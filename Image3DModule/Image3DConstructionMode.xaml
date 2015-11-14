@@ -1,0 +1,33 @@
+﻿<UserControl x:Class="CamMain.Image3DConstructionMode"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CamMain"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="10*"/>
+            <RowDefinition Height="40"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="50*"/>
+            <ColumnDefinition Width="10"/>
+            <ColumnDefinition Width="50*"/>
+        </Grid.ColumnDefinitions>
+        <local:CameraImage x:Name="_camImageFirst" Grid.Column="0" Grid.Row="0"/>
+        <local:CameraImage x:Name="_camImageSec" Grid.Column="2" Grid.Row="0"/>
+        <Border Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="3" BorderBrush="Black" BorderThickness="1">
+            <DockPanel DockPanel.Dock="Bottom" Height="30" Background="LightGray">
+                <Button x:Name="_butAcceptPoint" DockPanel.Dock="Left" Margin="3,4,4,3"  Width="100" IsEnabled="False" Click="AcceptImagePoints">Accept Points</Button>
+                <Button x:Name="_butRemovePoint" DockPanel.Dock="Left" Margin="3,4,4,3"  Width="100" IsEnabled="False" Click="RemoveImagePoints">Remove Points</Button>
+                <Button x:Name="_butManagePoints" DockPanel.Dock="Left" Margin="3,4,4,3"  Width="100" IsEnabled="True" Click="ManagePoints">Manage Points</Button>
+                <Button x:Name="_butCorners" DockPanel.Dock="Left" Margin="3,4,4,3"  Width="100" IsEnabled="True" Click="AutoCorners">Auto Corners</Button>
+                <Button x:Name="_butImage3D" DockPanel.Dock="Right" Margin="3,4,4,3"  Width="100" IsEnabled="True" Click="Build3DImage">Show 3D Image</Button>
+                
+                <Label></Label>
+            </DockPanel>
+        </Border>
+    </Grid>
+</UserControl>

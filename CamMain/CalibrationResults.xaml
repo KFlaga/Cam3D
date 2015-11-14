@@ -1,0 +1,253 @@
+﻿<UserControl
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:CamMain" 
+    xmlns:CamControls="clr-namespace:CamControls;assembly=CamControls" 
+    x:Class="CamMain.CalibrationResults" 
+             mc:Ignorable="d" 
+             Height="290" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="260"/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="15"/>
+            <ColumnDefinition Width="160"/>
+            <ColumnDefinition Width="160"/>
+            <ColumnDefinition Width="160"/>
+            <ColumnDefinition Width="130"/>
+            <ColumnDefinition Width="160"/>
+            <ColumnDefinition Width="15"/>
+        </Grid.ColumnDefinitions>
+
+        <Border Grid.Column="1" Style="{DynamicResource matrixPanel}">
+            <StackPanel>
+                <Label HorizontalContentAlignment="Center" Content="Left Camera Matrix"/>
+                <CamControls:MatrixControl Width="150" Height="90" Margin="5"
+                                           MatrixSource="{Binding CameraLeft}"
+                                           IsReadOnly="{Binding ElementName=_cbReadOnly, Path=IsChecked}"/>
+                <!--Border BorderBrush="Black" BorderThickness="1" Height="1"/-->
+                <Label HorizontalContentAlignment="Center" Content="Right Camera Matrix"/>
+                <CamControls:MatrixControl Width="150" Height="90" Margin="5"
+                                           MatrixSource="{Binding CameraRight}"
+                                           IsReadOnly="{Binding ElementName=_cbReadOnly, Path=IsChecked}"/>
+            </StackPanel>
+        </Border>
+        <Border Grid.Column="2" Style="{DynamicResource matrixPanel}">
+            <StackPanel>
+                <Label HorizontalContentAlignment="Center" Content="Left Camera Calibration"/>
+                <CamControls:MatrixControl Width="150" Height="90" Margin="5"
+                                           MatrixSource="{Binding CalibrationLeft}"
+                                           IsReadOnly="{Binding ElementName=_cbReadOnly, Path=IsChecked}"/>
+                <!--Border BorderBrush="Black" BorderThickness="1" Height="1"/-->
+                <Label HorizontalContentAlignment="Center" Content="Right Camera Calibration"/>
+                <CamControls:MatrixControl Width="150" Height="90" Margin="5"
+                                           MatrixSource="{Binding CalibrationRight}"
+                                           IsReadOnly="{Binding ElementName=_cbReadOnly, Path=IsChecked}"/>
+            </StackPanel>
+        </Border>
+        <Border Grid.Column="3" Style="{DynamicResource matrixPanel}">
+            <StackPanel>
+                <Label HorizontalContentAlignment="Center" Content="Left Camera Rotation"/>
+                <CamControls:MatrixControl Width="150" Height="90" Margin="5"
+                                           MatrixSource="{Binding RotationLeft}"
+                                           IsReadOnly="{Binding ElementName=_cbReadOnly, Path=IsChecked}"/>
+                <!--Border BorderBrush="Black" BorderThickness="1" Height="1"/-->
+                <Label HorizontalContentAlignment="Center" Content="Right Camera Rotation"/>
+                <CamControls:MatrixControl Width="150" Height="90" Margin="5"
+                                           MatrixSource="{Binding RotationRight}"
+                                           IsReadOnly="{Binding ElementName=_cbReadOnly, Path=IsChecked}"/>
+            </StackPanel>
+        </Border>
+
+        <Border Grid.Column="4" Style="{DynamicResource matrixPanel}">
+            <StackPanel>
+                <Label HorizontalContentAlignment="Center" Content="Left Camera Center"/>
+                <CamControls:MatrixControl Width="45" Height="90" Margin="5"
+                                           MatrixSource="{Binding TranslationLeft}"
+                                           IsReadOnly="{Binding ElementName=_cbReadOnly, Path=IsChecked}"/>
+                <!--Border BorderBrush="Black" BorderThickness="1" Height="1"/-->
+                <Label HorizontalContentAlignment="Center" Content="Right Camera Center"/>
+                <CamControls:MatrixControl Width="45" Height="90" Margin="5"
+                                           MatrixSource="{Binding TranslationRight}"
+                                           IsReadOnly="{Binding ElementName=_cbReadOnly, Path=IsChecked}"/>
+            </StackPanel>
+        </Border>
+
+        <Border Grid.Column="5" Style="{DynamicResource matrixPanel}">
+            <StackPanel>
+                <Label HorizontalContentAlignment="Center" Content="Essential Matrix"/>
+                <CamControls:MatrixControl Width="150" Height="90" Margin="5"
+                                           MatrixSource="{Binding Essential}"
+                                           IsReadOnly="{Binding ElementName=_cbReadOnly, Path=IsChecked}"/>
+                <!--Border BorderBrush="Black" BorderThickness="1" Height="1"/-->
+                <Label HorizontalContentAlignment="Center" Content="Fundamental Matrix"/>
+                <CamControls:MatrixControl Width="150" Height="90" Margin="5"
+                                           MatrixSource="{Binding Fundamental}"
+                                           IsReadOnly="{Binding ElementName=_cbReadOnly, Path=IsChecked}"/>
+            </StackPanel>
+        </Border>
+
+        <Border Grid.Column="1" Grid.ColumnSpan="5" Grid.Row="1" Style="{DynamicResource bottomPanel}">
+            <Grid>
+                <CheckBox x:Name="_cbReadOnly" Content="Disable Edit" HorizontalAlignment="Left" 
+                          VerticalContentAlignment="Center" Margin="10,0,0,0" Height="30" Width="90" IsChecked="True"/>
+                <Button Width="100" Height="25" HorizontalAlignment="Center" VerticalAlignment="Stretch" 
+                        Style="{DynamicResource slideUpButton}" Click="SlideButton_Click"/>
+            </Grid>
+        </Border>
+        <Border Grid.Column="0" Grid.Row="0" Style="{DynamicResource sidePanelLeft}"/>
+        <Border Grid.Column="6" Grid.Row="0" Style="{DynamicResource sidePanelRight}"/>
+        <Border Grid.Column="0" Grid.Row="1" Style="{DynamicResource cornerPanelLeft}"/>
+        <Border Grid.Column="6" Grid.Row="1" Style="{DynamicResource cornerPanelRight}"/>
+    </Grid>
+
+    <UserControl.Resources>
+        <Color x:Key="colorMain" A="#FF" B="#CC" G="#CC" R="#CC"/>
+        <Color x:Key="colorDark" A="#FF" B="#AA" G="#AA" R="#AA"/>
+        <Color x:Key="colorLight" A="#FF" B="#BB" G="#BB" R="#BB"/>
+        
+        <Style x:Key="matrixPanel" TargetType="{x:Type Border}">
+            <Setter Property="Background">
+                <Setter.Value>
+                    <SolidColorBrush Color="{DynamicResource colorMain}"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+        <Style x:Key="bottomPanel" TargetType="{x:Type Border}">
+            <Setter Property="Background">
+                <Setter.Value>
+                    <LinearGradientBrush SpreadMethod="Reflect" StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Color="{DynamicResource colorMain}" Offset="0"/>
+                        <GradientStop Color="{DynamicResource colorDark}" Offset="0.5"/>
+                        <GradientStop Color="{DynamicResource colorLight}" Offset="1"/>
+                    </LinearGradientBrush>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="SnapsToDevicePixels" Value="True" />
+        </Style>
+
+        <Style x:Key="sidePanelLeft" TargetType="{x:Type Border}">
+            <Setter Property="Background">
+                <Setter.Value>
+                    <LinearGradientBrush SpreadMethod="Reflect" StartPoint="0,0" EndPoint="1,0">
+                        <GradientStop Color="{DynamicResource colorLight}" Offset="0"/>
+                        <GradientStop Color="{DynamicResource colorDark}" Offset="0.5"/>
+                        <GradientStop Color="{DynamicResource colorMain}" Offset="1"/>
+                    </LinearGradientBrush>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="SnapsToDevicePixels" Value="True" />
+        </Style>
+
+        <Style x:Key="sidePanelRight" TargetType="{x:Type Border}">
+            <Setter Property="Background">
+                <Setter.Value>
+                    <LinearGradientBrush SpreadMethod="Reflect" StartPoint="0,0" EndPoint="1,0">
+                        <GradientStop Color="{DynamicResource colorMain}" Offset="0"/>
+                        <GradientStop Color="{DynamicResource colorDark}" Offset="0.5"/>
+                        <GradientStop Color="{DynamicResource colorLight}" Offset="1"/>
+                    </LinearGradientBrush>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="SnapsToDevicePixels" Value="True" />
+        </Style>
+
+        <Style x:Key="cornerPanelLeft" TargetType="{x:Type Border}">
+            <Setter Property="Background">
+                <Setter.Value>
+                    <RadialGradientBrush SpreadMethod="Pad" Center="1,0" RadiusX="1" RadiusY="1" GradientOrigin="1,0">
+                        <GradientStop Color="{DynamicResource colorMain}" Offset="0"/>
+                        <GradientStop Color="{DynamicResource colorDark}" Offset="0.5"/>
+                        <GradientStop Color="{DynamicResource colorLight}" Offset="1"/>
+                        <GradientStop Color="Transparent" Offset="1"/>
+                    </RadialGradientBrush>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="SnapsToDevicePixels" Value="True" />
+        </Style>
+
+        <Style x:Key="cornerPanelRight" TargetType="{x:Type Border}">
+            <Setter Property="Background">
+                <Setter.Value>
+                    <RadialGradientBrush SpreadMethod="Pad" Center="0,0" RadiusX="1" RadiusY="1" GradientOrigin="0,0">
+                        <GradientStop Color="{DynamicResource colorMain}" Offset="0"/>
+                        <GradientStop Color="{DynamicResource colorDark}" Offset="0.5"/>
+                        <GradientStop Color="{DynamicResource colorLight}" Offset="1"/>
+                        <GradientStop Color="Transparent" Offset="1"/>
+                    </RadialGradientBrush>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="SnapsToDevicePixels" Value="True" />
+        </Style>
+
+        <Style x:Key="slideUpButton" TargetType="{x:Type Button}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Grid Background="{Binding Background}">
+                            <Viewbox>
+                                <Grid>
+                                    <Path x:Name="arrowInsides"
+                                        Stretch="Fill" StrokeThickness="1" StrokeStartLineCap="Round" StrokeEndLineCap="Round"   
+                                        StrokeLineJoin="Round" Stroke="Transparent"  
+                                        Data="F1 M 0,90 L 100,10 200,90 160,90 100,60 40,90 Z M 0,100 M 0,0"
+                                        RenderTransformOrigin="0.5,0.5">
+                                        <Path.RenderTransform>
+                                            <ScaleTransform ScaleX="1.2" ScaleY="0.9"/>
+                                        </Path.RenderTransform>
+                                        <Path.Effect>
+                                            <DropShadowEffect BlurRadius="20" RenderingBias="Performance" ShadowDepth="0"/>
+                                        </Path.Effect>
+                                        <Path.Fill>
+                                            <LinearGradientBrush SpreadMethod="Reflect" StartPoint="0,0" EndPoint="0,1">
+                                                <GradientStop Color="#333" Offset="0"/>
+                                                <GradientStop Color="#000" Offset="0.5"/>
+                                                <GradientStop Color="#555" Offset="1"/>
+                                            </LinearGradientBrush>
+                                        </Path.Fill>
+                                    </Path>
+                                </Grid>
+                            </Viewbox>
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}" 
+                                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
+                                              RecognizesAccessKey="True"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsFocused" Value="True"/>
+                            <Trigger Property="IsDefaulted" Value="True"/>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="arrowInsides" Property="Effect">
+                                    <Setter.Value>
+                                        <DropShadowEffect BlurRadius="10" ShadowDepth="0" Color="Aqua"/>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter TargetName="arrowInsides" Property="Fill">
+                                    <Setter.Value>
+                                        <SolidColorBrush Color="#222"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="arrowInsides" Property="Effect">
+                                    <Setter.Value>
+                                        <DropShadowEffect BlurRadius="10" ShadowDepth="0" Color="Aqua"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False"/>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+</UserControl>
