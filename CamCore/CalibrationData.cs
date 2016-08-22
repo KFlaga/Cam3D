@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using MathNet.Numerics.LinearAlgebra;
 using System.IO;
 using System.Xml;
-using MathNet.Numerics.LinearAlgebra.Single;
+using MathNet.Numerics.LinearAlgebra.Double;
 using System.ComponentModel;
 
 namespace CamCore
@@ -16,8 +16,8 @@ namespace CamCore
         private static CalibrationData _data = new CalibrationData();
         public static CalibrationData Data { get { return _data; } }
 
-        private Matrix<float> _camLeft = null;
-        private Matrix<float> _camRight = null;
+        private Matrix<double> _camLeft = null;
+        private Matrix<double> _camRight = null;
 
         public bool IsCamLeftCalibrated { get; set; }
         public bool IsCamRightCalibrated { get; set; }
@@ -37,7 +37,7 @@ namespace CamCore
         //      |R3 -R3T|
         // Pcam = R(Pworld − T) (in 3d)
         // pimg = M*Pworld
-        public Matrix<float> CameraLeft
+        public Matrix<double> CameraLeft
         {
             get
             {
@@ -58,7 +58,7 @@ namespace CamCore
                 CalibrationLeft = RQ.R;
                 if (Math.Abs(CalibrationLeft[2, 2] - 1) > 0.001)
                 {
-                    float divCoeff = CalibrationLeft[2, 2];
+                    double divCoeff = CalibrationLeft[2, 2];
                     _camLeft = _camLeft.Divide(divCoeff);
                     NotifyPropertyChanged("CameraLeft");
                     RQ = _camLeft.SubMatrix(0, 3, 0, 3).QR();
@@ -70,7 +70,7 @@ namespace CamCore
             }
         }
 
-        public Matrix<float> CameraRight
+        public Matrix<double> CameraRight
         {
             get
             {
@@ -91,7 +91,7 @@ namespace CamCore
                 CalibrationRight = RQ.R;
                 if( Math.Abs(CalibrationRight[2,2] - 1) > 0.001)
                 {
-                    float divCoeff = CalibrationRight[2, 2];
+                    double divCoeff = CalibrationRight[2, 2];
                     _camRight = _camRight.Divide(divCoeff);
                     NotifyPropertyChanged("CameraRight");
                     RQ = _camRight.SubMatrix(0, 3, 0, 3).QR();
@@ -105,8 +105,8 @@ namespace CamCore
 
         #region Additional Matrices
 
-        private Matrix<float> _calibrationLeft;
-        public Matrix<float> CalibrationLeft
+        private Matrix<double> _calibrationLeft;
+        public Matrix<double> CalibrationLeft
         {
             get { return _calibrationLeft; }
             private set
@@ -116,8 +116,8 @@ namespace CamCore
             }
         }
 
-        private Matrix<float> _calibrationRight;
-        public Matrix<float> CalibrationRight
+        private Matrix<double> _calibrationRight;
+        public Matrix<double> CalibrationRight
         {
             get { return _calibrationRight; }
             private set
@@ -127,8 +127,8 @@ namespace CamCore
             }
         }
 
-        private Matrix<float> _rotationLeft;
-        public Matrix<float> RotationLeft
+        private Matrix<double> _rotationLeft;
+        public Matrix<double> RotationLeft
         {
             get { return _rotationLeft; }
             private set
@@ -138,8 +138,8 @@ namespace CamCore
             }
         }
 
-        private Matrix<float> _rotationRight;
-        public Matrix<float> RotationRight
+        private Matrix<double> _rotationRight;
+        public Matrix<double> RotationRight
         {
             get { return _rotationRight; }
             private set
@@ -149,8 +149,8 @@ namespace CamCore
             }
         }
 
-        private Matrix<float> _translationLeft;
-        public Matrix<float> TranslationLeft
+        private Matrix<double> _translationLeft;
+        public Matrix<double> TranslationLeft
         {
             get { return _translationLeft; }
             private set
@@ -160,8 +160,8 @@ namespace CamCore
             }
         }
 
-        private Matrix<float> _translationRight;
-        public Matrix<float> TranslationRight
+        private Matrix<double> _translationRight;
+        public Matrix<double> TranslationRight
         {
             get { return _translationRight; }
             private set
@@ -171,8 +171,8 @@ namespace CamCore
             }
         }
 
-        private Matrix<float> _essential;
-        public Matrix<float> Essential
+        private Matrix<double> _essential;
+        public Matrix<double> Essential
         {
             get { return _essential; }
             private set
@@ -182,8 +182,8 @@ namespace CamCore
             }
         }
 
-        private Matrix<float> _fundamental;
-        public Matrix<float> Fundamental
+        private Matrix<double> _fundamental;
+        public Matrix<double> Fundamental
         {
             get { return _fundamental; }
             private set
@@ -203,12 +203,12 @@ namespace CamCore
             // Al->r = [R|T] = Ar * Al^-1 
             // [R|T] = [Rr*Rl^T | Rr * (-Rl^T * Tl) + Tr]
 
-            Matrix<float> rotLR = RotationRight.Multiply(RotationLeft.Transpose());
-            Matrix<float> transLR = (RotationRight.Multiply(
+            Matrix<double> rotLR = RotationRight.Multiply(RotationLeft.Transpose());
+            Matrix<double> transLR = (RotationRight.Multiply(
                 -RotationLeft.Transpose().Multiply(TranslationLeft)))
                 .Add(TranslationRight);
 
-            Matrix<float> skewTransMat = new DenseMatrix(3, 3);
+            Matrix<double> skewTransMat = new DenseMatrix(3, 3);
             skewTransMat[0, 0] = 0;
             skewTransMat[0, 1] = -transLR[2, 0];
             skewTransMat[0, 2] = transLR[1, 0];
@@ -313,19 +313,19 @@ namespace CamCore
             dataDoc.Save(file);
         }
 
-        private Matrix<float> ParseCamMatrix(string mat)
+        private Matrix<double> ParseCamMatrix(string mat)
         {
             DenseMatrix matrix = new DenseMatrix(3, 4);
             string[] nums = mat.Split('|');
             for (int num = 0; num < 12; num++)
             {
-                float val = float.Parse(nums[num]);
+                double val = double.Parse(nums[num]);
                 matrix[num / 4, num % 4] = val;
             }
             return matrix;
         }
 
-        private string CamMatrixToString(Matrix<float> matrix)
+        private string CamMatrixToString(Matrix<double> matrix)
         {
             StringBuilder nums = new StringBuilder();
             for (int num = 0; num < 12; num++)

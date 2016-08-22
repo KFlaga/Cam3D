@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CamCore", "CamCore\CamCore.csproj", "{30AB90ED-775C-49E5-96A8-B419D08D2204}"
 EndProject
@@ -24,6 +24,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CamCapture", "CamCapture\CamCapture.csproj", "{4A7A81A4-29AD-4B02-A40A-A425BF3D133E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CaptureTestModule", "CaptureTestModule\CaptureTestModule.csproj", "{D7EB4FEC-FFC9-4B78-A6B8-33D6AF071C7E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CamImageOperationsModule", "CamImageOperationsModule\CamImageOperationsModule.csproj", "{3D588C4A-259A-4E7D-A155-C2A96DF504C7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTestProject1\UnitTests.csproj", "{DFA5842E-EF98-497A-A922-5BAE02E83821}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -75,6 +79,14 @@ Global
 		{D7EB4FEC-FFC9-4B78-A6B8-33D6AF071C7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D7EB4FEC-FFC9-4B78-A6B8-33D6AF071C7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D7EB4FEC-FFC9-4B78-A6B8-33D6AF071C7E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D588C4A-259A-4E7D-A155-C2A96DF504C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D588C4A-259A-4E7D-A155-C2A96DF504C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D588C4A-259A-4E7D-A155-C2A96DF504C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D588C4A-259A-4E7D-A155-C2A96DF504C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DFA5842E-EF98-497A-A922-5BAE02E83821}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DFA5842E-EF98-497A-A922-5BAE02E83821}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DFA5842E-EF98-497A-A922-5BAE02E83821}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DFA5842E-EF98-497A-A922-5BAE02E83821}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

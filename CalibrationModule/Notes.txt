@@ -1,0 +1,18 @@
+﻿// Minimises radial distortion in points
+    // Let ex=(ex,ey) be ideal point on image, x=(x,y) measured one and X=(X,Y,Z) corresponding real point
+    // Then ex = P*X and x = L(er) * ex, where L(r) is distortion function of 
+    // r - distance from distortion center er = ||ex-c||
+    // If we inverse the equation, we obtain :
+    // (ex,ey) = (cx,cy) + L(r)*(x-cx,y-cy), where r = (x-xc)^2 + (y-yc)^2
+    // To compute L(r) Taylor expansion may be used :
+    // L(r) = 1 + k1*r + k2*r^2 + ...
+    // Radial distortion couses lines in real to not be straight on image, so
+    // if we know some points lie on a line, we can compute L(r), so those points will
+    // lie on line on corrected image
+    // Of course as points are erroneus, we have minimalisation problem :
+    // - find such {ki} that sum d(Pi1Pi3, ePi2)^2 is minimised ( where Pi1Pi3 defines line Li 
+    // from Pi1 to Pi3 and Pi2 is point which lies on this line in real - Pik are estimated (corrected) image points )
+    // d(P1P3,P2)^2 = ((P3y-P1y)P2x - (P3x-P1x)P2y + P3xP1y - P3yP1x)^2/((P3x-P1x)^2+(P3y-P1y)^2)
+    //
+    //
+    //

@@ -1,5 +1,5 @@
 ﻿using MathNet.Numerics.LinearAlgebra;
-using MathNet.Numerics.LinearAlgebra.Single;
+using MathNet.Numerics.LinearAlgebra.Double;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,8 +11,8 @@ namespace CalibrationModule
 {
     public class CamerasData
     {
-        public static Matrix<float> Cam1Matrix { get; set; }
-        public static Matrix<float> Cam2Matrix { get; set; }
+        public static Matrix<double> Cam1Matrix { get; set; }
+        public static Matrix<double> Cam2Matrix { get; set; }
         public static List<CalibrationPoint> Cam1Points { get; set; }
         public static List<CalibrationPoint> Cam2Points { get; set; }
         public static List<RealGridData> Cam1Grids { get; set; }
@@ -131,7 +131,7 @@ namespace CalibrationModule
                     var row = line.Current.Split('|');
                     for (int c = 0; c < 4; c++)
                     {
-                        Cam1Matrix[r, c] = float.Parse(row.ElementAt(c));
+                        Cam1Matrix[r, c] = double.Parse(row.ElementAt(c));
                     }
                 }
             }
@@ -150,7 +150,7 @@ namespace CalibrationModule
                     var row = line.Current.Split('|');
                     for (int c = 0; c < 4; c++)
                     {
-                        Cam2Matrix[r, c] = float.Parse(row.ElementAt(c));
+                        Cam2Matrix[r, c] = double.Parse(row.ElementAt(c));
                     }
                 }
             }
@@ -169,8 +169,8 @@ namespace CalibrationModule
 
                 Cam1Points.Add(new CalibrationPoint()
                 {
-                    ImgX = float.Parse(point.ElementAt(0)),
-                    ImgY = float.Parse(point.ElementAt(1)),
+                    ImgX = double.Parse(point.ElementAt(0)),
+                    ImgY = double.Parse(point.ElementAt(1)),
                     GridNum = int.Parse(point.ElementAt(2)),
                     RealCol = int.Parse(point.ElementAt(3)),
                     RealRow = int.Parse(point.ElementAt(4))
@@ -191,8 +191,8 @@ namespace CalibrationModule
 
                 Cam2Points.Add(new CalibrationPoint()
                 {
-                    ImgX = float.Parse(point.ElementAt(0)),
-                    ImgY = float.Parse(point.ElementAt(1)),
+                    ImgX = double.Parse(point.ElementAt(0)),
+                    ImgY = double.Parse(point.ElementAt(1)),
                     GridNum = int.Parse(point.ElementAt(2)),
                     RealCol = int.Parse(point.ElementAt(3)),
                     RealRow = int.Parse(point.ElementAt(4))

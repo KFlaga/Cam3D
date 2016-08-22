@@ -5,13 +5,13 @@ namespace CamImageProcessing
 {
     public class Patch
     {
-        public Matrix<float> ImageMatrix { get; set; }
+        public Matrix<double> ImageMatrix { get; set; }
         public int Rows { get; set; }
         public int Cols { get; set; }
         public int StartRow { get; set; }
         public int StartCol { get; set; }
 
-        public float this[int y, int x]
+        public double this[int y, int x]
         {
             get
             {
@@ -19,33 +19,33 @@ namespace CamImageProcessing
             }
         }
 
-        public delegate float CorrelationComputer(Patch patchRef, Patch patchTest, float param); 
+        public delegate double CorrelationComputer(Patch patchRef, Patch patchTest, double param); 
 
-        public static float ComputePatchesCorrelation(Patch patchRef, Patch patchTest, float unused)
+        public static double ComputePatchesCorrelation(Patch patchRef, Patch patchTest, double unused)
         {
             // corr = Pr .* Pt / |Pr|*|Pt|
 
-            float corr = 0.0f;
-            float sqLenRef = 0.0f, sqLenTest = 0.0f;
+            double corr = 0.0f;
+            double sqLenRef = 0.0f, sqLenTest = 0.0f;
             int y, x;
             for(y = 0; y < patchRef.Rows; ++y)
             {
                 for(x = 0; x < patchRef.Cols; ++x)
                 {
-                    float pr = patchRef[y, x];
-                    float pt = patchTest[y, x];
+                    double pr = patchRef[y, x];
+                    double pt = patchTest[y, x];
                     corr += pr * pt;
                     sqLenRef += pr * pr;
                     sqLenTest += pt * pt;
                 }
             }
 
-            corr /= (float)Math.Sqrt(sqLenRef*sqLenTest);
+            corr /= (double)Math.Sqrt(sqLenRef*sqLenTest);
 
             return corr;
         }
 
-        public static float ComputePatchesSmoothCorrelation(Patch patchRef, Patch patchTest, float sgm_gauss)
+        public static double ComputePatchesSmoothCorrelation(Patch patchRef, Patch patchTest, double sgm_gauss)
         {
             //% Correlation: c = r / sqrt(dev_r^2 * dev_t^2)
             //% r = sum { G(y, x) * Pr(y +y0/2, x + x0/2) * Pt(y +y0/2, x + x0/2) }
@@ -54,25 +54,25 @@ namespace CamImageProcessing
             int r2 = patchRef.Rows / 2;
             int c2 = patchRef.Cols / 2;
 
-            float corr = 0.0f, gauss = 0.0f;
-            float sqDevRef = 0.0f, sqDevTest = 0.0f;
-            float sgm2 = 2 * sgm_gauss * sgm_gauss;
-            float norm_coeff = 1 / (sgm_gauss * (float)Math.Sqrt(2 * Math.PI));
+            double corr = 0.0f, gauss = 0.0f;
+            double sqDevRef = 0.0f, sqDevTest = 0.0f;
+            double sgm2 = 2 * sgm_gauss * sgm_gauss;
+            double norm_coeff = 1 / (sgm_gauss * (double)Math.Sqrt(2 * Math.PI));
             int y, x;
             for (y = 0; y < patchRef.Rows; ++y)
             {
                 for (x = 0; x < patchRef.Cols; ++x)
                 {
-                    float pr = patchRef[y, x];
-                    float pt = patchTest[y, x];
-                    gauss = (float)Math.Exp(((x - c2) * (x - c2) + (y - r2) * (y - r2)) / sgm2) * norm_coeff;
+                    double pr = patchRef[y, x];
+                    double pt = patchTest[y, x];
+                    gauss = (double)Math.Exp(((x - c2) * (x - c2) + (y - r2) * (y - r2)) / sgm2) * norm_coeff;
                     corr += gauss * pr * pt;
                     sqDevRef += gauss * pr * pr;
                     sqDevTest += gauss * pt * pt;
                 }
             }
 
-            corr /= (float)Math.Sqrt(sqDevRef * sqDevTest);
+            corr /= (double)Math.Sqrt(sqDevRef * sqDevTest);
 
             return corr;
         }

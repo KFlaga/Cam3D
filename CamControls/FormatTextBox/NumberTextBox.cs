@@ -13,13 +13,13 @@ namespace CamControls
 
     public class NumberTextBox<T> : NumberTextBox where T : IComparable<T>, IConvertible, IFormattable
     {
-        public static readonly DependencyProperty CurrentValueProperty =
+        public static DependencyProperty CurrentValueProperty =
             DependencyProperty.Register("CurrentValue", typeof(T), typeof(NumberTextBox<T>));
-        public static readonly DependencyProperty MaxValueProperty =
+        public static DependencyProperty MaxValueProperty =
             DependencyProperty.Register("MaxValue", typeof(T), typeof(NumberTextBox<T>));
-        public static readonly DependencyProperty MinValueProperty =
+        public static DependencyProperty MinValueProperty =
             DependencyProperty.Register("MinValue", typeof(T), typeof(NumberTextBox<T>));
-        public static readonly DependencyProperty LimitValueProperty =
+        public static DependencyProperty LimitValueProperty =
             DependencyProperty.Register("LimitValue", typeof(bool), typeof(NumberTextBox<T>));
 
         protected T _curVal;

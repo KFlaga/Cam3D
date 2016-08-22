@@ -5,32 +5,45 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:CamControls"
              mc:Ignorable="d" ResizeMode="NoResize"
-             Height="310" Width="300"
-             d:DesignHeight="310" d:DesignWidth="300">
+             Height="360" Width="300"
+             d:DesignHeight="360" d:DesignWidth="300">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="10*"/>
+            <RowDefinition/>
             <RowDefinition Height="80"/>
-            <RowDefinition Height="80"/>
-            <RowDefinition Height="80"/>
-            <RowDefinition Height="25"/>
+            <RowDefinition Height="86"/>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="70"/>
+            <RowDefinition Height="30"/>
             <RowDefinition Height="10"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="10*"/>
             <ColumnDefinition Width="150"/>
-            <ColumnDefinition Width="30"/>
             <ColumnDefinition Width="80"/>
             <ColumnDefinition Width="10*"/>
         </Grid.ColumnDefinitions>
         <!-- Gradient color picker -->
-        <Border x:Name="_gradientPicker" Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" BorderBrush="Black" BorderThickness="1" Margin="10"/>
-        <Border x:Name="_colorPicker" Grid.Column="2" Grid.Row="1" Grid.RowSpan="2" BorderBrush="Black" BorderThickness="1" Margin="2,10,2,10"/>
+        <Border Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" Margin="0" Width="142" Height="142">
+            <Image x:Name="_brightnessPicker" Margin="1" Width="140" Height="140" 
+                   MouseMove="_brightnessPicker_MouseMove" MouseDown="_brightnessPicker_MouseDown"/> 
+        </Border>
+
+        <Border x:Name="_bsPointer" Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" Width="5" Height="5" BorderThickness="1" 
+                HorizontalAlignment="Left" VerticalAlignment="Top" Margin="3, 11, 0, 0" BorderBrush="Black"/>
+
+        <Border Grid.Column="1" Grid.Row="3" BorderBrush="Black" BorderThickness="1" Margin="3,11,3,11">
+            <Image x:Name="_huePicker" Margin="1" Width="140" Height="24"
+                   MouseMove="_huePicker_MouseMove" MouseDown="_huePicker_MouseDown"/>
+        </Border>
+        <Rectangle x:Name="_huePointer" Width="2" Height="24" Grid.Column="1" Grid.Row="3" Fill="Black" HorizontalAlignment="Left" Margin="3,0,0,0"/>
         <!-- Color preview -->
-        <Label Grid.Column="1" Grid.Row="3" HorizontalAlignment="Center" Background="{Binding PickedColor}">Color Preview</Label>
-        <Border x:Name="_colorPreview" Grid.Column="1" Grid.Row="3" BorderBrush="Black" BorderThickness="1" Margin="20"/>
+        <Label Grid.Column="1" Grid.Row="4" HorizontalAlignment="Center" Margin="33,0" Width="84">Color Preview</Label>
+        <Border Grid.Column="1" Grid.Row="4" BorderBrush="Black" BorderThickness="1" Margin="20">
+            <Rectangle x:Name="_colorPreview" Margin="1" Fill="{Binding PickedColor}" />
+        </Border>
         <!-- Manual RGB control -->
-        <Border Grid.Column="3" Grid.Row="1" Grid.RowSpan="3" BorderBrush="Black" BorderThickness="1" Margin="5">
+        <Border Grid.Column="2" Grid.Row="1" Grid.RowSpan="2" BorderBrush="Black" BorderThickness="1" Margin="5">
             <StackPanel>
                 <Label Margin="0,3,0,3" HorizontalContentAlignment="Center" Height="15" Padding="0">RED</Label>
                 <local:UnsignedIntegerTextBox x:Name="_tbRed" Style="{DynamicResource colorTextBoxStyle}" TextChanged="_tbRed_TextChanged"/>
@@ -38,11 +51,9 @@
                 <local:UnsignedIntegerTextBox x:Name="_tbGreen" Style="{DynamicResource colorTextBoxStyle}" TextChanged="_tbGreen_TextChanged"/>
                 <Label Margin="0,3,0,3" HorizontalContentAlignment="Center">BLUE</Label>
                 <local:UnsignedIntegerTextBox x:Name="_tbBlue" Style="{DynamicResource colorTextBoxStyle}" TextChanged="_tbBlue_TextChanged"/>
-                <Label Margin="0,3,0,3" HorizontalContentAlignment="Center">OPACITY</Label>
-                <local:UnsignedIntegerTextBox x:Name="_tbAlpha" Style="{DynamicResource colorTextBoxStyle}" TextChanged="_tbAlpha_TextChanged"/>
             </StackPanel>
         </Border>
-        <StackPanel Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="4" Orientation="Horizontal">
+        <StackPanel Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="5" Orientation="Horizontal">
             <Button Width="50" Margin="2" Click="Cancel">Cancel</Button>
             <Button Width="50" Margin="2" Click="Accept">OK</Button>
         </StackPanel>

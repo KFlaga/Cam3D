@@ -29,12 +29,19 @@ namespace CamMain
         {
             InitializeComponent();
             _modules = new List<Module>();
-            LoadModules("d:\\config.xml");
+            var entryAssembly = System.Reflection.Assembly.GetEntryAssembly();
+            string dir = System.IO.Path.GetDirectoryName(entryAssembly.Location);
+            LoadModules(dir + "\\config.xml");
 
             InitCalibrationResultsAnimation();
             this.SizeChanged += (s, e) =>
             {
                 Canvas.SetLeft(_calibResults, CalibResultsLeft);
+            };
+
+            this.Closed += (s, e) =>
+            {
+                App.Current.Shutdown();
             };
         }
 

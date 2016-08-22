@@ -58,15 +58,32 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Alg\BasicFloodAlgorithm.cs" />
+    <Compile Include="Alg\FloatExtensions.cs" />
+    <Compile Include="Alg\IControllableAlgorithm.cs" />
+    <Compile Include="Alg\IFloodAlgorithm.cs" />
+    <Compile Include="Alg\IterativeBasicFloodAlgorithm.cs" />
+    <Compile Include="Alg\ScanLineFloodAlgorithm.cs" />
+    <Compile Include="Alg\VectorExtensions.cs" />
     <Compile Include="CalibrationData.cs" />
     <Compile Include="Converters\DoubleToStringConverter.cs" />
     <Compile Include="FileOperations.cs" />
+    <Compile Include="Alg\GaussSolver.cs" />
+    <Compile Include="Alg\ILinearEquationsSolver.cs" />
     <Compile Include="Image3DPoint.cs" />
     <Compile Include="Converters\IntToStringConverter.cs" />
     <Compile Include="InterModularConnection.cs" />
+    <Compile Include="Alg\LevenbergMarquardtBasicAlgorithm.cs" />
+    <Compile Include="Alg\MatrixExtensions.cs" />
+    <Compile Include="Alg\MinimalisationAlgorithm.cs" />
     <Compile Include="Module.cs" />
+    <Compile Include="ModuleControl.cs" />
     <Compile Include="ModuleInfo.cs" />
     <Compile Include="ModuleLoader.cs" />
+    <Compile Include="Alg\NoiseGenerators.cs" />
+    <Compile Include="Alg\Vector2.cs" />
+    <Compile Include="Alg\Point3D.cs" />
+    <Compile Include="ProcessorParameters.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -82,6 +99,8 @@
     </Compile>
     <Compile Include="Converters\StringToDoubleConverter.cs" />
     <Compile Include="Converters\StringToIntConverter.cs" />
+    <Compile Include="Alg\SvdSolver.cs" />
+    <Compile Include="RadialDistortionModel.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

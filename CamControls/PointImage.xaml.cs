@@ -34,16 +34,30 @@ namespace CamControls
             }
             set
             {
+                BitmapSource old = _baseImage;
                 _baseImage = value;
-                _finalImage = new WriteableBitmap(_baseImage);
-                foreach(var point in Points)
+                if(_baseImage != null)
                 {
-                    DrawCross(point.Position, _finalImage, CrossColor);
+                    _finalImage = new WriteableBitmap(_baseImage);
+                    foreach(var point in Points)
+                    {
+                        DrawCross(point.Position, _finalImage, CrossColor);
+                    }
+                    _imageControl.Source = _finalImage;
                 }
-                _imageControl.Source = _finalImage;
+                else
+                    _imageControl.Source = null;
+
+                ImageSourceChanged?.Invoke(this, new ImageChangedEventArgs()
+                {
+                    NewImage = value,
+                    OldImage = old,
+                });
             }
         }
         public List<PointImagePoint> Points { get { return _points; } }
+
+        public event EventHandler<ImageChangedEventArgs> ImageSourceChanged;
 
         public PointImagePoint SelectedPoint
         {
@@ -53,11 +67,11 @@ namespace CamControls
             }
             set
             {
-                if (_selectedPoint == value)
+                if(_selectedPoint == value)
                     return;
                 PointImagePoint oldpoint = _selectedPoint;
                 _selectedPoint = value;
-                if (_selectedPoint.IsNullPoint) // Deselect old point
+                if(_selectedPoint.IsNullPoint) // Deselect old point
                 {
                     oldpoint.IsSelected = false;
                     if(!oldpoint.IsNullPoint)
@@ -69,15 +83,16 @@ namespace CamControls
                     DrawCross(_selectedPoint.Position, _finalImage, SelectedColor);
                     _selectedPoint.IsSelected = true;
                 }
-                if (SelectedPointChanged != null)
-                    SelectedPointChanged(this, new PointImageEventArgs()
-                    {
-                        OldImagePoint = oldpoint,
-                        NewImagePoint = _selectedPoint,
-                        IsNewPointSelected = _selectedPoint.IsSelected
-                    });
+                SelectedPointChanged?.Invoke(this, new PointImageEventArgs()
+                {
+                    OldImagePoint = oldpoint,
+                    NewImagePoint = _selectedPoint,
+                    IsNewPointSelected = _selectedPoint.IsSelected
+                });
             }
         }
+
+        public event PointImageEventHandler SelectedPointChanged;
 
         public PointImagePoint TemporaryPoint
         {
@@ -88,7 +103,7 @@ namespace CamControls
             set
             {
                 _tempPoint = value;
-                if (!value.IsNullPoint)
+                if(!value.IsNullPoint)
                     MoveTempPoint(_tempPoint.Position);
             }
         }
@@ -116,7 +131,7 @@ namespace CamControls
         private void PointPositionChanged(object sender, PointImageEventArgs e)
         {
             RemoveCross(e.OldPointPosition, _finalImage);
-            if (!e.NewImagePoint.IsNullPoint)
+            if(!e.NewImagePoint.IsNullPoint)
             {
                 if(e.NewImagePoint.IsSelected)
                     DrawCross(e.NewPointPosition, _finalImage, SelectedColor);
@@ -143,7 +158,10 @@ namespace CamControls
         public void ResetPoints()
         {
             _points.Clear();
-            _finalImage = new WriteableBitmap(_baseImage);
+            if(_finalImage != null)
+            {
+                _finalImage = new WriteableBitmap(_baseImage);
+            }
         }
 
         public PointImagePoint FindPointByPosition(Point pos)
@@ -163,9 +181,9 @@ namespace CamControls
         public PointImagePoint FindPointByValue(object value)
         {
             PointImagePoint p = null;
-            foreach (PointImagePoint point in Points)
+            foreach(PointImagePoint point in Points)
             {
-                if (point.Value.Equals(value))
+                if(point.Value.Equals(value))
                 {
                     p = point;
                     break;
@@ -176,14 +194,14 @@ namespace CamControls
 
         public void SelectPointQuiet(PointImagePoint point) // Do not rise event
         {
-            if (_selectedPoint == point)
+            if(_selectedPoint == point)
                 return;
             PointImagePoint oldpoint = _selectedPoint;
             _selectedPoint = point;
-            if (_selectedPoint.IsNullPoint) // Deselect old point
+            if(_selectedPoint.IsNullPoint) // Deselect old point
             {
                 oldpoint.IsSelected = false;
-                if (!oldpoint.IsNullPoint)
+                if(!oldpoint.IsNullPoint)
                     DrawCross(oldpoint.Position, _finalImage, CrossColor);
             }
             else // Remove temp point if there's one and select point
@@ -196,7 +214,7 @@ namespace CamControls
 
         public PointImagePoint AcceptTempPoint(object value)
         {
-            if (_tempPoint.IsNullPoint)
+            if(_tempPoint.IsNullPoint)
                 return null;
             PointImagePoint newPoint = new PointImagePoint()
             {
@@ -209,14 +227,14 @@ namespace CamControls
             TemporaryPoint.IsNullPoint = true;
             return newPoint;
         }
-        
+
         private void MoveTempPoint(Point mpos)
         {
-            if (_tempPoint.IsNullPoint)
+            if(_tempPoint.IsNullPoint)
             {
                 _tempPoint.IsNullPoint = false;
             }
-            else if (_tempPoint.Position.Equals(mpos))
+            else if(_tempPoint.Position.Equals(mpos))
                 return;
             else
                 RemoveCross(_tempPoint.Position, _finalImage);
@@ -226,7 +244,7 @@ namespace CamControls
 
         private void RemoveTempPoint()
         {
-            if (_tempPoint.IsNullPoint)
+            if(_tempPoint.IsNullPoint)
                 return;
             RemoveCross(_tempPoint.Position, _finalImage);
             _tempPoint.IsNullPoint = true;
@@ -234,31 +252,31 @@ namespace CamControls
 
         private void DrawCross(Point pos, WriteableBitmap img, Color color)
         {
-            if (_showPoints)
+            if(_showPoints)
             {
-                if (pos.X > _baseImage.Width - 5 || pos.Y > _baseImage.Height - 5 ||
+                if(pos.X > _baseImage.PixelWidth - 5 || pos.Y > _baseImage.PixelHeight - 5 ||
                     pos.X < 5 || pos.Y < 5)
                     return;
 
                 img.DrawLine((int)Math.Max(pos.X - 2, 0), (int)Math.Max(pos.Y - 2, 0),
-                    (int)Math.Min(pos.X + 2, img.Width), (int)Math.Min(pos.Y + 2, img.Height), color);
-                img.DrawLine((int)Math.Min(pos.X + 2, img.Width), (int)Math.Max(pos.Y - 2, 0),
-                    (int)Math.Max(pos.X - 2, 0), (int)Math.Min(pos.Y + 2, img.Height), color);
+                    (int)Math.Min(pos.X + 2, img.PixelWidth), (int)Math.Min(pos.Y + 2, img.PixelHeight), color);
+                img.DrawLine((int)Math.Min(pos.X + 2, img.PixelWidth), (int)Math.Max(pos.Y - 2, 0),
+                    (int)Math.Max(pos.X - 2, 0), (int)Math.Min(pos.Y + 2, img.PixelHeight), color);
             }
         }
 
         private void RemoveCross(Point point, WriteableBitmap img)
         {
-            if (point.X > _baseImage.Width - 5 || point.Y > _baseImage.Height - 5 ||
+            if(point.X > _baseImage.PixelWidth - 5 || point.Y > _baseImage.PixelHeight - 5 ||
                 point.X < 5 || point.Y < 5)
                 return;
 
             Int32[] cross = new Int32[25];
             _baseImage.CopyPixels(new Int32Rect((int)point.X - 2, (int)point.Y - 2, 5, 5), cross, 20, 0);
             img.WritePixels(new Int32Rect((int)point.X - 2, (int)point.Y - 2, 5, 5), cross, 20, 0);
-            foreach (var p in _points)
+            foreach(var p in _points)
             {
-                if (CrossHitTest(p.Position, point))
+                if(CrossHitTest(p.Position, point))
                 {
                     DrawCross(p.Position, img, CrossColor);
                 }
@@ -284,9 +302,7 @@ namespace CamControls
                                 + "All Images|*.bmp;*.jpg;*.jpeg;*.png;*.gif");
             if(imgPath != null)
             {
-                _baseImage = new BitmapImage(new Uri(imgPath, UriKind.Absolute));
-                _finalImage = new WriteableBitmap(_baseImage);
-                _imageControl.Source = _finalImage;
+                ImageSource = new BitmapImage(new Uri(imgPath, UriKind.Absolute));
             }
         }
 
@@ -294,38 +310,40 @@ namespace CamControls
         {
             // Get mouse pos and transform to image source coords
             Point mpos = Mouse.GetPosition(_imageControl);
-            mpos.X *= _imageControl.Source.Width / _imageControl.ActualWidth;
-            mpos.Y *= _imageControl.Source.Height / _imageControl.ActualHeight;
+            mpos.X *= _finalImage.PixelWidth / _imageControl.ActualWidth;
+            mpos.Y *= _finalImage.PixelHeight / _imageControl.ActualHeight;
             // If isn't within image then return
-            if (mpos.X < 2 || mpos.Y < 2 && mpos.X > _imageControl.Source.Width - 3 || mpos.Y > _imageControl.Source.Height - 3)
+            if(mpos.X < 2 || mpos.Y < 2 &&
+                mpos.X > _finalImage.PixelWidth - 3 ||
+                mpos.Y > _finalImage.PixelHeight - 3)
             {
                 SelectedPoint = new PointImagePoint() { IsNullPoint = true };
                 return;
             }
             // Check if mouse hovers over point -> list of such points
             List<PointImagePoint> hoverPoints = new List<PointImagePoint>();
-            foreach (var point in _points)
+            foreach(var point in _points)
             {
-                if (PointHitTest(mpos, point.Position))
+                if(PointHitTest(mpos, point.Position))
                 {
                     hoverPoints.Add(point);
                 }
             }
-            if (hoverPoints.Count > 0)
+            if(hoverPoints.Count > 0)
             {
                 // If it hovers over ones then find closest one
                 PointImagePoint hoverPoint = new PointImagePoint();
                 double minDist = 999999;
-                foreach (var point in hoverPoints)
+                foreach(var point in hoverPoints)
                 {
                     double dist = (point.Position.X - mpos.X) + (point.Position.Y - mpos.Y);
-                    if (dist < minDist)
+                    if(dist < minDist)
                     {
                         hoverPoint = point;
                         minDist = dist;
                     }
                 }
-                if (hoverPoint != _selectedPoint)// if clicked not on selected one, deselect it and select new one
+                if(hoverPoint != _selectedPoint)// if clicked not on selected one, deselect it and select new one
                 {
                     SelectedPoint = new PointImagePoint() { IsNullPoint = true };
                     SelectedPoint = hoverPoint;
@@ -347,18 +365,19 @@ namespace CamControls
 
         protected void ImageMouseMove(object sender, MouseEventArgs e)
         {
-            if (e.LeftButton == MouseButtonState.Pressed)
+            if(e.LeftButton == MouseButtonState.Pressed)
             {
                 // Get mouse pos and transform to image source coords
                 Point mpos = Mouse.GetPosition(_imageControl);
-                mpos.X *= _imageControl.Source.Width / _imageControl.ActualWidth;
-                mpos.Y *= _imageControl.Source.Height / _imageControl.ActualHeight;
+                mpos.X *= _finalImage.PixelWidth / _imageControl.ActualWidth;
+                mpos.Y *= _finalImage.PixelHeight / _imageControl.ActualHeight;
                 // If isn't within image then return
-                if (mpos.X < 2 || mpos.Y < 2 && mpos.X > _imageControl.Source.Width - 3 || mpos.Y > _imageControl.Source.Height - 3)
+                if(mpos.X < 2 || mpos.Y < 2 &&
+                    mpos.X > _finalImage.PixelWidth - 3 || mpos.Y > _finalImage.PixelWidth - 3)
                     return;
                 // States: unselected -> drag temp point
                 //         selected -> drag selected
-                if (_selectedPoint.IsNullPoint)
+                if(_selectedPoint.IsNullPoint)
                 {
                     MoveTempPoint(mpos);
                 }
@@ -372,8 +391,6 @@ namespace CamControls
             }
             base.OnMouseMove(e);
         }
-
-        public event PointImageEventHandler SelectedPointChanged;
 
         // Toggle point showing
         private void _cbTogglePoints_Checked(object sender, RoutedEventArgs e)
@@ -425,7 +442,7 @@ namespace CamControls
                     var removed = SelectedPoint;
                     RemovePoint(SelectedPoint);
                     SelectedPoint = new PointImagePoint(true);
-                    if (PointDeleted != null)
+                    if(PointDeleted != null)
                         PointDeleted(this, new PointImageEventArgs()
                         {
                             OldImagePoint = removed

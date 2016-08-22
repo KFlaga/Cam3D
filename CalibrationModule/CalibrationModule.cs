@@ -4,14 +4,14 @@ namespace CalibrationModule
 {
     public class CalibModule : CamCore.Module
     {
-        private UserControl _calibControl = null;
+        private CalibrationModeTabs _calibControl = null;
 
         public override string Name { get { return "Calibration Module"; } } // Name which user sees
         public override UserControl MainPanel
         {
             get
             {
-                if (_calibControl == null)
+                if(_calibControl == null)
                     _calibControl = new CalibrationModeTabs();
                 return _calibControl;
             }
@@ -25,6 +25,14 @@ namespace CalibrationModule
         public override bool StartModule()
         {
             return true;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if(disposing)
+            {
+                _calibControl.Dispose();
+            }
         }
     }
 }

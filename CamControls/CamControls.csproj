@@ -55,9 +55,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AlgorithmWindow.xaml.cs">
+      <DependentUpon>AlgorithmWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="FormatTextBox\DoubleTextBox.cs" />
     <Compile Include="FormatTextBox\IntegerTextBox.cs" />
     <Compile Include="FormatTextBox\NumberTextBox.cs" />
+    <Compile Include="ParametersSelectionPanel.xaml.cs">
+      <DependentUpon>ParametersSelectionPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ParametersSelectionWindow.xaml.cs">
+      <DependentUpon>ParametersSelectionWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="PointImageEventArgs.cs" />
     <Compile Include="PointImagePoint.cs" />
     <Compile Include="MatrixControl.xaml.cs">
@@ -71,6 +80,9 @@
     <Compile Include="FormatTextBox\UnsignedIntegerTextBox.cs" />
     <Compile Include="ColorPicker.xaml.cs">
       <DependentUpon>ColorPicker.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ParametrizedProcessorsSelectionWindow.xaml.cs">
+      <DependentUpon>ParametrizedProcessorsSelectionWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="ZoomingScrollControl.xaml.cs">
       <DependentUpon>ZoomingScrollControl.xaml</DependentUpon>
@@ -86,15 +98,31 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="AlgorithmWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MatrixControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ParametersSelectionPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ParametersSelectionWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="PointImage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ColorPicker.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ParametrizedProcessorsSelectionWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

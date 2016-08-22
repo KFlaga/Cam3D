@@ -68,9 +68,6 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AutoCornersOptionsWindow.xaml.cs">
-      <DependentUpon>AutoCornersOptionsWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Image3DConstructionModule.cs" />
     <Compile Include="PointImagesTabs.xaml.cs">
       <DependentUpon>PointImagesTabs.xaml</DependentUpon>
@@ -123,10 +120,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="AutoCornersOptionsWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="PointImagesTabs.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

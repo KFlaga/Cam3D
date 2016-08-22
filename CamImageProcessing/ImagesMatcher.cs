@@ -1,19 +1,27 @@
 ﻿using CamCore;
-using MathNet.Numerics.LinearAlgebra.Single;
+using MathNet.Numerics.LinearAlgebra.Double;
 using System.Collections.Generic;
 
 namespace CamImageProcessing
 {
-    public abstract class ImagesMatcher
+    public abstract class ImagesMatcher : IParametrizedProcessor
     {
-        public List<ProcessorParameter> Parameters { get; protected set; }
+        private List<ProcessorParameter> _parameters;
+        public List<ProcessorParameter> Parameters
+        {
+            get { return _parameters; }
+            protected set { _parameters = value; }
+        }
+
+        public abstract void InitParameters();
+        public abstract void UpdateParameters();
+
         public GrayScaleImage LeftImage { get; set; }
         public GrayScaleImage RightImage { get; set; }
 
         public List<Camera3DPoint> MatchedPoints { get; protected set; }
 
         public abstract bool Match();
-        protected abstract void InitParameters();
 
         public ImagesMatcher()
         {

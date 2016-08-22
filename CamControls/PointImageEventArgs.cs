@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Media.Imaging;
 
 namespace CamControls
 {
@@ -14,4 +15,10 @@ namespace CamControls
     }
 
     public delegate void PointImageEventHandler(object sender, PointImageEventArgs e);
+
+    public class ImageChangedEventArgs
+    {
+        public BitmapSource OldImage { get; set; }
+        public BitmapSource NewImage { get; set; }
+    }
 }

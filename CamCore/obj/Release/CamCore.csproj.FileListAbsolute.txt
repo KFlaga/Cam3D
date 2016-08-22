@@ -1,0 +1,12 @@
+C:\Users\Kamil\Documents\Visual Studio 2012\Projects\Cam3D\CamCore\bin\Release\CamCore.dll
+C:\Users\Kamil\Documents\Visual Studio 2012\Projects\Cam3D\CamCore\bin\Release\CamCore.pdb
+C:\Users\Kamil\Documents\Visual Studio 2012\Projects\Cam3D\CamCore\bin\Release\MathNet.Numerics.dll
+C:\Users\Kamil\Documents\Visual Studio 2012\Projects\Cam3D\CamCore\bin\Release\WriteableBitmapEx.Wpf.dll
+C:\Users\Kamil\Documents\Visual Studio 2012\Projects\Cam3D\CamCore\bin\Release\MathNet.Numerics.xml
+C:\Users\Kamil\Documents\Visual Studio 2012\Projects\Cam3D\CamCore\bin\Release\WriteableBitmapEx.Wpf.pdb
+C:\Users\Kamil\Documents\Visual Studio 2012\Projects\Cam3D\CamCore\bin\Release\WriteableBitmapEx.Wpf.xml
+C:\Users\Kamil\Documents\Visual Studio 2012\Projects\Cam3D\CamCore\obj\Release\CamCore.csprojResolveAssemblyReference.cache
+C:\Users\Kamil\Documents\Visual Studio 2012\Projects\Cam3D\CamCore\obj\Release\CamCore.Properties.Resources.resources
+C:\Users\Kamil\Documents\Visual Studio 2012\Projects\Cam3D\CamCore\obj\Release\CamCore.csproj.GenerateResource.Cache
+C:\Users\Kamil\Documents\Visual Studio 2012\Projects\Cam3D\CamCore\obj\Release\CamCore.dll
+C:\Users\Kamil\Documents\Visual Studio 2012\Projects\Cam3D\CamCore\obj\Release\CamCore.pdb

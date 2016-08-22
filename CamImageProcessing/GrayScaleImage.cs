@@ -1,17 +1,19 @@
 ﻿using MathNet.Numerics.LinearAlgebra;
-using MathNet.Numerics.LinearAlgebra.Single;
+using MathNet.Numerics.LinearAlgebra.Double;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using Matrix = MathNet.Numerics.LinearAlgebra.Single.Matrix;
+using static CamCore.MatrixExtensions;
 
 namespace CamImageProcessing
 {
+    [DebuggerTypeProxy(typeof(GrayImageDebugView))]
     public class GrayScaleImage
     {
-        public Matrix<float> ImageMatrix { get; set; }
+        public Matrix<double> ImageMatrix { get; set; }
         public int SizeX { get { return ImageMatrix.ColumnCount; } }
         public int SizeY { get { return ImageMatrix.RowCount; } }
 
@@ -19,7 +21,7 @@ namespace CamImageProcessing
         public double DpiX { get; set; }
         public double DpiY { get; set; }
 
-        public float this[int y, int x]
+        public double this[int y, int x]
         {
             get
             {
@@ -33,7 +35,7 @@ namespace CamImageProcessing
 
         public void FromColorImage(ColorImage cimage)
         {
-            ImageMatrix = new DenseMatrix(SizeY, SizeX);
+            ImageMatrix = new DenseMatrix(cimage.SizeY, cimage.SizeX);
             int x, y;
 
             for(x = 0; x < SizeX; ++x)
@@ -67,8 +69,8 @@ namespace CamImageProcessing
             DpiX = bitmap.DpiX;
             DpiY = bitmap.DpiY;
 
-            int stride = bitmap.PixelWidth * sizeof(float);
-            float[] data = new float[bitmap.PixelHeight * bitmap.PixelWidth];
+            int stride = bitmap.PixelWidth * sizeof(double);
+            double[] data = new double[bitmap.PixelHeight * bitmap.PixelWidth];
             bitmap.CopyPixels(data, stride, 0);
             // Bitmap stores data in row-major order and matrix in column major
             // So store data to transposed matrix and transpose it so bitmap[y,x] == matrix[y,x]
@@ -97,8 +99,8 @@ namespace CamImageProcessing
             DpiX = bitmap.DpiX;
             DpiY = bitmap.DpiY;
 
-            int stride = area.Width * sizeof(float);
-            float[] data = new float[area.Height * area.Width];
+            int stride = area.Width * sizeof(double);
+            double[] data = new double[area.Height * area.Width];
             bitmap.CopyPixels(area, data, stride, 0);
             ImageMatrix = new DenseMatrix(area.Width, area.Height, data);
             ImageMatrix = ImageMatrix.Transpose();
@@ -113,14 +115,49 @@ namespace CamImageProcessing
 
         public BitmapSource ToBitmapSource(Int32Rect area)
         {
-            Matrix<float> submat = ImageMatrix.SubMatrix(area.Y, area.Height, area.X, area.Width);
+            Matrix<double> submat = ImageMatrix.SubMatrix(area.Y, area.Height, area.X, area.Width);
             int stride = area.Width * sizeof(float);
             return BitmapSource.Create(SizeX, SizeY, DpiX, DpiY, PixelFormats.Gray32Float, null,
                submat.Storage.ToRowMajorArray(), stride);
         }
+        
+        internal class GrayImageDebugView
+        {
+            private GrayScaleImage _image;
 
-        // public To/FromColorImage
-        // public To/FromGreyScaleBitmapSource
-        // public To/FromColorBitmapSource
+            public GrayImageDebugView(GrayScaleImage img)
+            {
+                _image = img;
+            }
+
+            public DoubleMatrixVisualiser ImageMatrix
+            {
+                get
+                {
+                    return new DoubleMatrixVisualiser(_image.ImageMatrix);
+                }
+            }
+
+            public int Rows
+            {
+                get
+                {
+                    return _image.SizeY;
+                }
+            }
+
+            public int Columns
+            {
+                get
+                {
+                    return _image.SizeX;
+                }
+            }
+
+            public override string ToString()
+            {
+                return "Gray. Rows : " + Rows.ToString() + ", Columns: " + Columns.ToString();
+            }
+        }
     }
 }

@@ -1,19 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using System.Xml;
 
 namespace CalibrationModule
@@ -182,11 +173,11 @@ namespace CalibrationModule
                 CalibrationPoint cpoint = new CalibrationPoint();
                 var imgx = pointNode.Attributes["imgx"];
                 if (imgx != null)
-                    cpoint.ImgX = float.Parse(imgx.Value);
+                    cpoint.ImgX = double.Parse(imgx.Value);
 
                 var imgy = pointNode.Attributes["imgy"];
                 if (imgy != null)
-                    cpoint.ImgY = float.Parse(imgy.Value);
+                    cpoint.ImgY = double.Parse(imgy.Value);
 
                 var gridNum = pointNode.Attributes["grid"];
                 if (gridNum != null)
@@ -202,15 +193,15 @@ namespace CalibrationModule
 
                 var realx = pointNode.Attributes["realX"];
                 if (realx != null)
-                    cpoint.RealX = float.Parse(realx.Value);
+                    cpoint.RealX = double.Parse(realx.Value);
 
                 var realy = pointNode.Attributes["realY"];
                 if (realy != null)
-                    cpoint.RealY = float.Parse(realy.Value);
+                    cpoint.RealY = double.Parse(realy.Value);
 
                 var realz = pointNode.Attributes["realZ"];
                 if (realz != null)
-                    cpoint.RealZ = float.Parse(realz.Value);
+                    cpoint.RealZ = double.Parse(realz.Value);
 
                 _pointList.Add(cpoint);
             }

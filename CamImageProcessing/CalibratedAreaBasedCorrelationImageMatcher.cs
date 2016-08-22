@@ -1,5 +1,6 @@
-﻿using MathNet.Numerics.LinearAlgebra;
-using MathNet.Numerics.LinearAlgebra.Single;
+﻿using CamCore;
+using MathNet.Numerics.LinearAlgebra;
+using MathNet.Numerics.LinearAlgebra.Double;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,29 +18,23 @@ namespace CamImageProcessing
         public int FinalSizeY { get; protected set; }
 
         private int _LoG_size;
-        private float _LoG_sigma;
+        private double _LoG_sigma;
         private int _patchSize;
         private bool _useSmoothCorrelation;
-        private float _t_match;
+        private double _t_match;
         private Patch.CorrelationComputer _corrComputer;
 
-        private Matrix<float> _leftFiltered;
-        private Matrix<float> _rightFiltered;
+        private Matrix<double> _leftFiltered;
+        private Matrix<double> _rightFiltered;
         private Patch _leftPatch;
         private Patch _rightPatch;
 
-        private Matrix<float>[] _leftDisparities;
-        private Matrix<float>[] _rightDisparities;
-
-        public CalibratedAreaBasedCorrelationImageMatcher()
-        {
-            InitParameters();
-        }
+        private Matrix<double>[] _leftDisparities;
+        private Matrix<double>[] _rightDisparities;
 
         public override bool Match()
         {
             ComputeEpiGeometry();
-            SetParameters();
             PrefilterImages();
             InitPatches();
             MatchLeft();
@@ -53,30 +48,11 @@ namespace CamImageProcessing
             return true;
         }
 
-        private void SetParameters()
-        {
-            _LoG_sigma = (float)ProcessorParameter.FindValue("LFD", Parameters);
-            _LoG_size = (int)ProcessorParameter.FindValue("LFR", Parameters);
-            _patchSize = (int)ProcessorParameter.FindValue("CMPS", Parameters);
-
-            _useSmoothCorrelation = (bool)ProcessorParameter.FindValue("USC", Parameters);
-            if (_useSmoothCorrelation)
-                _corrComputer = Patch.ComputePatchesSmoothCorrelation;
-            else
-                _corrComputer = Patch.ComputePatchesCorrelation;
-
-            _t_match = (float)ProcessorParameter.FindValue("CMT", Parameters);
-            _maxDisparity = (int)ProcessorParameter.FindValue("MD", Parameters);
-        }
-
         private void PrefilterImages()
         {
-            PreMatchFilter = new ImageFilter();
-            PreMatchFilter.Filter = ImageFilter.GetFilter_LoGNorm(_LoG_size, _LoG_sigma);
-            PreMatchFilter.Image = this.LeftImage;
-            _leftFiltered = PreMatchFilter.ApplyFilter().ImageMatrix;
-            PreMatchFilter.Image = this.RightImage;
-            _rightFiltered = PreMatchFilter.ApplyFilter().ImageMatrix;
+            Matrix<double> filter = ImageFilter.GetFilter_LoGNorm(_LoG_size, _LoG_sigma);
+            _leftFiltered = ImageFilter.ApplyFilter(LeftImage.ImageMatrix, filter);
+            _rightFiltered = ImageFilter.ApplyFilter(RightImage.ImageMatrix, filter);
 
             FinalSizeX = _leftFiltered.ColumnCount;
             FinalSizeY = _leftFiltered.RowCount;
@@ -106,14 +82,14 @@ namespace CamImageProcessing
             _leftDisparities[2] = new DenseMatrix(FinalSizeY, FinalSizeX);
 
             int y, x, p;
-            float bestMatch, match;
+            double bestMatch, match;
             int ps2 = _patchSize / 2;
 
             // For each point in feature map check if theres feature 
             // if yes then find best match
-            for (y = ps2; y < FinalSizeY - ps2; ++y)
+            for(y = ps2; y < FinalSizeY - ps2; ++y)
             {
-                for (x = ps2; x < FinalSizeX - ps2; ++x)
+                for(x = ps2; x < FinalSizeX - ps2; ++x)
                 {
                     bestMatch = 0.0f;
 
@@ -124,13 +100,13 @@ namespace CamImageProcessing
                     FindPotentialMatchPoints(y, x, true);
                     int pointCount = _potentPoints.Length / 2;
 
-                    for (p = 0; p < pointCount; p++)
+                    for(p = 0; p < pointCount; p++)
                     {
                         _rightPatch.StartCol = x + _potentPoints[p, 1] - ps2;
                         _rightPatch.StartRow = y + _potentPoints[p, 0] - ps2;
                         match = _corrComputer(_leftPatch, _rightPatch, 1.3f * _LoG_sigma);
 
-                        if (match > bestMatch)
+                        if(match > bestMatch)
                         {
                             bestMatch = match;
                             _leftDisparities[1][y, x] = _potentPoints[p, 1];
@@ -138,7 +114,7 @@ namespace CamImageProcessing
                         }
                     }
 
-                    if (bestMatch > _t_match)
+                    if(bestMatch > _t_match)
                     {
                         _leftDisparities[0][y, x] = 1;
                     }
@@ -158,14 +134,14 @@ namespace CamImageProcessing
             _rightDisparities[2] = new DenseMatrix(FinalSizeY, FinalSizeX);
 
             int y, x, p;
-            float bestMatch, match;
+            double bestMatch, match;
             int ps2 = _patchSize / 2;
 
             // For each point in feature map check if theres feature 
             // if yes then find best match
-            for (y = ps2; y < FinalSizeY - ps2; ++y)
+            for(y = ps2; y < FinalSizeY - ps2; ++y)
             {
-                for (x = ps2; x < FinalSizeX - ps2; ++x)
+                for(x = ps2; x < FinalSizeX - ps2; ++x)
                 {
                     bestMatch = 0.0f;
 
@@ -175,13 +151,13 @@ namespace CamImageProcessing
                     FindPotentialMatchPoints(y, x, false);
                     int pointCount = _potentPoints.Length / 2;
 
-                    for (p = 0; p < pointCount; p++)
+                    for(p = 0; p < pointCount; p++)
                     {
                         _leftPatch.StartCol = x + _potentPoints[p, 1] - ps2;
                         _leftPatch.StartRow = y + _potentPoints[p, 0] - ps2;
                         match = _corrComputer(_leftPatch, _rightPatch, 1.3f * _LoG_sigma);
 
-                        if (match > bestMatch)
+                        if(match > bestMatch)
                         {
                             bestMatch = match;
                             _rightDisparities[1][y, x] = _potentPoints[p, 1];
@@ -189,7 +165,7 @@ namespace CamImageProcessing
                         }
                     }
 
-                    if (bestMatch > _t_match)
+                    if(bestMatch > _t_match)
                     {
                         _rightDisparities[0][y, x] = 1;
                     }
@@ -206,13 +182,13 @@ namespace CamImageProcessing
             MatchedPoints = new List<CamCore.Camera3DPoint>();
             int y, x;
             int ps2 = _patchSize / 2;
-            float disp_xl, disp_yl, disp_xr, disp_yr;
+            double disp_xl, disp_yl, disp_xr, disp_yr;
 
-            for (y = ps2; y < FinalSizeY - ps2; ++y)
+            for(y = ps2; y < FinalSizeY - ps2; ++y)
             {
-                for (x = ps2; x < FinalSizeX - ps2; ++x)
+                for(x = ps2; x < FinalSizeX - ps2; ++x)
                 {
-                    if (_leftDisparities[0][y, x] > 0) // if point matched
+                    if(_leftDisparities[0][y, x] > 0) // if point matched
                     {
                         disp_xl = _leftDisparities[1][y, x];
                         disp_yl = _leftDisparities[2][y, x];
@@ -220,7 +196,7 @@ namespace CamImageProcessing
                         disp_xr = _rightDisparities[1][y + (int)disp_yl, x + (int)disp_xl];
                         disp_yr = _rightDisparities[2][y + (int)disp_yl, x + (int)disp_xl];
 
-                        if (Math.Abs((disp_xl + disp_xr)) + Math.Abs(disp_yl + disp_yr) <= 2)
+                        if(Math.Abs((disp_xl + disp_xr)) + Math.Abs(disp_yl + disp_yr) <= 2)
                         {
                             CamCore.Camera3DPoint matchedPoint = new CamCore.Camera3DPoint()
                             {
@@ -234,7 +210,7 @@ namespace CamImageProcessing
             }
         }
 
-        protected override void InitParameters()
+        public override void InitParameters()
         {
             Parameters = new List<ProcessorParameter>();
 
@@ -273,6 +249,22 @@ namespace CamImageProcessing
                "System.Int32", 30, 0, 30000);
 
             Parameters.Add(maxDisp);
+        }
+
+        public override void UpdateParameters()
+        {
+            _LoG_sigma = (float)ProcessorParameter.FindValue("LFD", Parameters);
+            _LoG_size = (int)ProcessorParameter.FindValue("LFR", Parameters);
+            _patchSize = (int)ProcessorParameter.FindValue("CMPS", Parameters);
+
+            _useSmoothCorrelation = (bool)ProcessorParameter.FindValue("USC", Parameters);
+            if(_useSmoothCorrelation)
+                _corrComputer = Patch.ComputePatchesSmoothCorrelation;
+            else
+                _corrComputer = Patch.ComputePatchesCorrelation;
+
+            _t_match = (float)ProcessorParameter.FindValue("CMT", Parameters);
+            _maxDisparity = (int)ProcessorParameter.FindValue("MD", Parameters);
         }
     }
 }

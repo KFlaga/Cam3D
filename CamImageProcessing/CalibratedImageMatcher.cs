@@ -10,8 +10,8 @@ namespace CamImageProcessing
     {
         CamCore.CalibrationData CalibrationData { get { return CamCore.CalibrationData.Data; } }
 
-        protected float _F1L, _F2L, _F3L;
-        protected float _F1R, _F2R, _F3R;
+        protected double _F1L, _F2L, _F3L;
+        protected double _F1R, _F2R, _F3R;
         protected int _maxDisparity;
 
         protected int[,] _potentPoints; // Potential points to match ( lie near epi line witihin
@@ -34,7 +34,7 @@ namespace CamImageProcessing
         // forLeftImage -> ref image is left ( y,x from left y+dy,x+dx from right )
         protected void FindPotentialMatchPoints(int y, int x, bool forLeftImage)
         {
-            float epiA, epiB, epiC;
+            double epiA, epiB, epiC;
             if (forLeftImage)
             {
                 epiA = _F1L * x;

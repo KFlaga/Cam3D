@@ -1,10 +1,10 @@
-﻿using Matrix = MathNet.Numerics.LinearAlgebra.Matrix<float>;
+﻿using Matrix = MathNet.Numerics.LinearAlgebra.Matrix<double>;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MathNet.Numerics.LinearAlgebra.Single;
+using MathNet.Numerics.LinearAlgebra.Double;
 
 namespace CamImageProcessing
 {
@@ -25,7 +25,7 @@ namespace CamImageProcessing
             int ymax = A.RowCount - row2;
 
             int y, x, dx, dy;
-            float maskSum;
+            double maskSum;
 
             for ( y = row2; y < ymax; ++y)
                 for ( x = col2; x < xmax; ++x)
@@ -59,7 +59,7 @@ namespace CamImageProcessing
             for (int y = row2; y < ymax; ++y)
                 for (int x = col2; x < xmax; ++x)
                 {
-                    float maskSum = 0;
+                    double maskSum = 0;
                     for (int dy = -row2; dy <= row2; dy++)
                         for (int dx = -col2; dx <= col2; dx++)
                         {
@@ -82,7 +82,7 @@ namespace CamImageProcessing
             for (int y = 0; y < ymax; ++y)
                 for (int x = len2; x < xmax; ++x)
                 {
-                    float maskSum = 0;
+                    double maskSum = 0;
                     for (int dx = -len2; dx <= len2; dx++)
                     {
                        maskSum += A[y, x + dx] * B[len2 + dx];
@@ -104,7 +104,7 @@ namespace CamImageProcessing
             for (int y = 0; y < ymax; ++y)
                 for (int x = len2; x < xmax; ++x)
                 {
-                    float maskSum = 0;
+                    double maskSum = 0;
                     for (int dx = -len2; dx <= len2; dx++)
                     {
                         maskSum += A[y, x + dx] * B[len2 + dx];
@@ -126,7 +126,7 @@ namespace CamImageProcessing
             for (int y = len2; y < ymax; ++y)
                 for (int x = 0; x < xmax; ++x)
                 {
-                    float maskSum = 0;
+                    double maskSum = 0;
                     for (int dy = -len2; dy <= len2; dy++)
                     {
                         maskSum += A[y + dy, x] * B[len2 + dy];
@@ -148,7 +148,7 @@ namespace CamImageProcessing
             for (int y = len2; y < ymax; ++y)
                 for (int x = 0; x < xmax; ++x)
                 {
-                    float maskSum = 0;
+                    double maskSum = 0;
                     for (int dy = -len2; dy <= len2; dy++)
                     {
                         maskSum += A[y + dy, x] * B[len2 + dy];

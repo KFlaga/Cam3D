@@ -4,7 +4,6 @@ using CamCore;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media.Media3D;
 
 namespace Image3DModule
 {
@@ -16,6 +15,8 @@ namespace Image3DModule
         private bool _isPointsSelected = false;
         Image3DWindow _3dwindow;
 
+        private ParametrizedProcessorsSelectionWindow _featuresMatchOpts;
+
         public PointImagesTabs()
         {
             Points3D = new List<Camera3DPoint>();
@@ -24,6 +25,15 @@ namespace Image3DModule
             _camImageSec.TemporaryPoint.IsNullChanged += TempPointChanged;
             _camImageFirst.SelectedPointChanged += OnSelectedPointChanged;
             _camImageSec.SelectedPointChanged += OnSelectedPointChanged;
+
+            _featuresMatchOpts = new ParametrizedProcessorsSelectionWindow();
+
+            _featuresMatchOpts.AddProcessorFamily("Feature Detector");
+            _featuresMatchOpts.AddToFamily("Feature Detector", new FeatureSUSANDetector());
+
+            _featuresMatchOpts.AddProcessorFamily("Points Matcher");
+            _featuresMatchOpts.AddToFamily("Points Matcher", new LoGCorrelationFeaturesMatcher());
+            _featuresMatchOpts.AddToFamily("Points Matcher", new AreaBasedCorrelationImageMatcher());
         }
 
 
@@ -74,13 +84,12 @@ namespace Image3DModule
         {
             // find corners in images and perform corner-based matching
             // 1 ) Show menu with options to choose corner detector and matcher 
-            AutoCornersOptionsWindow _cornersOpts = new AutoCornersOptionsWindow();
-            _cornersOpts.ShowDialog();
-            if(_cornersOpts.Accepted)
+            _featuresMatchOpts.ShowDialog();
+            if(_featuresMatchOpts.Accepted)
             {
                 // Get detector and matcher and compute
-                FeaturesDetector detector = _cornersOpts.SelectedDetector;
-                ImagesMatcher matcher = _cornersOpts.SelectedMatcher;
+                FeaturesDetector detector = (FeaturesDetector)_featuresMatchOpts.GetSelectedProcessor("Feature Detector");
+                ImagesMatcher matcher = (ImagesMatcher)_featuresMatchOpts.GetSelectedProcessor("Points Matcher");
 
                 GrayScaleImage leftImage = new GrayScaleImage();
                 leftImage.FromBitmapSource(_camImageFirst.ImageSource);
@@ -127,32 +136,32 @@ namespace Image3DModule
             Points3D.Clear();
             Points3D.Add(new Camera3DPoint()
             {
-                Real = new Point3D(0.0, 0.0, 0.0)
+                Real = new Point3D(0.0f, 0.0f, 0.0f)
             });
 
             Points3D.Add(new Camera3DPoint()
             {
-                Real = new Point3D(1.0, 1.0, 0.0)
+                Real = new Point3D(1.0f, 1.0f, 0.0f)
             });
 
             Points3D.Add(new Camera3DPoint()
             {
-                Real = new Point3D(1.0, 0.0, 0.0)
+                Real = new Point3D(1.0f, 0.0f, 0.0f)
             });
 
             Points3D.Add(new Camera3DPoint()
             {
-                Real = new Point3D(0.0, 0.0, -1.0)
+                Real = new Point3D(0.0f, 0.0f, -1.0f)
             });
 
             Points3D.Add(new Camera3DPoint()
             {
-                Real = new Point3D(1.0, 1.0, -1.0)
+                Real = new Point3D(1.0f, 1.0f, -1.0f)
             });
 
             Points3D.Add(new Camera3DPoint()
             {
-                Real = new Point3D(1.0, 0.0, -1.0)
+                Real = new Point3D(1.0f, 0.0f, -1.0f)
             });
 
             if (_3dwindow == null)

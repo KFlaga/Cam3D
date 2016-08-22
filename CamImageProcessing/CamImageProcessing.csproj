@@ -40,6 +40,7 @@
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Numerics" />
     <Reference Include="System.Windows" />
     <Reference Include="System.Xaml" />
@@ -58,17 +59,19 @@
     <Compile Include="CalibratedImageMatcher.cs" />
     <Compile Include="ColorImage.cs" />
     <Compile Include="CornerSUSANDetector.cs" />
-    <Compile Include="FastLoGFilter.cs" />
     <Compile Include="FeaturesDetector.cs" />
     <Compile Include="FeaturesMatcher.cs" />
+    <Compile Include="GaussFilter.cs" />
     <Compile Include="GrayScaleImage.cs" />
+    <Compile Include="HistogramOperations.cs" />
+    <Compile Include="HSLImage.cs" />
     <Compile Include="ImageFilter.cs" />
     <Compile Include="ImageProcessingUtils.cs" />
     <Compile Include="ImagesMatcher.cs" />
     <Compile Include="LoGCorrelationFeaturesMatcher.cs" />
-    <Compile Include="LUTs.cs" />
+    <Compile Include="LoGFilter.cs" />
+    <Compile Include="MedianFilter.cs" />
     <Compile Include="Patch.cs" />
-    <Compile Include="ProcessorParameters.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
