@@ -13,25 +13,19 @@ namespace CamControls
         {
             int val;
             int oldVal = _curVal;
+
             e.Handled = !int.TryParse(this.Text, out val);
-            if (!e.Handled)
+
+            if(!e.Handled)
                 _curVal = val;
+            else if(Text.Length == 0) // Empty text -> allow
+                _isEmpty = true;
+            else if(_isEmpty) // Bad value entered, but previously was empty, so leave it
+                Text = "";
             else
                 Text = oldVal.ToString();
-
-            _valInRange = false;
 
             base.OnTextChanged(e);
-
-            if (_valInRange)
-            {
-                _curVal = val;
-            }
-            else
-            {
-                _curVal = oldVal;
-                Text = oldVal.ToString();
-            }
         }
 
         public override void SetNumber(object num)

@@ -23,7 +23,6 @@ namespace CamControls
             DependencyProperty.Register("LimitValue", typeof(bool), typeof(NumberTextBox<T>));
 
         protected T _curVal;
-        protected bool _valInRange = true;
 
         public T MaxValue
         {
@@ -50,7 +49,7 @@ namespace CamControls
         {
             get
             {
-                return _curVal;
+                return _isEmpty ? default(T) : _curVal;
             }
             set
             {
@@ -59,6 +58,8 @@ namespace CamControls
                 this.Text = _curVal.ToString();
             }
         }
+
+        protected bool _isEmpty = true;
 
         public NumberTextBox()
         {
@@ -71,21 +72,19 @@ namespace CamControls
             {
                 if (LimitValue)
                 {
-                    if (CurrentValue.CompareTo(MaxValue) > 0 ||
-                        CurrentValue.CompareTo(MinValue) < 0)
+                    if (CurrentValue.CompareTo(MaxValue) > 0 )
                     {
-                        e.Handled = true;
-                        _valInRange = false;
+                        _curVal = MaxValue;
+                        Text = _curVal.ToString();
                     }
-                    else
+                    else if(CurrentValue.CompareTo(MinValue) < 0)
                     {
-                        _valInRange = true;
+                        _curVal = MinValue;
+                        Text = _curVal.ToString();
                     }
                 }
-                else
-                {
-                    _valInRange = true;
-                }
+                
+               _isEmpty = false;
             }
 
             base.OnTextChanged(e);
