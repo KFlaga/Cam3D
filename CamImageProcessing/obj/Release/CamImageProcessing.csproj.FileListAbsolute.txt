@@ -1,9 +1,0 @@
-C:\Users\Kamil\Documents\Visual Studio 2012\Projects\Cam3D\CamImageProcessing\bin\Release\CamImageProcessing.dll
-C:\Users\Kamil\Documents\Visual Studio 2012\Projects\Cam3D\CamImageProcessing\bin\Release\CamImageProcessing.pdb
-C:\Users\Kamil\Documents\Visual Studio 2012\Projects\Cam3D\CamImageProcessing\bin\Release\CamCore.dll
-C:\Users\Kamil\Documents\Visual Studio 2012\Projects\Cam3D\CamImageProcessing\bin\Release\MathNet.Numerics.dll
-C:\Users\Kamil\Documents\Visual Studio 2012\Projects\Cam3D\CamImageProcessing\bin\Release\CamCore.pdb
-C:\Users\Kamil\Documents\Visual Studio 2012\Projects\Cam3D\CamImageProcessing\bin\Release\MathNet.Numerics.xml
-C:\Users\Kamil\Documents\Visual Studio 2012\Projects\Cam3D\CamImageProcessing\obj\Release\CamImageProcessing.csprojResolveAssemblyReference.cache
-C:\Users\Kamil\Documents\Visual Studio 2012\Projects\Cam3D\CamImageProcessing\obj\Release\CamImageProcessing.dll
-C:\Users\Kamil\Documents\Visual Studio 2012\Projects\Cam3D\CamImageProcessing\obj\Release\CamImageProcessing.pdb
