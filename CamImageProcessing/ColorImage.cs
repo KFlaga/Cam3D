@@ -20,7 +20,7 @@ namespace CamImageProcessing
     [DebuggerTypeProxy(typeof(ColorImageDebugView))]
     public class ColorImage
     {
-        public Matrix<double>[] ImageMatrix { get; set; }
+        public Matrix<double>[] ImageMatrix { get; set; } = new Matrix<double>[3];
         public int SizeX { get { return ImageMatrix[0].ColumnCount; } }
         public int SizeY { get { return ImageMatrix[0].RowCount; } }
 
@@ -64,9 +64,22 @@ namespace CamImageProcessing
             }
         }
 
+        public double[] this[int y, int x]
+        {
+            get
+            {
+                return new double[3] { ImageMatrix[0].At(y,x), ImageMatrix[1].At(y, x), ImageMatrix[2].At(y, x) };
+            }
+            set
+            {
+                ImageMatrix[0].At(y, x, value[0]);
+                ImageMatrix[1].At(y, x, value[1]);
+                ImageMatrix[2].At(y, x, value[2]);
+            }
+        }
+
         public void FromGrayImage(GrayScaleImage gimage)
         {
-            ImageMatrix = new Matrix<double>[3];
             ImageMatrix[0] = new DenseMatrix(gimage.SizeY, gimage.SizeX);
             ImageMatrix[1] = new DenseMatrix(gimage.SizeY, gimage.SizeX);
             ImageMatrix[2] = new DenseMatrix(gimage.SizeY, gimage.SizeX);
@@ -85,7 +98,6 @@ namespace CamImageProcessing
 
         public void FromHSIImage(HSIImage hslimage)
         {
-            ImageMatrix = new Matrix<double>[3];
             ImageMatrix[0] = new DenseMatrix(hslimage.SizeY, hslimage.SizeX);
             ImageMatrix[1] = new DenseMatrix(hslimage.SizeY, hslimage.SizeX);
             ImageMatrix[2] = new DenseMatrix(hslimage.SizeY, hslimage.SizeX);
@@ -129,8 +141,7 @@ namespace CamImageProcessing
             int stride = bitmap.PixelWidth * 4 * sizeof(float);
             float[] data = new float[bitmap.PixelHeight * bitmap.PixelWidth * 4];
             bitmap.CopyPixels(data, stride, 0);
-
-            ImageMatrix = new Matrix<double>[3];
+            
             ImageMatrix[0] = new DenseMatrix(bitmap.PixelHeight, bitmap.PixelWidth);
             ImageMatrix[1] = new DenseMatrix(bitmap.PixelHeight, bitmap.PixelWidth);
             ImageMatrix[2] = new DenseMatrix(bitmap.PixelHeight, bitmap.PixelWidth);
@@ -173,8 +184,7 @@ namespace CamImageProcessing
             int stride = area.Width * 4 * sizeof(float);
             float[] data = new float[area.Height * area.Width * 4];
             bitmap.CopyPixels(area, data, stride, 0);
-
-            ImageMatrix = new Matrix<double>[3];
+            
             ImageMatrix[0] = new DenseMatrix(area.Height, area.Width);
             ImageMatrix[1] = new DenseMatrix(area.Height, area.Width);
             ImageMatrix[2] = new DenseMatrix(area.Height, area.Width);
@@ -215,8 +225,8 @@ namespace CamImageProcessing
 
         public BitmapSource ToBitmapSource(Int32Rect area)
         {
-            int stride = SizeX * 4 * sizeof(float);
-            float[] data = new float[SizeY * SizeX * 4];
+            int stride = area.Width * 4 * sizeof(float);
+            float[] data = new float[area.Width * area.Height * 4];
 
             for(int imgy = 0; imgy < area.Height; ++imgy)
             {

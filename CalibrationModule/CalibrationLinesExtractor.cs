@@ -18,36 +18,39 @@ namespace CalibrationModule
 
         public void ExtractLines()
         {
-            CalibrationLines = new List<List<Vector2>>(CalibGrid.RowCount + CalibGrid.ColumnCount);
-
-            // For each row extract line from valid shapes
-            for(int r = 0; r < CalibGrid.RowCount; ++r)
+            if(CalibGrid != null)
             {
-                var line = new List<Vector2>(CalibGrid.ColumnCount);
-                for(int c = 0; c < CalibGrid.ColumnCount; ++c)
-                {
-                    if(CalibGrid[r, c] != null && CalibGrid[r,c].IsInvalid == false)
-                    {
-                        line.Add(CalibGrid[r, c].GravityCenter);
-                    }
-                }
-                if(line.Count >= 3)
-                    CalibrationLines.Add(line);
-            }
+                CalibrationLines = new List<List<Vector2>>(CalibGrid.RowCount + CalibGrid.ColumnCount);
 
-            // Same for each column
-            for(int c = 0; c < CalibGrid.ColumnCount; ++c)
-            {
-                var line = new List<Vector2>(CalibGrid.RowCount);
+                // For each row extract line from valid shapes
                 for(int r = 0; r < CalibGrid.RowCount; ++r)
                 {
-                    if(CalibGrid[r, c] != null && CalibGrid[r, c].IsInvalid == false)
+                    var line = new List<Vector2>(CalibGrid.ColumnCount);
+                    for(int c = 0; c < CalibGrid.ColumnCount; ++c)
                     {
-                        line.Add(CalibGrid[r, c].GravityCenter);
+                        if(CalibGrid[r, c] != null && CalibGrid[r, c].IsInvalid == false)
+                        {
+                            line.Add(CalibGrid[r, c].GravityCenter);
+                        }
                     }
+                    if(line.Count >= 3)
+                        CalibrationLines.Add(line);
                 }
-                if(line.Count >= 3)
-                    CalibrationLines.Add(line);
+
+                // Same for each column
+                for(int c = 0; c < CalibGrid.ColumnCount; ++c)
+                {
+                    var line = new List<Vector2>(CalibGrid.RowCount);
+                    for(int r = 0; r < CalibGrid.RowCount; ++r)
+                    {
+                        if(CalibGrid[r, c] != null && CalibGrid[r, c].IsInvalid == false)
+                        {
+                            line.Add(CalibGrid[r, c].GravityCenter);
+                        }
+                    }
+                    if(line.Count >= 3)
+                        CalibrationLines.Add(line);
+                }
             }
         }
     }

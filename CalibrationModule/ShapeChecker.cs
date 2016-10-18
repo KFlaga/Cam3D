@@ -5,7 +5,7 @@ using CamImageProcessing;
 namespace CalibrationModule
 {
     // Returns true if shape fills arbitrary condition ( intended for primary shape test )
-    public abstract class ShapeChecker : IParametrizedProcessor
+    public abstract class ShapeChecker : IParameterizable
     {
         public GrayScaleImage ImageGray { get; set; }
         public ColorImage ImageRGB { get; set; }
@@ -13,8 +13,8 @@ namespace CalibrationModule
 
         public abstract bool CheckShape(CalibrationShape shape);
 
-        private List<ProcessorParameter> _parameters;
-        public List<ProcessorParameter> Parameters
+        private List<AlgorithmParameter> _parameters;
+        public List<AlgorithmParameter> Parameters
         {
             get { return _parameters; }
             protected set { _parameters = value; }
@@ -69,23 +69,21 @@ namespace CalibrationModule
         
         public override void InitParameters()
         {
-            Parameters = new List<ProcessorParameter>();
+            Parameters = new List<AlgorithmParameter>();
 
-            ProcessorParameter radius = new ProcessorParameter(
-                "Check Neighbourhood Radius", "CNR",
-                "System.Int32", 3, 1, 99);
+            AlgorithmParameter radius = new IntParameter(
+                "Check Neighbourhood Radius", "CNR",  3, 1, 99);
             Parameters.Add(radius);
 
-            ProcessorParameter redTresh = new ProcessorParameter(
-               "Red Value Treshold", "RVT",
-               "System.Single", 0.25f, 0.0f, 1.0f);
+            AlgorithmParameter redTresh = new DoubleParameter(
+               "Red Value Treshold", "RVT", 0.25, 0.0, 1.0);
             Parameters.Add(redTresh);
         }
 
         public override void UpdateParameters()
         {
-            NeighbourhoodRadius = (int)ProcessorParameter.FindValue("CNR", Parameters);
-            RedTreshold = (float)ProcessorParameter.FindValue("RVT", Parameters);
+            NeighbourhoodRadius = AlgorithmParameter.FindValue<int>("CNR", Parameters);
+            RedTreshold = AlgorithmParameter.FindValue<double>("RVT", Parameters);
         }
 
         public override string ToString()

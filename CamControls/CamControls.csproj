@@ -42,6 +42,7 @@
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Numerics" />
     <Reference Include="System.Windows" />
     <Reference Include="System.Xaml" />
@@ -58,6 +59,11 @@
     <Compile Include="AlgorithmWindow.xaml.cs">
       <DependentUpon>AlgorithmWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ParametrizedProcessorsSelectionPanel.xaml.cs">
+      <DependentUpon>ParametrizedProcessorsSelectionPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SGMDown.cs" />
+    <Compile Include="FinalParametersInput.cs" />
     <Compile Include="FormatTextBox\DoubleTextBox.cs" />
     <Compile Include="FormatTextBox\IntegerTextBox.cs" />
     <Compile Include="FormatTextBox\NumberTextBox.cs" />
@@ -113,6 +119,10 @@
     <Page Include="ParametersSelectionWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ParametrizedProcessorsSelectionPanel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="PointImage.xaml">
       <SubType>Designer</SubType>

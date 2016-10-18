@@ -17,24 +17,22 @@ namespace CamImageProcessing
 
         public override void InitParameters()
         {
-            Parameters = new List<ProcessorParameter>();
-            ProcessorParameter winRadius = new ProcessorParameter(
-                "Filter Window Size", "FWS",
-                "System.Int32", 4, 1, 101);
+            Parameters = new List<AlgorithmParameter>();
+            AlgorithmParameter winRadius = new IntParameter(
+                "Filter Window Size", "FWS", 4, 1, 101);
 
             Parameters.Add(winRadius);
 
-            ProcessorParameter deviation = new ProcessorParameter(
-               "Filter Deviation", "FD",
-               "System.Single", 1.6f, 0.01f, 50.0f);
+            AlgorithmParameter deviation = new DoubleParameter(
+               "Filter Deviation", "FD", 1.6f, 0.01f, 50.0f);
 
             Parameters.Add(deviation);
         }
 
         public override void UpdateParameters()
         {
-            WindowRadius = (int)ProcessorParameter.FindValue("FES", Parameters);
-            Deviation = (double)ProcessorParameter.FindValue("FD", Parameters);
+            WindowRadius = (int)AlgorithmParameter.FindValue("FES", Parameters);
+            Deviation = (double)AlgorithmParameter.FindValue("FD", Parameters);
 
             Filter = ImageFilter.GetFilter_Gauss(2 * WindowRadius + 1, Deviation);
         }

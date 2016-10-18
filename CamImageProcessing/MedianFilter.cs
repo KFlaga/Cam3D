@@ -98,24 +98,22 @@ namespace CamImageProcessing
 
         public override void InitParameters()
         {
-            Parameters = new List<ProcessorParameter>();
-            ProcessorParameter winRadius = new ProcessorParameter(
-                "Filter Window Size", "FWS",
-                "System.Int32", 3, 1, 99);
+            Parameters = new List<AlgorithmParameter>();
+            AlgorithmParameter winRadius = new IntParameter(
+                "Filter Window Size", "FWS", 3, 1, 99);
 
             Parameters.Add(winRadius);
 
-            ProcessorParameter deviation = new ProcessorParameter(
-               "Filter Border", "FB",
-               "System.Boolean", true, false, true);
+            AlgorithmParameter filterBorder = new BooleanParameter(
+               "Filter Border", "FB", true);
 
-            Parameters.Add(deviation);
+            Parameters.Add(filterBorder);
         }
 
         public override void UpdateParameters()
         {
-            WindowRadius = (int)ProcessorParameter.FindValue("FWS", Parameters);
-            FilterBorder = (bool)ProcessorParameter.FindValue("FB", Parameters);
+            WindowRadius = (int)AlgorithmParameter.FindValue("FWS", Parameters);
+            FilterBorder = (bool)AlgorithmParameter.FindValue("FB", Parameters);
         }
     }
 }

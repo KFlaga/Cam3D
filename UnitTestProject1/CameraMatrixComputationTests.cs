@@ -153,9 +153,11 @@ namespace UnitTestProject1
             _calib.HomoPoints();
             _calib.NormalizeImagePoints();
             _calib.NormalizeRealPoints();
+            _calib._pointsNormalised = true;
             _calib.CameraMatrix = _calib.FindLinearEstimationOfCameraMatrix();
             //    _calib.FindNormalisedVariances();
             _calib.DenormaliseCameraMatrix();
+            _calib._pointsNormalised = false;
 
             _eCM = _calib.CameraMatrix;
             double totalDiff = 0.0;
@@ -176,14 +178,19 @@ namespace UnitTestProject1
             }
 
             _calib.HomoPoints();
-            // _calib.NormalizeImagePoints();
-            // _calib.NormalizeRealPoints();
+             _calib.NormalizeImagePoints();
+             _calib.NormalizeRealPoints();
             _calib.CameraMatrix = _calib.FindLinearEstimationOfCameraMatrix();
+            _calib._pointsNormalised = true;
             _calib.FindNormalisedVariances();
+            _calib.UseCovarianceMatrix = true;
             var lecm = _eCM.Clone();
 
-            _calib._geometricErrorMinimalisationAlg.DoComputeJacobianNumerically = true;
-            _calib._geometricErrorMinimalisationAlg.NumericalDerivativeStep = 1e-4;
+            // Disturb camera matrix a little
+  //          _calib.CameraMatrix = AddNoise(_calib.CameraMatrix);
+
+            _calib._miniAlg.DoComputeJacobianNumerically = true;
+            _calib._miniAlg.NumericalDerivativeStep = 1e-4;
             _calib.MinimizeError();
 
             // _calib.DenormaliseCameraMatrix();
@@ -229,7 +236,7 @@ namespace UnitTestProject1
                         "Point after error minimalisation too far : " + (ip - cp.Img).Length());
             }
 
-            var minialg = _calib._geometricErrorMinimalisationAlg;
+            var minialg = _calib._miniAlg;
             // Test conovergence :
             // ||mX-rX|| = ||mX-eX|| + ||rX-eX|| (or squared??)
             // rX - real point from 'points'
@@ -286,7 +293,8 @@ namespace UnitTestProject1
 
             Assert.IsTrue( Math.Abs(len2_mr - len2_re - len2_me) < len2_mr/100.0 ||
                  Math.Abs(Math.Sqrt(len2_mr) - Math.Sqrt(len2_re) - Math.Sqrt(len2_me)) < Math.Sqrt(len2_mr) / 100.0,
-                "Triangle test failed");
+                "Triangle test failed."+" Points distances: LinearDiff = " + totalDiff +
+                 ". MiniDiff = " + estDiff);
 
             Assert.IsTrue(estDiff < totalDiff,
                  "Points after minimalisation are too far. LinearDiff = " + totalDiff +
@@ -325,7 +333,7 @@ namespace UnitTestProject1
 
             _calib.DecomposeCameraMatrix();
 
-            var miniAlg = _calib._geometricErrorMinimalisationAlg;
+            var miniAlg = _calib._miniAlg;
             _calib.PrepareMinimalisationAlg();
             miniAlg.Init();
 
@@ -378,7 +386,7 @@ namespace UnitTestProject1
                 double rz = rand.NextDouble() * (_rangeReal_MaxZ - _rangeReal_MinZ) + _rangeReal_MinZ;
 
                 CalibrationPoint cpoint = new CalibrationPoint();
-                cpoint.Real = new Point3D(rx, ry, rz);
+                cpoint.Real = new Vector3(rx, ry, rz);
 
                 Vector<double> rp = new DenseVector(4);
                 rp[0] = rx;
@@ -429,6 +437,32 @@ namespace UnitTestProject1
             }
 
             return noisedPoints;
+        }
+
+        int _seed = 100;
+        public Matrix<double> AddNoise(Matrix<double> matrix)
+        {
+            Matrix<double> noisedMat = matrix.Clone();
+
+            GaussianNoiseGenerator noise = new GaussianNoiseGenerator();
+            noise.Mean = 0.0;
+            noise.RandomSeed = false;
+            Random rand = new Random(_seed);
+
+            for(int r = 0; r < noisedMat.RowCount; ++r)
+            {
+                for(int c = 0; c < noisedMat.ColumnCount; ++c)
+                {
+                    noise.Seed = rand.Next();
+                    noise.Variance = Math.Abs(noisedMat[r, c]) < 1e-12 ?
+                        1e-12 : Math.Abs(noisedMat[r, c]) / 100.0;
+                    noise.UpdateDistribution();
+
+                    noisedMat[r, c] = noisedMat[r, c] + noise.GetSample();
+                }
+            }
+
+            return noisedMat;
         }
     }
 }

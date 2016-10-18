@@ -11,7 +11,7 @@ namespace CamCore
 {
     public static class FileOperations
     {
-        public delegate void FileDelegate(Stream file);
+        public delegate void FileDelegate(Stream file, string filePath);
 
         public static void LoadFromFile(FileDelegate onFileOpen, string filter)
         {
@@ -23,7 +23,7 @@ namespace CamCore
                 Stream fs = fileDialog.OpenFile();
                 try
                 {
-                    onFileOpen(fs);
+                    onFileOpen(fs, fileDialog.FileName);
                 }
                 catch (Exception exc)
                 {
@@ -43,7 +43,7 @@ namespace CamCore
                 Stream fs = fileDialog.OpenFile();
                 try
                 {
-                    onFileOpen(fs);
+                    onFileOpen(fs, fileDialog.FileName);
                 }
                 catch (Exception exc)
                 {

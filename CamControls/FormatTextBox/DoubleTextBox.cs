@@ -1,5 +1,4 @@
 ﻿
-using System.Text.RegularExpressions;
 using System.Windows.Controls;
 
 namespace CamControls

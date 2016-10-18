@@ -20,8 +20,8 @@ namespace CamControls
     {
         public bool Accepted { get; set; }
 
-        IParametrizedProcessor _processor;
-        public IParametrizedProcessor Processor
+        IParameterizable _processor;
+        public IParameterizable Processor
         {
             get { return _processor; }
             set

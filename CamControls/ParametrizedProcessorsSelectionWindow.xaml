@@ -6,13 +6,13 @@
              xmlns:local="clr-namespace:CamControls"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300"
-        Title="Parametrized Processors Selection" MinHeight="250" MinWidth="350"
-        SizeToContent="WidthAndHeight">
+        MinHeight="250" MinWidth="350" SizeToContent="WidthAndHeight">
     <DockPanel x:Name="_mainPanel">
         <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom" FlowDirection="RightToLeft" VerticalAlignment="Bottom">
             <Button Width="40" Margin="3" Click="Accept">OK</Button>
             <Button Width="40" Margin="3" Click="Cancel">Cancel</Button>
         </StackPanel>
+        <local:ParametrizedProcessorsSelectionPanel x:Name="_panel" DockPanel.Dock="Top"/>
         <Label/>
     </DockPanel>
 </Window>

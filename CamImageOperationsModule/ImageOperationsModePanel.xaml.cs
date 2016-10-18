@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using CamControls;
 using CamImageProcessing;
+using MathNet.Numerics.LinearAlgebra.Double;
 
 namespace CamImageOperationsModule
 {
@@ -162,6 +163,60 @@ namespace CamImageOperationsModule
             _optsWindow_FloodSelect = new ParametersSelectionWindow();
 
             _optsWindow_FuzzySelect = new ParametersSelectionWindow();
+        }
+
+        private void _butFloodSelection_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void _butSegment_Click(object sender, RoutedEventArgs e)
+        {
+            if(_imageControl.ImageSource != null)
+            {
+                ColorImage img = new ColorImage();
+                img.FromBitmapSource(_imageControl.ImageSource);
+
+                var window = new ParametrizedProcessorsSelectionWindow();
+                window.AddProcessorFamily("Segmentation");
+                window.AddToFamily("Segmentation", new MeanShiftSegmentation());
+
+                window.ShowDialog();
+                if(window.Accepted)
+                {
+                    ImageSegmentation segmentation = (ImageSegmentation)window.GetSelectedProcessor("Segmentation");
+
+                    GrayScaleImage imgGray = new GrayScaleImage();
+                    imgGray.FromColorImage(img);
+
+                    //segmentation.SegmentColor(img);
+                    segmentation.SegmentGray(imgGray.ImageMatrix);
+
+                    //var segments = segmentation.Segments_Color;
+                    var segments = segmentation.Segments_Gray;
+                    int[,] indices = segmentation.SegmentAssignments;
+
+                    ColorImage imgFinal = new ColorImage();
+                    imgFinal.ImageMatrix[0] = new DenseMatrix(img.SizeY, img.SizeX);
+                    imgFinal.ImageMatrix[1] = new DenseMatrix(img.SizeY, img.SizeX);
+                    imgFinal.ImageMatrix[2] = new DenseMatrix(img.SizeY, img.SizeX);
+
+                    for(int r = 0; r < img.SizeY; ++r)
+                    {
+                        for(int c = 0; c < img.SizeX; ++c)
+                        {
+                            imgFinal[r, c, RGBChannel.Red] = segments[indices[r, c]].Value;
+                            imgFinal[r, c, RGBChannel.Green] = segments[indices[r, c]].Value;
+                            imgFinal[r, c, RGBChannel.Blue] = segments[indices[r, c]].Value;
+                            //imgFinal[r, c, RGBChannel.Red] = segments[indices[r, c]].Red;
+                            // imgFinal[r, c, RGBChannel.Green] = segments[indices[r, c]].Green;
+                            //imgFinal[r, c, RGBChannel.Blue] = segments[indices[r, c]].Blue;
+                        }
+                    }
+
+                    _imageControl.ImageSource = imgFinal.ToBitmapSource();
+                }
+            }
         }
     }
 }

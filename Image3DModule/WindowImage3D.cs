@@ -16,10 +16,10 @@ namespace Image3DModule
     {
         DXCamera _camera = null;
         RenderGroup _tetraPoints = null;
-        DX11Scene _scene = null;
+        DXScene _scene = null;
 
-        List<KeyValuePair<Camera3DPoint, DX11Tetrahedron>> _pointMap = 
-            new List<KeyValuePair<Camera3DPoint, DX11Tetrahedron>>();
+      //  List<KeyValuePair<Camera3DPoint, DX11Tetrahedron>> _pointMap = 
+       //     new List<KeyValuePair<Camera3DPoint, DX11Tetrahedron>>();
 
         public Image3DWindow()
         {
@@ -31,32 +31,32 @@ namespace Image3DModule
 
         public void AddPoint(Camera3DPoint point)
         {
-            var tetra = new DX11Tetrahedron(Renderer.DxDevice);
-            tetra.SetSize(new Vector3((float)point.Real.X, (float)point.Real.Y, (float)point.Real.Z), 
-                0.05f);
+      //      var tetra = new DX11Tetrahedron(Renderer.DxDevice);
+      //      tetra.SetSize(new SharpDX.Vector3((float)point.Real.X, (float)point.Real.Y, (float)point.Real.Z), 
+      //          0.05f);
+      //
+      //      _pointMap.Add(new KeyValuePair<Camera3DPoint, DX11Tetrahedron>(
+//point, tetra));
 
-            _pointMap.Add(new KeyValuePair<Camera3DPoint, DX11Tetrahedron>(
-                point, tetra));
-
-            _tetraPoints.Models.Add(tetra);
+      //      _tetraPoints.Models.Add(tetra);
         }
 
         public void RemovePoint(Camera3DPoint point)
         {
-            KeyValuePair<Camera3DPoint, DX11Tetrahedron> toRemove =
-                new KeyValuePair<Camera3DPoint, DX11Tetrahedron>(null, null);
-            foreach (var pair in _pointMap)
-            {
-                if (pair.Key == point)
-                {
-                    _tetraPoints.Models.Remove(pair.Value);
-                    pair.Value.Dispose();
-                    toRemove = pair;
-                    break;
-                }
-            }
-            if (toRemove.Key != null)
-                _pointMap.Remove(toRemove);
+            //KeyValuePair<Camera3DPoint, DX11Tetrahedron> toRemove =
+            //    new KeyValuePair<Camera3DPoint, DX11Tetrahedron>(null, null);
+            //foreach (var pair in _pointMap)
+            //{
+            //    if (pair.Key == point)
+            //    {
+            //        _tetraPoints.Models.Remove(pair.Value);
+            //        pair.Value.Dispose();
+            //        toRemove = pair;
+            //        break;
+            //    }
+            //}
+            //if (toRemove.Key != null)
+            //    _pointMap.Remove(toRemove);
         }
 
         protected override void UpdateSize()
@@ -80,7 +80,7 @@ namespace Image3DModule
             _camera = new CamDX.DXCamera();
 
             // Create scene
-            _scene = new CamDX.DX11Scene(Renderer.DxDevice);
+            _scene = new CamDX.DXScene(Renderer.DxDevice);
             Renderer.CurrentScene = _scene;
             _scene.CurrentCamera = _camera;
 
@@ -103,9 +103,9 @@ namespace Image3DModule
                     });
 
             // Bound shaders to render group
-            _tetraPoints.VertexShader = vertexShader;
-            _tetraPoints.PixelShader = pixelShader;
-            _tetraPoints.InputLayout = layout;
+           // _tetraPoints.VertexShader = vertexShader;
+          //  _tetraPoints.PixelShader = pixelShader;
+           // _tetraPoints.InputLayout = layout;
 
             // Now when all is set, enable dx rendering
             IsRendering = true;

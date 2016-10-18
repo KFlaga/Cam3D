@@ -5,7 +5,7 @@ using MathNet.Numerics.LinearAlgebra.Double;
 
 namespace CamCore
 {
-    // Interface for algorithms that minimise problem : find P so that ||f(P)-X||^2 is minimal,
+    // Base for algorithms that minimise problem : find P so that ||f(P)-X||^2 is minimal,
     // where P is parameter vector, X is measurement vector and f(P) is arbitrary mapping function
     // Norm is Euqlidean or Mahalanobis if measurments' covariance matrix is supplied
     // Result of minimalisation ( estimated P ) is stored in ResultsVector
@@ -34,6 +34,8 @@ namespace CamCore
 
         public double MinimumResidiual { get; set; }
         public double BaseResidiual { get; set; }
+
+        public bool Terminate { get; set; } = false; // Set to true to break after next iteration
 
         // Executes whole algorithm -> MeasurementsVector, ParametersVector and Solver 
         // must be set before calling this
@@ -112,7 +114,8 @@ namespace CamCore
 
         public virtual bool CheckIterationEndConditions()
         {
-            return _currentIteration > MaximumIterations ||
+            return Terminate == true ||
+                _currentIteration > MaximumIterations ||
                 _currentResidiual < MaximumResidiual;
         }
 

@@ -53,6 +53,7 @@ namespace CalibrationModule
     {
         public int ImageWidth { get; set; }
         public int ImageHeight { get; set; }
+        public double Scale { get; set; }
 
         public List<Vector2> MeasuredPoints { set; get; } // Image measurments
 
@@ -67,6 +68,7 @@ namespace CalibrationModule
         }
 
         public RadialDistortionModel DistortionModel { get; set; }
+        private Vector<double> _modelParams;
 
         public string Name { get; } = "Radial Distortion Model - Parameters Estimation";
 
@@ -75,48 +77,62 @@ namespace CalibrationModule
 
         public bool SupportsProgress { get; } = true;
         public bool SupportsSuspension { get; } = false;
-        public bool SupportsTermination { get; } = false;
+        public bool SupportsTermination { get; } = true;
 
         public bool SupportsParameters { get; } = true;
-
-        public AlgorithmStatus Status { get; set; } = AlgorithmStatus.Idle;
-
-        private LMDistortionDirectionalLineFitMinimalisation _minimalisation;
-
         public event EventHandler<EventArgs> ParamtersAccepted;
 
+        private AlgorithmStatus _status = AlgorithmStatus.Idle;
+        public AlgorithmStatus Status
+        {
+            get { return _status; }
+            set
+            {
+                AlgorithmStatus old = _status;
+                _status = value;
+                StatusChanged?.Invoke(this, new CamCore.AlgorithmEventArgs()
+                    { CurrentStatus = _status, OldStatus = old });
+            }
+        }
+        public event EventHandler<CamCore.AlgorithmEventArgs> StatusChanged;
+
+        private LMDistortionDirectionalLineFitMinimalisation _minimalisation;
+        
         public RadialDistortionCorrector()
         {
             _minimalisation = new LMDistortionDirectionalLineFitMinimalisation();
-            _minimalisation.UseCovarianceMatrix = false;
             _minimalisation.MaximumIterations = 100;
+            _minimalisation.DoComputeJacobianNumerically = true;
+            _minimalisation.NumericalDerivativeStep = 1e-4;
+            _minimalisation.UseCovarianceMatrix = false;
+            _minimalisation.DumpingMethodUsed = LevenbergMarquardtBaseAlgorithm.DumpingMethod.Multiplicative;
         }
 
         // Computes parameters of model (CorrectionLines should be set)
         public void ComputeCorrectionParameters()
         {
+            _modelParams.CopyTo(DistortionModel.Parameters);
             // 1) Scale lines so that max radius sqrt(w^2+h^2) is equal to 1
-            double scale = 1.0 / Math.Sqrt(ImageHeight * ImageHeight + ImageWidth * ImageWidth);
+            Scale = 1.0 / Math.Sqrt(ImageHeight * ImageHeight + ImageWidth * ImageWidth);
+            DistortionModel.ImageScale = Scale;
             List<List<Vector2>> scaledLines = new List<List<Vector2>>();
             for(int l = 0; l < _lines.Count; ++l)
             {
                 List<Vector2> line = new List<Vector2>();
                 for(int p = 0; p < _lines[l].Count; ++p)
                 {
-                    line.Add(_lines[l][p] * scale);
+                    line.Add(_lines[l][p] * Scale);
                 }
                 scaledLines.Add(line);
             }
 
             // 2) Scale point choosen as center as well (it should be in pixels)
-            DistortionModel.DistortionCenter.X = DistortionModel.DistortionCenter.X;
-
             int paramsCount = DistortionModel.ParametersCount - 2; // Center
             paramsCount = DistortionModel.ComputesAspect ? paramsCount - 1 : paramsCount; // Aspect
 
             var dc = DistortionModel.DistortionCenter;
-            double scaledWidth = dc.X * scale;
-            double scaledHeight = dc.Y * scale;
+            double scaledWidth = dc.X * Scale;
+            double scaledHeight = dc.Y * Scale;
             DistortionModel.DistortionCenter = new Vector2(scaledWidth, scaledHeight);
             
             // 3) Init minimalisation algorithm
@@ -124,13 +140,18 @@ namespace CalibrationModule
             DistortionModel.Parameters.CopyTo(parVec);
             _minimalisation.ParametersVector = parVec;
             _minimalisation.LinePoints = scaledLines;
+            _minimalisation.Terminate = false;
 
             _minimalisation.MaximumResidiual = 0.0;
-            foreach(var points in CorrectionLines)
+            Vector2 imgCenter = new Vector2(ImageWidth * Scale, ImageHeight * Scale);
+            foreach(var points in scaledLines)
             {
-                _minimalisation.MaximumResidiual += points.Count * 0.25 * scale; // max 0.5 pixel deviation for each point (with gives 0.25 squared)
+                foreach(var point in points)
+                {
+                    _minimalisation.MaximumResidiual += point.DistanceToSquared(imgCenter) * 0.0001 * Scale;
+                }
             }
-
+            
             _minimalisation.Process();
 
             _minimalisation.BestResultVector.CopyTo(DistortionModel.Parameters);
@@ -139,12 +160,14 @@ namespace CalibrationModule
         // Corrects image points using previously computed model
         public void CorrectPoints()
         {
+            Scale = 1.0 / Math.Sqrt(ImageHeight * ImageHeight + ImageWidth * ImageWidth);
+            DistortionModel.ImageScale = Scale;
             _pCorr = new List<Vector2>(MeasuredPoints.Count);
             foreach(var point in MeasuredPoints)
             {
-                DistortionModel.P = point;
+                DistortionModel.P = point * Scale;
                 DistortionModel.Undistort();
-                _pCorr.Add(new Vector2(DistortionModel.Pf));
+                _pCorr.Add(new Vector2(DistortionModel.Pf / Scale));
             }
         }
 
@@ -175,8 +198,11 @@ namespace CalibrationModule
 
         public void Resume() { }
 
-        public void Terminate() { }
-
+        public void Terminate()
+        {
+            _minimalisation.Terminate = true;
+        }
+         
         public void ShowParametersWindow()
         {
             var algChooserWindow = new ParametrizedProcessorsSelectionWindow();
@@ -189,6 +215,8 @@ namespace CalibrationModule
             {
                 DistortionModel = algChooserWindow.GetSelectedProcessor("Radial Distortion Model") as RadialDistortionModel;
                 _minimalisation.DistortionModel = DistortionModel;
+                _modelParams = DistortionModel.Parameters.Clone();
+                ParamtersAccepted?.Invoke(this, new EventArgs());
             }
         }
 
@@ -199,15 +227,15 @@ namespace CalibrationModule
 
             if(Status == AlgorithmStatus.Finished)
                 result.Append("Finished");
-            else if(Status != AlgorithmStatus.Terminated)
+            else if(Status != AlgorithmStatus.Error)
                 result.Append("Not Finished");
             else
-                result.Append("Terminated");
+                result.Append("Error");
 
             result.AppendLine();
             result.AppendLine();
 
-            result.Append("Radial Distrotion Model: " + DistortionModel.ToString());
+            result.AppendLine("Radial Distrotion Model: " + DistortionModel.ToString());
             result.AppendLine("Estmated Paramters:");
 
             int paramsCount = DistortionModel.ParametersCount - 2; // Center
@@ -216,14 +244,13 @@ namespace CalibrationModule
             {
                 result.AppendLine("K" + k + ": " + DistortionModel.Parameters[k]);
             }
-            result.AppendLine("Cx: " + DistortionModel.Parameters[paramsCount]);
-            result.AppendLine("Cy: " + DistortionModel.Parameters[paramsCount + 1]);
+            result.AppendLine("Cx: " + DistortionModel.Parameters[paramsCount] / Scale);
+            result.AppendLine("Cy: " + DistortionModel.Parameters[paramsCount + 1] / Scale);
             if(DistortionModel.ComputesAspect)
             {
                 result.AppendLine("Sx: " + DistortionModel.Parameters[paramsCount + 2]);
             }
 
-            result.AppendLine();
             result.AppendLine();
 
             result.AppendLine("Minimal residiual: " + _minimalisation.MinimumResidiual);

@@ -20,6 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -64,15 +65,48 @@
     <Compile Include="GaussFilter.cs" />
     <Compile Include="GrayScaleImage.cs" />
     <Compile Include="HistogramOperations.cs" />
-    <Compile Include="HSLImage.cs" />
+    <Compile Include="HSIImage.cs" />
+    <Compile Include="ImageMatching\CrossCheckRefiner.cs" />
+    <Compile Include="ImageMatching\Disparity.cs" />
+    <Compile Include="ImageMatching\DisparityComputer.cs" />
+    <Compile Include="ImageMatching\DisparityRefinement.cs" />
+    <Compile Include="ImageMatching\DisparityRefinementChain.cs" />
+    <Compile Include="ImageMatching\ImageMatchingAlgorithm.cs" />
+    <Compile Include="ImageMatching\InterpolationDisparityComputer.cs" />
+    <Compile Include="ImageMatching\MatchConfidenceComputer.cs" />
+    <Compile Include="ImageMatching\MedianFilterRefiner.cs" />
+    <Compile Include="ImageMatching\Path.cs" />
+    <Compile Include="ImageMatching\PeakRemovalRefiner.cs" />
+    <Compile Include="ImageMatching\WholeImageScan.cs" />
+    <Compile Include="ImageMatching\WTADisparityComputer.cs" />
+    <Compile Include="ImageRectification.cs" />
+    <Compile Include="ImageRectification_FussieloUncalibrated.cs" />
+    <Compile Include="ImageResampler.cs" />
     <Compile Include="ImageFilter.cs" />
+    <Compile Include="ImageMatching\BaseSGMAggregator.cs" />
+    <Compile Include="ImageMatching\CensusCostComputer.cs" />
+    <Compile Include="ImageMatching\BitWord.cs" />
+    <Compile Include="ImageMatching\CostAggregator.cs" />
+    <Compile Include="ImageMatching\DisparityMap.cs" />
+    <Compile Include="ImageMatching\EpilineScanAggregator.cs" />
+    <Compile Include="ImageMatching\ImagePyramidCostAggregator.cs" />
+    <Compile Include="ImageMatching\RankCostComputer.cs" />
     <Compile Include="ImageProcessingUtils.cs" />
+    <Compile Include="ImageRectification_ZhangLoop.cs" />
+    <Compile Include="ImageSegmentation.cs" />
     <Compile Include="ImagesMatcher.cs" />
+    <Compile Include="ImageTransformation.cs" />
+    <Compile Include="ImageTransformer.cs" />
     <Compile Include="LoGCorrelationFeaturesMatcher.cs" />
     <Compile Include="LoGFilter.cs" />
+    <Compile Include="ImageMatching\MatchingCostComputer.cs" />
+    <Compile Include="MeanShiftSegmentation.cs" />
     <Compile Include="MedianFilter.cs" />
+    <Compile Include="ImageMatching\MutualInformationCostComputer.cs" />
+    <Compile Include="ImageMatching\NormalisedCrossCorrelationCostComputer.cs" />
     <Compile Include="Patch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ImageMatching\SeperateChannelCostComputer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

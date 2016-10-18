@@ -212,59 +212,53 @@ namespace CamImageProcessing
 
         public override void InitParameters()
         {
-            Parameters = new List<ProcessorParameter>();
+            Parameters = new List<AlgorithmParameter>();
 
-            ProcessorParameter logSize = new ProcessorParameter(
-                "LoG Filter Size", "LFR",
-                "System.Int32", 9, 3, 101);
+            AlgorithmParameter logSize = new IntParameter(
+                "LoG Filter Size", "LFR", 9, 3, 101);
 
             Parameters.Add(logSize);
 
-            ProcessorParameter logSigma = new ProcessorParameter(
-               "LoG Filter Sigma (Dev)", "LFD",
-               "System.Single", 1.6f, 0.5f, 10.0f);
+            AlgorithmParameter logSigma = new DoubleParameter(
+               "LoG Filter Sigma (Dev)", "LFD", 1.6f, 0.5f, 10.0f);
 
             Parameters.Add(logSigma);
 
-            ProcessorParameter matchPatchSize = new ProcessorParameter(
-               "Correlation Matching Patch Size", "CMPS",
-               "System.Int32", 5, 3, 101);
+            AlgorithmParameter matchPatchSize = new IntParameter(
+               "Correlation Matching Patch Size", "CMPS", 5, 3, 101);
 
             Parameters.Add(matchPatchSize);
 
-            ProcessorParameter useSmoothCorrelation = new ProcessorParameter(
-               "Use Smoothed Correlation", "USC",
-               "System.Boolean", false, false, true);
+            AlgorithmParameter useSmoothCorrelation = new BooleanParameter(
+               "Use Smoothed Correlation", "USC", false);
 
             Parameters.Add(useSmoothCorrelation);
 
-            ProcessorParameter correlationThreshold = new ProcessorParameter(
-               "Correlation Matching Threshold", "CMT",
-               "System.Single", 0.90f, 0.0f, 1.0f);
+            AlgorithmParameter correlationThreshold = new DoubleParameter(
+               "Correlation Matching Threshold", "CMT", 0.90f, 0.0f, 1.0f);
 
             Parameters.Add(correlationThreshold);
 
-            ProcessorParameter maxDisp = new ProcessorParameter(
-               "Max Expected Disparity Along Epiline", "MD",
-               "System.Int32", 30, 0, 30000);
+            AlgorithmParameter maxDisp = new IntParameter(
+               "Max Expected Disparity Along Epiline", "MD", 30, 0, 30000);
 
             Parameters.Add(maxDisp);
         }
 
         public override void UpdateParameters()
         {
-            _LoG_sigma = (float)ProcessorParameter.FindValue("LFD", Parameters);
-            _LoG_size = (int)ProcessorParameter.FindValue("LFR", Parameters);
-            _patchSize = (int)ProcessorParameter.FindValue("CMPS", Parameters);
+            _LoG_sigma = (float)AlgorithmParameter.FindValue("LFD", Parameters);
+            _LoG_size = (int)AlgorithmParameter.FindValue("LFR", Parameters);
+            _patchSize = (int)AlgorithmParameter.FindValue("CMPS", Parameters);
 
-            _useSmoothCorrelation = (bool)ProcessorParameter.FindValue("USC", Parameters);
+            _useSmoothCorrelation = (bool)AlgorithmParameter.FindValue("USC", Parameters);
             if(_useSmoothCorrelation)
                 _corrComputer = Patch.ComputePatchesSmoothCorrelation;
             else
                 _corrComputer = Patch.ComputePatchesCorrelation;
 
-            _t_match = (float)ProcessorParameter.FindValue("CMT", Parameters);
-            _maxDisparity = (int)ProcessorParameter.FindValue("MD", Parameters);
+            _t_match = (float)AlgorithmParameter.FindValue("CMT", Parameters);
+            _maxDisparity = (int)AlgorithmParameter.FindValue("MD", Parameters);
         }
     }
 }

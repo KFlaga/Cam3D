@@ -14,6 +14,12 @@
         <TabItem Header="Camera Right">
             <local:CalibModeCamTab x:Name="_tabCam2" CameraCaptureLabel="RightCameraCaptureSnapshot"/>
         </TabItem>
+        <TabItem Header="Cross Calibration">
+            <local:CrossCalibrationTab x:Name="_tabCross"/>
+        </TabItem>
+        <TabItem Header="Calibration Test">
+            <local:CalibrationTestTab x:Name="_tabTest"/>
+        </TabItem>
 
     </TabControl>
 </UserControl>

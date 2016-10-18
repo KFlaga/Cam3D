@@ -5,10 +5,10 @@ using System.Windows.Media.Imaging;
 
 namespace CalibrationModule
 {
-    public abstract class CalibrationPointsFinder : IParametrizedProcessor
+    public abstract class CalibrationPointsFinder : IParameterizable
     {
-        private List<ProcessorParameter> _parameters;
-        public List<ProcessorParameter> Parameters
+        private List<AlgorithmParameter> _parameters;
+        public List<AlgorithmParameter> Parameters
         {
             get { return _parameters; }
             protected set { _parameters = value; }

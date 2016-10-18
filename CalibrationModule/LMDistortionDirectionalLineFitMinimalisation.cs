@@ -279,8 +279,8 @@ namespace CalibrationModule
             var point = CorrectedPoints[l][p];
             double R = Get_RadiusErrorCoeff(l, p);
             double d = LineCoeffs[l, 0] * point.Pf.X + LineCoeffs[l, 1] * point.Pf.Y + LineCoeffs[l, 2];
-           // double error = d * R / Math.Sqrt(LineCoeffs[l, 0] * LineCoeffs[l, 0] + LineCoeffs[l, 1] * LineCoeffs[l, 1]);
-            double error = d *d * R * R / (LineCoeffs[l, 0] * LineCoeffs[l, 0] + LineCoeffs[l, 1] * LineCoeffs[l, 1]);
+            double error = d * R / Math.Sqrt(LineCoeffs[l, 0] * LineCoeffs[l, 0] + LineCoeffs[l, 1] * LineCoeffs[l, 1]);
+           // double error = d *d * R * R / (LineCoeffs[l, 0] * LineCoeffs[l, 0] + LineCoeffs[l, 1] * LineCoeffs[l, 1]);
             return error;
         }
 
@@ -289,124 +289,6 @@ namespace CalibrationModule
         {
             ComputeMappingFucntion(error);
         }
-
-        // Computes d(ei)/d(P) for ith line
-        public override void ComputeJacobianForLine(Matrix<double> J, int l, int p0)
-        {
-            throw new NotImplementedException("Analitical jacobian for directional line fit not implemented");
-
-            double A = LineCoeffs[l, 0];
-            double B = LineCoeffs[l, 1];
-            double C = LineCoeffs[l, 2];
-            double Ex = _sumX[l];
-            double Ey = _sumY[l];
-            double Exy = _sumXY[l];
-            double Ex2 = _sumX2[l];
-            double Ey2 = _sumY2[l];
-            Vector<double> dEx = _dEx[l];
-            Vector<double> dEy = _dEy[l];
-            Vector<double> dExy = _dExy[l];
-            Vector<double> dEx2 = _dEx2[l];
-            Vector<double> dEy2 = _dEy2[l];
-            double N = _n[l];
-
-            //   A = (-b - sqrt(D)) / 2a
-            //   D = b^2 + 4a^2
-            //   a = Exy - Ex*Ey/N
-            //   b = E(y^2) - (Ey)^2/N - (E(x^2) - (Ex)^2/N)
-            //double a = Exy - Ex * Ey / N;
-            //double b = Ey2 - Ex2 + (Ex * Ex - Ey * Ey) / N;
-            //double D = b * b + 4 * a * a;
-
-            double a = Get_a(l);
-            double b = Get_b(l);
-            double D = Get_D(l);
-
-            // d(a) = d(Exy) - 1/N * (Ey*d(Ex) + *Ex*d(Ey))
-            Vector<double> diff_a = dExy - (1.0 / N) * (dEx * Ey + dEy * Ex);
-
-            // d(b) = d(Ey2) - 2/N * Ey * d(Ey) - d(Ex2) + 2/N * Ex * d(Ex)
-            Vector<double> diff_b = dEy2 - dEx2 + (2.0 / N) * (dEx * Ex - dEy * Ey);
-
-            // d(D) = 2b*d(b) + 8a*d(a)
-            Vector<double> diff_D = (2.0 * b) * diff_b + (8.0 * a) * diff_a;
-
-            // d(A) = -a(d(b) + 1/2sqrt(D) * d(D)) + d(a)(b+sqrt(D)) / 2a^2
-            Vector<double> diff_A = (0.5 / (a * a)) *
-                ((b + Math.Sqrt(D)) * diff_a - a * (diff_b + (0.5 / Math.Sqrt(D)) * diff_D));
-
-            // d(C)/d(P) = -(1/N)(Ex*d(A) + A*d(Ex) + d(Ey))
-            Vector<double> diff_C = (-1.0 / N) * (Ex * diff_A + A * dEx + dEy);
-
-            double A212 = 1.0 / ((A * A + 1.0) * (A * A + 1.0));
-            var line = CorrectedPoints[l];
-            for(int p = 0; p < line.Count; ++p)
-            {
-                double R = Get_RadiusErrorCoeff(l, p);
-                var point = line[p] as DistortionPoint_Directional;
-                double dist = (A * point.Pf.X + point.Pf.Y + C) * R;
-                Vector<double> diff_dist =
-                    (diff_A * point.Pf.X + A * point.Diff_Xf + point.Diff_Yf + diff_C) * R +
-                    point.Diff_RCoeff * dist;
-                // J[point, k] = d(e)/d(P[k]) =
-                //  (2 * (Ax+y+C)R/(A^2+1)^2) * (d((Ax+y+C)R) - A*d(A)*(Ax+y+C)R)
-                //  d((Ax+y+C)) = a(A)*x + A*d(x) + d(y) + d(C)
-                Vector<double> diff_e = (2.0 * dist * A212) * (
-                    diff_dist * (A * A + 1.0) - (A * dist) * diff_A);
-
-                // Throw if NaN found in jacobian
-                bool nanInfFound = diff_e.Exists((e) => { return double.IsNaN(e) || double.IsInfinity(e); });
-                if(nanInfFound)
-                {
-                    throw new DivideByZeroException("NaN or Infinity found on jacobian");
-                }
-
-                J.SetRow(p0 + p, diff_e);
-            }
-        }
-
-        //public override void ComputeDelta(Vector<double> delta)
-        //{
-        //    ComputeJacobian(_J);
-        //    _J.TransposeToOther(_Jt);
-        //    _Jt.MultiplyToOther(_currentErrorVector, _Jte);
-        //    _Jte.Negate().CopyTo(delta);
-
-        //   // delta = _J.ColumnSums().Negate();
-
-        //    double bestLam = 1.0;
-        //    double lam = 1.0;
-        //    double lamMult = 2.0;
-        //    double lastRes = ComputeResidiual();
-        //    Vector<double> newResults = ResultsVector + lam * delta;
-        //    newResults.CopyTo(DistortionModel.Parameters);
-        //    DistortionModel.UpdateParamters();
-        //    UpdateAll();
-        //    ComputeErrorVector(_currentErrorVector);
-        //    double res = ComputeResidiual();
-
-        //    if(res > lastRes)
-        //    {
-        //        lamMult = 0.5;
-        //    }
-
-        //    do
-        //    {
-        //        bestLam = lam;
-        //        lam *= lamMult;
-        //        newResults = ResultsVector + lam * delta;
-        //        newResults.CopyTo(DistortionModel.Parameters);
-        //        DistortionModel.UpdateParamters();
-        //        UpdateAll();
-        //        ComputeErrorVector(_currentErrorVector);
-        //        lastRes = res;
-        //        res = ComputeResidiual();
-        //    }
-        //    while(res < lastRes && lam > 1e-3);
-
-        //    delta.MultiplyThis(bestLam);
-        //    ResultsVector.CopyTo(DistortionModel.Parameters);
-        //    UpdateAll();
-        //}
+        
     }
 }

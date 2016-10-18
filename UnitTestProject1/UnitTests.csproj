@@ -58,11 +58,16 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="CostAggregatorTests.cs" />
+    <Compile Include="MatchingCostTests.cs" />
+    <Compile Include="PolynomialTests.cs" />
     <Compile Include="Rational3ModelTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RaidalCorrectionMinimalisationTests.cs" />
     <Compile Include="MinimalisationTests.cs" />
     <Compile Include="CameraMatrixComputationTests.cs" />
+    <Compile Include="RectificationTests.cs" />
+    <Compile Include="TriangulationTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CalibrationModule\CalibrationModule.csproj">

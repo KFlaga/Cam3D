@@ -1,93 +1,15 @@
-﻿using System;
+﻿using MathNet.Numerics.LinearAlgebra;
+using MathNet.Numerics.LinearAlgebra.Double;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace CamCore
 {
-    [DebuggerDisplay("X = {_x}, Y = {_y}")]
-    public struct TPoint2D<T> where T : struct
-    {
-        private T _x;
-        private T _y;
-
-        public T X { get { return _x; } set { _x = value; } }
-        public T Y { get { return _y; } set { _y = value; } }
-
-        public TPoint2D(T x = default(T), T y = default(T))
-        {
-            _x = x;
-            _y = y;
-        }
-
-        public TPoint2D(TPoint2D<T> other)
-        {
-            _x = other.X;
-            _y = other.Y;
-        }
-    }
-
-    [DebuggerDisplay("X = {_x}, Y = {_y}, W = {_w}")]
-    public struct Point2DH
-    {
-        private double _x;
-        private double _y;
-        private double _w;
-
-        public double X { get { return _x; } set { _x = value; } }
-        public double Y { get { return _y; } set { _y = value; } }
-        public double W { get { return _w; } set { _w = value; } }
-
-        public Point2DH(TPoint2D<double> p)
-        {
-            _x = p.X; _y = p.Y; _w = 1.0f;
-        }
-
-        public Point2DH(double x = 0.0f, double y = 0.0f, double w = 1.0f)
-        {
-            _x = x; _y = y; _w = w;
-        }
-
-        public Point2DH(Point2DH other)
-        {
-            _x = other.X;
-            _y = other.Y;
-            _w = other.W;
-        }
-
-        public static Point2DH operator +(Point2DH p1, Point2DH p2)
-        {
-            return new Point2DH(p1.X / p1.W + p2.X / p2.W, p1.Y / p1.W + p2.Y / p2.W, 1.0f);
-        }
-
-        public static Point2DH operator -(Point2DH p1, Point2DH p2)
-        {
-            return new Point2DH(p1.X / p1.W - p2.X / p2.W, p1.Y / p1.W - p2.Y / p2.W, 1.0f);
-        }
-
-        public static Point2DH operator +(Point2DH p1, TPoint2D<double> p2)
-        {
-            return new Point2DH(p1.X / p1.W + p2.X, p1.Y / p1.W + p2.Y, 1.0f);
-        }
-
-        public static Point2DH operator -(Point2DH p1, TPoint2D<double> p2)
-        {
-            return new Point2DH(p1.X / p1.W - p2.X, p1.Y / p1.W - p2.Y, 1.0f);
-        }
-
-        public static Point2DH operator +(TPoint2D<double> p1, Point2DH p2)
-        {
-            return new Point2DH(p1.X + p2.X / p2.W, p1.Y + p2.Y / p2.W, 1.0f);
-        }
-
-        public static Point2DH operator -(TPoint2D<double> p1, Point2DH p2)
-        {
-            return new Point2DH(p1.X - p2.X / p2.W, p1.Y - p2.Y / p2.W, 1.0f);
-        }
-    }
-
     [DebuggerDisplay("X = {_x}, Y = {_y}")]
     public class Vector2
     {
@@ -106,6 +28,43 @@ namespace CamCore
         {
             _x = other.X;
             _y = other.Y;
+        }
+        
+        public Vector2(IntVector2 other)
+        {
+            _x = (double)other.X;
+            _y = (double)other.Y;
+        }
+
+        public Vector2(Vector<double> other)
+        {
+            if(other.Count == 3)
+            {
+                // Treat input vector as homogenous 2d vector
+                _x = other.At(0) / other.At(2);
+                _y = other.At(1) / other.At(2);
+            }
+            else
+            {
+                _x = other.At(0);
+                _y = other.At(1);
+            }
+        }
+
+        public void Set(double x, double y)
+        {
+            _x = x;
+            _y = y;
+        }
+
+        public Vector<double> ToMathNetVector2()
+        {
+            return new DenseVector(new double[2] { _x, _y });
+        }
+
+        public Vector<double> ToMathNetVector3()
+        {
+            return new DenseVector(new double[3] { _x, _y, 1.0 });
         }
 
         public static Vector2 operator +(TPoint2D<double> p1, Vector2 p2)
@@ -262,6 +221,38 @@ namespace CamCore
         {
             return (X * v.X + Y * v.Y);
         }
+
+        public override string ToString()
+        {
+            return "X: " + X + ", Y: " + Y;
+        }
+        
+        public XmlNode CreateXmlNode(XmlDocument xmlDoc, string nodeName = "Vector2")
+        {
+            XmlNode node = xmlDoc.CreateElement(nodeName);
+
+            var attX = xmlDoc.CreateAttribute("X");
+            attX.Value = X.ToString();
+            var attY = xmlDoc.CreateAttribute("Y");
+            attY.Value = Y.ToString();
+            node.Attributes.Append(attX);
+            node.Attributes.Append(attY);
+
+            return node;
+        }
+
+        public void ReadFromXmlNode(XmlNode node)
+        {
+            X = double.Parse(node.Attributes["X"]?.Value);
+            Y = double.Parse(node.Attributes["Y"]?.Value);
+        }
+
+        public static Vector2 CreateFromXmlNode(XmlNode node)
+        {
+            return new Vector2(
+                double.Parse(node.Attributes["X"]?.Value),
+                double.Parse(node.Attributes["Y"]?.Value));
+        }
     }
 
     [DebuggerDisplay("X = {_x}, Y = {_y}")]
@@ -281,6 +272,18 @@ namespace CamCore
         {
             _x = other.X;
             _y = other.Y;
+        }
+
+        public IntVector2(Vector2 other)
+        {
+            _x = (int)other.X;
+            _y = (int)other.Y;
+        }
+
+        public void Set(int x, int y)
+        {
+            _x = x;
+            _y = y;
         }
 
         public static IntVector2 operator +(TPoint2D<int> p1, IntVector2 p2)
@@ -346,6 +349,11 @@ namespace CamCore
         public double DistanceTo(IntVector2 v)
         {
             return (double)Math.Sqrt(DistanceToSquared(v));
+        }
+
+        public override string ToString()
+        {
+            return "X: " + X + ", Y: " + Y;
         }
     }
 }

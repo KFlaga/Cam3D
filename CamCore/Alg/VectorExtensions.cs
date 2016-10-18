@@ -109,11 +109,27 @@ namespace CamCore
             }
         }
 
+        public static void DivideThis(this Vector<double> v, double scalar)
+        {
+            for(int i = 0; i < v.Count; ++i)
+            {
+                v.At(i, v.At(i) / scalar);
+            }
+        }
+
         public static void PointwiseMultiplyThis(this Vector<double> v1, Vector<double> v2)
         {
             for(int i = 0; i < v1.Count; ++i)
             {
                 v1.At(i, v1.At(i) * v2.At(i));
+            }
+        }
+
+        public static void PointwiseDivideThis(this Vector<double> v1, Vector<double> v2)
+        {
+            for(int i = 0; i < v1.Count; ++i)
+            {
+                v1.At(i, v1.At(i) / v2.At(i));
             }
         }
 

@@ -8,10 +8,10 @@ namespace CamImageProcessing
 {
     // Universal image filter which compute convolution of image with
     // given filter mask
-    public abstract class ImageFilter : IParametrizedProcessor
+    public abstract class ImageFilter : IParameterizable
     {
-        private List<ProcessorParameter> _parameters;
-        public List<ProcessorParameter> Parameters
+        private List<AlgorithmParameter> _parameters;
+        public List<AlgorithmParameter> Parameters
         {
             get { return _parameters; }
             protected set { _parameters = value; }

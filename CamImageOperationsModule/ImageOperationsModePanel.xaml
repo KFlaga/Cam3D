@@ -40,7 +40,7 @@
                 <Rectangle Height="2" Fill="Black" Margin="0,0,0,0"/>
                 <ListBoxItem HorizontalContentAlignment="Stretch">
                     <DockPanel>
-                        <Button x:Name="_butFloodSelection" Click="_butSaturateHistogram_Click" DockPanel.Dock="Left"
+                        <Button x:Name="_butFloodSelection" Click="_butFloodSelection_Click" DockPanel.Dock="Left"
                                 HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
                             Flood Selection
                         </Button>
@@ -57,6 +57,10 @@
                         <CheckBox x:Name="_checkFuzzySelection" Checked="_checkFuzzySelection_Checked" HorizontalAlignment="Center"
                                   DockPanel.Dock="Right" VerticalAlignment="Center"/>
                     </DockPanel>
+                </ListBoxItem>
+                <Rectangle Height="2" Fill="Black" Margin="0,0,0,0"/>
+                <ListBoxItem HorizontalContentAlignment="Stretch">
+                    <Button x:Name="_butSegment" Click="_butSegment_Click">Segmentation</Button>
                 </ListBoxItem>
             </ListBox>
 

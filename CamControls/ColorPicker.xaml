@@ -65,9 +65,6 @@
             <Setter Property="Padding" Value="0"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="Margin" Value="5,0,5,0"/>
-            <Setter Property="LimitValue" Value="True"/>
-            <Setter Property="MaxValue" Value="255"/>
-            <Setter Property="MinValue" Value="0"/>
         </Style>
     </Window.Resources>
 </Window>

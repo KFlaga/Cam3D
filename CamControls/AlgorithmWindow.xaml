@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:CamControls"
-             mc:Ignorable="d" d:DesignWidth="600" Height="400">
+             mc:Ignorable="d" Width="600" Height="440" ResizeMode="CanMinimize">
     <DockPanel>
         <Border BorderThickness="1" BorderBrush="Black" DockPanel.Dock="Top">
             <StackPanel Orientation="Horizontal">
@@ -39,14 +39,19 @@
                 <Button x:Name="_buttonParams" IsEnabled="False" Height="44" Click="_buttonParams_Click">
                     <TextBlock TextAlignment="Center">SET<LineBreak/>PARAMETERS</TextBlock>
                 </Button>
+                <!--<Button x:Name="_buttonAcceptResults" IsEnabled="True" Height="44" Click="_buttonAcceptResults_Click">
+                    <TextBlock TextAlignment="Center">ACCEPT<LineBreak/>RESULTS</TextBlock>
+                </Button>-->
                 <Button x:Name="_buttonExit" Click="_buttonExit_Click">EXIT</Button>
+                <Button x:Name="_buttonSave" Click="_buttonSave_Click">SAVE RESULTS</Button>
             </StackPanel>
         </Border>
         <Border BorderThickness="1" BorderBrush="Black" DockPanel.Dock="Left">
             <StackPanel Orientation="Vertical">
                 <Label HorizontalContentAlignment="Center">RESULTS:</Label>
-                <ScrollViewer Margin="5">
-                    <TextBox x:Name="_textResults" IsReadOnly="True" Background="AntiqueWhite" MinLines="15"/>
+                <ScrollViewer Margin="5" Height="280">
+                    <TextBox x:Name="_textResults" IsReadOnly="True" 
+                             Background="AntiqueWhite" MinLines="15"/>
                 </ScrollViewer>
             </StackPanel>
         </Border>

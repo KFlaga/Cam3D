@@ -8,23 +8,26 @@ using CamCore;
 using System.ComponentModel;
 using System.Threading;
 using System.Windows.Threading;
+using System.Diagnostics;
+using System.IO;
 
 namespace CamControls
 {
     public partial class AlgorithmWindow : Window
     {
         IControllableAlgorithm _alg;
-        AlgorithmStatus Status { get; set; } = AlgorithmStatus.Idle;
 
         AlgorithmTask _runAlgTask;
 
-        DispatcherTimer _runningTimer = new DispatcherTimer();
-        int _runTime;
+        DispatcherTimer _progresTimer = new DispatcherTimer();
+        Stopwatch _runTimeTimer = new Stopwatch();
 
         public IControllableAlgorithm Algorithm
         {
             get { return _alg; }
         }
+
+        //public event EventHandler<AlgorithmEventArgs> AlgorithmResultsAccepted;
 
         public AlgorithmWindow(IControllableAlgorithm algorithm)
         {
@@ -34,16 +37,26 @@ namespace CamControls
             _alg = algorithm;
 
             InitializeComponent();
-            
+
             _buttonParams.IsEnabled = _alg.SupportsParameters;
             _buttonRun.IsEnabled = !_alg.SupportsParameters;
 
             this.Closed += (s, e) => { AbortTask(); };
 
-            _runningTimer.Interval = TimeSpan.FromMilliseconds(1000.0);
-            _runningTimer.Tick += _runningTimer_Tick;
+            _progresTimer.Interval = TimeSpan.FromMilliseconds(1000.0);
+            _progresTimer.Tick += _runningTimer_Tick;
+            _labelAlgorithmTime.Content = "0";
 
-            _alg.ParamtersAccepted += _algParamtersAccepted;
+            _alg.ParamtersAccepted += AlgorithmParamtersAccepted;
+            _alg.StatusChanged += AlgorithmStatusChanged;
+
+            if(_alg.SupportsProgress)
+                _labelAlgorithmProgress.Content = "Not Run";
+            else
+                _labelAlgorithmProgress.Content = "Not Supported";
+
+            _labelAlgorithmName.Content = _alg.Name;
+            _labelAlgorithmStatus.Content = "Waiting";
         }
 
         private void _buttonRun_Click(object sender, RoutedEventArgs e)
@@ -54,49 +67,16 @@ namespace CamControls
         private void _buttonAbort_Click(object sender, RoutedEventArgs e)
         {
             AbortTask();
-            
-            _buttonSuspend.IsEnabled = false;
-            _buttonAbort.IsEnabled = false;
-            _buttonRun.IsEnabled = true;
-            _buttonResume.IsEnabled = false;
-            _buttonRefresh.IsEnabled = false;
-            _buttonParams.IsEnabled = _alg.SupportsParameters;
         }
 
         private void _buttonSuspend_Click(object sender, RoutedEventArgs e)
         {
             _alg.Suspend();
-            Status = _alg.Status;
-
-            if(Status == AlgorithmStatus.Suspended)
-            {
-                _buttonSuspend.IsEnabled = false;
-                _buttonAbort.IsEnabled = true;
-                _buttonRun.IsEnabled = false;
-                _buttonResume.IsEnabled = true;
-                _buttonRefresh.IsEnabled = _alg.SupportsPartialResults;
-                _buttonParams.IsEnabled = false;
-
-                _runningTimer.Stop();
-            }
         }
 
         private void _buttonResume_Click(object sender, RoutedEventArgs e)
         {
             _alg.Resume();
-            Status = _alg.Status;
-
-            if(Status == AlgorithmStatus.Running)
-            {
-                _buttonSuspend.IsEnabled = true;
-                _buttonAbort.IsEnabled = true;
-                _buttonRun.IsEnabled = false;
-                _buttonResume.IsEnabled = false;
-                _buttonRefresh.IsEnabled = _alg.SupportsPartialResults;
-                _buttonParams.IsEnabled = false;
-
-                _runningTimer.Start();
-            }
         }
 
         private void _buttonRefresh_Click(object sender, RoutedEventArgs e)
@@ -106,6 +86,7 @@ namespace CamControls
 
         private void _buttonExit_Click(object sender, RoutedEventArgs e)
         {
+            AbortTask();
             Close();
         }
 
@@ -113,94 +94,147 @@ namespace CamControls
         {
             _alg.ShowParametersWindow();
         }
+        
+        //private void _buttonAcceptResults_Click(object sender, RoutedEventArgs e)
+        //{
+        //    AlgorithmResultsAccepted?.Invoke(this, new AlgorithmEventArgs()
+        //    {
+        //        Algorithm = _alg,
+        //        CurrentStatus = _alg.Status,
+        //        OldStatus = _alg.Status,
+        //    });
+        //}
+
+        private void AlgorithmStatusChanged(object sender, CamCore.AlgorithmEventArgs e)
+        {
+            Dispatcher.Invoke(() =>
+            {
+                if(e.CurrentStatus == AlgorithmStatus.Running)
+                {
+                    AlgorithmStarted();
+                }
+                else if(e.CurrentStatus == AlgorithmStatus.Suspended)
+                {
+                    AlgorithmSuspended();
+                }
+                else
+                {
+                    AlgorithmFinished();
+                }
+            });
+        }
 
         void AbortTask()
         {
-            if(_runAlgTask != null && 
-                (Status == AlgorithmStatus.Running ||
-                Status == AlgorithmStatus.Suspended))
+            if(_runAlgTask != null &&
+                (_alg.Status == AlgorithmStatus.Running ||
+                _alg.Status == AlgorithmStatus.Suspended))
             {
                 _runAlgTask.Abort();
             }
         }
 
-        async void RunAlgorithm()
+        void RunAlgorithm()
         {
-            _runAlgTask = new AlgorithmTask() { Algorithm = _alg };
-            _runAlgTask.OnFinished += AlgorithmTaskFinished;
-            await new Task(_runAlgTask.Start);
-
-            Status = _alg.Status;
-
-            if(Status == AlgorithmStatus.Running)
+            _runTimeTimer.Reset();
+            if(_alg.SupportsProgress)
             {
-                _buttonAbort.IsEnabled = true;
-                _buttonParams.IsEnabled = false;
-                _buttonRefresh.IsEnabled = _alg.SupportsPartialResults;
-                _buttonResume.IsEnabled = false;
-                _buttonRun.IsEnabled = false;
-                _buttonSuspend.IsEnabled = _alg.SupportsSuspension;
-
-                _runTime = 0;
-                _runningTimer.Start();
+                _labelAlgorithmProgress.Content = "0";
+                _labelAlgorithmTime.Content = "0";
             }
+
+            _runAlgTask = new AlgorithmTask() { Algorithm = _alg };
+            _runAlgTask.Start();
+        }
+
+        void AlgorithmStarted()
+        {
+            _buttonSuspend.IsEnabled = Algorithm.SupportsSuspension;
+            _buttonAbort.IsEnabled = Algorithm.SupportsTermination;
+            _buttonRun.IsEnabled = false;
+            _buttonResume.IsEnabled = false;
+            _buttonRefresh.IsEnabled = _alg.SupportsPartialResults;
+            _buttonParams.IsEnabled = false;
+
+            _runTimeTimer.Start();
+            _progresTimer.Start();
+            _labelAlgorithmStatus.Content = "Running";
+        }
+
+        void AlgorithmSuspended()
+        {
+            _buttonSuspend.IsEnabled = false;
+            _buttonAbort.IsEnabled = Algorithm.SupportsTermination;
+            _buttonRun.IsEnabled = false;
+            _buttonResume.IsEnabled = true;
+            _buttonRefresh.IsEnabled = _alg.SupportsPartialResults;
+            _buttonParams.IsEnabled = false;
+
+            _runTimeTimer.Stop();
+            _progresTimer.Stop();
+            _labelAlgorithmStatus.Content = "Suspended";
+        }
+
+        private void AlgorithmFinished()
+        {
+            _progresTimer.Stop();
+            _runTimeTimer.Stop();
+            _labelAlgorithmTime.Content = _runTimeTimer.ElapsedMilliseconds.ToString() + "ms";
+            if(_alg.SupportsProgress)
+                _labelAlgorithmProgress.Content = _alg.GetProgress();
+
+            if(_runAlgTask != null)
+            {
+                if(_runAlgTask.WasAborted)
+                {
+                    if(_alg.SupportsPartialResults)
+                    {
+                        _textResults.Text = _alg.GetPartialResults();
+                    }
+                    _labelAlgorithmStatus.Content = "Aborted";
+                }
+                else if(_runAlgTask.WasError)
+                {
+                    string text = "Algorithm failed. Error message: " + _runAlgTask.Error.Message;
+                    if(_alg.SupportsPartialResults)
+                    {
+                        text += "\r\nLast results:\r\n";
+                        text += _alg.GetPartialResults();
+                    }
+                    _textResults.Text = text;
+                    _labelAlgorithmStatus.Content = "Error";
+                }
+                else
+                {
+                    if(_alg.SupportsFinalResults)
+                    {
+                        _textResults.Text = _alg.GetFinalResults();
+                    }
+                    _labelAlgorithmStatus.Content = "Finished";
+                }
+            }
+
+            _buttonSuspend.IsEnabled = false;
+            _buttonAbort.IsEnabled = false;
+            _buttonRun.IsEnabled = true;
+            _buttonResume.IsEnabled = false;
+            _buttonRefresh.IsEnabled = false;
+            _buttonParams.IsEnabled = _alg.SupportsParameters;
+        }
+
+        private void AlgorithmParamtersAccepted(object sender, EventArgs e)
+        {
+            _buttonRun.IsEnabled = true;
         }
 
         private void _runningTimer_Tick(object sender, EventArgs e)
         {
-            _runTime += 1;
-            if(_alg.Status != AlgorithmStatus.Running)
-            {
-                // ?? Something failed
-                throw new Exception();
-            }
-
             Dispatcher.Invoke(() =>
             {
                 if(_alg.SupportsProgress)
                     _labelAlgorithmProgress.Content = _alg.GetProgress();
-                _labelAlgorithmTime.Content = _runTime;
+                _labelAlgorithmTime.Content = _runTimeTimer.ElapsedMilliseconds.ToString() + "ms";
             });
-        }
-
-        private void AlgorithmTaskFinished(object sender, EventArgs e)
-        {
-            _runningTimer.Stop();
-
-            AlgorithmTask task = sender as AlgorithmTask;
-            if(task.WasAborted)
-            {
-                if(_alg.SupportsPartialResults)
-                {
-                    Dispatcher.Invoke(() =>
-                   {
-                       _textResults.Text = _alg.GetPartialResults();
-                   });
-                }
-            }
-            else if(task.WasError)
-            {
-                string text = "Algorithm failed. Error message: " + task.Error.Message;
-                Dispatcher.Invoke(() =>
-                {
-                    _textResults.Text = text;
-                });
-            }
-            else
-            {
-                if(_alg.SupportsFinalResults)
-                {
-                    Dispatcher.Invoke(() =>
-                    {
-                        _textResults.Text = _alg.GetFinalResults();
-                    });
-                }
-            }
-        }
-
-        private void _algParamtersAccepted(object sender, EventArgs e)
-        {
-            _buttonRun.IsEnabled = true;
         }
 
         class AlgorithmTask
@@ -212,64 +246,52 @@ namespace CamControls
             public bool WasError { get; private set; }
             public Exception Error { get; set; }
 
-            public event EventHandler<EventArgs> OnFinished;
-
-            private CancellationTokenSource _canceller;
-            private bool _started;
-
-            class TaskAbortedException : Exception { }
-            
-            async public void Start()
+            public void Start()
             {
                 WasAborted = false;
                 WasError = false;
-                _started = false;
-                _canceller = new CancellationTokenSource();
-
+                
                 Worker = Task.Run(() =>
                 {
-                    try
-                    {
-                        using(_canceller.Token.Register(
-                           () => { throw new TaskAbortedException(); }))
-                        {
-                            _started = true;
-                            Algorithm.Process();
-                        }
-                    }
-                    catch(TaskAbortedException)
-                    {
-                        WasAborted = true;
-                        if(Algorithm.SupportsTermination)
-                            Algorithm.Terminate();
-                    }
-                    catch(Exception e)
-                    {
-                        WasError = true;
-                        Error = e;
-                        if(Algorithm.SupportsTermination)
-                            Algorithm.Terminate();
-                    }
-                    OnFinished?.Invoke(this, new EventArgs());
-                }, _canceller.Token);
-
-                await Task.Run(() =>
-                {
-                    int timeLeft = 1000;
-                    while(_started == false)
-                    {
-                        Task.Delay(1);
-                        timeLeft--;
-                        if(timeLeft <= 0)
-                            return;
-                    }
+                  //  try
+                  //  {
+                        Algorithm.Process();
+                  //  }
+                  //  catch(Exception e)
+                  //  {
+                  //      WasError = true;
+                  //      Error = e;
+                  //      Algorithm.Status = AlgorithmStatus.Error;
+                  //  }
                 });
             }
 
             public void Abort()
             {
-                _canceller.Cancel();
+                if(Algorithm.SupportsTermination)
+                {
+                    WasAborted = true;
+                    Algorithm.Terminate();
+                }
             }
+        }
+
+        private void _buttonSave_Click(object sender, RoutedEventArgs e)
+        {
+            CamCore.FileOperations.SaveToFile(SaveToFile, "AllFiles|*.*");
+        }
+
+        public void SaveToFile(Stream file, string path)
+        {
+            StreamWriter writer = new StreamWriter(file);
+
+            string text = _textResults.Text;
+            for(int c = 0; c < text.Length; ++c)
+            {
+                writer.Write(text[c]);
+            }
+
+            writer.Close();
         }
     }
 }

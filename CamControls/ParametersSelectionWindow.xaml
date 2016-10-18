@@ -13,6 +13,8 @@
         </StackPanel>
         <Label x:Name="_labelTitle" DockPanel.Dock="Top" Height="35" 
                HorizontalContentAlignment="Center" VerticalContentAlignment="Stretch"/>
-        <local:ParametersSelectionPanel x:Name="_parametersPanel" DockPanel.Dock="Top"/>
+        <ScrollViewer HorizontalScrollBarVisibility="Visible">
+            <local:ParametersSelectionPanel x:Name="_parametersPanel" DockPanel.Dock="Top"/>
+        </ScrollViewer>
     </DockPanel>
 </Window>

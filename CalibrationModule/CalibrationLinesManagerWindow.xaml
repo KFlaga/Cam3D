@@ -1,0 +1,27 @@
+﻿<Window x:Class="CalibrationModule.CalibrationLinesManagerWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="CalibrationLinesManagerWindow" Height="400" Width="300"
+        xmlns:textbox="clr-namespace:CamControls;assembly=CamControls"
+        >
+    <DockPanel>
+        <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom" FlowDirection="RightToLeft" VerticalAlignment="Bottom">
+            <Button Width="40" Margin="3" Click="Accept">OK</Button>
+            <Button Width="90" Margin="3" Click="LoadFromFile">Load From File</Button>
+            <Button Width="90" Margin="3" Click="SaveToFile">Save To File</Button>
+        </StackPanel>
+        <Border DockPanel.Dock="Left" BorderBrush="Black" BorderThickness="1" Width="99">
+            <StackPanel VerticalAlignment="Top" Height="332" Margin="9,9,0,0">
+                <ListBox x:Name="_linesstView" Height="228" VerticalAlignment="Stretch" SelectionChanged="SelectLine" SelectionMode="Single" Margin="0,0,10,0"/>
+                <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Bottom">
+                    <Button Margin="3" Width="40" Click="AddLine" Content="Add"/>
+                    <Button Margin="3" Width="40" Click="DeleteLine" Content="Delete"/>
+                    <Button Margin="3" Width="40" Click="DeleteAllLines" Content="Clear"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+        <Border DockPanel.Dock="Left" BorderBrush="Black" BorderThickness="1" Width="193">
+            <ListBox x:Name="_pointsView" VerticalAlignment="Stretch" SelectionMode="Single" Margin="9"/>
+        </Border>
+    </DockPanel>
+</Window>

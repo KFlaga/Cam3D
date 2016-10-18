@@ -29,6 +29,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CamImageOperationsModule", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTestProject1\UnitTests.csproj", "{DFA5842E-EF98-497A-A922-5BAE02E83821}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageMatchingModule", "ImageMatchingModule\ImageMatchingModule.csproj", "{092F0409-76D1-4858-B4D4-A78737BEBB6A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TriangulationModule", "TriangulationModule\TriangulationModule.csproj", "{F64005ED-2C17-4678-928F-5CD1B3BBE6BC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -87,6 +91,14 @@ Global
 		{DFA5842E-EF98-497A-A922-5BAE02E83821}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DFA5842E-EF98-497A-A922-5BAE02E83821}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DFA5842E-EF98-497A-A922-5BAE02E83821}.Release|Any CPU.Build.0 = Release|Any CPU
+		{092F0409-76D1-4858-B4D4-A78737BEBB6A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{092F0409-76D1-4858-B4D4-A78737BEBB6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{092F0409-76D1-4858-B4D4-A78737BEBB6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{092F0409-76D1-4858-B4D4-A78737BEBB6A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F64005ED-2C17-4678-928F-5CD1B3BBE6BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F64005ED-2C17-4678-928F-5CD1B3BBE6BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F64005ED-2C17-4678-928F-5CD1B3BBE6BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F64005ED-2C17-4678-928F-5CD1B3BBE6BC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -18,81 +18,67 @@ namespace CamControls
 {
     public partial class ParametersSelectionPanel : UserControl
     {
+        public delegate IParameterInput InputCreator(AlgorithmParameter parameter);
+        public static Dictionary<string, InputCreator> InputCreators = new Dictionary<string, InputCreator>()
+        {
+             { typeof(int).Name, CreateInput_Int},
+             { typeof(float).Name, CreateInput_Float},
+             { typeof(double).Name, CreateInput_Double},
+             { typeof(bool).Name, CreateInput_Boolean},
+             { typeof(string).Name, CreateInput_String},
+             { "Dictionary", CreateInput_Combo},
+             { "IParameterizable", CreateInput_Parametrizable}
+        };
+
+        public static IParameterInput CreateInput_Int(AlgorithmParameter parameter)
+        {
+            return new IntParameterInput(parameter as AlgorithmParameter<int>);
+        }
+
+        public static IParameterInput CreateInput_Float(AlgorithmParameter parameter)
+        {
+            return new FloatParameterInput(parameter as AlgorithmParameter<float>);
+        }
+
+        public static IParameterInput CreateInput_Double(AlgorithmParameter parameter)
+        {
+            return new DoubleParameterInput(parameter as AlgorithmParameter<double>);
+        }
+
+        public static IParameterInput CreateInput_Boolean(AlgorithmParameter parameter)
+        {
+            return new BooleanParameterInput(parameter as AlgorithmParameter<bool>);
+        }
+
+        public static IParameterInput CreateInput_String(AlgorithmParameter parameter)
+        {
+            return new StringParameterInput(parameter as AlgorithmParameter<string>);
+        }
+
+        public static IParameterInput CreateInput_Combo(AlgorithmParameter parameter)
+        {
+            return new ComboParameterInput(parameter as DictionaryParameter);
+        }
+
+        public static IParameterInput CreateInput_Parametrizable(AlgorithmParameter parameter)
+        {
+            return new ParametrizableParameterInput(parameter as ParametrizedObjectParameter);
+        }
+
         public ParametersSelectionPanel()
         {
             InitializeComponent();
         }
 
-        public void SetParameters(List<ProcessorParameter> paramters)
+        public void SetParameters(List<AlgorithmParameter> paramters)
         {
             _mainPanel.Children.Clear();
             foreach(var parameter in paramters)
             {
-                _mainPanel.Children.Add(CreateOptionSelector(parameter));
+                var input = InputCreators[parameter.TypeName](parameter);
+                parameter.Input = input;
+                _mainPanel.Children.Add(input.UIInput);
             }
-        }
-
-        public UIElement CreateOptionSelector(ProcessorParameter parameter)
-        {
-            DockPanel optPanel = new DockPanel();
-            optPanel.Height = 25;
-
-            Label name = new Label();
-            name.Content = parameter.Name;
-            DockPanel.SetDock(name, Dock.Left);
-
-            if(parameter.TypeName.Contains("Boolean"))
-            {
-                CheckBox checkBox = new CheckBox();
-                checkBox.IsChecked = (bool)parameter.DefaultValue;
-                checkBox.Checked += (s, e) => { parameter.ActualValue = true; };
-                checkBox.Unchecked += (s, e) => { parameter.ActualValue = false; };
-                checkBox.HorizontalAlignment = HorizontalAlignment.Center;
-                checkBox.HorizontalContentAlignment = HorizontalAlignment.Center;
-                checkBox.VerticalAlignment = VerticalAlignment.Center;
-
-                DockPanel.SetDock(checkBox, Dock.Right);
-                optPanel.Children.Add(checkBox);
-            }
-            else
-            {
-                NumberTextBox textBox = null;
-
-                if(parameter.TypeName.Contains("UInt"))
-                {
-                    textBox = new UnsignedIntegerTextBox();
-                }
-                else if(parameter.TypeName.Contains("Int"))
-                {
-                    textBox = new IntegerTextBox();
-                }
-                else if(parameter.TypeName.Contains("Single"))
-                {
-                    textBox = new SingleTextBox();
-                }
-                else if(parameter.TypeName.Contains("Double"))
-                {
-                    textBox = new DoubleTextBox();
-                }
-
-                textBox.SetNumber(parameter.DefaultValue);
-                textBox.SetMinMaxValues(parameter.MinValue, parameter.MaxValue);
-                textBox.MinWidth = 100;
-                textBox.HorizontalAlignment = HorizontalAlignment.Center;
-                textBox.HorizontalContentAlignment = HorizontalAlignment.Center;
-                textBox.VerticalAlignment = VerticalAlignment.Center;
-                DockPanel.SetDock(textBox, Dock.Right);
-                optPanel.Children.Add(textBox);
-
-                textBox.TextChanged += (s, e) =>
-                {
-                    parameter.ActualValue = textBox.GetNumber();
-                };
-            }
-
-            optPanel.Children.Add(name);
-
-            return optPanel;
         }
     }
 }

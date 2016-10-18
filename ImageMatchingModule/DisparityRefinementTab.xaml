@@ -1,0 +1,79 @@
+﻿<UserControl x:Class="ImageMatchingModule.DisparityRefinementTab"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ImageMatchingModule"
+             xmlns:CamControls="clr-namespace:CamControls;assembly=CamControls"
+             mc:Ignorable="d" 
+             d:DesignHeight="400" d:DesignWidth="600">
+    <Grid x:Name="_mainLayout">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="10*"/>
+            <RowDefinition Height="40"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="395"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <Label Grid.Column="1" HorizontalContentAlignment="Center">Final disparity map (for left image)</Label>
+        
+        <Border Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" BorderBrush="Black" BorderThickness="1">
+            <ScrollViewer>
+                <ItemsControl x:Name="_refinerBlocksView" 
+                              ItemTemplate="{DynamicResource ResourceKey=RefinerItemTemplate}"/>
+
+            </ScrollViewer>
+        </Border>
+
+        <local:DisparityImage x:Name="_disparityMapImage" Grid.Column="1" Grid.Row="1" BorderBrush="Black" BorderThickness="1"/>
+
+        <Border Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="3" BorderBrush="Black" BorderThickness="1">
+            <DockPanel DockPanel.Dock="Bottom" Height="35" Background="LightGray">
+                <Button Margin="10,4,3,4" Click="UpdateMaps">Update Maps</Button>
+                <Button Margin="10,4,3,4" Click="ResetMaps">Reset Maps</Button>
+
+                <Button Margin="10,4,3,4" Click="ResetMaps" DockPanel.Dock="Right">Restore Map</Button>
+                <Button Margin="10,4,3,4" Click="ResetMaps" DockPanel.Dock="Right">Store Map</Button>
+                <Button Margin="10,4,3,4" Click="ResetMaps" DockPanel.Dock="Right">Save Map To File</Button>
+                <Button Margin="10,4,3,4" Click="ResetMaps" DockPanel.Dock="Right">Load Map From File</Button>
+                <Label></Label>
+            </DockPanel>
+        </Border>
+    </Grid>
+    
+    <UserControl.Resources>
+        <DataTemplate x:Key="RefinerItemTemplate">
+            <Border BorderBrush="Black" BorderThickness="1">
+                <StackPanel Orientation="Horizontal">
+                    <Button Click="ChangeRefiner" Tag="{Binding Index}" Height="54" Width="150" Margin="2" Padding="1">
+                        <Button.Content>
+                            <TextBlock Text="{Binding Name}" TextWrapping="Wrap" Padding="1" TextAlignment="Center" Margin="1"/>
+                        </Button.Content>
+                    </Button>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="28"/>
+                            <RowDefinition Height="28"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="110"/>
+                            <ColumnDefinition Width="110"/>
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" Grid.Row="0" Content="On Base" Tag="{Binding Index}"
+                                Margin="1" IsEnabled="{Binding IsRefinerSet}" Click="ApplyOnBase" />
+                        <Button Grid.Column="1" Grid.Row="0" Content="On Current" Tag="{Binding Index}"
+                                Margin="1" IsEnabled="{Binding IsRefinerSet}" Click="ApplyOnCurrent" />
+                        <Button Grid.Column="0" Grid.Row="1" Content="Above On Base" Tag="{Binding Index}"
+                                Margin="1" IsEnabled="{Binding IsRefinerSet}" Click="ApplyAboveOnBase"/>
+                        <Button Grid.Column="1" Grid.Row="1" Content="Above On Current" Tag="{Binding Index}"
+                                Margin="1" IsEnabled="{Binding IsRefinerSet}" Click="ApplyAboveOnCurrent" />
+                    </Grid>
+                </StackPanel>
+            </Border>
+        </DataTemplate>
+    </UserControl.Resources>
+    
+</UserControl>

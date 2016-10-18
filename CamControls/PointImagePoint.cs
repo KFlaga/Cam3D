@@ -21,8 +21,11 @@ namespace CamControls
                         PositionChanged(this, new PointImageEventArgs()
                         {
                             NewImagePoint = this,
+                            OldImagePoint = this,
                             NewPointPosition = _position,
-                            OldPointPosition = oldpos
+                            OldPointPosition = oldpos,
+                            IsNewPointNull = _isNull,
+                            IsNewPointSelected = _isSelected
                         });
                 }
             }
@@ -43,7 +46,12 @@ namespace CamControls
                     if (IsSelectedChanged != null)
                         IsSelectedChanged(this, new PointImageEventArgs()
                         {
-                            IsNewPointSelected = _isSelected
+                            IsNewPointSelected = _isSelected,
+                            IsNewPointNull = _isNull,
+                            NewImagePoint = this,
+                            OldImagePoint = this,
+                            NewPointPosition = Position,
+                            OldPointPosition = Position
                         });
                 }
             }
@@ -61,7 +69,12 @@ namespace CamControls
                     if (IsNullChanged != null)
                         IsNullChanged(this, new PointImageEventArgs()
                         {
-                            IsNewPointNull = _isNull
+                            IsNewPointNull = _isNull,
+                            IsNewPointSelected = false,
+                            NewImagePoint = this,
+                            OldImagePoint = this,
+                            NewPointPosition = Position,
+                            OldPointPosition = Position
                         });
                 }
             }

@@ -294,7 +294,8 @@ namespace CalibrationModule
             // e = dL_i'^2 = (Axi+Byi+C)^2 / A^2 + B^2
             var point = CorrectedPoints[l][p];
             double d = LineCoeffs[l, 0] * point.Pf.X + LineCoeffs[l, 1] * point.Pf.Y + LineCoeffs[l, 2];
-            double error = d * d / (LineCoeffs[l, 0] * LineCoeffs[l, 0] + LineCoeffs[l, 1] * LineCoeffs[l, 1]);
+            double error = d / Math.Sqrt(LineCoeffs[l, 0] * LineCoeffs[l, 0] + LineCoeffs[l, 1] * LineCoeffs[l, 1]);
+           // double error = d * d / (LineCoeffs[l, 0] * LineCoeffs[l, 0] + LineCoeffs[l, 1] * LineCoeffs[l, 1]);
             return error;
         }
 
@@ -646,8 +647,8 @@ namespace CalibrationModule
         public override double ComputeResidiual()
         {
             ComputeErrorVector(_currentErrorVector);
-            return _currentErrorVector.Sum();
-            // return _currentErrorVector.DotProduct(_currentErrorVector);
+           // return _currentErrorVector.Sum();
+             return _currentErrorVector.DotProduct(_currentErrorVector);
         }
     }
 }

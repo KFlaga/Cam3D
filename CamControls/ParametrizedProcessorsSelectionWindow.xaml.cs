@@ -13,58 +13,13 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using static CamControls.ParametrizedProcessorsSelectionPanel;
 
 namespace CamControls
 {
     public partial class ParametrizedProcessorsSelectionWindow : Window
     {
-        class ProcessorFamily
-        {
-            public int Index { get; set; }
-            public string Name { get; set; }
-            public ComboBox ComboProcessors { get; set; }
-            public Label LabelName { get; set; }
-            public ParametersSelectionPanel ParametersPanel { get; set; }
-
-            public IParametrizedProcessor SelectedProcessor { get; set; }
-
-            public ProcessorFamily(Panel parentPanel, int idx, string name)
-            {
-                Index = idx;
-                Name = name;
-                SelectedProcessor = null;
-
-                LabelName = new Label();
-                LabelName.Content = "Choose " + name;
-                DockPanel.SetDock(LabelName, Dock.Top);
-                LabelName.Height = 30.0;
-                LabelName.HorizontalContentAlignment = HorizontalAlignment.Center;
-                parentPanel.Children.Add(LabelName);
-
-                ComboProcessors = new ComboBox();
-                DockPanel.SetDock(ComboProcessors, Dock.Top);
-                ComboProcessors.Height = 25.0;
-                ComboProcessors.Margin = new Thickness(30.0, 5.0, 30.0, 5.0);
-                ComboProcessors.HorizontalContentAlignment = HorizontalAlignment.Center;
-                parentPanel.Children.Add(ComboProcessors);
-
-                ComboProcessors.SelectionChanged += ComboProcessors_SelectionChanged;
-
-                ParametersPanel = new ParametersSelectionPanel();
-                ParametersPanel.MinHeight = 20.0;
-                DockPanel.SetDock(ParametersPanel, Dock.Top);
-                parentPanel.Children.Add(ParametersPanel);
-            }
-
-            private void ComboProcessors_SelectionChanged(object sender, SelectionChangedEventArgs e)
-            {
-                SelectedProcessor = (IParametrizedProcessor)e.AddedItems[0];
-                ParametersPanel.SetParameters(SelectedProcessor.Parameters);
-            }
-        }
-
         public bool Accepted { get; set; }
-        private Dictionary<string, ProcessorFamily> _processorFamilies = new Dictionary<string, ProcessorFamily>();
         private bool _firstTimeShown = true;
 
         public ParametrizedProcessorsSelectionWindow()
@@ -76,36 +31,33 @@ namespace CamControls
                 if((bool)e.NewValue == true && _firstTimeShown)
                 {
                     _firstTimeShown = false;
-                    foreach(var family in _processorFamilies)
+                    foreach(var family in _panel._processorFamilies)
                     {
                         family.Value.ComboProcessors.SelectedIndex = 0;
                     }
                 }
             };
         }
-
+        
         public void AddProcessorFamily(string familyName)
         {
-            var family = new ProcessorFamily(_mainPanel, _processorFamilies.Count, familyName);
-            _processorFamilies.Add(familyName, family);
+            _panel.AddProcessorFamily(familyName);
         }
 
-        public void AddToFamily(string familyName, IParametrizedProcessor processor)
+        public void AddToFamily(string familyName, IParameterizable processor)
         {
-            processor.InitParameters();
-            var family = _processorFamilies[familyName];
-            family.ComboProcessors.Items.Add(processor);
+            _panel.AddToFamily(familyName, processor);
         }
 
-        public IParametrizedProcessor GetSelectedProcessor(string family)
+        public IParameterizable GetSelectedProcessor(string family)
         {
-            return _processorFamilies[family].SelectedProcessor;
+            return _panel.GetSelectedProcessor(family);
         }
 
         public void Accept(object sender, RoutedEventArgs e)
         {
             Accepted = true;
-            foreach(var family in _processorFamilies)
+            foreach(var family in _panel._processorFamilies)
             {
                 if(family.Value.SelectedProcessor != null)
                 {

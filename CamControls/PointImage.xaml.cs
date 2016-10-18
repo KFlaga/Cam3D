@@ -39,9 +39,12 @@ namespace CamControls
                 if(_baseImage != null)
                 {
                     _finalImage = new WriteableBitmap(_baseImage);
-                    foreach(var point in Points)
+                    if(_showPoints)
                     {
-                        DrawCross(point.Position, _finalImage, CrossColor);
+                        foreach(var point in Points)
+                        {
+                            DrawCross(point.Position, _finalImage, CrossColor);
+                        }
                     }
                     _imageControl.Source = _finalImage;
                 }
@@ -58,6 +61,8 @@ namespace CamControls
         public List<PointImagePoint> Points { get { return _points; } }
 
         public event EventHandler<ImageChangedEventArgs> ImageSourceChanged;
+
+        public WriteableBitmap EditableSource { get { return _finalImage; } }
 
         public PointImagePoint SelectedPoint
         {
@@ -161,6 +166,23 @@ namespace CamControls
             if(_finalImage != null)
             {
                 _finalImage = new WriteableBitmap(_baseImage);
+            }
+        }
+
+        public void UpdateImage()
+        {
+            if(_showPoints)
+            {
+                _finalImage = new WriteableBitmap(_baseImage);
+                // Redraw all points
+                foreach(var point in _points)
+                {
+                    if(point.IsSelected)
+                        DrawCross(point.Position, _finalImage, SelectedColor);
+                    else
+                        DrawCross(point.Position, _finalImage, CrossColor);
+                }
+                _imageControl.Source = _finalImage;
             }
         }
 
@@ -271,16 +293,21 @@ namespace CamControls
                 point.X < 5 || point.Y < 5)
                 return;
 
-            Int32[] cross = new Int32[25];
-            _baseImage.CopyPixels(new Int32Rect((int)point.X - 2, (int)point.Y - 2, 5, 5), cross, 20, 0);
-            img.WritePixels(new Int32Rect((int)point.X - 2, (int)point.Y - 2, 5, 5), cross, 20, 0);
-            foreach(var p in _points)
+            try
             {
-                if(CrossHitTest(p.Position, point))
+                Int32[] cross = new Int32[25];
+                _baseImage.CopyPixels(new Int32Rect((int)point.X - 2, (int)point.Y - 2, 5, 5), cross, 20, 0);
+                img.WritePixels(new Int32Rect((int)point.X - 2, (int)point.Y - 2, 5, 5), cross, 20, 0);
+                foreach(var p in _points)
                 {
-                    DrawCross(p.Position, img, CrossColor);
+                    if(CrossHitTest(p.Position, point))
+                    {
+                        DrawCross(p.Position, img, CrossColor);
+                    }
                 }
             }
+            catch(Exception e)
+            { }
         }
 
         private bool PointHitTest(Point hitting, Point hit)
@@ -298,12 +325,39 @@ namespace CamControls
 
         private void LoadImage(object sender, RoutedEventArgs e)
         {
-            string imgPath = CamCore.FileOperations.GetFilePath("BMP|*.bmp|GIF|*.gif|JPG|*.jpg;*.jpeg|PNG|*.png|"
-                                + "All Images|*.bmp;*.jpg;*.jpeg;*.png;*.gif");
+            string imgPath = CamCore.FileOperations.GetFilePath("All Images|*.bmp;*.jpg;*.jpeg;*.png;*.gif|" +
+                "BMP|*.bmp|GIF|*.gif|JPG|*.jpg;*.jpeg|PNG|*.png");
             if(imgPath != null)
             {
                 ImageSource = new BitmapImage(new Uri(imgPath, UriKind.Absolute));
             }
+        }
+
+        private void SaveImage(object sender, RoutedEventArgs e)
+        {
+            if(ImageSource == null)
+                return;
+
+            CamCore.FileOperations.SaveToFile((stream, path) =>
+            {
+                BitmapEncoder encoder;
+                if(path.EndsWith(".png"))
+                    encoder = new PngBitmapEncoder();
+                else if(path.EndsWith(".jpg") || path.EndsWith(".jpeg"))
+                    encoder = new JpegBitmapEncoder();
+                else if(path.EndsWith(".bmp"))
+                    encoder = new BmpBitmapEncoder();
+                else
+                {
+                    MessageBox.Show("Not supported image format");
+                    return;
+                }
+
+                encoder.Frames.Add(BitmapFrame.Create(ImageSource));
+                encoder.Save(stream);
+            },
+                "All Images|*.bmp;*.jpg;*.jpeg;*.png;|" +
+                "BMP|*.bmp|JPG|*.jpg;*.jpeg|PNG|*.png");
         }
 
         protected void ImageMouseLeftButtonDown(object sender, MouseButtonEventArgs e)

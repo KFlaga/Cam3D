@@ -13,38 +13,12 @@ namespace CamControls
 
     public class NumberTextBox<T> : NumberTextBox where T : IComparable<T>, IConvertible, IFormattable
     {
-        public static DependencyProperty CurrentValueProperty =
-            DependencyProperty.Register("CurrentValue", typeof(T), typeof(NumberTextBox<T>));
-        public static DependencyProperty MaxValueProperty =
-            DependencyProperty.Register("MaxValue", typeof(T), typeof(NumberTextBox<T>));
-        public static DependencyProperty MinValueProperty =
-            DependencyProperty.Register("MinValue", typeof(T), typeof(NumberTextBox<T>));
-        public static DependencyProperty LimitValueProperty =
-            DependencyProperty.Register("LimitValue", typeof(bool), typeof(NumberTextBox<T>));
-
         protected T _curVal;
-
-        public T MaxValue
-        {
-            get { return (T)GetValue(MaxValueProperty); }
-            set
-            {
-                SetValue(MaxValueProperty, value);
-            }
-        }
-        public T MinValue
-        {
-            get { return (T)GetValue(MinValueProperty); }
-            set
-            {
-                SetValue(MinValueProperty, value);
-            }
-        }
-        public bool LimitValue
-        {
-            get { return (bool)GetValue(LimitValueProperty); }
-            set { SetValue(LimitValueProperty, value); }
-        }
+        
+        public T MaxValue { get; set; }
+        public T MinValue { get; set; }
+        public bool LimitValue { get; set; }
+        
         public virtual T CurrentValue
         {
             get
@@ -53,9 +27,15 @@ namespace CamControls
             }
             set
             {
+                bool changed = !_curVal.Equals(value);
                 _curVal = value;
-                SetValue(CurrentValueProperty, value);
-                this.Text = _curVal.ToString();
+                if(changed)
+                    this.Text = _curVal.ToString();
+
+                ValueChanged?.Invoke(this, new NumberTextBoxValueChangedEventArgs<T>()
+                {
+                    NewValue = _curVal
+                });
             }
         }
 
@@ -63,28 +43,31 @@ namespace CamControls
 
         public NumberTextBox()
         {
-            
+
         }
 
         protected override void OnTextChanged(TextChangedEventArgs e)
         {
-            if (!e.Handled)
+            if(!e.Handled)
             {
-                if (LimitValue)
+                if(LimitValue)
                 {
-                    if (CurrentValue.CompareTo(MaxValue) > 0 )
+                    if(_curVal.CompareTo(MaxValue) > 0)
                     {
                         _curVal = MaxValue;
+                        e.Handled = true;
                         Text = _curVal.ToString();
                     }
-                    else if(CurrentValue.CompareTo(MinValue) < 0)
+                    else if(_curVal.CompareTo(MinValue) < 0)
                     {
                         _curVal = MinValue;
+                        e.Handled = true;
                         Text = _curVal.ToString();
                     }
                 }
-                
-               _isEmpty = false;
+
+                _isEmpty = false;
+                CurrentValue = _curVal;
             }
 
             base.OnTextChanged(e);
@@ -106,5 +89,16 @@ namespace CamControls
             MinValue = (T)min;
             MaxValue = (T)max;
         }
+
+        public event EventHandler<NumberTextBoxValueChangedEventArgs<T>> ValueChanged;
+        public void ClearValueChangedEvent()
+        {
+            ValueChanged = null;
+        }
+    }
+
+    public class NumberTextBoxValueChangedEventArgs<T> : EventArgs
+    {
+        public T NewValue { get;set; }
     }
 }

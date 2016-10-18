@@ -167,7 +167,7 @@ namespace CalibrationModule
 
         public override void InitParameters()
         {
-            Parameters = new List<CamCore.ProcessorParameter>();
+            Parameters = new List<CamCore.AlgorithmParameter>();
         }
 
         public override void UpdateParameters()

@@ -66,6 +66,16 @@ namespace CamControls
             _saturation = 1.0;
             _hueAngle = 0.0;
 
+            _tbBlue.LimitValue = true;
+            _tbBlue.MaxValue = 255;
+            _tbBlue.MinValue = 255;
+            _tbGreen.LimitValue = true;
+            _tbGreen.MaxValue = 255;
+            _tbGreen.MinValue = 255;
+            _tbRed.LimitValue = true;
+            _tbRed.MaxValue = 255;
+            _tbRed.MinValue = 255;
+
             FillHueField();
             FillBrightnessSaturationField();
             UpdateColorFromHSB();

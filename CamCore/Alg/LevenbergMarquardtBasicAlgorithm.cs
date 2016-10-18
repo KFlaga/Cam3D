@@ -175,7 +175,13 @@ namespace CamCore
                 oldRes.CopyTo(ResultsVector);
             }
             
-            if(_currentResidiual < MinimumResidiual * 1.01)
+            if(_currentResidiual < MinimumResidiual)
+            {
+                // Update lambda -> lower only if new residiual is good enough
+                // (1% difference as it tends to stuck with high lambda and almost no change in results)
+                _lam *= 0.1;
+            }
+            else if(_currentResidiual < MinimumResidiual * 1.01)
             {
                 // Update lambda -> lower only if new residiual is good enough
                 // (1% difference as it tends to stuck with high lambda and almost no change in results)

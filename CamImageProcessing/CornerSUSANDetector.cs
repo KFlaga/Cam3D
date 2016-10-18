@@ -109,46 +109,41 @@ namespace CamImageProcessing
         
         public override void InitParameters()
         {
-            Parameters = new List<ProcessorParameter>();
+            Parameters = new List<AlgorithmParameter>();
 
-            ProcessorParameter intensityThreshold = new ProcessorParameter(
-                "Intensity Difference Threshold", "TI",
-                "System.Single", 0.05f, 0.0f, 1.0f);
+            AlgorithmParameter intensityThreshold = new DoubleParameter(
+                "Intensity Difference Threshold", "TI", 0.05f, 0.0f, 1.0f);
 
             Parameters.Add(intensityThreshold);
 
-            ProcessorParameter susanTreshold = new ProcessorParameter(
-                "SUSAN Factor Threshold", "TS",
-                "System.Single", 0.5f, 0.0f, 1.0f);
+            AlgorithmParameter susanTreshold = new DoubleParameter(
+                "SUSAN Factor Threshold", "TS", 0.5f, 0.0f, 1.0f);
 
             Parameters.Add(susanTreshold);
 
-            ProcessorParameter performNonmaxSupression = new ProcessorParameter(
-               "Perform NonMax Supression (Corners)", "PS",
-               "System.Boolean", false, false, true);
+            AlgorithmParameter performNonmaxSupression = new BooleanParameter(
+               "Perform NonMax Supression (Corners)", "PS", false);
 
             Parameters.Add(performNonmaxSupression);
 
-            ProcessorParameter checkCenterDistance = new ProcessorParameter(
-                "Check Center Distance (Corners)", "CDist",
-                "System.Boolean", false, false, true);
+            AlgorithmParameter checkCenterDistance = new BooleanParameter(
+                "Check Center Distance (Corners)", "CDist", false);
 
             Parameters.Add(checkCenterDistance);
 
-            ProcessorParameter checkCenterDirection = new ProcessorParameter(
-                "Check Center Direction (Corners)", "CDir",
-                "System.Boolean", false, false, true);
+            AlgorithmParameter checkCenterDirection = new BooleanParameter(
+                "Check Center Direction (Corners)", "CDir", false);
 
             Parameters.Add(checkCenterDirection);
         }
 
         public override void UpdateParameters()
         {
-            _t_intensity = (float)(ProcessorParameter.FindValue("TI", Parameters));
-            _t_usan = (float)(ProcessorParameter.FindValue("TS", Parameters));
-            _checkCenterDistance = (bool)(ProcessorParameter.FindValue("CDist", Parameters));
-            _checkCenterDirection = (bool)(ProcessorParameter.FindValue("CDir", Parameters));
-            _nonMaxSup = (bool)(ProcessorParameter.FindValue("PS", Parameters));
+            _t_intensity = (float)(AlgorithmParameter.FindValue("TI", Parameters));
+            _t_usan = (float)(AlgorithmParameter.FindValue("TS", Parameters));
+            _checkCenterDistance = (bool)(AlgorithmParameter.FindValue("CDist", Parameters));
+            _checkCenterDirection = (bool)(AlgorithmParameter.FindValue("CDir", Parameters));
+            _nonMaxSup = (bool)(AlgorithmParameter.FindValue("PS", Parameters));
             _t_isFeature = _t_usan * _patchArea;
         }
     }

@@ -44,24 +44,22 @@ namespace CamImageProcessing
 
         public override void InitParameters()
         {
-            Parameters = new List<ProcessorParameter>();
-            ProcessorParameter tresh = new ProcessorParameter(
-                "Treshold", "TH",
-                "System.Single", 0.5f, 0.0f, 1.0f);
+            Parameters = new List<AlgorithmParameter>();
+            AlgorithmParameter tresh = new DoubleParameter(
+                "Treshold", "TH", 0.5, 0.0, 1.0);
 
             Parameters.Add(tresh);
 
-            ProcessorParameter inversed = new ProcessorParameter(
-               "Inverse Brightness", "IB",
-               "System.Boolean", false, false, true);
+            AlgorithmParameter inversed = new BooleanParameter(
+               "Inverse Brightness", "IB", false);
 
             Parameters.Add(inversed);
         }
 
         public override void UpdateParameters()
         {
-            Threshold = (int)ProcessorParameter.FindValue("TH", Parameters);
-            Inverse = (bool)ProcessorParameter.FindValue("IB", Parameters);
+            Threshold = AlgorithmParameter.FindValue<int>("TH", Parameters);
+            Inverse = AlgorithmParameter.FindValue<bool>("IB", Parameters);
         }
     }
 }

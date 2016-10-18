@@ -6,18 +6,27 @@
              xmlns:local="clr-namespace:CalibrationModule"
              xmlns:CamControls="clr-namespace:CamControls;assembly=CamControls"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="650">
+             d:DesignHeight="450" d:DesignWidth="650">
     <DockPanel>
         <Border BorderBrush="Black" BorderThickness="1" DockPanel.Dock="Right">
             <StackPanel>
                 <Button Content="Find Calib. Points" Click="FindCalibrationPoints" Margin="5,3,5,3"/>
                 <Button Content="Manage Real Grids" Click="ManageGrids" Margin="5,3,5,3"/>
                 <Button Content="Manage Calib. Points" Click="ManagePoints" Margin="5,3,5,3"/>
+                <Button Content="Manage Calib. Lines" Click="ManageLines" Margin="5,3,5,3"/>
                 <Rectangle Fill="Black" Height="2"/>
                 <Button Content="Compute Distortion Params" VerticalAlignment="Bottom" Margin="5,3,5,3" Click="ComputeDistortionCorrectionParameters"/>
                 <Button Content="Undistort Calib Points" VerticalAlignment="Bottom" Margin="5,3,5,3" Click="UndistortCalibrationPoints"/>
                 <Button Content="Undistort image" VerticalAlignment="Bottom" Margin="5,3,5,3" Click="UndistortImage"/>
+                <Button Content="Accept UnDistortion" VerticalAlignment="Bottom" Margin="5,3,5,3" Click="AcceptDistortionModel"/>
+                <Button Content="Save UnDistortion" VerticalAlignment="Bottom" Margin="5,3,5,3" Click="SaveDistortionModel"/>
+                <Button Content="Load UnDistortion" VerticalAlignment="Bottom" Margin="5,3,5,3" Click="LoadDistortionModel"/>
+                <Rectangle Fill="Black" Height="2"/>
                 <Button Content="Calibrate!" VerticalAlignment="Bottom" Margin="5,3,5,3" Click="Calibrate"/>
+                <Button Content="Accept Calibration" VerticalAlignment="Bottom" Margin="5,3,5,3" Click="AcceptCalibration"/>
+                <Button Content="Test Calibration" VerticalAlignment="Bottom" Margin="5,3,5,3" Click="TestCalibration"/>
+                <Button Content="Save Calibration" VerticalAlignment="Bottom" Margin="5,3,5,3" Click="SaveCalibration"/>
+                <Button Content="Load Calibration" VerticalAlignment="Bottom" Margin="5,3,5,3" Click="LoadCalibration"/>
                 <Rectangle Fill="Black" Height="2"/>
                 <Button Content="Get Image From Memory" VerticalAlignment="Bottom" Margin="5,3,5,10" IsEnabled="{Binding IsCameraCaptureInMemory}" Click="LoadImageFromMemory"/>
             </StackPanel>

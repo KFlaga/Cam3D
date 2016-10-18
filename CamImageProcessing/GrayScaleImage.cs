@@ -41,26 +41,21 @@ namespace CamImageProcessing
             for(x = 0; x < SizeX; ++x)
             {
                 for(y = 0; y < SizeY; ++y)
-                { 
-                    ImageMatrix[y,x] = (cimage[y, x, 0] +
-                        cimage[y, x, 1] + cimage[y, x, 2] ) / 3;
+                {
+                    ImageMatrix[y, x] = (cimage[y, x, 0] +
+                        cimage[y, x, 1] + cimage[y, x, 2]) / 3;
                 }
             }
         }
 
         public void FromBitmapSource(BitmapSource bitmap)
         {
-            if (bitmap.Format != PixelFormats.Gray32Float)
+            if(bitmap.Format != PixelFormats.Rgba128Float)
             {
                 FormatConvertedBitmap bitmapFormater = new FormatConvertedBitmap();
-                // BitmapSource objects like FormatConvertedBitmap can only have their properties
-                // changed within a BeginInit/EndInit block.
                 bitmapFormater.BeginInit();
-                // Use the BitmapSource object defined above as the source for this new 
-                // BitmapSource (chain the BitmapSource objects together).
                 bitmapFormater.Source = bitmap;
-                // Set the new format to Gray32Float (grayscale).
-                bitmapFormater.DestinationFormat = PixelFormats.Gray32Float;
+                bitmapFormater.DestinationFormat = PixelFormats.Rgba128Float;
                 bitmapFormater.EndInit();
 
                 bitmap = bitmapFormater;
@@ -69,28 +64,32 @@ namespace CamImageProcessing
             DpiX = bitmap.DpiX;
             DpiY = bitmap.DpiY;
 
-            int stride = bitmap.PixelWidth * sizeof(double);
-            double[] data = new double[bitmap.PixelHeight * bitmap.PixelWidth];
+            int stride = bitmap.PixelWidth * 4 * sizeof(float);
+            float[] data = new float[bitmap.PixelHeight * bitmap.PixelWidth * 4];
             bitmap.CopyPixels(data, stride, 0);
-            // Bitmap stores data in row-major order and matrix in column major
-            // So store data to transposed matrix and transpose it so bitmap[y,x] == matrix[y,x]
-            ImageMatrix = new DenseMatrix(bitmap.PixelWidth, bitmap.PixelHeight, data);
-            ImageMatrix = ImageMatrix.Transpose();
+
+            ImageMatrix = new DenseMatrix(bitmap.PixelHeight, bitmap.PixelWidth);
+            for(int imgy = 0; imgy < bitmap.PixelHeight; ++imgy)
+            {
+                for(int imgx = 0; imgx < bitmap.PixelWidth; ++imgx)
+                {
+                    // Bitmap stores data in row-major order and matrix in column major
+                    // So store data to transposed matrix and transpose it so bitmap[y,x] == matrix[y,x]
+                    ImageMatrix[imgy, imgx] = (data[4 * imgy * bitmap.PixelWidth + 4 * imgx]
+                     + data[4 * imgy * bitmap.PixelWidth + 4 * imgx + 1]
+                     + data[4 * imgy * bitmap.PixelWidth + 4 * imgx + 2]) / 3.0;
+                }
+            }
         }
 
         public void FromBitmapSource(BitmapSource bitmap, Int32Rect area)
         {
-            if (bitmap.Format != PixelFormats.Gray32Float)
+            if(bitmap.Format != PixelFormats.Rgba128Float)
             {
                 FormatConvertedBitmap bitmapFormater = new FormatConvertedBitmap();
-                // BitmapSource objects like FormatConvertedBitmap can only have their properties
-                // changed within a BeginInit/EndInit block.
                 bitmapFormater.BeginInit();
-                // Use the BitmapSource object defined above as the source for this new 
-                // BitmapSource (chain the BitmapSource objects together).
                 bitmapFormater.Source = bitmap;
-                // Set the new format to Gray32Float (grayscale).
-                bitmapFormater.DestinationFormat = PixelFormats.Gray32Float;
+                bitmapFormater.DestinationFormat = PixelFormats.Rgba128Float;
                 bitmapFormater.EndInit();
 
                 bitmap = bitmapFormater;
@@ -99,28 +98,56 @@ namespace CamImageProcessing
             DpiX = bitmap.DpiX;
             DpiY = bitmap.DpiY;
 
-            int stride = area.Width * sizeof(double);
-            double[] data = new double[area.Height * area.Width];
+            int stride = area.Width * 4 * sizeof(float);
+            float[] data = new float[area.Height * area.Width * 4];
             bitmap.CopyPixels(area, data, stride, 0);
-            ImageMatrix = new DenseMatrix(area.Width, area.Height, data);
-            ImageMatrix = ImageMatrix.Transpose();
+
+            for(int imgy = 0; imgy < area.Height; ++imgy)
+            {
+                for(int imgx = 0; imgx < area.Width; ++imgx)
+                {
+                    // Bitmap stores data in row-major order and matrix in column major
+                    // So store data to transposed matrix and transpose it so bitmap[y,x] == matrix[y,x]
+                    ImageMatrix[imgy, imgx] = (data[imgy * area.Width + imgx]
+                     + data[imgy * area.Width + imgx + 1]
+                     + data[imgy * area.Width + imgx + 2]) / 3.0;
+                }
+            }
         }
 
-        public BitmapSource ToBitmapSource( )
+        public BitmapSource ToBitmapSource()
         {
             int stride = SizeX * sizeof(float);
-            return BitmapSource.Create(SizeX, SizeY, DpiX, DpiY, PixelFormats.Gray32Float, null,
-               ImageMatrix.Storage.ToRowMajorArray(), stride);
+            float[] data = new float[SizeY * SizeX];
+
+            for(int imgy = 0; imgy < SizeY; ++imgy)
+            {
+                for(int imgx = 0; imgx < SizeX; ++imgx)
+                {
+                    data[imgy * SizeX + imgx] = (float)ImageMatrix[imgy, imgx];
+                }
+            }
+
+            return BitmapSource.Create(SizeX, SizeY, DpiX, DpiY,
+                PixelFormats.Gray32Float, null, data, stride);
         }
 
         public BitmapSource ToBitmapSource(Int32Rect area)
         {
-            Matrix<double> submat = ImageMatrix.SubMatrix(area.Y, area.Height, area.X, area.Width);
             int stride = area.Width * sizeof(float);
-            return BitmapSource.Create(SizeX, SizeY, DpiX, DpiY, PixelFormats.Gray32Float, null,
-               submat.Storage.ToRowMajorArray(), stride);
+            float[] data = new float[area.Width * area.Height];
+
+            for(int imgy = 0; imgy < area.Height; ++imgy)
+            {
+                for(int imgx = 0; imgx < area.Width; ++imgx)
+                {
+                    data[imgy * SizeX + imgx] = (float)ImageMatrix[area.Y + imgy, area.X + imgx];
+                }
+            }
+
+            return BitmapSource.Create(SizeX, SizeY, DpiX, DpiY, PixelFormats.Gray32Float, null,data, stride);
         }
-        
+
         internal class GrayImageDebugView
         {
             private GrayScaleImage _image;

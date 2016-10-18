@@ -76,6 +76,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CameraControl.cs" />
     <Compile Include="DX11Window.cs" />
     <Compile Include="DXWPFExt.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

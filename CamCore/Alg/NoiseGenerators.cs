@@ -17,6 +17,7 @@ namespace CamCore
 
         public abstract double GetSample();
         public abstract void DisturbVector(Vector<double> vecToBeDisturbed);
+        public abstract void DisturbMatrix(Matrix<double> matToBeDisturbed);
     }
 
     public class GaussianNoiseGenerator : NoiseGenerator
@@ -73,7 +74,12 @@ namespace CamCore
             }
             _gauss = new MathNet.Numerics.Distributions.Normal(_mean, _deviation, rand);
         }
-       
+
+        public override double GetSample()
+        {
+            return (double)_gauss.Sample();
+        }
+
         public override void DisturbVector(Vector<double> vecToBeDisturbed)
         {
             double[] samples = new double[vecToBeDisturbed.Count];
@@ -82,9 +88,20 @@ namespace CamCore
                 vecToBeDisturbed.At(i, vecToBeDisturbed.At(i) + (double)samples[i]);
         }
 
-        public override double GetSample()
+        public override void DisturbMatrix(Matrix<double> matToBeDisturbed)
         {
-            return (double)_gauss.Sample();
+            double[] samples = new double[matToBeDisturbed.RowCount * matToBeDisturbed.ColumnCount];
+            _gauss.Samples(samples);
+            int i = 0;
+            for(int c = 0; c < matToBeDisturbed.ColumnCount; ++c)
+            { 
+                for(int r = 0; r < matToBeDisturbed.RowCount; ++r)
+                {
+                    matToBeDisturbed.At(r, c,
+                       matToBeDisturbed.At(r, c) + samples[i]);
+                    ++i;
+                }
+            }
         }
     }
 }

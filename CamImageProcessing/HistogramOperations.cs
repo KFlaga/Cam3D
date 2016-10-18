@@ -239,10 +239,10 @@ namespace CamImageProcessing
         }
     }
 
-    public class HistogramSaturator : IParametrizedProcessor
+    public class HistogramSaturator : IParameterizable
     {
-        private List<ProcessorParameter> _parameters;
-        public List<ProcessorParameter> Parameters
+        private List<AlgorithmParameter> _parameters;
+        public List<AlgorithmParameter> Parameters
         {
             get { return _parameters; }
             protected set { _parameters = value; }
@@ -250,38 +250,34 @@ namespace CamImageProcessing
 
         public void InitParameters()
         {
-            Parameters = new List<ProcessorParameter>();
-            ProcessorParameter tl = new ProcessorParameter(
-                "Saturate Level Low", "SLL",
-                "System.Single", 0.2f, 0.0f, 1.0f);
+            Parameters = new List<AlgorithmParameter>();
+            AlgorithmParameter tl = new DoubleParameter(
+                "Saturate Level Low", "SLL", 0.2, 0.0, 1.0);
 
             Parameters.Add(tl);
 
-            ProcessorParameter th = new ProcessorParameter(
-                "Saturate Level High", "SLH",
-                "System.Single", 0.8f, 0.0f, 1.0f);
+            AlgorithmParameter th = new DoubleParameter(
+                "Saturate Level High", "SLH", 0.8, 0.0, 1.0);
 
             Parameters.Add(th);
 
-            ProcessorParameter rl = new ProcessorParameter(
-                "Saturate Ratio Low", "SRL",
-                "System.Single", 0.2f, 0.0f, 1.0f);
+            AlgorithmParameter rl = new DoubleParameter(
+                "Saturate Ratio Low", "SRL", 0.2, 0.0, 1.0);
 
             Parameters.Add(rl);
 
-            ProcessorParameter rh = new ProcessorParameter(
-                "Saturate Ratio High", "SRH",
-                "System.Single", 0.8f, 0.0f, 1.0f);
+            AlgorithmParameter rh = new DoubleParameter(
+                "Saturate Ratio High", "SRH", 0.8, 0.0, 1.0);
 
             Parameters.Add(rh);
         }
 
         public void UpdateParameters()
         {
-            SaturateLow = (float)ProcessorParameter.FindValue("SLL", Parameters);
-            SaturateHigh = (float)ProcessorParameter.FindValue("SLH", Parameters);
-            SaturateRatioLow = (float)ProcessorParameter.FindValue("SRL", Parameters);
-            SaturateRatioHigh = (float)ProcessorParameter.FindValue("SRH", Parameters);
+            SaturateLow = AlgorithmParameter.FindValue<double>("SLL", Parameters);
+            SaturateHigh = AlgorithmParameter.FindValue<double>("SLH", Parameters);
+            SaturateRatioLow = AlgorithmParameter.FindValue<double>("SRL", Parameters);
+            SaturateRatioHigh = AlgorithmParameter.FindValue<double>("SRH", Parameters);
         }
 
         public double SaturateLow { get; set; }

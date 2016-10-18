@@ -9,12 +9,18 @@ namespace CamCore
     public enum AlgorithmStatus
     {
         Idle,
-        Waiting,
         Running,
         Terminated,
         Suspended,
         Finished,
         Error
+    }
+
+    public class AlgorithmEventArgs : EventArgs
+    {
+        public IControllableAlgorithm Algorithm;
+        public AlgorithmStatus OldStatus;
+        public AlgorithmStatus CurrentStatus;
     }
 
     public interface IControllableAlgorithm
@@ -29,7 +35,8 @@ namespace CamCore
         bool SupportsTermination { get; }
 
         bool SupportsParameters { get; }
-        AlgorithmStatus Status { get; }
+        AlgorithmStatus Status { get; set; }
+        event EventHandler<AlgorithmEventArgs> StatusChanged;
 
         void Process();
 

@@ -7,8 +7,8 @@ namespace CalibrationModule
         private Vector2 _img;
         public Vector2 Img { get { return _img; } set { _img.X = value.X; _img.Y = value.Y; } }
 
-        private Point3D _real;
-        public Point3D Real { get { return _real; } set { _real.X = value.X; _real.Y = value.Y; _real.Z = value.Z; } }
+        private Vector3 _real;
+        public Vector3 Real { get { return _real; } set { _real.X = value.X; _real.Y = value.Y; _real.Z = value.Z; } }
 
         private TPoint2D<int> _realGridPos;
         public TPoint2D<int> RealGridPos { get { return _realGridPos; } set { _realGridPos.X = value.X; _realGridPos.Y = value.Y; } }
@@ -28,7 +28,7 @@ namespace CalibrationModule
         public CalibrationPoint()
         {
             _img = new Vector2();
-            _real = new Point3D();
+            _real = new Vector3();
             _realGridPos = new TPoint2D<int>(-1, -1);
         }
 

@@ -57,6 +57,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CrossCalibrationTab.xaml.cs">
+      <DependentUpon>CrossCalibrationTab.xaml</DependentUpon>
+    </Compile>
     <Compile Include="CalibModeCamTab.xaml.cs">
       <SubType>Code</SubType>
       <DependentUpon>CalibModeCamTab.xaml</DependentUpon>
@@ -74,6 +77,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="CalibrationPointsFinder.cs" />
+    <Compile Include="CalibrationLinesManagerWindow.xaml.cs">
+      <DependentUpon>CalibrationLinesManagerWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="CalibrationPointsManagerWindow.xaml.cs">
       <SubType>Code</SubType>
       <DependentUpon>CalibrationPointsManagerWindow.xaml</DependentUpon>
@@ -83,20 +89,28 @@
     <Compile Include="CamCalibrator.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CamerasData.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="ChooseRealGridPointDialog.xaml.cs">
       <SubType>Code</SubType>
       <DependentUpon>ChooseRealGridPointDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="CrossCalibrationRefiner.cs" />
     <Compile Include="DotCPFinder.cs" />
+    <Compile Include="LMCameraMatrixGridMinimalisation.cs" />
+    <Compile Include="LMCameraMatrixZeroSkewMini.cs" />
     <Compile Include="LMDistortionDirectionalLineFitMinimalisation.cs" />
+    <Compile Include="CalibrationTestTab.xaml.cs">
+      <DependentUpon>CalibrationTestTab.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MatchedPointsManagerWindow.xaml.cs">
+      <DependentUpon>MatchedPointsManagerWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="RadialCorrectionTester.cs" />
+    <Compile Include="RealGridsManagerWindow_Old.xaml.cs">
+      <DependentUpon>RealGridsManagerWindow_Old.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ShapeChecker.cs" />
     <Compile Include="LMRadialDistortionLineFitMinimalisation.cs" />
     <Compile Include="RadialDistortionCorrector.cs" />
-    <Compile Include="Rational3RDModel.cs" />
     <Compile Include="LMCameraMatrixSparseMinimalisation.cs" />
     <Compile Include="LMCameraMatrixSimpleMinimalisation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -108,7 +122,6 @@
       <DependentUpon>RealGridsManagerWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="ShapesGridCPFinder.cs" />
-    <Compile Include="Taylor4Model.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CamControls\CamControls.csproj">
@@ -125,6 +138,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="CrossCalibrationTab.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="CalibModeCamTab.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -133,6 +150,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="CalibrationLinesManagerWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="CalibrationPointsManagerWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -140,6 +161,18 @@
     <Page Include="ChooseRealGridPointDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CalibrationTestTab.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="MatchedPointsManagerWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="RealGridsManagerWindow_Old.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="RealGridsManagerWindow.xaml">
       <SubType>Designer</SubType>

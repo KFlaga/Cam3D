@@ -1,0 +1,6 @@
+<!-- Contains all available shaders -->
+<Shaders>
+	<ShaderFile>ColorShader_NoLight.xml</ShaderFile>
+	<ShaderFile>ColorShader_WithLight.xml</ShaderFile>
+</Shaders>
+

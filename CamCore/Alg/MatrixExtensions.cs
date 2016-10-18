@@ -4,6 +4,7 @@ using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
 using System.Diagnostics;
 using System.Collections;
+using MathNet.Numerics;
 
 namespace CamCore
 {
@@ -70,44 +71,38 @@ namespace CamCore
             return C;
         }
 
-        //public class MatrixRankInfo
-        //{
-        //    public int Rank;
+        /// <summary> 
+        /// Moore–Penrose pseudoinverse 
+        /// If A = U • Σ • VT is the singular value decomposition of A, then A† = V • Σ† • UT. 
+        /// For a diagonal matrix such as Σ, we get the pseudoinverse by taking the reciprocal of each non-zero element 
+        /// on the diagonal, leaving the zeros in place, and transposing the resulting matrix. 
+        /// In numerical computation, only elements larger than some small tolerance are taken to be nonzero,
+        /// and the others are replaced by zeros. For example, in the MATLAB or NumPy function pinv, 
+        /// the tolerance is taken to be t = ε • max(m,n) • max(Σ), where ε is the machine epsilon. (Wikipedia) 
+        /// </summary> 
+        /// <param name="M">The matrix to pseudoinverse</param> 
+        /// <returns>The pseudoinverse of this Matrix</returns> 
+        public static Matrix<double> PseudoInverse(this Matrix<double> M)
+        {
+            var D = M.Svd(true);
+            var W = D.W;
+            var s = D.S;
 
-        //    List<int> ZeroRows;
-        //    bool[] IsZeroRowMap;
-        //    List<LinearDepedency> DependentRows;
-        //    bool[] IsDependentRowMap;
-        //    List<int> ZeroColumns;
-        //    bool[] IsZeroColumnMap;
-        //    List<LinearDepedency> DependentColumns;
-        //    bool[] IsDependentColumnMap;
+            // The first element of W has the maximum value. 
+            double tolerance = Precision.EpsilonOf(2) * Math.Max(M.RowCount, M.ColumnCount) * W[0, 0];
 
-        //    public struct LinearDepedency
-        //    {
-        //        public int BaseIndex;
-        //        public int DependentIndex;
-        //        public double Multiplier;
-        //    }
-        //}
+            for(int i = 0; i < s.Count; i++)
+            {
+                if(s[i] < tolerance)
+                    s[i] = 0;
+                else
+                    s[i] = 1 / s[i];
+            }
+            W.SetDiagonal(s);
 
-        //public static MatrixRankInfo FindRankInfo(this Matrix<double> A)
-        //{
-        //    MatrixRankInfo info = new MatrixRankInfo();
-        //    A.FindRankInfo(info);
-        //    return info;
-        //}
-
-        //public static void FindRankInfo(this Matrix<double> A, MatrixRankInfo rankInfo)
-        //{
-        //    // 1) Find zero rows
-
-        //    // 2) Find zero columns
-
-        //    // 3) Find lineary dependent rows
-
-        //    // 4) Find lineary dependent columns
-        //}
+            // (U * W * VT)T is equivalent with V * WT * UT 
+            return (D.U * W * D.VT).Transpose();
+        }
 
         public static List<int> FindZeroRows(this Matrix<double> A, double error = double.Epsilon * 100.0f)
         {

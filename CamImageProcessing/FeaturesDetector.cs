@@ -3,10 +3,10 @@ using System.Collections.Generic;
 
 namespace CamImageProcessing
 {
-    public abstract class FeaturesDetector : IParametrizedProcessor
+    public abstract class FeaturesDetector : IParameterizable
     {
-        private List<ProcessorParameter> _parameters;
-        public List<ProcessorParameter> Parameters
+        private List<AlgorithmParameter> _parameters;
+        public List<AlgorithmParameter> Parameters
         {
             get { return _parameters; }
             protected set { _parameters = value; }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using CamCore;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -82,6 +83,10 @@ namespace CalibrationModule
         {
             Save();
             DialogResult = true;
+            for(int grid = 0; grid < _gridsList.Count; grid++)
+            {
+                _savedList[grid].Update();
+            }
             Close();
         }
 
@@ -106,30 +111,38 @@ namespace CalibrationModule
         {
             BindingOperations.ClearBinding(_tbGridNum, TextBox.TextProperty);
             BindingOperations.ClearBinding(_tbLabel, TextBox.TextProperty);
-            BindingOperations.ClearBinding(_tbWidthX, TextBox.TextProperty);
-            BindingOperations.ClearBinding(_tbWidthY, TextBox.TextProperty);
-            BindingOperations.ClearBinding(_tbWidthZ, TextBox.TextProperty);
-            BindingOperations.ClearBinding(_tbHeightX, TextBox.TextProperty);
-            BindingOperations.ClearBinding(_tbHeightY, TextBox.TextProperty);
-            BindingOperations.ClearBinding(_tbHeightZ, TextBox.TextProperty);
-            BindingOperations.ClearBinding(_tbZeroY, TextBox.TextProperty);
-            BindingOperations.ClearBinding(_tbZeroZ, TextBox.TextProperty);
             BindingOperations.ClearBinding(_tbCols, TextBox.TextProperty);
             BindingOperations.ClearBinding(_tbRows, TextBox.TextProperty);
 
-            _tbCols.Text = "";
+            _tbBLX.ClearValueChangedEvent();
+            _tbBLY.ClearValueChangedEvent();
+            _tbBLZ.ClearValueChangedEvent();
+            _tbBRX.ClearValueChangedEvent();
+            _tbBRY.ClearValueChangedEvent();
+            _tbBRZ.ClearValueChangedEvent();
+            _tbTLX.ClearValueChangedEvent();
+            _tbTLY.ClearValueChangedEvent();
+            _tbTLZ.ClearValueChangedEvent();
+            _tbTRX.ClearValueChangedEvent();
+            _tbTRY.ClearValueChangedEvent();
+            _tbTRZ.ClearValueChangedEvent();
+
             _tbGridNum.Text = "";
             _tbLabel.Text = "";
-            _tbRows.Text = "";
-            _tbZeroX.Text = "";
-            _tbZeroY.Text = "";
-            _tbZeroZ.Text = "";
-            _tbHeightX.Text = "";
-            _tbHeightY.Text = "";
-            _tbHeightZ.Text = "";
-            _tbWidthX.Text = "";
-            _tbWidthY.Text = "";
-            _tbWidthZ.Text = "";
+            _tbRows.CurrentValue = 0;
+            _tbCols.CurrentValue = 0;
+            _tbBLX.CurrentValue = 0;
+            _tbBLY.CurrentValue = 0;
+            _tbBLZ.CurrentValue = 0;
+            _tbBRX.CurrentValue = 0;
+            _tbBRY.CurrentValue = 0;
+            _tbBRZ.CurrentValue = 0;
+            _tbTLX.CurrentValue = 0;
+            _tbTLY.CurrentValue = 0;
+            _tbTLZ.CurrentValue = 0;
+            _tbTRX.CurrentValue = 0;
+            _tbTRY.CurrentValue = 0;
+            _tbTRZ.CurrentValue = 0;
         }
 
         private void SelectGrid(object sender, SelectionChangedEventArgs e)
@@ -151,61 +164,7 @@ namespace CalibrationModule
                     Source = addgrid,
                     Mode = BindingMode.TwoWay
                 });
-                _tbWidthX.SetBinding(TextBox.TextProperty, new Binding("WidthX")
-                {
-                    Source = addgrid,
-                    Mode = BindingMode.TwoWay,
-                    Converter = new CamCore.Converters.DoubleToStringConverter()
-                });
-                _tbWidthY.SetBinding(TextBox.TextProperty, new Binding("WidthY")
-                {
-                    Source = addgrid,
-                    Mode = BindingMode.TwoWay,
-                    Converter = new CamCore.Converters.DoubleToStringConverter()
-                });
-                _tbWidthZ.SetBinding(TextBox.TextProperty, new Binding("WidthZ")
-                {
-                    Source = addgrid,
-                    Mode = BindingMode.TwoWay,
-                    Converter = new CamCore.Converters.DoubleToStringConverter()
-                });
-                _tbHeightX.SetBinding(TextBox.TextProperty, new Binding("HeightX")
-                {
-                    Source = addgrid,
-                    Mode = BindingMode.TwoWay,
-                    Converter = new CamCore.Converters.DoubleToStringConverter()
-                });
-                _tbHeightY.SetBinding(TextBox.TextProperty, new Binding("HeightY")
-                {
-                    Source = addgrid,
-                    Mode = BindingMode.TwoWay,
-                    Converter = new CamCore.Converters.DoubleToStringConverter()
-                });
-                _tbHeightZ.SetBinding(TextBox.TextProperty, new Binding("HeightZ")
-                {
-                    Source = addgrid,
-                    Mode = BindingMode.TwoWay,
-                    Converter = new CamCore.Converters.DoubleToStringConverter()
-                });
-                _tbZeroX.SetBinding(TextBox.TextProperty, new Binding("ZeroX")
-                {
-                    Source = addgrid,
-                    Mode = BindingMode.TwoWay,
-                    Converter = new CamCore.Converters.DoubleToStringConverter()
-                });
-                _tbZeroY.SetBinding(TextBox.TextProperty, new Binding("ZeroY")
-                {
-                    Source = addgrid,
-                    Mode = BindingMode.TwoWay,
-                    Converter = new CamCore.Converters.DoubleToStringConverter()
-                });
-                _tbZeroZ.SetBinding(TextBox.TextProperty, new Binding("ZeroZ")
-                {
-                    Source = addgrid,
-                    Mode = BindingMode.TwoWay,
-                    Converter = new CamCore.Converters.DoubleToStringConverter()
-                });
-                _tbCols.SetBinding(TextBox.TextProperty, new Binding("Cols")
+                _tbCols.SetBinding(TextBox.TextProperty, new Binding("Columns")
                 {
                     Source = addgrid,
                     Mode = BindingMode.TwoWay,
@@ -217,6 +176,31 @@ namespace CalibrationModule
                     Mode = BindingMode.TwoWay,
                     Converter = new CamCore.Converters.IntToStringConverter()
                 });
+
+                _tbBLX.CurrentValue = addgrid.BotLeft.X;
+                _tbBLX.ValueChanged += (s, ea) => { addgrid.BotLeft.X = ea.NewValue; };
+                _tbBLY.CurrentValue = addgrid.BotLeft.Y;
+                _tbBLY.ValueChanged += (s, ea) => { addgrid.BotLeft.Y = ea.NewValue; };
+                _tbBLZ.CurrentValue = addgrid.BotLeft.Z;
+                _tbBLZ.ValueChanged += (s, ea) => { addgrid.BotLeft.Z = ea.NewValue; };
+                _tbBRX.CurrentValue = addgrid.BotRight.X;
+                _tbBRX.ValueChanged += (s, ea) => { addgrid.BotRight.X = ea.NewValue; };
+                _tbBRY.CurrentValue = addgrid.BotRight.Y;
+                _tbBRY.ValueChanged += (s, ea) => { addgrid.BotRight.Y = ea.NewValue; };
+                _tbBRZ.CurrentValue = addgrid.BotRight.Z;
+                _tbBRZ.ValueChanged += (s, ea) => { addgrid.BotRight.Z = ea.NewValue; };
+                _tbTLX.CurrentValue = addgrid.TopLeft.X;
+                _tbTLX.ValueChanged += (s, ea) => { addgrid.TopLeft.X = ea.NewValue; };
+                _tbTLY.CurrentValue = addgrid.TopLeft.Y;
+                _tbTLY.ValueChanged += (s, ea) => { addgrid.TopLeft.Y = ea.NewValue; };
+                _tbTLZ.CurrentValue = addgrid.TopLeft.Z;
+                _tbTLZ.ValueChanged += (s, ea) => { addgrid.TopLeft.Z = ea.NewValue; };
+                _tbTRX.CurrentValue = addgrid.TopRight.X;
+                _tbTRX.ValueChanged += (s, ea) => { addgrid.TopRight.X = ea.NewValue; };
+                _tbTRY.CurrentValue = addgrid.TopRight.Y;
+                _tbTRY.ValueChanged += (s, ea) => { addgrid.TopRight.Y = ea.NewValue; };
+                _tbTRZ.CurrentValue = addgrid.TopRight.Z;
+                _tbTRZ.ValueChanged += (s, ea) => { addgrid.TopRight.Z = ea.NewValue; };
             }
         }
 
@@ -230,7 +214,7 @@ namespace CalibrationModule
             CamCore.FileOperations.LoadFromFile(LoadFromFile, "Xml File|*.xml");
         }
 
-        public void LoadFromFile(Stream file)
+        public void LoadFromFile(Stream file, string path)
         {
             XmlDocument dataDoc = new XmlDocument();
             dataDoc.Load(file);
@@ -243,39 +227,38 @@ namespace CalibrationModule
                 var gridNum = gridNode.Attributes["num"];
                 if (gridNum != null)
                     grid.Num = int.Parse(gridNum.Value);
+
                 var gridLabel = gridNode.Attributes["label"];
                 if (gridLabel != null)
                     grid.Label = gridLabel.Value;
 
-                XmlNode widthNode = gridNode.SelectSingleNode("child::Width");
-                    var wx = widthNode.Attributes["X"];
-                    grid.WidthX = double.Parse(wx.Value);
-                var wy = widthNode.Attributes["Y"];
-                grid.WidthY = double.Parse(wy.Value);
-                var wz = widthNode.Attributes["Z"];
-                grid.WidthZ = double.Parse(wz.Value);
+                XmlNode topleftNode = gridNode.SelectSingleNode("child::TopLeft");
+                grid.TopLeft = Vector3.CreateFromXmlNode(topleftNode);
 
-                XmlNode heightNode = gridNode.SelectSingleNode("child::Height");
-                var hx = heightNode.Attributes["X"];
-                grid.HeightX = double.Parse(hx.Value);
-                var hy = heightNode.Attributes["Y"];
-                grid.HeightY = double.Parse(hy.Value);
-                var hz = heightNode.Attributes["Z"];
-                grid.HeightZ = double.Parse(hz.Value);
+                XmlNode toprightNode = gridNode.SelectSingleNode("child::TopRight");
+                grid.TopRight = Vector3.CreateFromXmlNode(toprightNode);
 
-                XmlNode zeroNode = gridNode.SelectSingleNode("child::Zero");
-                var zx = zeroNode.Attributes["X"];
-                grid.ZeroX = double.Parse(zx.Value);
-                var zy = zeroNode.Attributes["Y"];
-                grid.ZeroY = double.Parse(zy.Value);
-                var zz = zeroNode.Attributes["Z"];
-                grid.ZeroZ = double.Parse(zz.Value);
+                XmlNode botleftNode = gridNode.SelectSingleNode("child::BotLeft");
+                grid.BotLeft = Vector3.CreateFromXmlNode(botleftNode);
+
+                XmlNode botrightNode = gridNode.SelectSingleNode("child::BotRight");
+                grid.BotRight = Vector3.CreateFromXmlNode(botrightNode);
+
+                var rowsNode = gridNode.SelectSingleNode("child::Rows");
+                if(rowsNode != null)
+                    grid.Rows = int.Parse(rowsNode.Attributes["count"].Value);
+
+                var colsNode = gridNode.SelectSingleNode("child::Columns");
+                if(colsNode != null)
+                    grid.Columns = int.Parse(colsNode.Attributes["count"].Value);
+
+                grid.Update();
 
                 _gridsList.Add(grid);
             }
         }
 
-        public void SaveToFile(Stream file)
+        public void SaveToFile(Stream file, string path)
         {
             XmlDocument dataDoc = new XmlDocument();
             var rootNode = dataDoc.CreateElement("Grids");
@@ -289,48 +272,41 @@ namespace CalibrationModule
                 gridAttLabel.Value = grid.Label;
                 gridNode.Attributes.Append(gridAttNum);
                 gridNode.Attributes.Append(gridAttLabel);
+                
+                gridNode.AppendChild(grid.TopLeft.CreateXmlNode(dataDoc, "TopLeft"));
+                gridNode.AppendChild(grid.TopRight.CreateXmlNode(dataDoc, "TopRight"));
+                gridNode.AppendChild(grid.BotLeft.CreateXmlNode(dataDoc, "BotLeft"));
+                gridNode.AppendChild(grid.BotRight.CreateXmlNode(dataDoc, "BotRight"));
 
-                var gridWidth = dataDoc.CreateElement("Width");
-                var widthAttX = dataDoc.CreateAttribute("X");
-                widthAttX.Value = grid.WidthX.ToString();
-                var widthAttY = dataDoc.CreateAttribute("Y");
-                widthAttY.Value = grid.WidthY.ToString();
-                var widthAttZ = dataDoc.CreateAttribute("Z");
-                widthAttZ.Value = grid.WidthZ.ToString();
-                gridWidth.Attributes.Append(widthAttX);
-                gridWidth.Attributes.Append(widthAttY);
-                gridWidth.Attributes.Append(widthAttZ);
-                gridNode.AppendChild(gridWidth);
+                XmlNode rowsNode = dataDoc.CreateElement("Rows");
+                var rowsAtt = dataDoc.CreateAttribute("count");
+                rowsAtt.Value = grid.Rows.ToString();
+                rowsNode.Attributes.Append(rowsAtt);
+                gridNode.AppendChild(rowsNode);
 
-                var gridHeight = dataDoc.CreateElement("Height");
-                var heightAttX = dataDoc.CreateAttribute("X");
-                heightAttX.Value = grid.HeightX.ToString();
-                var heightAttY = dataDoc.CreateAttribute("Y");
-                heightAttY.Value = grid.HeightY.ToString();
-                var heightAttZ = dataDoc.CreateAttribute("Z");
-                heightAttZ.Value = grid.HeightZ.ToString();
-                gridHeight.Attributes.Append(heightAttX);
-                gridHeight.Attributes.Append(heightAttY);
-                gridHeight.Attributes.Append(heightAttZ);
-                gridNode.AppendChild(gridHeight);
-
-                var gridZero = dataDoc.CreateElement("Zero");
-                var zeroAttX = dataDoc.CreateAttribute("X");
-                zeroAttX.Value = grid.ZeroX.ToString();
-                var zeroAttY = dataDoc.CreateAttribute("Y");
-                zeroAttY.Value = grid.ZeroY.ToString();
-                var zeroAttZ = dataDoc.CreateAttribute("Z");
-                zeroAttZ.Value = grid.ZeroZ.ToString();
-                gridZero.Attributes.Append(zeroAttX);
-                gridZero.Attributes.Append(zeroAttY);
-                gridZero.Attributes.Append(zeroAttZ);
-                gridNode.AppendChild(gridZero);
+                XmlNode colsNode = dataDoc.CreateElement("Columns");
+                var colsAtt = dataDoc.CreateAttribute("count");
+                colsAtt.Value = grid.Columns.ToString();
+                colsNode.Attributes.Append(colsAtt);
+                gridNode.AppendChild(colsNode);
 
                 rootNode.AppendChild(gridNode);
             }
 
             dataDoc.InsertAfter(rootNode, dataDoc.DocumentElement);
             dataDoc.Save(file);
+        }
+
+        public void UpdateFromP1P4(object sender, RoutedEventArgs e)
+        {
+            RealGridData grid = (RealGridData)_gridListView.SelectedItem;
+
+            Vector3 p1 = new Vector3(_tbP1X.CurrentValue, _tbP1Y.CurrentValue, _tbP1Z.CurrentValue);
+            Vector3 p4 = new Vector3(_tbP4X.CurrentValue, _tbP4Y.CurrentValue, _tbP4Z.CurrentValue);
+            Vector3 p1p = new Vector3(_tbP1pX.CurrentValue, _tbP1pY.CurrentValue, _tbP1pZ.CurrentValue);
+            Vector3 p4p = new Vector3(_tbP4pX.CurrentValue, _tbP4pY.CurrentValue, _tbP4pZ.CurrentValue);
+
+            grid.FillFromP1P4(p1, p4, p1p, p4p);
         }
     }
 }
