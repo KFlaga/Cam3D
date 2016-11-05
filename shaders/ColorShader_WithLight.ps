@@ -2,26 +2,26 @@
 // Global ConstBuffer for global lights
 cbuffer GlobalLightsBuffer : register(b1)
 {
-    Color4 GlobalAmbient;
-	Color4 GlobalDirectional;
-	Vector3 LightDirection;
+    float4 GlobalAmbient;
+	float4 GlobalDirectional;
+	float3 LightDirection;
 	float Padding1;
 };
 
 // Global ConstBuffer for material light color
 cbuffer MaterialIllumination : register(b2)
 {
-    Color4 MatAmbient;
-	Color4 MatDiffuse;
-	Color4 MatSpecular;
-	Color4 MatEmmisive;
+    float4 MatAmbient;
+	float4 MatDiffuse;
+	float4 MatSpecular;
+	float4 MatEmmisive;
 	float Shininess;
-	float3 Padding2
+	float3 Padding2;
 };
 
 // Directions are passed as TEXCOORD so they will interpolated throughout
 // the triangle, so lightning will be more accurate than per-vertex computation
-struct PixelInputType
+struct PS_IN
 {
     float4 position : SV_POSITION;
     float4 color : COLOR;
@@ -30,16 +30,16 @@ struct PixelInputType
 	float3 half_dir : TEXCOORD2;
 };
 
-float4 Main(PixelInputType input) : SV_TARGET
+float4 Main(PS_IN input) : SV_TARGET
 {
-     float NdotL = dp3(light_dir, normal);
-     float NdotH = dp3(half_dir, normal);
+     float NdotL = dot(input.light_dir, input.normal);
+     float NdotH = dot(input.half_dir, input.normal);
 	 
 	 // lit returns (1,diffuse_coeff,specular_coeff,1)
      float4 lightCoeffs = lit(NdotL,NdotH,Shininess);
-     outColor = GlobalDirectional * lightCoeffs.y * MatDiffuse + 
+     float4 outColor = GlobalDirectional * lightCoeffs.y * MatDiffuse + 
 		GlobalDirectional * lightCoeffs.z * MatSpecular + 
 		GlobalAmbient * MatAmbient + MatEmmisive;
  
-    return outColor * color;
+    return outColor * input.color;
 }

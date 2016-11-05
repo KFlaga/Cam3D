@@ -16,7 +16,7 @@ namespace CamImageProcessing.ImageMatching
         public int MaskWidth { get; set; } // Actual width is equal to MaskWidth*2 + 1
         public int MaskHeight { get; set; } // Actual height is equal to MaskWidth*2 + 1
         public int WordLength { get; set; }
-
+        
         public override double GetCost(IntVector2 pixelBase, IntVector2 pixelMatched)
         {
             return CensusBase[pixelBase.Y, pixelBase.X].GetHammingDistance(
@@ -25,7 +25,8 @@ namespace CamImageProcessing.ImageMatching
 
         public override double GetCost_Border(IntVector2 pixelBase, IntVector2 pixelMatched)
         {
-            return GetCost(pixelBase, pixelMatched);
+            return CensusBase[pixelBase.Y, pixelBase.X].GetHammingDistance(
+                CensusMatched[pixelMatched.Y, pixelMatched.X]);
         }
 
         public override void Init()
@@ -135,11 +136,11 @@ namespace CamImageProcessing.ImageMatching
         public override void InitParameters()
         {
             AlgorithmParameter maskW = new IntParameter(
-                "Mask Width Radius", "MWR", 3, 1, 7);
+                "Mask Width Radius", "MWR", 6, 1, 7);
             _parameters.Add(maskW);
 
             AlgorithmParameter maskH = new IntParameter(
-                "Mask Height Radius", "MHR", 3, 1, 7);
+                "Mask Height Radius", "MHR", 6, 1, 7);
             _parameters.Add(maskH);
         }
 

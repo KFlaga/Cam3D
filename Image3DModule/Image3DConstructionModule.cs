@@ -12,7 +12,7 @@ namespace Image3DModule
             get
             {
                 if (_moduleControl == null)
-                    _moduleControl = new PointImagesTabs();
+                    _moduleControl = new Image3DTabs();
                 return _moduleControl;
             }
         }

@@ -29,7 +29,7 @@ namespace CamImageProcessing.ImageMatching
         public abstract void FinalizeForPixel(IntVector2 pixelBase);
         public abstract void FinalizeMap();
 
-        List<AlgorithmParameter> _params = new List<AlgorithmParameter>();
+        protected List<AlgorithmParameter> _params;
         public List<AlgorithmParameter> Parameters
         {
             get { return _params; }
@@ -37,6 +37,7 @@ namespace CamImageProcessing.ImageMatching
 
         public virtual void InitParameters()
         {
+            _params = new List<AlgorithmParameter>();
             // Add all available confidence computing methods
             DictionaryParameter confParam =
                 new DictionaryParameter("Confidence Computing Method", "CONF");

@@ -191,5 +191,31 @@ namespace CamImageProcessing.ImageMatching
         {
             return "Epiline Scan Cost Aggregator";
         }
+
+        public override void InitParameters()
+        {
+            base.InitParameters();
+
+            ParametrizedObjectParameter disparityParam = new ParametrizedObjectParameter(
+                "Disparity Computer", "DISP_COMP");
+
+            disparityParam.Parameterizables = new List<IParameterizable>();
+            var dcWTA = new WTADisparityComputer();
+            dcWTA.InitParameters();
+            disparityParam.Parameterizables.Add(dcWTA);
+
+            var intWTA = new InterpolationDisparityComputer();
+            intWTA.InitParameters();
+            disparityParam.Parameterizables.Add(intWTA);
+
+            Parameters.Add(disparityParam);
+        }
+
+        public override void UpdateParameters()
+        {
+            base.UpdateParameters();
+            DispComp = AlgorithmParameter.FindValue<DisparityComputer>("DISP_COMP", Parameters);
+            DispComp.UpdateParameters();
+        }
     }
 }

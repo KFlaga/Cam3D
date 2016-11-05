@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CamCore;
 using Point2D = CamCore.TPoint2D<int>;
+using System.Diagnostics;
 
 namespace CamImageProcessing.ImageMatching
 {
@@ -14,14 +15,15 @@ namespace CamImageProcessing.ImageMatching
         public double MaxDisparityDiff { get; set; }
         public bool InterpolateInvalidated { get; set; }
 
-        struct Cell
+        [DebuggerDisplay("d = {Disparity}, i = {SegmentIndex}")]
+        class Cell
         {
             public double Disparity;
             public int SegmentIndex;
             public bool Visited;
         }
         List<List<Point2D>> _segments;
-        
+
         Cell[,] _segmentedMap;
 
         public override void Init()
@@ -51,10 +53,14 @@ namespace CamImageProcessing.ImageMatching
             {
                 for(int c = 0; c < map.ColumnCount; ++c)
                 {
-                    _segmentedMap[r, c].Disparity =
-                        Math.Sqrt(map[r, c].SubDX * map[r, c].SubDX +
-                        map[r, c].SubDY * map[r, c].SubDY);
-                    _segmentedMap[r, c].Visited = false;
+                    _segmentedMap[r, c] = new Cell()
+                    {
+                        Disparity =
+                            Math.Sqrt(map[r, c].SubDX * map[r, c].SubDX +
+                            map[r, c].SubDY * map[r, c].SubDY),
+                        Visited = false,
+                        SegmentIndex = 0
+                    };
                 }
             }
 
@@ -135,11 +141,16 @@ namespace CamImageProcessing.ImageMatching
             _currentSegment = new List<Point2D>();
             _currentSegment.Add(new Point2D(x, y));
             _segmentedMap[y, x].SegmentIndex = _segments.Count;
-            
+
             _pointStack.Push(new Point2D(x, y));
             while(_pointStack.Count > 0)
             {
                 Point2D point = _pointStack.Pop();
+
+                if(point.X == 197 && point.Y == 97)
+                {
+                    CheckAndAddToSegment(point.X, point.Y, point.X, point.Y);
+                }
 
                 if(point.Y > 0)
                 {
@@ -164,9 +175,9 @@ namespace CamImageProcessing.ImageMatching
 
         private void CheckAndAddToSegment(int oldX, int oldY, int newX, int newY)
         {
-            if(_segmentedMap[newY, newX].Visited == false && 
-                Math.Abs(_segmentedMap[newY, newY].Disparity -
-                    _segmentedMap[oldY, oldX].Disparity) < MaxDisparityDiff)
+            if(_segmentedMap[newY, newX].Visited == false &&
+                Math.Abs(_segmentedMap[newY, newX].Disparity -
+                    _segmentedMap[oldY, oldX].Disparity) <= MaxDisparityDiff)
             {
                 _segmentedMap[newY, newX].Visited = true;
                 _segmentedMap[newY, newX].SegmentIndex = _segments.Count;

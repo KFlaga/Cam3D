@@ -73,7 +73,7 @@ namespace CamDX.WPF
             return teximg;
         }
 
-        public static WriteableBitmap GetImage(this DX11Renderer rend)
+        public static WriteableBitmap GetImage(this DXRenderer rend)
         {
             return rend.BackBuffer.GetBitmap();
         }

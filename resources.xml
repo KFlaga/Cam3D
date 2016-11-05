@@ -1,0 +1,11 @@
+<!-- List of all external resources -->
+<Resources>
+	<!-- All paths may be relative to .exe or be global if they start with 'x:' -->
+	<DXResources>
+		<Shaders>
+			<ShaderFile>shaders/ColorShader_NoLight.xml</ShaderFile>
+			<ShaderFile>shaders/ColorShader_WithLight.xml</ShaderFile>
+		</Shaders>
+	</DXResources>
+</Resources>
+

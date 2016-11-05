@@ -133,8 +133,14 @@ namespace CamDX
                 elementType = LayoutElementType.Position3;
             else if(typeName == "Position4")
                 elementType = LayoutElementType.Position4;
-            else if(typeName == "Position4")
-                elementType = LayoutElementType.Position4;
+            else if(typeName == "Normal4")
+                elementType = LayoutElementType.Normal4;
+            else if(typeName == "Normal3")
+                elementType = LayoutElementType.Normal3;
+            else if(typeName == "Color4")
+                elementType = LayoutElementType.Color4;
+            else if(typeName == "TexCoords2")
+                elementType = LayoutElementType.TexCoords2;
 
             int slot;
             bool haveSlot = int.TryParse(typeNode.Attributes["slot"]?.Value, out slot);

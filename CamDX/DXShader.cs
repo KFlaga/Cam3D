@@ -6,6 +6,7 @@ using SharpDX.D3DCompiler;
 using SharpDX.DXGI;
 using System.Xml;
 using System.Runtime.InteropServices;
+using System.IO;
 
 namespace CamDX
 {
@@ -113,7 +114,7 @@ namespace CamDX
 
                 // Update illumination buffer
                 DataStream stream;
-                var dataBox = deviceContext.MapSubresource(_illuminationBuffer, 
+                var dataBox = deviceContext.MapSubresource(_illuminationBuffer,
                     (int)ConstantBufferSlots.MaterialIllumination, MapMode.WriteDiscard, SharpDX.Direct3D11.MapFlags.None);
                 stream = new DataStream(dataBox.DataPointer, _illuminationBuffer.Description.SizeInBytes, true, true);
                 stream.Write(MaterialIlluminationData.Default);
@@ -121,7 +122,7 @@ namespace CamDX
                 stream.Dispose();
             }
         }
-        
+
         public void Load(SharpDX.Direct3D11.Device dxDevice, XmlDocument xmlDoc)
         {
             //<Shader name="ColorShader_WithLight">
@@ -138,13 +139,14 @@ namespace CamDX
                 {
                     DXShaderPass pass = new DXShaderPass(this);
                     pass.Load(dxDevice, passNode);
+                    _passes.Add(pass);
                 }
                 //	<VertexShaders>
                 //		<VertexShader>
                 //			<File>"ColorShader_Light.vs</File>
                 //			<Entry>"Main"</Entry>
                 //			<Profile>"vs_4_0"</Profile>
-                //	        InputLayout padding="0">
+                //	        <InputLayout padding="0">
                 //			    <ElementType type="Position4" slot="0"/ >...
                 var vsList = shaderNode.SelectNodes("VertexShaders/VertexShader");
                 foreach(XmlNode vsNode in vsList)
@@ -153,12 +155,13 @@ namespace CamDX
                     string entry = vsNode.SelectSingleNode("Entry").InnerText;
                     string profile = vsNode.SelectSingleNode("Profile").InnerText;
 
-                    var vertexShaderByteCode = ShaderBytecode.CompileFromFile(
+                    var compliationResult = ShaderBytecode.CompileFromFile(
                         filePath, entry, profile, ShaderFlags.None, EffectFlags.None);
-                    if(vertexShaderByteCode == null)
+                    if(compliationResult.HasErrors || compliationResult.Bytecode == null)
                         throw new Exception("Failed to compile vertex shader");
-                    var vertexShader = new VertexShader(dxDevice, vertexShaderByteCode);
-                    var vsSignature = ShaderSignature.GetInputSignature(vertexShaderByteCode);
+
+                    var vertexShader = new VertexShader(dxDevice, compliationResult.Bytecode.Data);
+                    var vsSignature = ShaderSignature.GetInputSignature(compliationResult);
 
                     var layNode = vsNode.SelectSingleNode("InputLayout");
                     InputLayout layout = InputLayoutCreator.CreateInputLayoutFromXml(dxDevice, vsSignature, layNode);
@@ -170,6 +173,7 @@ namespace CamDX
                 //		<PixelShader>
                 //			<File>"ColorShader_Light.ps</File>
                 //			<Entry>"Main"</Entry>
+                //			<Profile>"ps_4_0"</Profile>
                 var psList = shaderNode.SelectNodes("PixelShaders/PixelShader");
                 foreach(XmlNode psNode in psList)
                 {
@@ -177,11 +181,11 @@ namespace CamDX
                     string entry = psNode.SelectSingleNode("Entry").InnerText;
                     string profile = psNode.SelectSingleNode("Profile").InnerText;
 
-                    var pixelShaderByteCode = ShaderBytecode.CompileFromFile(
+                    var compliationResult = ShaderBytecode.CompileFromFile(
                         filePath, entry, profile, ShaderFlags.None, EffectFlags.None);
-                    if(pixelShaderByteCode == null)
+                    if(compliationResult.HasErrors)
                         throw new Exception("Failed to compile pixel shader");
-                    var pixelShader = new PixelShader(dxDevice, pixelShaderByteCode);
+                    var pixelShader = new PixelShader(dxDevice, compliationResult);
                     _pixelShaders.Add(pixelShader);
                 }
                 //	<IlluminationDatas>
@@ -269,7 +273,7 @@ namespace CamDX
             }
             _samplers.Clear();
             this.SetField(ref _illuminationBuffer, null);
-            
+
             Loaded = false;
         }
     }

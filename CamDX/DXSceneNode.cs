@@ -127,17 +127,24 @@ namespace CamDX
         public void AttachModel(IModel model)
         {
             AttachedObjects.Add(model);
+            model.SceneNode = this;
             LocalAABB.Union(AABB.Transformed(model.ModelAABB, TransformationMatrix));
         }
 
         public void DetachModel(IModel model)
         {
             AttachedObjects.Remove(model);
+            if(model.SceneNode == this) model.SceneNode = null;
             RecalculateAABB();
         }
 
         public void DetachAll()
         {
+            foreach(var model in AttachedObjects)
+            {
+                if(model.SceneNode == this)
+                    model.SceneNode = null;
+            }
             AttachedObjects.Clear();
             RecalculateAABB();
         }
@@ -171,6 +178,16 @@ namespace CamDX
                 _transfrom = _transfrom * Matrix.Translation(_position);
                 _transfromChanged = false;
             }
+        }
+
+        public DXSceneNode CreateChildNode()
+        {
+            DXSceneNode node = new DXSceneNode();
+            node.Parent = this;
+            node.Scale = new Vector3(1.0f);
+            node.Orientation = Quaternion.Identity;
+            Children.Add(node);
+            return node;
         }
     }
 }

@@ -8,19 +8,24 @@
 		</Pass>
 	</Passes>
 	<VertexShaders>
+	<!-- All paths may be relative to .exe or be global if they start with 'x:' -->
 		<VertexShader>
-			<File>"ColorShader.vs</File>
-			<Entry>"Main"</Entry>
+			<File>shaders/ColorShader_NoLight.vs</File>
+			<Entry>Main</Entry>
+            <Profile>vs_4_0</Profile>
+			<InputLayout padding="0">
+				<ElementType type="Position4" slot="0"/>
+				<ElementType type="Normal3" slot="0"/>
+				<ElementType type="Color4" slot="0"/>
+				<ElementType type="TexCoords2" slot="0"/>
+			</InputLayout>
 		</VertexShader>
-		<InputLayout padding="0">
-			<ElementType type="Position4" slot="0"/>
-			<ElementType type="Color4" slot="0"/>
-		</InputLayout>
 	</VertexShaders>
 	<PixelShaders>
 		<PixelShader>
-			<File>"ColorShader.ps</File>
-			<Entry>"Main"</Entry>
+			<File>shaders/ColorShader_NoLight.ps</File>
+			<Entry>Main</Entry>
+			<Profile>ps_4_0</Profile>
 		</PixelShader>
 	</PixelShaders>
 </Shader>

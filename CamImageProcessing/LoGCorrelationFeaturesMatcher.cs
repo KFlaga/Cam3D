@@ -90,7 +90,7 @@ namespace CamImageProcessing
                         continue;
 
                     bestMatch = 0.0f;
-                    matchPoint.Cam1Img = new System.Windows.Point(x, y);
+                    matchPoint.Cam1Img = new Vector2(x, y);
 
                     int dxMax, dxMin, dyMax, dyMin, dx, dy;
                     // Search boundaries such as not to exceed image dimensions
@@ -114,7 +114,7 @@ namespace CamImageProcessing
                                 if(match > bestMatch)
                                 {
                                     bestMatch = match;
-                                    matchPoint.Cam2Img = new System.Windows.Point(x + dx, y + dy);
+                                    matchPoint.Cam2Img = new Vector2(x + dx, y + dy);
                                 }
                             }
 

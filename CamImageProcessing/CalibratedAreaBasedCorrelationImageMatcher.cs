@@ -200,8 +200,8 @@ namespace CamImageProcessing
                         {
                             CamCore.Camera3DPoint matchedPoint = new CamCore.Camera3DPoint()
                             {
-                                Cam1Img = new System.Windows.Point(x, y),
-                                Cam2Img = new System.Windows.Point(x + (disp_xl - disp_xr) / 2, y + (disp_yl - disp_yr) / 2)
+                                Cam1Img = new Vector2(x, y),
+                                Cam2Img = new Vector2(x + (disp_xl - disp_xr) / 2, y + (disp_yl - disp_yr) / 2)
                             };
                             MatchedPoints.Add(matchedPoint);
                         }

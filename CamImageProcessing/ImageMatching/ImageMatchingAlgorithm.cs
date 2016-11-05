@@ -10,7 +10,6 @@ namespace CamImageProcessing.ImageMatching
     public class ImageMatchingAlgorithm : IParameterizable
     {
         public CostAggregator Aggregator { get; protected set; }
-        public DisparityComputer DispComp { get; protected set; }
 
         public DisparityMap MapLeft { get; set; }
         public DisparityMap MapRight { get; set; }
@@ -26,8 +25,7 @@ namespace CamImageProcessing.ImageMatching
             imgGrayLeft.FromColorImage(ImageLeft);
             GrayScaleImage imgGrayRight = new GrayScaleImage();
             imgGrayRight.FromColorImage(ImageRight);
-
-
+            
             if(Rectified)
             {
                 Aggregator.Fundamental = new DenseMatrix(3, 3);
@@ -39,35 +37,38 @@ namespace CamImageProcessing.ImageMatching
                 Aggregator.Fundamental = CalibrationData.Data.Fundamental;
             }
 
-            Aggregator.DispComp = DispComp;
-            DispComp.CostComp = Aggregator.CostComp;
-
             MapLeft = new DisparityMap(ImageLeft.SizeY, ImageLeft.SizeX);
             Aggregator.DisparityMap = MapLeft;
             Aggregator.ImageBase = imgGrayLeft.ImageMatrix;
             Aggregator.ImageMatched = imgGrayRight.ImageMatrix;
             Aggregator.IsLeftImageBase = true;
-            DispComp.DisparityMap = MapLeft;
-            DispComp.ImageBase = imgGrayLeft.ImageMatrix;
-            DispComp.ImageMatched = imgGrayRight.ImageMatrix;
 
             Aggregator.Init();
-            DispComp.Init();
-            Aggregator.ComputeMatchingCosts();
+            if(Rectified)
+            {
+                Aggregator.ComputeMatchingCosts_Rectified();
+            }
+            else
+            {
+                Aggregator.ComputeMatchingCosts();
+            }
 
             MapRight = new DisparityMap(ImageRight.SizeY, ImageRight.SizeX);
             Aggregator.DisparityMap = MapRight;
             Aggregator.ImageBase = imgGrayRight.ImageMatrix;
             Aggregator.ImageMatched = imgGrayLeft.ImageMatrix;
             Aggregator.IsLeftImageBase = false;
-            DispComp.DisparityMap = MapRight;
-            DispComp.ImageBase = imgGrayRight.ImageMatrix;
-            DispComp.ImageMatched = imgGrayLeft.ImageMatrix;
 
             Aggregator.Init();
-            DispComp.Init();
-            Aggregator.ComputeMatchingCosts();
-             
+            if(Rectified)
+            {
+                Aggregator.ComputeMatchingCosts_Rectified();
+            }
+            else
+            {
+                Aggregator.ComputeMatchingCosts();
+            }
+
         }
 
         List<AlgorithmParameter> _params = new List<AlgorithmParameter>();
@@ -92,28 +93,14 @@ namespace CamImageProcessing.ImageMatching
             img.InitParameters();
             aggregatorParam.Parameterizables.Add(img);
 
-            var sgm = new BaseSGMAggregator();
+            var sgm = new SGMAggregator();
             sgm.InitParameters();
             aggregatorParam.Parameterizables.Add(sgm);
 
             _params.Add(aggregatorParam);
         
-            ParametrizedObjectParameter disparityParam = new ParametrizedObjectParameter(
-                "Disparity Computer", "DISP_COMP");
-
-            disparityParam.Parameterizables = new List<IParameterizable>();
-            var dcWTA = new WTADisparityComputer();
-            dcWTA.InitParameters();
-            disparityParam.Parameterizables.Add(dcWTA);
-
-            var intWTA = new InterpolationDisparityComputer();
-            intWTA.InitParameters();
-            disparityParam.Parameterizables.Add(intWTA);
-
-            _params.Add(disparityParam);
-
             BooleanParameter rectParam = new BooleanParameter(
-                "Images Rectified", "RECT", false);
+                "Images Rectified", "RECT", true);
             _params.Add(rectParam);
         }
 
@@ -121,9 +108,6 @@ namespace CamImageProcessing.ImageMatching
         {
             Aggregator = AlgorithmParameter.FindValue<CostAggregator>("CAGG", _params);
             Aggregator.UpdateParameters();
-
-            DispComp = AlgorithmParameter.FindValue<DisparityComputer>("DISP_COMP", _params);
-            DispComp.UpdateParameters();
 
             Rectified = AlgorithmParameter.FindValue<bool>("RECT", _params);
         }

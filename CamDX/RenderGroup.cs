@@ -19,7 +19,7 @@ namespace CamDX
 
         }
 
-        public void Render(DeviceContext device)
+        public void Render(DeviceContext device, DXScene scene)
         {
             Shader.RenderFirstPass(device);
 

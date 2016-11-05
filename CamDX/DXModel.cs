@@ -10,6 +10,7 @@ namespace CamDX
 {
     public interface IModel : IRenderable, IDisposable
     {
+        DXSceneNode SceneNode { set; get; }
         List<IModel> SubModels { get; }
         DXShader Shader { get; }
         AABB ModelAABB { get; }
@@ -31,10 +32,11 @@ namespace CamDX
 
         protected DXShader _shader;
         protected AABB _bounds;
-
+        
         public List<IModel> SubModels { get { return null; } }
         public DXShader Shader { get { return _shader; } set { _shader = value; } }
         public AABB ModelAABB { get { return _bounds; } }
+        public DXSceneNode SceneNode { set; get; }
 
         public virtual void Render(DeviceContext device)
         {
@@ -89,23 +91,30 @@ namespace CamDX
         protected ushort[] _indices;
         public ushort[] IndexList { get { return _indices; } }
 
+        protected bool _isVertexBufMutable;
+        protected bool _isIndexBufMutable;
+
         public override void UpdateBuffers()
         {
             DeviceContext device = _vertexBuf.Device.ImmediateContext;
             DataStream stream;
-            var dataBox = device.MapSubresource(_vertexBuf, 0, MapMode.WriteDiscard, SharpDX.Direct3D11.MapFlags.None);
-            stream = new DataStream(dataBox.DataPointer, _vertexBuf.Description.SizeInBytes, true, true);
-            stream.WriteRange(_vertices);
-            device.UnmapSubresource(_vertexBuf, 0);
 
-            stream.Dispose();
-
-            if(_isIndexed)
+            if(_isVertexBufMutable)
             {
-                dataBox = device.MapSubresource(_indicesBuf, 0, MapMode.WriteDiscard, SharpDX.Direct3D11.MapFlags.None);
+                var dataBox = device.MapSubresource(_vertexBuf, 0, MapMode.WriteDiscard, SharpDX.Direct3D11.MapFlags.None);
+                stream = new DataStream(dataBox.DataPointer, _vertexBuf.Description.SizeInBytes, true, true);
+                stream.WriteRange(_vertices);
+                device.UnmapSubresource(_vertexBuf, 0);
+                stream.Dispose();
+            }
+
+            if(_isIndexed && _isIndexBufMutable)
+            {
+                var dataBox = device.MapSubresource(_indicesBuf, 0, MapMode.WriteDiscard, SharpDX.Direct3D11.MapFlags.None);
                 stream = new DataStream(dataBox.DataPointer, _indicesBuf.Description.SizeInBytes, true, true);
                 stream.WriteRange(_indices);
                 device.UnmapSubresource(_indicesBuf, 0);
+                stream.Dispose();
             }
         }
 
@@ -124,6 +133,7 @@ namespace CamDX
         protected List<IModel> _subModels = new List<IModel>();
         public List<IModel> SubModels { get { return _subModels; } }
         public DXShader Shader { get { return null; } }
+        public DXSceneNode SceneNode { set; get; }
 
         protected AABB _bounds;
         public AABB ModelAABB { get { return _bounds; } }

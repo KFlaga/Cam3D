@@ -28,6 +28,16 @@ namespace CamImageProcessing.ImageMatching
             CostComp.DisparityMap = DisparityMap;
             
             CostComp.Init();
+
+            if(DispComp != null)
+            {
+                DispComp.CostComp = CostComp;
+                DispComp.ImageBase = ImageBase;
+                DispComp.ImageMatched = ImageMatched;
+                DispComp.IsLeftImageBase = IsLeftImageBase;
+                DispComp.DisparityMap = DisparityMap;
+                DispComp.Init();
+            }
         }
 
         public abstract void ComputeMatchingCosts();
@@ -46,12 +56,12 @@ namespace CamImageProcessing.ImageMatching
                 new ParametrizedObjectParameter("Matching Cost Computer", "COST");
 
             costParam.Parameterizables = new List<IParameterizable>();
-            var rank = new RankCostComputer();
-            rank.InitParameters();
-            costParam.Parameterizables.Add(rank);
             var cens = new CensusCostComputer();
             cens.InitParameters();
             costParam.Parameterizables.Add(cens);
+            var rank = new RankCostComputer();
+            rank.InitParameters();
+            costParam.Parameterizables.Add(rank);
 
             _params.Add(costParam);
         }

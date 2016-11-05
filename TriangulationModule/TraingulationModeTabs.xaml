@@ -11,6 +11,9 @@
        <TabItem Header="From Points">
             <local:TriangulationFromPointsTab x:Name="_tabFromPoints"/>
         </TabItem>
+        <TabItem Header="From Disparity Map">
+            <local:TriangulationFromDisparityMapTab x:Name="_tabFromDisparity"/>
+        </TabItem>
 
     </TabControl>
 </UserControl>

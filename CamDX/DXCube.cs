@@ -28,17 +28,25 @@ namespace CamDX
 
             _indicesBuf = Buffer.Create(device, new ushort[]
             {
-                2,1,0, // bot
-                0,1,3,
-                1,2,3,
-                2,0,3
+                (ushort)VertexPosition.BotLeftBack, (ushort)VertexPosition.BotRightBack, (ushort)VertexPosition.BotRightFront , // Bottom 
+                (ushort)VertexPosition.BotLeftBack, (ushort)VertexPosition.BotRightFront, (ushort)VertexPosition.BotLeftFront, 
+                (ushort)VertexPosition.BotLeftFront, (ushort)VertexPosition.BotRightFront , (ushort)VertexPosition.TopRightFront, // Front
+                (ushort)VertexPosition.BotLeftFront, (ushort)VertexPosition.TopRightFront, (ushort)VertexPosition.TopLeftFront,
+                (ushort)VertexPosition.BotLeftBack, (ushort)VertexPosition.BotLeftFront , (ushort)VertexPosition.TopLeftFront, // Left
+                (ushort)VertexPosition.BotLeftBack, (ushort)VertexPosition.TopLeftFront, (ushort)VertexPosition.TopLeftBack,
+                (ushort)VertexPosition.TopLeftFront, (ushort)VertexPosition.TopRightFront , (ushort)VertexPosition.TopRightBack, // Top
+                (ushort)VertexPosition.TopLeftFront, (ushort)VertexPosition.TopRightBack, (ushort)VertexPosition.TopLeftBack,
+                (ushort)VertexPosition.BotRightFront, (ushort)VertexPosition.BotRightBack , (ushort)VertexPosition.TopRightBack, // Right
+                (ushort)VertexPosition.BotRightFront, (ushort)VertexPosition.TopRightBack, (ushort)VertexPosition.TopRightFront,
+                (ushort)VertexPosition.BotRightBack, (ushort)VertexPosition.BotLeftBack , (ushort)VertexPosition.TopRightBack, // Back
+                (ushort)VertexPosition.BotLeftBack,(ushort)VertexPosition.TopLeftBack, (ushort)VertexPosition.TopRightBack,  
             }, new BufferDescription()
             {
                 BindFlags = BindFlags.IndexBuffer,
                 CpuAccessFlags = CpuAccessFlags.None,
                 OptionFlags = ResourceOptionFlags.None,
                 StructureByteStride = 0,
-                Usage = ResourceUsage.Default,
+                Usage = ResourceUsage.Immutable,
                 SizeInBytes = 36 * sizeof(ushort)
             });
 
@@ -47,6 +55,10 @@ namespace CamDX
             _isIndexed = true;
             _indicesCount = 36;
             _vertexCount = 8;
+            _vertices = new Vertex_P4N3C4T2[_vertexCount];
+
+            _isVertexBufMutable = true;
+            _isIndexBufMutable = false;
 
             SetSize(size, center);
             UpdateBuffers();
@@ -57,42 +69,50 @@ namespace CamDX
             _vertices[0] = new Vertex_P4N3C4T2() // BotLeftBack
             {
                 Position = new Vector3(center.X - halfSize.X, center.Y - halfSize.Y, center.Z - halfSize.Z),
-                Normal = new Vector3()
+                Normal = new Vector3(),
+                Color = new Color4(1.0f)
             };
             _vertices[1] = new Vertex_P4N3C4T2() // BotLeftFront
             {
                 Position = new Vector3(center.X - halfSize.X, center.Y - halfSize.Y, center.Z + halfSize.Z),
-                Normal = new Vector3()
+                Normal = new Vector3(),
+                Color = new Color4(1.0f)
             };
             _vertices[2] = new Vertex_P4N3C4T2() // BotRightBack
             {
                 Position = new Vector3(center.X + halfSize.X, center.Y - halfSize.Y, center.Z - halfSize.Z),
-                Normal = new Vector3()
+                Normal = new Vector3(),
+                Color = new Color4(1.0f)
             };
             _vertices[3] = new Vertex_P4N3C4T2() // BotRightFront
             {
                 Position = new Vector3(center.X + halfSize.X, center.Y - halfSize.Y, center.Z + halfSize.Z),
-                Normal = new Vector3()
+                Normal = new Vector3(),
+                Color = new Color4(1.0f)
             };
             _vertices[4] = new Vertex_P4N3C4T2() // TopLeftBack
             {
                 Position = new Vector3(center.X - halfSize.X, center.Y + halfSize.Y, center.Z - halfSize.Z),
-                Normal = new Vector3()
+                Normal = new Vector3(),
+                Color = new Color4(1.0f)
             };
             _vertices[5] = new Vertex_P4N3C4T2() // TopLeftFront
             {
                 Position = new Vector3( center.X - halfSize.X, center.Y + halfSize.Y, center.Z + halfSize.Z),
-                Normal = new Vector3()
+                Normal = new Vector3(),
+                Color = new Color4(1.0f)
             };
             _vertices[6] = new Vertex_P4N3C4T2() // TopRightBack
             {
                 Position = new Vector3(center.X + halfSize.X, center.Y + halfSize.Y, center.Z - halfSize.Z),
-                Normal = new Vector3()
+                Normal = new Vector3(),
+                Color = new Color4(1.0f)
             };
             _vertices[7] = new Vertex_P4N3C4T2() // TopRightFront
             {
                 Position = new Vector3(center.X + halfSize.X, center.Y + halfSize.Y, center.Z + halfSize.Z),
-                Normal = new Vector3()
+                Normal = new Vector3(),
+                Color = new Color4(1.0f)
             };
         }
 
@@ -108,6 +128,20 @@ namespace CamDX
             var vertex = _vertices[(int)vIdx];
             vertex.TexCoords = uv;
             _vertices[(int)vIdx] = vertex;
+        }
+
+        public void SetColor(int vIdx, Color4 color)
+        {
+            var vertex = _vertices[vIdx];
+            vertex.Color = color;
+            _vertices[vIdx] = vertex;
+        }
+
+        public void SetTexCoords(int vIdx, Vector2 uv)
+        {
+            var vertex = _vertices[vIdx];
+            vertex.TexCoords = uv;
+            _vertices[vIdx] = vertex;
         }
     }
 }

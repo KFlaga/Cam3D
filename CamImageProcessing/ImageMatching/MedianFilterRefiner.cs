@@ -64,20 +64,22 @@ namespace CamImageProcessing.ImageMatching
                         return r1 < r2 ? 1 : r1 > r2 ? -1 : 0;
                     });
                     // Set value of image to be median of window
-                    filtered.Set(r, c, window[middle + (invalidCount >> 2)]); // For each 2 invalid cells move middle by 1 pos
+                    filtered.Set(r, c - 1, (Disparity)window[middle + (invalidCount >> 2)].Clone()); // For each 2 invalid cells move middle by 1 pos
+                                 // c - 1 to negate some strange horizontal shift
                 }
             }
 
             for(int r = 0; r < map.RowCount; ++r)
             {
-                filtered.Set(r, 0, map[r, 0]);
-                filtered.Set(r, map.ColumnCount - 1, map[r, map.ColumnCount - 1]);
+                filtered.Set(r, 0, (Disparity)map[r, 0].Clone());
+                filtered.Set(r, map.ColumnCount - 2, (Disparity)map[r, map.ColumnCount - 2].Clone());
+                filtered.Set(r, map.ColumnCount - 1, (Disparity)map[r, map.ColumnCount - 1].Clone());
             }
 
             for(int c = 0; c < map.ColumnCount; ++c)
             {
-                filtered.Set(0, c, map[0, c]);
-                filtered.Set(map.RowCount - 1, c, map[map.RowCount - 1, c]);
+                filtered.Set(0, c, (Disparity)map[0, c].Clone());
+                filtered.Set(map.RowCount - 1, c, (Disparity)map[map.RowCount - 1, c].Clone());
             }
 
             return filtered;

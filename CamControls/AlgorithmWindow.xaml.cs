@@ -253,16 +253,16 @@ namespace CamControls
                 
                 Worker = Task.Run(() =>
                 {
-                  //  try
-                  //  {
+                    try
+                    {
                         Algorithm.Process();
-                  //  }
-                  //  catch(Exception e)
-                  //  {
-                  //      WasError = true;
-                  //      Error = e;
-                  //      Algorithm.Status = AlgorithmStatus.Error;
-                  //  }
+                    }
+                    catch(Exception e)
+                    {
+                        WasError = true;
+                        Error = e;
+                        Algorithm.Status = AlgorithmStatus.Error;
+                    }
                 });
             }
 

@@ -5,17 +5,19 @@ using SharpDX.Direct3D11;
 using SharpDX.D3DCompiler;
 using SharpDX.DXGI;
 using SharpDX;
+using System.Xml;
 
 namespace DXTestModule
 {
     public partial class DXControl : UserControl
     {
-        CamDX.WPF.DX11Window dxwindow = null;
-        DXCamera camera = null;
-        DX11Renderer renderer = null;
-        DXTestCube cube = null;
-        RenderGroup rg = null;
-        DX11Scene scene = null;
+        CamDX.WPF.DX11Window _dxWindow;
+        DXCamera _camera;
+        DXRenderer _renderer;
+        DXScene _scene;
+        DXResourceManager _resourceManager;
+        DXCube _testCube;
+        DXSceneNode _cubeNode;
 
         public DXControl()
         {
@@ -26,59 +28,73 @@ namespace DXTestModule
         {
             // Create and show window -> disable rendering for now, as
             // we show it only to get window's handle
-            dxwindow = new CamDX.WPF.DX11Window();
-            dxwindow.ResizeMode = ResizeMode.NoResize;
-            dxwindow.IsRendering = false;
-            dxwindow.Show();
+            _dxWindow = new CamDX.WPF.DX11Window();
+            _dxWindow.ResizeMode = ResizeMode.NoResize;
+            _dxWindow.IsRendering = false;
+            _dxWindow.Show();
             
             // Create camera
-            camera = new CamDX.DXCamera();
+            _camera = new CamDX.DXCamera();
+            _camera.FarBound = 400.0f;
+            _camera.NearBound = 1.0f;
+            _camera.Position = new Vector3(0.0f, 60.0f, 260.0f);
+            _camera.LookAt = new Vector3(0.0f, 0.0f, 0.0f);
             
             // Create renderer for window
-            renderer = new DX11Renderer(dxwindow.WinHanldle, new Size2( 800, 600));
-            var device = renderer.DxDevice;
-            dxwindow.Renderer = renderer;
+            _renderer = new DXRenderer(_dxWindow.WinHanldle, new Size2( 800, 600));
+            var device = _renderer.DxDevice;
+            _dxWindow.Renderer = _renderer;
+
+            // Load resources
+            XmlDocument resDoc = new XmlDocument();
+            resDoc.Load("resources.xml");
+            XmlNode dxResourcesNode = resDoc.SelectSingleNode("//DXResources");
+            _resourceManager = new DXResourceManager(device, dxResourcesNode);
 
             // Create scene
-            scene = new CamDX.DX11Scene(renderer.DxDevice);
-            renderer.CurrentScene = scene;
-            scene.CurrentCamera = camera;
+            _scene = new CamDX.DXScene(_renderer.DxDevice);
+            _renderer.CurrentScene = _scene;
+            _scene.CurrentCamera = _camera;
 
-            rg = new RenderGroup();
+            // Create test cube and scene node for it, add to scene
+            _testCube = new DXCube(device, new Vector3(10.0f, 15.0f, 5.0f));
+            _testCube.Shader = _resourceManager.ShaderManager.GetShader("ColorShader_NoLight");
+            _testCube.SetColor(DXCube.VertexPosition.BotLeftBack, new Color4(1.0f, 1.0f, 0.0f, 1.0f));
+            _testCube.SetColor(DXCube.VertexPosition.BotLeftFront, new Color4(0.7f, 0.7f, 0.7f, 1.0f));
+            _testCube.SetColor(DXCube.VertexPosition.BotRightBack, new Color4(1.0f, 0.0f, 1.0f, 1.0f));
+            _testCube.SetColor(DXCube.VertexPosition.BotRightFront, new Color4(0.7f, 0.7f, 0.7f, 1.0f));
+            _testCube.SetColor(DXCube.VertexPosition.TopLeftBack, new Color4(0.0f, 1.0f, 1.0f, 1.0f));
+            _testCube.SetColor(DXCube.VertexPosition.TopLeftFront, new Color4(0.7f, 0.7f, 0.7f, 1.0f));
+            _testCube.SetColor(DXCube.VertexPosition.TopRightBack, new Color4(1.0f, 1.0f, 1.0f, 1.0f));
+            _testCube.SetColor(DXCube.VertexPosition.TopRightFront, new Color4(0.7f, 0.7f, 0.7f, 1.0f));
+            _testCube.UpdateBuffers();
 
-            // Create model to show on our window
-            cube = new DXTestCube(renderer.DxDevice);
-            rg.Models.Add(cube);
-            scene.RenderGroups.Add(rg);
+            _cubeNode = new DXSceneNode();
+            _cubeNode.Position = new Vector3(0.0f);
+            _cubeNode.Scale = new Vector3(1.0f);
+            _cubeNode.Orientation = Quaternion.RotationAxis(Vector3.UnitY, 0.0f);
+            _cubeNode.UpdateTransfromMatrix();
 
-            // Compile Vertex and Pixel shaders
-            var vertexShaderByteCode = ShaderBytecode.CompileFromFile("d:\\shaders.fx", "VS", "vs_4_0", ShaderFlags.None, EffectFlags.None);
-            var vertexShader = new VertexShader(device, vertexShaderByteCode);
-
-            var pixelShaderByteCode = ShaderBytecode.CompileFromFile("d:\\shaders.fx", "PS", "ps_4_0", ShaderFlags.None, EffectFlags.None);
-            var pixelShader = new PixelShader(device, pixelShaderByteCode);
-
-            var signature = ShaderSignature.GetInputSignature(vertexShaderByteCode);
-            // Layout from VertexShader input signature
-            var layout = new InputLayout(device, signature, new[]
-                    {
-                        new InputElement("POSITION", 0, Format.R32G32B32A32_Float, 0, 0),
-                        new InputElement("COLOR", 0, Format.R32G32B32A32_Float, 16, 0)
-                    });
-
-            // Bound shaders to render group
-            rg.VertexShader = vertexShader;
-            rg.PixelShader = pixelShader;
-            rg.InputLayout = layout;
+            _cubeNode.AttachModel(_testCube);
+            _scene.RootNode.Children.Add(_cubeNode);
 
             // Now when all is set, enable dx rendering
-            dxwindow.IsRendering = true;
-            dxwindow.Render();
+            _dxWindow.IsRendering = true;
+            _dxWindow.Render();
+
+            _dxWindow.PreRender += _dxWindow_PreRender;
         }
 
-
-
-
+        float _angle = 0.0f;
+        Vector3 _axis = new Vector3(0.0f, 1.0f, 0.0f); 
+        private void _dxWindow_PreRender(object sender, System.EventArgs e)
+        {
+            // Rotate test cube
+            //_angle = _angle > 6.28f ? 0.0f : _angle + 0.02f;
+            //Quaternion qnew = Quaternion.RotationAxis(_axis, _angle);
+            //_cubeNode.Orientation = qnew;
+            //_cubeNode.UpdateTransfromMatrix();
+        }
     }
 }
 

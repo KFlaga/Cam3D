@@ -12,8 +12,8 @@ namespace ImageMatchingModule
         {
             InitializeComponent();
 
-            _tabMatching.LeftMapChanged += (s, e) => { _tabDisparity.DisparityMapLeft = e.NewMap; };
-            _tabMatching.RightMapChanged += (s, e) => { _tabDisparity.DisparityMapRight = e.NewMap; };
+            _tabMatching.LeftMapChanged += (s, e) => { if(e.NewMap != null) _tabDisparity.DisparityMapLeft = e.NewMap; };
+            _tabMatching.RightMapChanged += (s, e) => { if(e.NewMap != null) _tabDisparity.DisparityMapRight = e.NewMap; };
 
             _tabRefinement.RequsestDisparityMapsUpdate += (s, e) =>
             {

@@ -73,8 +73,15 @@ namespace ImageMatchingModule
 
         private void ResetMaps(object sender, RoutedEventArgs e)
         {
-            MapLeftCurrent = (DisparityMap)MapLeftBase.Clone();
-            MapRightCurrent = (DisparityMap)MapRightBase.Clone();
+            if(MapLeftBase != null)
+                MapLeftCurrent = (DisparityMap)MapLeftBase.Clone();
+            else
+                MapLeftCurrent = null;
+
+            if(MapRightBase != null)
+                MapRightCurrent = (DisparityMap)MapRightBase.Clone();
+            else
+                MapRightCurrent = null;
         }
 
         private void UpdateMaps(object sender, RoutedEventArgs e)

@@ -27,6 +27,8 @@ namespace CamMain
 
         public MainWindow()
         {
+            Directory.SetCurrentDirectory(Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location));
+
             InitializeComponent();
             _modules = new List<Module>();
             var entryAssembly = System.Reflection.Assembly.GetEntryAssembly();

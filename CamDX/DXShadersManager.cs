@@ -1,9 +1,6 @@
 ﻿using SharpDX.Direct3D11;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 
 namespace CamDX
@@ -31,27 +28,43 @@ namespace CamDX
 
         public void AddShader(DXShader shader)
         {
-            var old = _shadersByName[shader.Name];
-            if(old != null)
+            DXShader oldShader;
+            var idOld = _shadersByName.TryGetValue(shader.Name, out oldShader);
+            if(idOld == false)
             {
                 _shadersByName.Add(shader.Name, shader);
             }
             else
             {
-                old.Dispose();
+                oldShader.Dispose();
                 _shadersByName[shader.Name] = shader;
             }
         }
 
         public void LoadShaders(XmlNode shaderResourcesNode)
         {
+            //    < Shaders >
+            //        < ShaderFile > shaders / ColorShader_NoLight.xml </ ShaderFile >
+            //        < ShaderFile > shaders / ColorShader_WithLight.xml </ ShaderFile >
+            //    </ Shaders >
+            _shadersByName = new Dictionary<string, DXShader>();
+            XmlNode shaderFileNode = shaderResourcesNode.FirstChild;
+            while(shaderFileNode != null)
+            {
+                string path = shaderFileNode.InnerText;
+                XmlDocument shaderDoc = new XmlDocument();
+                shaderDoc.Load(path);
+                LoadShader(shaderDoc);
 
+                shaderFileNode = shaderFileNode.NextSibling;
+            }
         }
 
         public void LoadShader(XmlDocument shaderDoc)
         {
             DXShader shader = new DXShader();
             shader.Load(_dxDevice, shaderDoc);
+            AddShader(shader);
         }
 
         public void RemoveShader(DXShader shader)
@@ -108,7 +121,7 @@ namespace CamDX
             }
         }
 
-        void IDisposable.Dispose()
+        public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);

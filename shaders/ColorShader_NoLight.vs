@@ -1,36 +1,37 @@
-// Global ConstBuffer for transform matrix
-cbuffer WorldViewProjBuffer : register(b0)
-{
-    matrix transformMatrix;
-	Vector3 cameraPosition;
-	float Padding1;
-};
 
 // Defines of vertices
-struct VertexInputType
+struct VS_IN
 {
-    float4 position : POSITION;
+	float4 position : POSITION;
+  	float3 normal : NORMAL;
     float4 color : COLOR;
+	float2 texCoords : TEXCOORD0;
 };
 
-struct PixelInputType
+struct PS_IN
 {
-    float4 position : SV_POSITION;
-    float4 color : COLOR;
+	float4 position : SV_POSITION;
+	float4 color : COLOR;
 };
 
-PixelInputType Main(VertexInputType input)
+// Global ConstBuffer for scene transform matrix
+cbuffer WorldViewProjBuffer : register(b0)
 {
-    PixelInputType output;
-    
-    // Change the position vector to be 4 units for proper matrix calculations.
-    input.position.w = 1.0f;
+	float4x4 transformMatrix;
+};
 
-    // Calculate the position of the vertex against the world, view, and projection matrices.
-    output.position = mul(input.position, transformMatrix);
-    
-    // Store the input color for the pixel shader to use.
-    output.color = input.color;
-    
-    return output;
+PS_IN Main(VS_IN input)
+{
+	PS_IN output;
+
+	// Change the position vector to be 4 units for proper matrix calculations.
+	input.position.w = 1.0f;
+
+	// Calculate the position of the vertex against the world, view, and projection matrices.
+	output.position = mul(input.position, transformMatrix);
+
+	// Store the input color for the pixel shader to use.
+	output.color = input.color;
+
+	return output;
 }

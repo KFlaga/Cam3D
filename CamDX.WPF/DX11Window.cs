@@ -15,12 +15,12 @@ namespace CamDX.WPF
 {
     public class DX11Window : Window
     {
-        protected DX11Renderer _renderer;
+        protected DXRenderer _renderer;
         private bool _isRendering = false;
         private bool _isRenderingOld = false;
 
-        public IntPtr WinHanldle {  get { return new WindowInteropHelper(this).EnsureHandle(); } }
-        public DX11Renderer Renderer
+        public IntPtr WinHanldle { get { return new WindowInteropHelper(this).EnsureHandle(); } }
+        public DXRenderer Renderer
         {
             get
             {
@@ -38,7 +38,7 @@ namespace CamDX.WPF
             get { return _isRendering; }
             set
             {
-                if (value == _isRendering)
+                if(value == _isRendering)
                     return;
                 _isRenderingOld = _isRendering;
                 _isRendering = value;
@@ -51,13 +51,16 @@ namespace CamDX.WPF
             base.SnapsToDevicePixels = true;
             Width = width;
             Height = height;
-            DX11Renderer renderer = new DX11Renderer(WinHanldle, new SharpDX.Size2(width, height));
+            DXRenderer renderer = new DXRenderer(WinHanldle, new SharpDX.Size2(width, height));
+
+            this.Closed += DX11Window_Closed;
         }
 
-        public DX11Window(DX11Renderer renderer) : base()
+        public DX11Window(DXRenderer renderer) : base()
         {
             base.SnapsToDevicePixels = true;
             Renderer = renderer;
+            this.Closed += DX11Window_Closed;
         }
 
         public DX11Window() : base()
@@ -65,8 +68,9 @@ namespace CamDX.WPF
             base.SnapsToDevicePixels = true;
             Width = 800;
             Height = 600;
+            this.Closed += DX11Window_Closed;
         }
- 
+
         protected override System.Windows.Size ArrangeOverride(System.Windows.Size finalSize)
         {
             base.ArrangeOverride(finalSize);
@@ -95,10 +99,10 @@ namespace CamDX.WPF
                 && Renderer != null
                 && IsVisible;
 
-            if (newValue != _isRenderingOld)
+            if(newValue != _isRenderingOld)
             {
                 _isRendering = newValue;
-                if (IsRendering)
+                if(IsRendering)
                 {
                     CompositionTarget.Rendering += OnRendering;
                 }
@@ -111,7 +115,9 @@ namespace CamDX.WPF
 
         void OnRendering(object sender, EventArgs e)
         {
+            PreRender?.Invoke(this, new EventArgs());
             Render();
+            PostRender?.Invoke(this, new EventArgs());
         }
 
         protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
@@ -122,18 +128,51 @@ namespace CamDX.WPF
 
         protected virtual void UpdateSize()
         {
-            if (Renderer == null)
+            if(Renderer == null)
                 return;
             Renderer.Reset((int)this.ActualWidth, (int)this.ActualHeight);
         }
-        
+
         public void Render()
         {
-            if (!IsRendering || Renderer == null || IsInDesignMode)
+            if(!IsRendering || Renderer == null || IsInDesignMode)
                 return;
             Renderer.Render();
         }
-       
+
+        public new void Show()
+        {
+            base.Show();
+            UpdateIsRendering();
+        }
+
+        public new void Hide()
+        {
+            base.Hide();
+            UpdateIsRendering();
+        }
+
+        protected bool _closingInternal = false;
+        public new void Close()
+        {
+            _closingInternal = true;
+            base.Close();
+            _closingInternal = false;
+            UpdateIsRendering();
+        }
+
+        private void DX11Window_Closed(object sender, EventArgs e)
+        {
+            if(_closingInternal == false)
+            {
+                IsRendering = false;
+                UpdateIsRendering();
+            }
+        }
+
+        public event EventHandler<EventArgs> PreRender;
+        public event EventHandler<EventArgs> PostRender;
+
         /// <summary>
         /// Gets a value indicating whether the control is in design mode
         /// (running in Blend or Visual Studio).

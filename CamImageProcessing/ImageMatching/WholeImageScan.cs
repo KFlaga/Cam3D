@@ -15,7 +15,7 @@ namespace CamImageProcessing.ImageMatching
         public int MaxDisp_NegX { get; set; }
         public int MaxDisp_PosY { get; set; }
         public int MaxDisp_NegY { get; set; }
-
+        
         public override void ComputeMatchingCosts()
         {
             IntVector2 pm = new IntVector2();
@@ -96,6 +96,21 @@ namespace CamImageProcessing.ImageMatching
             IntParameter minDYParam =
                 new IntParameter("Max Disparity In Y (Negative)", "DYNEG", 1, -100000, 100000);
             Parameters.Add(minDYParam);
+
+            ParametrizedObjectParameter disparityParam = new ParametrizedObjectParameter(
+                "Disparity Computer", "DISP_COMP");
+
+            disparityParam.Parameterizables = new List<IParameterizable>();
+            var dcWTA = new WTADisparityComputer();
+            dcWTA.InitParameters();
+            disparityParam.Parameterizables.Add(dcWTA);
+
+            var intWTA = new InterpolationDisparityComputer();
+            intWTA.InitParameters();
+            disparityParam.Parameterizables.Add(intWTA);
+
+            Parameters.Add(disparityParam);
+
         }
 
         public override void UpdateParameters()
@@ -105,6 +120,9 @@ namespace CamImageProcessing.ImageMatching
             MaxDisp_NegX = AlgorithmParameter.FindValue<int>("DXNEG", Parameters);
             MaxDisp_PosY = AlgorithmParameter.FindValue<int>("DYPOS", Parameters);
             MaxDisp_NegY = AlgorithmParameter.FindValue<int>("DYNEG", Parameters);
+
+            DispComp = AlgorithmParameter.FindValue<DisparityComputer>("DISP_COMP", Parameters);
+            DispComp.UpdateParameters();
         }
 
         public override string ToString()

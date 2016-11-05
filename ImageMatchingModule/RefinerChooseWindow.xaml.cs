@@ -64,9 +64,14 @@ namespace ImageMatchingModule
             crossRefiner.InitParameters();
             _availableRefiners.Add(crossRefiner);
 
+            LimitRangeRefiner limitRefiner = new LimitRangeRefiner();
+            limitRefiner.InitParameters();
+            _availableRefiners.Add(limitRefiner);
+
             _refinersCombo.Items.Add(medianRefiner);
             _refinersCombo.Items.Add(peakRefiner);
             _refinersCombo.Items.Add(crossRefiner);
+            _refinersCombo.Items.Add(limitRefiner);
         }
 
         private void _refinersCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)

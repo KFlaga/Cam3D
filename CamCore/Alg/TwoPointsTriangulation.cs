@@ -10,6 +10,7 @@ namespace CamCore
     public class TwoPointsTriangulation
     {
         public Matrix<double> Fundamental { get; set; }
+        public bool Rectified { get; set; }
 
         public Matrix<double> CameraLeft { get; set; }
         public Matrix<double> CameraRight { get; set; }
@@ -42,6 +43,8 @@ namespace CamCore
 
         public bool UseLinearEstimationOnly { get; set; } = false;
 
+        // Computes 3d points from left/right points
+        // Result points are scaled so that w = 1
         public void Estimate3DPoints()
         {
             Points3D = new List<Vector<double>>(PointsLeft.Count);
@@ -53,16 +56,23 @@ namespace CamCore
                 _pR = PointsRight[p];
                 _pR = _pR / _pR[2];
 
-                if(UseLinearEstimationOnly)
-                    ComputeBackprojected3DPoint();
+                if(Rectified)
+                {
+                    Estimate3DPoint_Rect();
+                }
                 else
-                    Estimate3DPoint();
+                {
+                    if(UseLinearEstimationOnly)
+                        ComputeBackprojected3DPoint();
+                    else
+                        Estimate3DPoint();
+                }
 
                 Points3D.Add(_p3D);
             }
         }
 
-        public void Estimate3DPoint()
+        void Estimate3DPoint()
         {
             ComputeTransformToOriginMatrices();
             ComputeTransformedFundamental();
@@ -79,7 +89,7 @@ namespace CamCore
             ComputeBackprojected3DPoint();
         }
 
-        public void ComputeTransformToOriginMatrices()
+        void ComputeTransformToOriginMatrices()
         {
             // 1) Define transform matrices, which take points to origin
             //     |1    -x|      |1    -x'|
@@ -96,7 +106,7 @@ namespace CamCore
             _Tinv_R[1, 2] = _pR[1];
         }
 
-        public void ComputeTransformedFundamental()
+        void ComputeTransformedFundamental()
         {
             // 2) Fundamental matrix resulting from appying this transforms
             // over 2 images is equalt to:
@@ -104,7 +114,7 @@ namespace CamCore
             _F_T = _Tinv_R.Transpose() * Fundamental * _Tinv_L;
         }
 
-        public void ComputeNormalisedTransformedEpipoles()
+        void ComputeNormalisedTransformedEpipoles()
         {
             // 3) Compute new e and e' such that e'^T*F = 0 and F*e = 0
             // Normalise them so that || e || == || e' || == 1
@@ -119,7 +129,7 @@ namespace CamCore
             _e_T_R.MultiplyThis(scale);
         }
 
-        public void ComputeRotationMatrices()
+        void ComputeRotationMatrices()
         {
             // 4) Compute rotation matrices R,R' which will take epipoles to points (rotation is around origin, so points are not moved)
             // e_rot = (1,0,e.w), e_rot' = (1,0,e'.w)
@@ -147,13 +157,13 @@ namespace CamCore
             _Rinv_R[1, 1] = _e_T_R[0];
         }
 
-        public void ComputeRotatedFundamental()
+        void ComputeRotatedFundamental()
         {
             // 5) Replace F by R'*F*R^T
             _F_TR = _R_R * _F_T * _Rinv_L;
         }
 
-        public void FindMinimalErrorPoints()
+        void FindMinimalErrorPoints()
         {
             // 10) Having t, we can find closest points to origin on this lines
             // For line l = (a,b,c), closes point is p = (-ac, -bc, a^2 + b^2)
@@ -183,7 +193,7 @@ namespace CamCore
             _pR[2] = 1.0;
         }
 
-        public void FindMinimalErrorEpipolarLines()
+        void FindMinimalErrorEpipolarLines()
         {
             // 7) Now find 2 corresponding epilines, which are best fit for our 2 points
             // Our epipoles are at e=(1,0,f)^T and e'=(1,0,f')^T
@@ -254,7 +264,7 @@ namespace CamCore
             }
         }
 
-        public double ComputeEpilineFitCost(double t)
+        double ComputeEpilineFitCost(double t)
         {
             // Distance to origin (and so our transformed point):
             // d(x,l(t))^2 = t^2 / (1+(tf)^2)
@@ -267,7 +277,7 @@ namespace CamCore
                 (ctd2 / (atb * atb + _e_T_R[2] * _e_T_R[2] * ctd2));
         }
 
-        public double ComputeEpilineFitCost_Inf()
+        double ComputeEpilineFitCost_Inf()
         {
             // d(x,l(t))^2 = t^2 / (1+(tf)^2) -> for t = inf : d = 1/f^2
             // d(x',l'(t))^2 = (ct + d)^2 / (at+b)^2 + f'^2(ct+d)^2 -> for t = inf : 1 / ( (a/c)^2  + f'^2 )
@@ -275,7 +285,7 @@ namespace CamCore
                 1.0 / ((_F_TR[1, 1]* _F_TR[1, 1]) / (_F_TR[2, 2]* _F_TR[2, 2]) + _e_T_R[2] * _e_T_R[2]);
         }
 
-        public double ComputeEpilineFitCostDerivative(double t)
+        double ComputeEpilineFitCostDerivative(double t)
         {
             // s' = 0 <=> g = 0
             // g(t) = t((at+b)^2 + f'^2(ct+d)^2) - (ad-bc)(1+(ft)^2)^2(at+b)(ct+d)
@@ -287,7 +297,7 @@ namespace CamCore
                 * ft2 * ft2 * atb * ctd;
         }
 
-        public Polynomial FindCostPolynomial()
+        Polynomial FindCostPolynomial()
         {
             Polynomial poly = new Polynomial();
             poly.Rank = 6;
@@ -343,7 +353,7 @@ namespace CamCore
             return poly;
         }
 
-        public void TransformEstimatedImagePointsBack()
+        void TransformEstimatedImagePointsBack()
         {
             // 11) Transfer computed p and p' back to original coordinates
             // p_org = T^-1 * R^T * p, p_org' = T'^-1 * R'^T * p'
@@ -351,7 +361,7 @@ namespace CamCore
             _pR = _Tinv_R * _Rinv_R * _pR;
         }
 
-        public void ComputeBackprojected3DPoint()
+        void ComputeBackprojected3DPoint()
         {
             // 12) Rays from estimated points should intersect in 3D now, so
             // find this 3D point (vai linear method) :
@@ -392,6 +402,11 @@ namespace CamCore
 
             _p3D = SvdZeroFullrankSolver.Solve(A);
             _p3D.DivideThis(_p3D[3]);
+        }
+
+        void Estimate3DPoint_Rect()
+        {
+
         }
     }
 }
