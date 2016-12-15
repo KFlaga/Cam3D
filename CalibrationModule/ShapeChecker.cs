@@ -7,9 +7,8 @@ namespace CalibrationModule
     // Returns true if shape fills arbitrary condition ( intended for primary shape test )
     public abstract class ShapeChecker : IParameterizable
     {
-        public GrayScaleImage ImageGray { get; set; }
-        public ColorImage ImageRGB { get; set; }
-        public HSIImage ImageHSI { get; set; }
+        public abstract string Name { get; }
+        public IImage Image { get; set; }
 
         public abstract bool CheckShape(CalibrationShape shape);
 
@@ -17,11 +16,17 @@ namespace CalibrationModule
         public List<AlgorithmParameter> Parameters
         {
             get { return _parameters; }
-            protected set { _parameters = value; }
         }
 
-        public abstract void InitParameters();
-        public abstract void UpdateParameters();
+        public virtual void InitParameters()
+        {
+            _parameters = new List<AlgorithmParameter>();
+        }
+
+        public virtual void UpdateParameters()
+        {
+
+        }
     }
 
     // Qualifies shape as primary one if most (75%) of centers' neighbourhood (def r=3) 
@@ -42,7 +47,9 @@ namespace CalibrationModule
             get { return _minRed; }
             set { _minRed = value; }
         }
-        
+
+        public override string Name { get { return "Red Neighbourhood Checker"; } }
+
         public RedNeighbourhoodChecker(int radius = 3, double redTreshold = 0.25f)
         {
             NeighbourhoodRadius = radius;
@@ -59,7 +66,7 @@ namespace CalibrationModule
             {
                 for(int dy= -_r; dy <= _r; ++dy)
                 {
-                    redCount = ImageRGB[RGBChannel.Red][cy + dy, cx + dx] > _minRed ? 
+                    redCount = Image[cy + dy, cx + dx, (int)RGBChannel.Red] > _minRed ? 
                         redCount + 1 : redCount; 
                 }
             }
@@ -69,7 +76,7 @@ namespace CalibrationModule
         
         public override void InitParameters()
         {
-            Parameters = new List<AlgorithmParameter>();
+            base.InitParameters();
 
             AlgorithmParameter radius = new IntParameter(
                 "Check Neighbourhood Radius", "CNR",  3, 1, 99);
@@ -82,13 +89,14 @@ namespace CalibrationModule
 
         public override void UpdateParameters()
         {
+            base.UpdateParameters();
             NeighbourhoodRadius = AlgorithmParameter.FindValue<int>("CNR", Parameters);
             RedTreshold = AlgorithmParameter.FindValue<double>("RVT", Parameters);
         }
 
         public override string ToString()
         {
-            return "RedNeighbourhoodChecker";
+            return Name;
         }
     }
 }

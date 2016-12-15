@@ -5,6 +5,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
 using CamImageProcessing.ImageMatching;
+using CamCore;
+using CamImageProcessing;
 
 namespace UnitTestProject1
 {
@@ -114,8 +116,8 @@ namespace UnitTestProject1
             RankCostComputer cost = new RankCostComputer();
             MatchConfidenceComputer conf = new MatchConfidenceComputer();
 
-            cost.ImageBase = _imageLeft;
-            cost.ImageMatched = _imageRight;
+            cost.ImageBase = new GrayScaleImage() { ImageMatrix = _imageLeft };
+            cost.ImageMatched = new GrayScaleImage() { ImageMatrix = _imageRight };
             cost.RankMaskHeight = 3;
             cost.RankMaskWidth = 3;
             cost.CorrMaskWidth = 3;
@@ -128,11 +130,10 @@ namespace UnitTestProject1
             conf.UsedConfidenceMethod = ConfidenceMethod.TwoAgainstTwo;
 
             DisparityMap disp = new DisparityMap(_imageLeft.RowCount, _imageLeft.ColumnCount);
-            cost.DisparityMap = disp;
             agg.DisparityMap = disp;
 
-            agg.ImageBase = _imageLeft;
-            agg.ImageMatched = _imageRight;
+            agg.ImageBase = cost.ImageBase;
+            agg.ImageMatched = cost.ImageMatched;
             agg.IsLeftImageBase = true;
             agg.Fundamental = _F;
 
@@ -143,33 +144,32 @@ namespace UnitTestProject1
         [TestMethod]
         public void Test_BSGM_NoNoise()
         {
-            BaseSGMAggregator agg = new BaseSGMAggregator();
+            SGMAggregator agg = new SGMAggregator();
             CensusCostComputer cost = new CensusCostComputer();
             WTADisparityComputer dispComp = new WTADisparityComputer();
 
-            cost.ImageBase = _imageLeft;
-            cost.ImageMatched = _imageRight;
+            cost.ImageBase = new GrayScaleImage() { ImageMatrix = _imageLeft };
+            cost.ImageMatched = new GrayScaleImage() { ImageMatrix = _imageRight };
             cost.MaskWidth = 3;
             cost.MaskHeight = 3;
             agg.CostComp = cost;
 
             dispComp.ConfidenceComp.UsedConfidenceMethod = ConfidenceMethod.TwoAgainstTwo;
             dispComp.CostComp = cost;
-            dispComp.ImageBase = _imageLeft;
-            dispComp.ImageMatched = _imageRight;
+            dispComp.ImageBase = cost.ImageBase;
+            dispComp.ImageMatched = cost.ImageMatched;
             agg.DispComp = dispComp;
 
             DisparityMap disp = new DisparityMap(_imageLeft.RowCount, _imageLeft.ColumnCount);
-            cost.DisparityMap = disp;
             agg.DisparityMap = disp;
             dispComp.DisparityMap = disp;
 
-            agg.ImageBase = _imageLeft;
-            agg.ImageMatched = _imageRight;
+            agg.ImageBase = cost.ImageBase;
+            agg.ImageMatched = cost.ImageMatched;
             agg.IsLeftImageBase = true;
             agg.Fundamental = _F;
 
-            agg.PathsLength = 10;
+           // agg.PathsLength = 10;
             agg.LowPenaltyCoeff = 0.02;
             agg.HighPenaltyCoeff = 0.04;
             agg.MaxDisparity = 10;

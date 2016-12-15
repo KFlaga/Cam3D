@@ -13,6 +13,7 @@
                 <Button Content="Manage Left Calib Points" Click="ManagePointsLeft" Margin="5,3,5,3"/>
                 <Button Content="Manage Right Calib Points" Click="ManagePointsRight" Margin="5,3,5,3"/>
                 <Button Content="Manage Calib Grids" Click="ManageGridsLeft" Margin="5,3,5,3"/>
+                <Button Content="Save Matched Calib Points" Click="SaveCalibMatched" Margin="5,3,5,3"/>
                 <Rectangle Fill="Black" Height="2"/>
                 <Button Content="Manage Matched Left" Click="ManageMatchedPointsLeft" Margin="5,3,5,3"/>
                 <Button Content="Manage Matched Right" Click="ManageMatchedPointsRight" Margin="5,3,5,3"/>

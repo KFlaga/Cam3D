@@ -11,8 +11,8 @@ namespace CamImageProcessing.ImageMatching
     public abstract class CostAggregator : IParameterizable
     {
         public bool IsLeftImageBase { get; set; }
-        public Matrix<double> ImageBase { get; set; }
-        public Matrix<double> ImageMatched { get; set; }
+        public IImage ImageBase { get; set; }
+        public IImage ImageMatched { get; set; }
         public DisparityMap DisparityMap { get; set; } // For each pixel p in base image stores corresponding pixels
         public Matrix<double> Fundamental { get; set; }
 
@@ -25,7 +25,6 @@ namespace CamImageProcessing.ImageMatching
         {
             CostComp.ImageBase = ImageBase;
             CostComp.ImageMatched = ImageMatched;
-            CostComp.DisparityMap = DisparityMap;
             
             CostComp.Init();
 
@@ -42,13 +41,13 @@ namespace CamImageProcessing.ImageMatching
 
         public abstract void ComputeMatchingCosts();
         public abstract void ComputeMatchingCosts_Rectified();
-
+        
         List<AlgorithmParameter> _params = new List<AlgorithmParameter>();
         public List<AlgorithmParameter> Parameters
         {
             get { return _params; }
         }
-
+        
         public virtual void InitParameters()
         {
             // Add all available cost computers
@@ -72,9 +71,10 @@ namespace CamImageProcessing.ImageMatching
             CostComp.UpdateParameters();
         }
 
+        public abstract string Name { get; }
         public override string ToString()
         {
-            return "Cost Aggregator - Base";
+            return Name;
         }
     }
 }

@@ -93,7 +93,7 @@ namespace CamImageProcessing.ImageMatching
                         for(int p = 0; p < segment.Count; ++p)
                         {
                             Point2D point = segment[p];
-                            if(point.X < 0 || point.Y < 0 || point.X >= map.ColumnCount || point.Y >= map.RowCount)
+                            if(point.X < 1 || point.Y < 1 || point.X >= map.ColumnCount - 1 || point.Y >= map.RowCount - 1)
                                 continue;
 
                             double intDx = 0.0, intDy = 0.0;
@@ -102,8 +102,8 @@ namespace CamImageProcessing.ImageMatching
                             {
                                 for(int dx = -1; dx <= 1; ++dx)
                                 {
-                                    int py = Math.Max(0, Math.Min(point.Y + dy, map.RowCount - 1));
-                                    int px = Math.Max(0, Math.Min(point.X + dx, map.ColumnCount - 1));
+                                    int py = point.Y + dy;
+                                    int px = point.X + dx;
                                     if(map[py, px].IsValid())
                                     {
                                         intDx += map[py, px].SubDX;
@@ -112,7 +112,7 @@ namespace CamImageProcessing.ImageMatching
                                     }
                                 }
                             }
-                            if(n > 0)
+                            if(n > 3)
                             {
                                 map[point.Y, point.X].Flags = (int)DisparityFlags.Valid;
                                 map[point.Y, point.X].SubDX = intDx / n;
@@ -212,9 +212,12 @@ namespace CamImageProcessing.ImageMatching
             InterpolateInvalidated = AlgorithmParameter.FindValue<bool>("INT", Parameters);
         }
 
-        public override string ToString()
+        public override string Name
         {
-            return "Peaks (small segments) removal";
+            get
+            {
+                return "Peaks removal";
+            }
         }
     }
 }

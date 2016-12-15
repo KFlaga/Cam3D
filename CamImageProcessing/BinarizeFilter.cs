@@ -42,9 +42,17 @@ namespace CamImageProcessing
             return ApplyFilter();
         }
 
+        public override string Name
+        {
+            get
+            {
+                return "Binarize Filter";
+            }
+        }
+
         public override void InitParameters()
         {
-            Parameters = new List<AlgorithmParameter>();
+            base.InitParameters();
             AlgorithmParameter tresh = new DoubleParameter(
                 "Treshold", "TH", 0.5, 0.0, 1.0);
 
@@ -58,6 +66,7 @@ namespace CamImageProcessing
 
         public override void UpdateParameters()
         {
+            base.UpdateParameters();
             Threshold = AlgorithmParameter.FindValue<int>("TH", Parameters);
             Inverse = AlgorithmParameter.FindValue<bool>("IB", Parameters);
         }

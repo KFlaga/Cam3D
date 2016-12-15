@@ -24,6 +24,8 @@ namespace CamCore
 
     public class Rational3RDModel : RadialDistortionModel, IParameterizable
     {
+        public string Name { get { return "Rational 3 Model"; } }
+
         public override int ParametersCount
         {
             get

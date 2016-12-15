@@ -16,7 +16,7 @@ namespace CamImageProcessing.ImageMatching
         public int MaskWidth { get; set; } // Actual width is equal to MaskWidth*2 + 1
         public int MaskHeight { get; set; } // Actual height is equal to MaskWidth*2 + 1
         public int WordLength { get; set; }
-        
+
         public override double GetCost(IntVector2 pixelBase, IntVector2 pixelMatched)
         {
             return CensusBase[pixelBase.Y, pixelBase.X].GetHammingDistance(
@@ -32,7 +32,7 @@ namespace CamImageProcessing.ImageMatching
         public override void Init()
         {
             HammingLookup.ComputeWordBitsLookup();
-            
+
             // Transform images using census transform
             CensusBase = new IBitWord[ImageBase.RowCount, ImageBase.ColumnCount];
             CensusMatched = new IBitWord[ImageBase.RowCount, ImageBase.ColumnCount];
@@ -51,9 +51,10 @@ namespace CamImageProcessing.ImageMatching
 
             // Compute census transfor for each pixel for which mask is within bounds
             int maxY = ImageBase.RowCount - MaskHeight, maxX = ImageBase.ColumnCount - MaskWidth;
-            for(int y = MaskHeight; y < maxY; ++y)
+
+            for(int x = MaskWidth; x < maxX; ++x)
             {
-                for(int x = MaskWidth; x < maxX; ++x)
+                for(int y = MaskHeight; y < maxY; ++y)
                 {
                     CensusTransform(y, x, maskWordBase, maskWordMatched);
                 }
@@ -87,9 +88,9 @@ namespace CamImageProcessing.ImageMatching
             {
                 for(dy = -MaskHeight; dy <= MaskHeight; ++dy)
                 {
-                    if(ImageBase.At(y + dy, x + dx) < ImageBase.At(y, x))
+                    if(ImageBase[y + dy, x + dx] < ImageBase[y, x])
                         maskBase[maskPos / 32] |= (1u << (maskPos % 32));
-                    if(ImageMatched.At(y + dy, x + dx) < ImageMatched.At(y, x))
+                    if(ImageMatched[y + dy, x + dx] < ImageMatched[y, x])
                         maskMatch[maskPos / 32] |= (1u << (maskPos % 32));
                     ++maskPos;
                 }
@@ -116,9 +117,9 @@ namespace CamImageProcessing.ImageMatching
                     py = py > ImageBase.RowCount - 1 ? 2 * ImageBase.RowCount - py - 2 : py;
                     py = py < 0 ? -py : py;
 
-                    if(ImageBase.At(py, px) < ImageBase.At(y, x))
+                    if(ImageBase[py, px] < ImageBase[y, x])
                         maskBase[maskPos / 32] |= (1u << (maskPos % 32));
-                    if(ImageMatched.At(py, px) < ImageMatched.At(y, x))
+                    if(ImageMatched[py, px] < ImageMatched[y, x])
                         maskMatch[maskPos / 32] |= (1u << (maskPos % 32));
                     ++maskPos;
                 }
@@ -135,6 +136,7 @@ namespace CamImageProcessing.ImageMatching
 
         public override void InitParameters()
         {
+            base.InitParameters();
             AlgorithmParameter maskW = new IntParameter(
                 "Mask Width Radius", "MWR", 6, 1, 7);
             _parameters.Add(maskW);
@@ -146,13 +148,17 @@ namespace CamImageProcessing.ImageMatching
 
         public override void UpdateParameters()
         {
+            base.UpdateParameters();
             MaskWidth = AlgorithmParameter.FindValue<int>("MWR", Parameters);
             MaskHeight = AlgorithmParameter.FindValue<int>("MHR", Parameters);
         }
 
-        public override string ToString()
+        public override string Name
         {
-            return "Census Cost Computer";
+            get
+            {
+                return "Census Cost Computer";
+            }
         }
     }
 }

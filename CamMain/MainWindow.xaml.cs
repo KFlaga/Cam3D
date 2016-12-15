@@ -15,7 +15,8 @@ namespace CamMain
     /// </summary>
     public partial class MainWindow : Window
     {
-        private List<Module> _modules;
+        //private List<Module> _modules;
+        private Dictionary<object, Module> _modules;
         private Module _currentModule = null;
         public double CalibResultsLeft
         {
@@ -24,16 +25,27 @@ namespace CamMain
                 return _mainCanvas.ActualWidth / 2 - _calibResults.ActualWidth / 2;
             }
         }
-
+        
         public MainWindow()
         {
             Directory.SetCurrentDirectory(Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location));
 
             InitializeComponent();
-            _modules = new List<Module>();
-            var entryAssembly = System.Reflection.Assembly.GetEntryAssembly();
-            string dir = System.IO.Path.GetDirectoryName(entryAssembly.Location);
-            LoadModules(dir + "\\config.xml");
+
+            //_modules = new List<Module>();
+            //var entryAssembly = System.Reflection.Assembly.GetEntryAssembly();
+            //string dir = System.IO.Path.GetDirectoryName(entryAssembly.Location);
+            //LoadModules(dir + "\\config.xml");
+
+            _modules = new Dictionary<object, Module>()
+            {
+                 { _headerCalibration, new CalibrationModule.CalibModule() },
+                 { _headerRectification, new RectificationModule.RectModule() },
+                 { _headerMatching, new ImageMatchingModule.MatchingModule() },
+                 { _headerTriangulation, new TriangulationModule.TriModule() },
+                 { _headerImage3D, new Image3DModule.Image3DConstructionModule() },
+                 { _headerCapture, new CaptureModule.CamCaptureModule() },
+            };
 
             InitCalibrationResultsAnimation();
             this.SizeChanged += (s, e) =>
@@ -46,56 +58,32 @@ namespace CamMain
                 App.Current.Shutdown();
             };
         }
-
-        private void LoadModules(string file)
+        
+        private void OpenModule(object sender, RoutedEventArgs e)
         {
-            CamCore.ModuleLoader moduleLoader = new CamCore.ModuleLoader();
-            moduleLoader.ConfFilePath = file;
-            moduleLoader.LoadModules();
-            _modules = moduleLoader.Modules;
+            MenuItem item = sender as MenuItem;
+            Module module = _modules[item];
+            OpenModule(module);
+        }
 
-            foreach (Module module in _modules)
+        private void OpenModule(Module module)
+        {
+            if(_currentModule != null)
             {
-                MenuItem submenu = new MenuItem();
-                submenu.Header = module.Name;
-                submenu.Click += (s, ee) =>
+                if(!_currentModule.EndModule())
                 {
-                    if(_currentModule != null)
-                        if(!_currentModule.EndModule())
-                        {
-                            MessageBox.Show("Cannot end this module right now: " + _currentModule.FailText);
-                            return;
-                        }
-                    _mainPanel.Children.Clear();
-                    _currentModule = module;
-                    if(!module.StartModule())
-                    {
-                        MessageBox.Show("Cannot start this module right now: " + module.FailText);
-                        return;
-                    }
-                    _mainPanel.Children.Add(module.MainPanel);
-                };
-                _menuModules.Items.Add(submenu);
+                    MessageBox.Show("Cannot end this module right now: " + _currentModule.FailText);
+                    return;
+                }
             }
-        }
-
-        private void UnloadModules()
-        {
-            if (_currentModule != null)
-                _currentModule.EndModule();
             _mainPanel.Children.Clear();
-            _menuModules.Items.Clear();
-            foreach (Module module in _modules)
-            {  
-                module.Dispose();
+            _currentModule = module;
+            if(!module.StartModule())
+            {
+                MessageBox.Show("Cannot start this module right now: " + module.FailText);
+                return;
             }
-            _modules.Clear();
-        }
-
-        private void ReloadModules(object sender, RoutedEventArgs e)
-        {
-            UnloadModules();
-            LoadModules("d:\\config.xml");
+            _mainPanel.Children.Add(module.MainPanel);
         }
 
         private void Exit(object sender, RoutedEventArgs e)
@@ -113,7 +101,7 @@ namespace CamMain
             _calibResults.Showing += (s, e) =>
             {
                 Storyboard sbShow = (Storyboard)TryFindResource("calibResultShowAnimation");
-                sbShow.SpeedRatio = -290 / (Canvas.GetTop(_calibResults)+1);
+                sbShow.SpeedRatio = -290 / (Canvas.GetTop(_calibResults) + 1);
                 _calibResults.BeginStoryboard(sbShow);
             };
             _calibResults.Hiding += (s, e) =>
@@ -133,5 +121,57 @@ namespace CamMain
         {
             FileOperations.SaveToFile(CalibrationData.Data.SaveToFile, "Xml File|*.xml");
         }
+
+
+        //private void LoadModules(string file)
+        //{
+        //    CamCore.ModuleLoader moduleLoader = new CamCore.ModuleLoader();
+        //    moduleLoader.ConfFilePath = file;
+        //    moduleLoader.LoadModules();
+        //    _modules = moduleLoader.Modules;
+
+        //    foreach(Module module in _modules)
+        //    {
+        //        MenuItem submenu = new MenuItem();
+        //        submenu.Header = module.Name;
+        //        submenu.Click += (s, ee) =>
+        //        {
+        //            if(_currentModule != null)
+        //                if(!_currentModule.EndModule())
+        //                {
+        //                    MessageBox.Show("Cannot end this module right now: " + _currentModule.FailText);
+        //                    return;
+        //                }
+        //            _mainPanel.Children.Clear();
+        //            _currentModule = module;
+        //            if(!module.StartModule())
+        //            {
+        //                MessageBox.Show("Cannot start this module right now: " + module.FailText);
+        //                return;
+        //            }
+        //            _mainPanel.Children.Add(module.MainPanel);
+        //        };
+        //        _menuModules.Items.Add(submenu);
+        //    }
+        //}
+
+        //private void UnloadModules()
+        //{
+        //    if(_currentModule != null)
+        //        _currentModule.EndModule();
+        //    _mainPanel.Children.Clear();
+        //    _menuModules.Items.Clear();
+        //    foreach(Module module in _modules)
+        //    {
+        //        module.Dispose();
+        //    }
+        //    _modules.Clear();
+        //}
+
+        //private void ReloadModules(object sender, RoutedEventArgs e)
+        //{
+        //    UnloadModules();
+        //    LoadModules("d:\\config.xml");
+        //}
     }
 }

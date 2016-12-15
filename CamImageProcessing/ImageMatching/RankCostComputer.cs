@@ -108,9 +108,9 @@ namespace CamImageProcessing.ImageMatching
             {
                 for(dy = -RankMaskHeight; dy <= RankMaskHeight; ++dy)
                 {
-                    if(ImageBase.At(y + dy, x + dx) < ImageBase.At(y, x))
+                    if(ImageBase[y + dy, x + dx] < ImageBase[y, x])
                         ++rankBase;
-                    if(ImageMatched.At(y + dy, x + dx) < ImageMatched.At(y, x))
+                    if(ImageMatched[y + dy, x + dx] < ImageMatched[y, x])
                         ++rankMatch;
                 }
             }
@@ -130,9 +130,9 @@ namespace CamImageProcessing.ImageMatching
                     px = Math.Max(0, Math.Min(ImageBase.ColumnCount - 1, x + dx));
                     py = Math.Max(0, Math.Min(ImageBase.RowCount - 1, y + dy));
 
-                    if(ImageBase.At(py, px) < ImageBase.At(y, x))
+                    if(ImageBase[py, px] < ImageBase[y, x])
                         ++rankBase;
-                    if(ImageMatched.At(py, px) < ImageMatched.At(y, x))
+                    if(ImageMatched[py, px] < ImageMatched[y, x])
                         ++rankMatch;
                 }
             }
@@ -148,6 +148,7 @@ namespace CamImageProcessing.ImageMatching
 
         public override void InitParameters()
         {
+            base.InitParameters();
             AlgorithmParameter maskRW = new IntParameter(
                 "Rank-Compute Mask Width Radius", "RMWR", 3, 1, 10);
             _parameters.Add(maskRW);
@@ -167,15 +168,19 @@ namespace CamImageProcessing.ImageMatching
 
         public override void UpdateParameters()
         {
+            base.UpdateParameters();
             RankMaskWidth = AlgorithmParameter.FindValue<int>("RMWR", Parameters);
             RankMaskHeight = AlgorithmParameter.FindValue<int>("RMHR", Parameters);
             CorrMaskWidth = AlgorithmParameter.FindValue<int>("CMWR", Parameters);
             CorrMaskHeight = AlgorithmParameter.FindValue<int>("CMHR", Parameters);
         }
 
-        public override string ToString()
+        public override string Name
         {
-            return "Rank Cost Computer";
+            get
+            {
+                return "Rank Cost Computer";
+            }
         }
     }
 }

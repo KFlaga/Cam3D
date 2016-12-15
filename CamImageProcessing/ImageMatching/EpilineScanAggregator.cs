@@ -23,99 +23,93 @@ namespace CamImageProcessing.ImageMatching
             // 4.2) For each yd = [(int)yd0, (int)yd1] (may also use range [(int)yd0-1, (int)yd1+1] - or [(int)yd0+1, (int)yd1-1] if yd0 > yd1)
             //  - Set disparity D = (px-xd,px-yd) (or (xd,yd))
             //  - Compute cost for disparity
-
-            int xmax;
-            int x0;
+            
             for(int c = 0; c < ImageBase.ColumnCount; ++c)
             {
                 for(int r = 0; r < ImageBase.RowCount; ++r)
                 {
-                    Vector2 pb_d = new Vector2(x: c, y: r);
-                    CurrentPixel = new IntVector2(x: c, y: r);
-                    Vector<double> epiLine = IsLeftImageBase ?
-                        FindCorrespondingEpiline_OnRightImage(pb_d) : FindCorrespondingEpiline_OnLeftImage(pb_d);
+                    if(ImageBase.HaveValueAt(r, c))
+                    {
+                        Vector2 pb_d = new Vector2(x: c, y: r);
+                        CurrentPixel = new IntVector2(x: c, y: r);
+                        Vector<double> epiLine = IsLeftImageBase ?
+                            FindCorrespondingEpiline_OnRightImage(pb_d) : FindCorrespondingEpiline_OnLeftImage(pb_d);
 
-                    if(Math.Abs(epiLine[0]) < Math.Abs(epiLine[1]) * 1e-12)
-                    {
-                        // Horizotal
-                        FindDisparitiesCosts_HorizontalEpiline(CurrentPixel, r);
-                    }
-                    else if(Math.Abs(epiLine[1]) < Math.Abs(epiLine[0]) * 1e-12)
-                    {
-                        // Vertical
-                        FindDisparitiesCosts_VerticalEpiline(CurrentPixel, c);
-                    }
-                    else
-                    {
-                        // FindDisparitiesCosts(CurrentPixel, epiLine);
-                        epiLine.DivideThis(epiLine.At(1));
-                        IntVector2 pm = new IntVector2();
-                        xmax = FindXmax(epiLine);
-                        x0 = FindX0(epiLine);
-                        xmax = xmax - 1;
-
-                        for(int xm = x0 + 1; xm < xmax; ++xm)
+                        if(Math.Abs(epiLine[0]) < Math.Abs(epiLine[1]) * 1e-12)
                         {
-                            double ym0 = FindYd(xm, epiLine);
-                            double ym1 = FindYd(xm + 1, epiLine);
-                            for(int ym = (int)ym0; ym < (int)ym1; ++ym)
-                            {
-                                pm.X = xm;
-                                pm.Y = ym;
-                                double cost = CostComp.GetCost_Border(CurrentPixel, pm);
-                                DispComp.StoreDisparity(CurrentPixel, pm, cost);
-                            }
+                            // Horizotal
+                            FindDisparitiesCosts_HorizontalEpiline(r);
                         }
-                    }
+                        else if(Math.Abs(epiLine[1]) < Math.Abs(epiLine[0]) * 1e-12)
+                        {
+                            // Vertical
+                            FindDisparitiesCosts_VerticalEpiline(c);
+                        }
+                        else
+                        {
+                            FindDisparitiesCosts(CurrentPixel, epiLine);
+                        }
 
-                    DispComp.FinalizeForPixel(CurrentPixel);
+                        DispComp.FinalizeForPixel(CurrentPixel);
+                    }
                 }
             }
         }
 
         private void FindDisparitiesCosts(IntVector2 pb, Vector<double> epiLine)
         {
+            epiLine.DivideThis(epiLine.At(1));
             IntVector2 pm = new IntVector2();
             int xmax = FindXmax(epiLine);
+            int x0 = FindX0(epiLine);
             xmax = xmax - 1;
 
-            for(int xm = FindX0(epiLine) + 1; xm < xmax; ++xm)
+            for(int xm = x0 + 1; xm < xmax; ++xm)
             {
                 double ym0 = FindYd(xm, epiLine);
                 double ym1 = FindYd(xm + 1, epiLine);
                 for(int ym = (int)ym0; ym < (int)ym1; ++ym)
                 {
-                    pm.X = xm;
-                    pm.Y = ym;
-                    double cost = CostComp.GetCost_Border(pb, pm);
-                    DispComp.StoreDisparity(CurrentPixel, pm, cost);
+                    if(ImageMatched.HaveValueAt(ym, xm))
+                    {
+                        pm.X = xm;
+                        pm.Y = ym;
+                        double cost = CostComp.GetCost_Border(CurrentPixel, pm);
+                        DispComp.StoreDisparity(CurrentPixel, pm, cost);
+                    }
                 }
             }
         }
 
-        private void FindDisparitiesCosts_HorizontalEpiline(IntVector2 pb, int y)
+        private void FindDisparitiesCosts_HorizontalEpiline(int y)
         {
             IntVector2 pm = new IntVector2();
 
             for(int xm = 0; xm < ImageBase.ColumnCount; ++xm)
             {
-                pm.X = xm;
-                pm.Y = y;
-                double cost = CostComp.GetCost_Border(pb, pm);
-                DispComp.StoreDisparity(CurrentPixel, pm, cost);
+                if(ImageMatched.HaveValueAt(y, xm))
+                {
+                    pm.X = xm;
+                    pm.Y = y;
+                    double cost = CostComp.GetCost_Border(CurrentPixel, pm);
+                    DispComp.StoreDisparity(CurrentPixel, pm, cost);
+                }
             }
         }
 
-        private void FindDisparitiesCosts_VerticalEpiline(IntVector2 pb, int x)
+        private void FindDisparitiesCosts_VerticalEpiline(int x)
         {
             IntVector2 pm = new IntVector2();
 
             for(int ym = 0; ym < ImageBase.RowCount; ++ym)
             {
-                pm.X = x;
-                pm.Y = ym;
-                double cost = CostComp.GetCost_Border(pb, pm);
-                DispComp.StoreDisparity(CurrentPixel, pm, cost);
+                if(ImageMatched.HaveValueAt(ym, x))
+                {
+                    pm.X = x;
+                    pm.Y = ym;
+                    double cost = CostComp.GetCost_Border(CurrentPixel, pm);
+                    DispComp.StoreDisparity(CurrentPixel, pm, cost);
+                }
             }
         }
 
@@ -134,7 +128,7 @@ namespace CamImageProcessing.ImageMatching
                 {
                     Vector2 pb_d = new Vector2(x: c, y: r);
                     CurrentPixel = new IntVector2(x: c, y: r);
-                    FindDisparitiesCosts_HorizontalEpiline(CurrentPixel, r);
+                    FindDisparitiesCosts_HorizontalEpiline(r);
                     DispComp.FinalizeForPixel(CurrentPixel);
                 }
             }
@@ -187,9 +181,12 @@ namespace CamImageProcessing.ImageMatching
             });
         }
 
-        public override string ToString()
+        public override string Name
         {
-            return "Epiline Scan Cost Aggregator";
+            get
+            {
+                return "Epiline Scan Cost Aggregator";
+            }
         }
 
         public override void InitParameters()

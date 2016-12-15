@@ -51,12 +51,19 @@ namespace CamCapture
 
         private void OnCameraUnplugged(object sender, CameraEventArgs e)
         {
-            if(e.Camera == SelectedCamera)
+            try
             {
-                if (SelectedCameraUnplugged != null)
-                    SelectedCameraUnplugged(this, e);
+                if(e.Camera == SelectedCamera)
+                {
+                    if(SelectedCameraUnplugged != null)
+                        SelectedCameraUnplugged(this, e);
+                }
+                this.Remove(e.Camera);
             }
-            this.Remove(e.Camera);
+            catch(Exception ex)
+            {
+                
+            }
         }
 
         private void OnCameraPlugged(object sender, CameraEventArgs e)

@@ -61,14 +61,42 @@ namespace CamCore
             {
                 for(int r = 0; r < C.RowCount; ++r)
                 {
-                    C.At(r, c, 
+                    C.At(r, c,
                         B.At(r, c).Equals(0.0) ?
                         (A.At(r, c).Equals(0.0) ? 1.0 : A.At(r, c)) :
-                        (A.At(r, c).Equals(0.0) ? 1.0 : A.At(r, c) / B.At(r, c) )
+                        (A.At(r, c).Equals(0.0) ? 1.0 : A.At(r, c) / B.At(r, c))
                         );
                 }
             }
             return C;
+        }
+
+        // Computes matrix v1 * v2^T, where v1/v2 are same size column vectors
+        public static Matrix<double> FromVectorProduct(Vector<double> v1, Vector<double> v2)
+        {
+            Matrix<double> mat = new DenseMatrix(v1.Count);
+            for(int x = 0; x < mat.ColumnCount; ++x)
+            {
+                for(int y = 0; y < mat.RowCount; ++y)
+                {
+                    mat.At(y, x, v1.At(y) * v2.At(x));
+                }
+            }
+            return mat;
+        }
+
+        // Computes matrix v1 * v1^T, where v1 is column vectors
+        public static Matrix<double> FromVectorProduct(Vector<double> v1)
+        {
+            Matrix<double> mat = new DenseMatrix(v1.Count);
+            for(int x = 0; x < mat.ColumnCount; ++x)
+            {
+                for(int y = 0; y < mat.RowCount; ++y)
+                {
+                    mat.At(y, x, v1.At(y) * v1.At(x));
+                }
+            }
+            return mat;
         }
 
         /// <summary> 
@@ -107,7 +135,7 @@ namespace CamCore
         public static List<int> FindZeroRows(this Matrix<double> A, double error = double.Epsilon * 100.0f)
         {
             List<int> zeroRows = new List<int>();
-            
+
             for(int row = 0; row < A.RowCount; ++row)
             {
                 bool zeroRow = true;
@@ -130,7 +158,7 @@ namespace CamCore
         public static List<int> FindZeroColumns(this Matrix<double> A, double error = double.Epsilon * 100.0f)
         {
             List<int> zeroCols = new List<int>();
-            
+
             for(int col = 0; col < A.ColumnCount; ++col)
             {
                 bool zeroCol = true;
@@ -240,7 +268,7 @@ namespace CamCore
         }
 
         // Returns absolute maximum element of matrix
-        public static Tuple<int,int,double> AbsoulteMaximum(this Matrix<double> A)
+        public static Tuple<int, int, double> AbsoulteMaximum(this Matrix<double> A)
         {
             int maxRow = 0, maxCol = 0;
             double maxVal = 0.0f;

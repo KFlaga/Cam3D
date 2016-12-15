@@ -14,18 +14,13 @@ namespace CamImageProcessing.ImageMatching
         public DisparityMap MapLeft { get; set; }
         public DisparityMap MapRight { get; set; }
 
-        public ColorImage ImageLeft { get; set; }
-        public ColorImage ImageRight { get; set; }
+        public IImage ImageLeft { get; set; }
+        public IImage ImageRight { get; set; }
 
         public bool Rectified { get; set; }
         
         public void MatchImages()
         {
-            GrayScaleImage imgGrayLeft = new GrayScaleImage();
-            imgGrayLeft.FromColorImage(ImageLeft);
-            GrayScaleImage imgGrayRight = new GrayScaleImage();
-            imgGrayRight.FromColorImage(ImageRight);
-            
             if(Rectified)
             {
                 Aggregator.Fundamental = new DenseMatrix(3, 3);
@@ -37,10 +32,10 @@ namespace CamImageProcessing.ImageMatching
                 Aggregator.Fundamental = CalibrationData.Data.Fundamental;
             }
 
-            MapLeft = new DisparityMap(ImageLeft.SizeY, ImageLeft.SizeX);
+            MapLeft = new DisparityMap(ImageLeft.RowCount, ImageLeft.ColumnCount);
             Aggregator.DisparityMap = MapLeft;
-            Aggregator.ImageBase = imgGrayLeft.ImageMatrix;
-            Aggregator.ImageMatched = imgGrayRight.ImageMatrix;
+            Aggregator.ImageBase = ImageLeft;
+            Aggregator.ImageMatched = ImageRight;
             Aggregator.IsLeftImageBase = true;
 
             Aggregator.Init();
@@ -53,10 +48,10 @@ namespace CamImageProcessing.ImageMatching
                 Aggregator.ComputeMatchingCosts();
             }
 
-            MapRight = new DisparityMap(ImageRight.SizeY, ImageRight.SizeX);
+            MapRight = new DisparityMap(ImageRight.RowCount, ImageRight.ColumnCount);
             Aggregator.DisparityMap = MapRight;
-            Aggregator.ImageBase = imgGrayRight.ImageMatrix;
-            Aggregator.ImageMatched = imgGrayLeft.ImageMatrix;
+            Aggregator.ImageBase = ImageRight;
+            Aggregator.ImageMatched = ImageLeft;
             Aggregator.IsLeftImageBase = false;
 
             Aggregator.Init();
@@ -70,6 +65,8 @@ namespace CamImageProcessing.ImageMatching
             }
 
         }
+
+        public string Name { get { return "Image Matching Algorithm"; } }
 
         List<AlgorithmParameter> _params = new List<AlgorithmParameter>();
         public List<AlgorithmParameter> Parameters

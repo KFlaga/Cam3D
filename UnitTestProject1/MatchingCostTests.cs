@@ -85,8 +85,8 @@ namespace UnitTestProject1
             costCpu.RankMaskWidth = 1;
             costCpu.CorrMaskHeight = 1;
             costCpu.CorrMaskWidth = 1;
-            costCpu.ImageBase = _imageLeft;
-            costCpu.ImageMatched = _imageRight;
+            costCpu.ImageBase = new GrayScaleImage() { ImageMatrix = _imageLeft };
+            costCpu.ImageMatched = new GrayScaleImage() { ImageMatrix = _imageRight };
 
             costCpu.Init();
 
@@ -115,8 +115,8 @@ namespace UnitTestProject1
             CensusCostComputer costCpu = new CensusCostComputer();
             costCpu.MaskHeight = 1;
             costCpu.MaskWidth = 1;
-            costCpu.ImageBase = _imageLeft;
-            costCpu.ImageMatched = _imageRight;
+            costCpu.ImageBase = new GrayScaleImage() { ImageMatrix = _imageLeft };
+            costCpu.ImageMatched = new GrayScaleImage() { ImageMatrix = _imageRight };
 
             costCpu.Init();
 

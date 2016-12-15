@@ -28,6 +28,7 @@ namespace CamImageOperationsModule
         private bool _dontUpdateImage = false;
 
         private ParametersSelectionWindow _optsWindow_MedianFilter;
+        private ParametersSelectionWindow _optsWindow_DiffusionFilter;
         private ParametersSelectionWindow _optsWindow_GaussFilter;
         private ParametersSelectionWindow _optsWindow_LoGFilter;
         private ParametersSelectionWindow _optsWindow_SaturateHistogram;
@@ -63,6 +64,7 @@ namespace CamImageOperationsModule
                 _butGaussFilter.IsEnabled = false;
                 _butLoGFilter.IsEnabled = false;
                 _butMedianFilter.IsEnabled = false;
+                _butDiffusionFilter.IsEnabled = false;
                 _butResetImage.IsEnabled = false;
                 _butSaturateHistogram.IsEnabled = false;
                 _butStretchHistogram.IsEnabled = false;
@@ -76,6 +78,7 @@ namespace CamImageOperationsModule
                 _butGaussFilter.IsEnabled = true;
                 _butLoGFilter.IsEnabled = true;
                 _butMedianFilter.IsEnabled = true;
+                _butDiffusionFilter.IsEnabled = true;
                 _butResetImage.IsEnabled = true;
                 _butSaturateHistogram.IsEnabled = true;
                 _butStretchHistogram.IsEnabled = true;
@@ -92,9 +95,23 @@ namespace CamImageOperationsModule
             _optsWindow_MedianFilter.ShowDialog();
             if(_optsWindow_MedianFilter.Accepted)
             {
-                //var medianFilter = (MedianFilter)_optsWindow_MedianFilter.Processor;
-                //medianFilter.Image = _hsiImage[HSIChannel.Intensity];
-                //_hsiImage[HSIChannel.Intensity] = medianFilter.ApplyFilter();
+                var medianFilter = (MedianFilter)_optsWindow_MedianFilter.Processor;
+                medianFilter.Image = _hsiImage[HSIChannel.Intensity];
+                _hsiImage[HSIChannel.Intensity] = medianFilter.ApplyFilter();
+
+                _colorImage.FromHSIImage(_hsiImage);
+                _imageControl.ImageSource = _colorImage.ToBitmapSource();
+            }
+        }
+        
+        private void _butDiffusionFilter_Click(object sender, RoutedEventArgs e)
+        {
+            _optsWindow_DiffusionFilter.ShowDialog();
+            if(_optsWindow_DiffusionFilter.Accepted)
+            {
+                var diffFilter = (AnisotropicDiffusionFilter)_optsWindow_DiffusionFilter.Processor;
+                diffFilter.Image = _hsiImage[HSIChannel.Intensity];
+                _hsiImage[HSIChannel.Intensity] = diffFilter.ApplyFilter();
 
                 _colorImage.FromHSIImage(_hsiImage);
                 _imageControl.ImageSource = _colorImage.ToBitmapSource();
@@ -154,6 +171,9 @@ namespace CamImageOperationsModule
             _optsWindow_GaussFilter = new ParametersSelectionWindow();
             _optsWindow_GaussFilter.Processor = new GaussFilter();
 
+            _optsWindow_DiffusionFilter = new ParametersSelectionWindow();
+            _optsWindow_DiffusionFilter.Processor = new AnisotropicDiffusionFilter();
+
             _optsWindow_LoGFilter = new ParametersSelectionWindow();
             _optsWindow_LoGFilter.Processor = new LoGFilter();
 
@@ -193,21 +213,21 @@ namespace CamImageOperationsModule
                     segmentation.SegmentGray(imgGray.ImageMatrix);
 
                     //var segments = segmentation.Segments_Color;
-                    var segments = segmentation.Segments_Gray;
+                    var segments = segmentation.Segments;
                     int[,] indices = segmentation.SegmentAssignments;
 
                     ColorImage imgFinal = new ColorImage();
-                    imgFinal.ImageMatrix[0] = new DenseMatrix(img.SizeY, img.SizeX);
-                    imgFinal.ImageMatrix[1] = new DenseMatrix(img.SizeY, img.SizeX);
-                    imgFinal.ImageMatrix[2] = new DenseMatrix(img.SizeY, img.SizeX);
+                    imgFinal.ImageMatrix[0] = new DenseMatrix(img.RowCount, img.ColumnCount);
+                    imgFinal.ImageMatrix[1] = new DenseMatrix(img.RowCount, img.ColumnCount);
+                    imgFinal.ImageMatrix[2] = new DenseMatrix(img.RowCount, img.ColumnCount);
 
-                    for(int r = 0; r < img.SizeY; ++r)
+                    for(int r = 0; r < img.RowCount; ++r)
                     {
-                        for(int c = 0; c < img.SizeX; ++c)
+                        for(int c = 0; c < img.ColumnCount; ++c)
                         {
-                            imgFinal[r, c, RGBChannel.Red] = segments[indices[r, c]].Value;
-                            imgFinal[r, c, RGBChannel.Green] = segments[indices[r, c]].Value;
-                            imgFinal[r, c, RGBChannel.Blue] = segments[indices[r, c]].Value;
+                            imgFinal[r, c, RGBChannel.Red] = ((ImageSegmentation.Segment_Gray)segments[indices[r, c]]).Value;
+                            imgFinal[r, c, RGBChannel.Green] = ((ImageSegmentation.Segment_Gray)segments[indices[r, c]]).Value;
+                            imgFinal[r, c, RGBChannel.Blue] = ((ImageSegmentation.Segment_Gray)segments[indices[r, c]]).Value;
                             //imgFinal[r, c, RGBChannel.Red] = segments[indices[r, c]].Red;
                             // imgFinal[r, c, RGBChannel.Green] = segments[indices[r, c]].Green;
                             //imgFinal[r, c, RGBChannel.Blue] = segments[indices[r, c]].Blue;

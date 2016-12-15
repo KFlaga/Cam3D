@@ -17,7 +17,7 @@ namespace TriangulationModule
         
         public string Name { get; } = "Triangulation from points";
 
-        TwoPointsTriangulation _triangulation;
+        TwoPointsTriangulation _triangulation = new TwoPointsTriangulation();
 
         public bool SupportsFinalResults { get; } = true;
         public bool SupportsPartialResults { get; } = true;

@@ -10,7 +10,7 @@
         <TabItem Header="Cube Points">
             <local:Image3DFromPointsTab x:Name="_tabFromPoints"/>
         </TabItem>
-        <TabItem Header="Plane Interpolation">
+        <TabItem Header="Disparity Segmented">
             <local:Image3DWithDisparityTab x:Name="_tabWithDisparity"/>
         </TabItem>
     </TabControl>

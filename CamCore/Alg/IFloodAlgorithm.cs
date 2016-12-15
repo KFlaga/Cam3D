@@ -9,7 +9,9 @@ namespace CamCore
 {
     public abstract class IFloodAlgorithm
     {
-        public Matrix<double> Image { get; set; }
+        //public Matrix<double> Image { get; set; }
+        public int ImageWidth { get; set; }
+        public int ImageHeight { get; set; }
 
         public delegate bool FillConditionDelegate(int y, int x);
         public delegate void FillActionDelegate(int y, int x);
@@ -24,7 +26,7 @@ namespace CamCore
 
         protected bool RangeCheck(int y, int x)
         {
-            return !(y < 0 || y >= Image.RowCount || x < 0 || x >= Image.ColumnCount);
+            return !(y < 0 || y >= ImageHeight || x < 0 || x >= ImageWidth);
         }
     }
 

@@ -41,15 +41,16 @@ namespace CalibrationModule
 
             UpdateAll();
 
-            if(DumpingMethodUsed == DumpingMethod.Additive)
-            {
-                // Compute initial lambda lam = 10^-3*diag(J'J)/size(J'J)
-                ComputeJacobian(_J);
-                _J.TransposeToOther(_Jt);
-                _Jt.MultiplyToOther(_J, _JtJ);
-                _lam = 1e-3f * _JtJ.Trace() / (double)_JtJ.ColumnCount;
-            }
-            else if(DumpingMethodUsed == DumpingMethod.Multiplicative)
+            //if(DumpingMethodUsed == DumpingMethod.Additive)
+            //{
+            //    // Compute initial lambda lam = 10^-3*diag(J'J)/size(J'J)
+            //    ComputeJacobian(_J);
+            //    _J.TransposeToOther(_Jt);
+            //    _Jt.MultiplyToOther(_J, _JtJ);
+            //    _lam = 1e-3f * _JtJ.Trace() / (double)_JtJ.ColumnCount;
+            //}
+            //else 
+            if(DumpingMethodUsed == DumpingMethod.Multiplicative)
             {
                 _lam = 1e-3f;
             }
@@ -213,42 +214,6 @@ namespace CalibrationModule
             }
         }
 
-
-        // Computes d(ei)/d(P) for ith line numericaly
-        public void ComputeJacobian_Numerical(Matrix<double> J)
-        {
-            Vector<double> error_n = new DenseVector(_currentErrorVector.Count);
-            Vector<double> error_p = new DenseVector(_currentErrorVector.Count);
-            for(int k = 0; k < ParametersVector.Count; ++k)
-            {
-                double oldK = ResultsVector[k];
-                double k_n = Math.Abs(oldK) > float.Epsilon ? oldK * (1 - NumericalDerivativeStep) : -NumericalDerivativeStep * 0.01;
-                double k_p = Math.Abs(oldK) > float.Epsilon ? oldK * (1 + NumericalDerivativeStep) : NumericalDerivativeStep * 0.01;
-
-                ResultsVector[k] = k_n;
-                UpdateAll();
-                ComputeErrorVector(error_n);
-
-                ResultsVector[k] = k_p;
-                UpdateAll();
-                ComputeErrorVector(error_p);
-
-                Vector<double> diff_e = 1.0 / (k_p - k_n) * (error_p - error_n);
-                J.SetColumn(k, diff_e);
-
-                ResultsVector[k] = oldK;
-
-                // Throw if NaN found in jacobian
-                bool nanInfFound = diff_e.Exists((e) => { return double.IsNaN(e) || double.IsInfinity(e); });
-                if(nanInfFound)
-                {
-                    throw new DivideByZeroException("NaN or Infinity found on jacobian");
-                }
-            }
-
-            UpdateAll();
-        }
-
-
+        
     }
 }

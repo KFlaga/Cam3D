@@ -12,10 +12,9 @@ namespace CamImageProcessing.ImageMatching
     // If cost is lower, then match is better
     public abstract class MatchingCostComputer : IParameterizable
     {
-        public Matrix<double> ImageBase { get; set; }
-        public Matrix<double> ImageMatched { get; set; }
-        public DisparityMap DisparityMap { get; set; } // For each pixel p in base image stores disparity d, so that pixel
-                                                       // p + d is corresponding pixel in matched image.
+        public IImage ImageBase { get; set; }
+        public IImage ImageMatched { get; set; }
+
         public double MaxCost { get; protected set; }
         public int BorderWidth { get; set; }
         public int BorderHeight { get; set; }
@@ -51,10 +50,23 @@ namespace CamImageProcessing.ImageMatching
             return GetCost_Border(new IntVector2(pixelBase), new IntVector2(pixelMatched));
         }
 
-        protected List<AlgorithmParameter> _parameters = new List<AlgorithmParameter>();
+        protected List<AlgorithmParameter> _parameters;
         public List<AlgorithmParameter> Parameters { get { return _parameters; } }
 
-        public abstract void InitParameters();
-        public abstract void UpdateParameters();
+        public virtual void InitParameters()
+        {
+            _parameters = new List<AlgorithmParameter>();
+        }
+
+        public virtual void UpdateParameters()
+        {
+
+        }
+
+        public abstract string Name { get; }
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

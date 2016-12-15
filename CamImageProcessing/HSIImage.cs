@@ -18,11 +18,12 @@ namespace CamImageProcessing
     }
 
     [DebuggerTypeProxy(typeof(HSIImageDebugView))]
-    public class HSIImage
+    public class HSIImage : IImage
     {
         public Matrix<double>[] ImageMatrix { get; set; } = new Matrix<double>[3];
-        public int SizeX { get { return ImageMatrix[0].ColumnCount; } }
-        public int SizeY { get { return ImageMatrix[0].RowCount; } }
+        public int ColumnCount { get { return ImageMatrix[0].ColumnCount; } }
+        public int RowCount { get { return ImageMatrix[0].RowCount; } }
+        public int ChannelsCount { get { return 3; } }
 
         // Bitmap data saved when image created from bitmapsource
         public double DpiX { get; set; }
@@ -64,17 +65,73 @@ namespace CamImageProcessing
             }
         }
 
+        public double this[int y, int x]
+        {
+            get
+            {
+                return 0.333333 * (ImageMatrix[0].At(y, x) + ImageMatrix[1].At(y, x) + ImageMatrix[2].At(y, x));
+            }
+            set
+            {
+                ImageMatrix[0].At(y, x, value);
+                ImageMatrix[1].At(y, x, value);
+                ImageMatrix[2].At(y, x, value);
+            }
+        }
+
+        public bool HaveValueAt(int y, int x) { return true; }
+
+        public Matrix<double> GetMatrix(int channel)
+        {
+            return ImageMatrix[channel];
+        }
+
+        public Matrix<double> GetMatrix()
+        {
+            Matrix<double> mat = new DenseMatrix(RowCount, ColumnCount);
+            for(int ch = 0; ch < ChannelsCount; ++ch)
+            {
+                mat.PointwiseAddThis(ImageMatrix[ch]);
+            }
+            mat.MultiplyThis(1.0 / 3.0);
+            return mat;
+        }
+
+        public void SetMatrix(Matrix<double> matrix, int channel)
+        {
+            if(ImageMatrix == null)
+                ImageMatrix = new Matrix<double>[3];
+            ImageMatrix[channel] = matrix;
+        }
+
+        public IImage Clone()
+        {
+            HSIImage img = new HSIImage()
+            {
+                ImageMatrix = new Matrix<double>[3],
+            };
+            img.ImageMatrix[0] = ImageMatrix[0].Clone();
+            img.ImageMatrix[1] = ImageMatrix[1].Clone();
+            img.ImageMatrix[2] = ImageMatrix[2].Clone();
+            return img;
+        }
+
+        object ICloneable.Clone()
+        {
+            return Clone();
+        }
+
         public void FromColorImage(ColorImage cimage)
         {
-            ImageMatrix[0] = new DenseMatrix(cimage.SizeY, cimage.SizeX);
-            ImageMatrix[1] = new DenseMatrix(cimage.SizeY, cimage.SizeX);
-            ImageMatrix[2] = new DenseMatrix(cimage.SizeY, cimage.SizeX);
+            ImageMatrix[0] = new DenseMatrix(cimage.RowCount, cimage.ColumnCount);
+            ImageMatrix[1] = new DenseMatrix(cimage.RowCount, cimage.ColumnCount);
+            ImageMatrix[2] = new DenseMatrix(cimage.RowCount, cimage.ColumnCount);
             int x, y;
 
             double h, s, i;
-            for(x = 0; x < SizeX; ++x)
+            for(x = 0; x < ColumnCount; ++x)
             {
-                for(y = 0; y < SizeY; ++y)
+                for(y = 0; y < RowCount; ++y)
                 {
                     RGBToHSI(cimage[y, x, RGBChannel.Red], cimage[y, x, RGBChannel.Green], cimage[y, x, RGBChannel.Blue],
                         out h, out s, out i);
@@ -84,6 +141,16 @@ namespace CamImageProcessing
                 }
             }
         }
+        
+        public void FromBitmapSource(BitmapSource bitmap)
+        {
+
+        }
+
+        public BitmapSource ToBitmapSource()
+        {
+            return null;
+        }
 
         public static void RGBToHSI(double r, double g, double b, out double h, out double s, out double i)
         {
@@ -92,13 +159,13 @@ namespace CamImageProcessing
             double chrom = cmax - cmin;
 
             i = (r + g + b) / 3.0f;
-            s = i > 0.0f ? Math.Max(0.0f, 1.0f - cmin / i) : 0.0f;
+            s = i > 0.0 ? Math.Max(0.0f, 1.0 - cmin / i) : 0.0;
             double m  = (r - g) * (r - g) + (r - b) * (g - b);
-            h = m > 0.0f ? (double)Math.Acos(((r - g) + (r - b)) / (2 * Math.Sqrt((r - g) * (r - g) + (r - b) * (g - b)))) : 0.0f;
+            h = m > 0.0 ? Math.Acos(((r - g) + (r - b)) / (2 * Math.Sqrt((r - g) * (r - g) + (r - b) * (g - b)))) : 0.0;
 
-            if(r > g)
+            if(b > g)
             {
-                h = (double)(2.0 * Math.PI) - h;
+                h = (2.0 * Math.PI) - h;
             }
         }
         
@@ -139,7 +206,7 @@ namespace CamImageProcessing
             {
                 get
                 {
-                    return _image.SizeY;
+                    return _image.RowCount;
                 }
             }
 
@@ -147,7 +214,7 @@ namespace CamImageProcessing
             {
                 get
                 {
-                    return _image.SizeX;
+                    return _image.ColumnCount;
                 }
             }
 

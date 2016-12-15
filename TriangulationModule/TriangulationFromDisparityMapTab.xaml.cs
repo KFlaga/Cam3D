@@ -1,22 +1,10 @@
 ﻿using CamCore;
-using CamImageProcessing.ImageMatching;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Xml;
 
 namespace TriangulationModule
@@ -33,21 +21,11 @@ namespace TriangulationModule
         public TriangulationFromDisparityMapTab()
         {
             InitializeComponent();
-        }
 
-        private void LoadDisparityMap(object sender, RoutedEventArgs e)
-        {
-            FileOperations.LoadFromFile(LoadDisparityMap, "Xml File|*.xml");
-        }
-
-        private void LoadDisparityMap(Stream file, string path)
-        {
-            XmlDocument xmlDoc = new XmlDocument();
-            xmlDoc.Load(file);
-
-            XmlNode mapNode = xmlDoc.GetElementsByTagName("DisparityMap")[0];
-            _dispMap = DisparityMap.CreateFromNode(mapNode);
-            _dispImage.Map = _dispMap;
+            _dispImage.MapLoaded += (s, e) =>
+            {
+                _dispMap = _dispImage.Map;
+            };
         }
 
         private void Triangulate(object sender, RoutedEventArgs e)
@@ -58,7 +36,13 @@ namespace TriangulationModule
                 MessageBox.Show("Error: Cameras are not calibrated!");
                 return;
             }
-            
+
+            if(_dispMap == null)
+            {
+                MessageBox.Show("Error: disparity map needs to be loaded");
+                return;
+            }
+
             _left = new List<Vector<double>>();
             _right = new List<Vector<double>>();
             for(int r = 0; r < _dispMap.RowCount; ++r)

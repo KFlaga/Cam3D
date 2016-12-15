@@ -41,7 +41,7 @@ namespace CamCore
 
             FillAction(y, x);
 
-            int h = Image.RowCount, w = Image.ColumnCount;
+            int h = ImageHeight, w = ImageWidth;
             _stack = new Stack<Segment>();
             _stack.Push(new Segment(x, x + 1, y, 0, true, true));
 

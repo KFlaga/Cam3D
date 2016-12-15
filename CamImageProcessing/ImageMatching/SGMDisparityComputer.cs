@@ -29,6 +29,7 @@ namespace CamImageProcessing.ImageMatching
         {
             DistanceToMean,
             DistanceSquredToMean,
+            DistanceSquredToMeanRoot,
         }
 
         delegate double CostComputer(double mean, int start, int count);
@@ -67,11 +68,11 @@ namespace CamImageProcessing.ImageMatching
                 switch(value)
                 {
                     case CostMethods.DistanceSquredToMean:
-                        _costComputer = FindCost;
+                        _costComputer = FindCost_Squared;
                         break;
                     case CostMethods.DistanceToMean:
                     default:
-                        _costComputer = FindCost;
+                        _costComputer = FindCost_Simple;
                         break;
                 }
             }
@@ -167,12 +168,12 @@ namespace CamImageProcessing.ImageMatching
 
             DisparityMap.Set(pixelBase.Y, pixelBase.X, new Disparity()
             {
-                Cost = cost,
-                DX = (int)mean,
+                DX = mean.Round(),
                 DY = 0,
                 SubDX = mean,
                 SubDY = 0.0,
-                Confidence = 1.0,
+                Cost = CostComp.GetCost_Border(pixelBase, new IntVector2(pixelBase.X + mean.Round(), pixelBase.Y)),
+                Confidence = ((double)count / (double)_idx) * (1.0 / (cost + 1.0)),
                 Flags = (int)DisparityFlags.Valid
             });
 
@@ -228,27 +229,45 @@ namespace CamImageProcessing.ImageMatching
             return mean;
         }
 
-        double FindCost(double mean, int start, int count)
+        double FindCost_Simple(double mean, int start, int count)
         {
             double cost = 0.0;
 
-            // Cost function: 
             // 1) C = sum(||m - d||) / n^2 
             for(int i = 0; i < count; ++i)
             {
                 cost += Math.Abs(mean - (double)_dispForPixel[start + i].DX);
             }
             cost /= (count * count);
+            return cost;
+        }
 
-            // 2) C = sqrt(sum(||m - d||^2)) / n^2
-            //double d;
-            //for(int i = 0; i < count; ++i)
-            //{
-            //    d = Math.Abs(mean - (double)_dispForPixel[start + i].DX);
-            //    cost += d * d;
-            //}
-            //cost /= (count * count * count * count);
+        double FindCost_Squared(double mean, int start, int count)
+        {
+            double cost = 0.0;
 
+            // 2) C = sqrt(sum(||m - d||^2)) / n^2 -> same results as sum(||m - d||^2)/n^4
+            double d;
+            for(int i = 0; i < count; ++i)
+            {
+                d = mean - (double)_dispForPixel[start + i].DX;
+                cost += d * d;
+            }
+            cost /= (count * count * count * count);
+
+            return cost;
+        }
+
+        double FindCost_Root(double mean, int start, int count)
+        {
+            double cost = 0.0;
+
+            // 1) C = sum(||m - d||) / n*sqrt(n) 
+            for(int i = 0; i < count; ++i)
+            {
+                cost += Math.Abs(mean - (double)_dispForPixel[start + i].DX);
+            }
+            cost /= (count * Math.Sqrt(count));
             return cost;
         }
 
@@ -272,16 +291,33 @@ namespace CamImageProcessing.ImageMatching
             };
 
             _params.Add(meanParam);
+
+            DictionaryParameter costParam =
+                new DictionaryParameter("Cost Computing Method", "COST");
+
+            costParam.ValuesMap = new Dictionary<string, object>()
+            {
+                { "E(||d - m||) / n^2", CostMethods.DistanceToMean },
+                { "E(||d - m||^2) / n^4", CostMethods.DistanceSquredToMean },
+                { "E(||d - m||) / n*sqrt(n)", CostMethods.DistanceSquredToMeanRoot }
+            };
+
+            _params.Add(costParam);
         }
 
         public override void UpdateParameters()
         {
             MeanMethod = AlgorithmParameter.FindValue<MeanMethods>("MEAN", Parameters);
+            CostMethod = AlgorithmParameter.FindValue<CostMethods>("COST", Parameters);
         }
 
-        public override string ToString()
+
+        public override string Name
         {
-            return "SGM Disparity Computer";
+            get
+            {
+                return "SGM Disparity Computer";
+            }
         }
     }
 }

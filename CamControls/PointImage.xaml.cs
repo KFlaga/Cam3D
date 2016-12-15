@@ -11,6 +11,8 @@ using System.ComponentModel;
 
 namespace CamControls
 {
+    // TODO: Change point drawing on bitmap to drawing points on invisible canvas or sth
+    // 
     public partial class PointImage : UserControl
     {
         private List<PointImagePoint> _points;

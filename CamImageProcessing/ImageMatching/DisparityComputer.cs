@@ -12,8 +12,8 @@ namespace CamImageProcessing.ImageMatching
     {
         public bool IsLeftImageBase { get; set; }
 
-        public Matrix<double> ImageBase { get; set; }
-        public Matrix<double> ImageMatched { get; set; }
+        public IImage ImageBase { get; set; }
+        public IImage ImageMatched { get; set; }
         public DisparityMap DisparityMap { get; set; }
 
         public MatchConfidenceComputer ConfidenceComp { get; } = new MatchConfidenceComputer();
@@ -57,9 +57,10 @@ namespace CamImageProcessing.ImageMatching
             ConfidenceComp.UsedConfidenceMethod = AlgorithmParameter.FindValue<ConfidenceMethod>("CONF", _params);
         }
 
+        public abstract string Name { get; }
         public override string ToString()
         {
-            return "Disparity Computer - Base";
+            return Name;
         }
     }
 }

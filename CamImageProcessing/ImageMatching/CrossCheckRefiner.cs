@@ -42,13 +42,21 @@ namespace CamImageProcessing.ImageMatching
                                 else
                                 {
                                     // Set both disparities (sub ones) to be on middle
-                                    double subDx = (MapLeft[r, c].SubDX + MapRight[rightPixel.Y, rightPixel.X].SubDX) * 0.5;
-                                    double subDy = (MapLeft[r, c].SubDY + MapRight[rightPixel.Y, rightPixel.X].SubDY) * 0.5;
+                                    double subDx = (MapLeft[r, c].SubDX - MapRight[rightPixel.Y, rightPixel.X].SubDX) * 0.5;
+                                    double subDy = (MapLeft[r, c].SubDY - MapRight[rightPixel.Y, rightPixel.X].SubDY) * 0.5;
                                     MapLeft[r, c].SubDX = subDx;
                                     MapLeft[r, c].SubDY = subDy;
-                                    MapRight[rightPixel.Y, rightPixel.X].SubDX = subDx;
-                                    MapRight[rightPixel.Y, rightPixel.X].SubDY = subDy;
+                                    MapRight[rightPixel.Y, rightPixel.X].SubDX = -subDx;
+                                    MapRight[rightPixel.Y, rightPixel.X].SubDY = -subDy;
+                                    MapLeft[r, c].DX = subDx.Round();
+                                    MapLeft[r, c].DY = subDy.Round();
+                                    MapRight[rightPixel.Y, rightPixel.X].DX = -MapLeft[r, c].DX;
+                                    MapRight[rightPixel.Y, rightPixel.X].DY = -MapLeft[r, c].DY;
                                 }
+                            }
+                            else
+                            {
+                                MapLeft[r, c].Flags = (int)DisparityFlags.Invalid;
                             }
                         }
                     }
@@ -71,9 +79,12 @@ namespace CamImageProcessing.ImageMatching
             MaxDisparityDiff = AlgorithmParameter.FindValue<double>("DIFF", Parameters);
         }
 
-        public override string ToString()
+        public override string Name
         {
-            return "Cross validation";
+            get
+            {
+                return "Cross validation";
+            }
         }
     }
 }

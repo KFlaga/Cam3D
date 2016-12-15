@@ -17,8 +17,14 @@ namespace CamImageProcessing
             protected set { _parameters = value; }
         }
 
-        public virtual void InitParameters() { }
+        public virtual void InitParameters() { _parameters = new List<AlgorithmParameter>(); }
         public virtual void UpdateParameters() { }
+
+        public abstract string Name { get; }
+        public override string ToString()
+        {
+            return Name;
+        }
 
         public Matrix<double> Image { get; set; }
 

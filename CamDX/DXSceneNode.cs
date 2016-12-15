@@ -62,6 +62,11 @@ namespace CamDX
         public Matrix TransformationMatrix
         {
             get { return _transfrom; }
+            set
+            {
+                _transfrom = value;
+                _transfromChanged = true;
+            }
         }
 
         public AABB LocalAABB { get; set; }
@@ -70,7 +75,7 @@ namespace CamDX
         {
             get
             {
-                return AABB.Transformed(LocalAABB, 
+                return AABB.Transformed(LocalAABB,
                     TransformationMatrixDerived);
             }
         }
@@ -186,6 +191,8 @@ namespace CamDX
             node.Parent = this;
             node.Scale = new Vector3(1.0f);
             node.Orientation = Quaternion.Identity;
+            node.Position = new Vector3(0.0f);
+            node.TransformationMatrix = Matrix.Identity;
             Children.Add(node);
             return node;
         }

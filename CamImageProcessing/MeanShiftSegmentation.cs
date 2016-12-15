@@ -106,13 +106,13 @@ namespace CamImageProcessing
                     {
                         pixel.X = c;
                         pixel.Y = r;
-                        double shift = ComputeMean_GaussGauss_Gray(pixel);
-                        if(shift < ConvergenceThreshold)
+                        double newMean = ComputeMean_GaussGauss_Gray(pixel);
+                        if(Math.Abs(newMean - _values[r,c]) < ConvergenceThreshold)
                         {
                             _converged[r, c] = true;
                             continue;
                         }
-                        _values[r, c] += shift;
+                        _values[r, c] = newMean;
                     }
                 }
             }
@@ -121,7 +121,7 @@ namespace CamImageProcessing
             // Now we need to assign each pixel a cluster according to its maximum
             // For each pixel start flood
             _visited = new bool[image.RowCount, image.ColumnCount];
-            Segments_Gray = new List<Segment_Gray>();
+            Segments = new List<Segment>();
             SegmentAssignments = new int[image.RowCount, image.ColumnCount];
             for(int r = Radius; r < image.RowCount - Radius; ++r)
             {
@@ -171,7 +171,7 @@ namespace CamImageProcessing
             _currentSegment_Gray = new Segment_Gray()
             {
                 Value = _values[y, x],
-                SegmentIndex = Segments_Gray.Count,
+                SegmentIndex = Segments.Count,
                 Pixels = new List<Point2D>()
             };
             _currentSegment_Gray.Pixels.Add(new Point2D(x, y));
@@ -200,7 +200,7 @@ namespace CamImageProcessing
                 }
             }
 
-            Segments_Gray.Add(_currentSegment_Gray);
+            Segments.Add(_currentSegment_Gray);
         }
 
         private void CheckAndAddToSegment_Gray(int oldX, int oldY, int newX, int newY)
@@ -227,12 +227,12 @@ namespace CamImageProcessing
 
         public override void SegmentColor(ColorImage image)
         {
-            _converged = new bool[image.SizeY, image.SizeX]; // Filled with false
-            _red = new double[image.SizeY, image.SizeX];
-            _green = new double[image.SizeY, image.SizeX];
-            _blue = new double[image.SizeY, image.SizeX];
-            for(int r = 0; r < image.SizeY; ++r)
-                for(int c = 0; c < image.SizeX; ++c)
+            _converged = new bool[image.RowCount, image.ColumnCount]; // Filled with false
+            _red = new double[image.RowCount, image.ColumnCount];
+            _green = new double[image.RowCount, image.ColumnCount];
+            _blue = new double[image.RowCount, image.ColumnCount];
+            for(int r = 0; r < image.RowCount; ++r)
+                for(int c = 0; c < image.ColumnCount; ++c)
                 {
                     _red[r, c] = image[RGBChannel.Red].At(r, c);
                     _green[r, c] = image[RGBChannel.Green].At(r, c);
@@ -249,9 +249,9 @@ namespace CamImageProcessing
             {
                 ++iteration;
                 allConverged = true;
-                for(int r = Radius; r < image.SizeY - Radius; ++r)
+                for(int r = Radius; r < image.RowCount - Radius; ++r)
                 {
-                    for(int c = Radius; c < image.SizeX - Radius; ++c)
+                    for(int c = Radius; c < image.ColumnCount - Radius; ++c)
                     {
                         if(_converged[r, c] == false)
                         {
@@ -277,12 +277,12 @@ namespace CamImageProcessing
             // We should have converged local maximas in _values
             // Now we need to assign each pixel a cluster according to its maximum
             // For each pixel start flood
-            _visited = new bool[image.SizeY, image.SizeX];
-            Segments_Color = new List<Segment_Color>();
-            SegmentAssignments = new int[image.SizeY, image.SizeX];
-            for(int r = Radius; r < image.SizeY - Radius; ++r)
+            _visited = new bool[image.RowCount, image.ColumnCount];
+            Segments = new List<Segment>();
+            SegmentAssignments = new int[image.RowCount, image.ColumnCount];
+            for(int r = Radius; r < image.RowCount - Radius; ++r)
             {
-                for(int c = Radius; c < image.SizeX - Radius; ++c)
+                for(int c = Radius; c < image.ColumnCount - Radius; ++c)
                 {
                     FloodFillSegments_Color(r, c);
                 }
@@ -333,7 +333,7 @@ namespace CamImageProcessing
                 Red = _red[y, x],
                 Green = _green[y, x],
                 Blue = _blue[y, x],
-                SegmentIndex = Segments_Color.Count,
+                SegmentIndex = Segments.Count,
                 Pixels = new List<Point2D>()
             };
             _currentSegment_Color.Pixels.Add(new Point2D(x, y));
@@ -362,7 +362,7 @@ namespace CamImageProcessing
                 }
             }
 
-            Segments_Color.Add(_currentSegment_Color);
+            Segments.Add(_currentSegment_Color);
         }
 
         private void CheckAndAddToSegment_Color(int oldX, int oldY, int newX, int newY)
@@ -386,6 +386,11 @@ namespace CamImageProcessing
             }
         }
         #endregion
+
+        public override void SegmentDisparity(DisparityMap dispMap)
+        {
+
+        }
 
         public override void InitParameters()
         {
@@ -446,9 +451,12 @@ namespace CamImageProcessing
             UsedSpatialKernel = AlgorithmParameter.FindValue<KernelType>("KER_SPT", Parameters);
         }
 
-        public override string ToString()
+        public override string Name
         {
-            return "Mean-Shift Segmentation";
+            get
+            {
+                return "Mean-Shift Segmentation";
+            }
         }
     }
 }

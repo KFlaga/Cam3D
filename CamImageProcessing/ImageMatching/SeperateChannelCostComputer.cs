@@ -101,12 +101,12 @@ namespace CamImageProcessing.ImageMatching
 
         public override void Init()
         {
-            CostComputer_Red.ImageBase = ColorImageBase[RGBChannel.Red];
-            CostComputer_Red.ImageMatched = ColorImageMatched[RGBChannel.Red];
-            CostComputer_Green.ImageBase = ColorImageBase[RGBChannel.Green];
-            CostComputer_Green.ImageMatched = ColorImageMatched[RGBChannel.Green];
-            CostComputer_Blue.ImageBase = ColorImageBase[RGBChannel.Blue];
-            CostComputer_Blue.ImageMatched = ColorImageMatched[RGBChannel.Blue];
+            CostComputer_Red.ImageBase = new GrayScaleImage() { ImageMatrix = ColorImageBase[RGBChannel.Red] };
+            CostComputer_Red.ImageMatched = new GrayScaleImage() { ImageMatrix = ColorImageMatched[RGBChannel.Red] };
+            CostComputer_Green.ImageBase = new GrayScaleImage() { ImageMatrix = ColorImageBase[RGBChannel.Green] };
+            CostComputer_Green.ImageMatched = new GrayScaleImage() { ImageMatrix = ColorImageMatched[RGBChannel.Green] };
+            CostComputer_Blue.ImageBase = new GrayScaleImage() { ImageMatrix = ColorImageBase[RGBChannel.Blue] };
+            CostComputer_Blue.ImageMatched = new GrayScaleImage() { ImageMatrix = ColorImageMatched[RGBChannel.Blue] };
 
             CostComputer_Red.Init();
             CostComputer_Green.Init();
@@ -121,6 +121,14 @@ namespace CamImageProcessing.ImageMatching
         public override void UpdateParameters()
         {
             
+        }
+
+        public override string Name
+        {
+            get
+            {
+                return "Separate Channels Cost Computer";
+            }
         }
 
         public override void Update()

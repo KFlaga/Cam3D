@@ -12,8 +12,6 @@ namespace CalibrationModule
 {
     public class ShapesGridCPFinder : CalibrationPointsFinder
     {
-        public ColorImage ImageColor { get; set; }
-        public GrayScaleImage ImageGray { get; set; }
         public List<CalibrationShape> CalibShapes { get; set; }
         private Matrix<double> _pixelCodes;
         private CalibrationShape _currentShape;
@@ -78,15 +76,6 @@ namespace CalibrationModule
             LinesExtractor = new ShapeGridLinesExtractor();
         }
 
-        public override void SetBitmapSource(BitmapSource source)
-        {
-            ImageColor = new ColorImage();
-            ImageColor.FromBitmapSource(source);
-
-            ImageGray = new GrayScaleImage();
-            ImageGray.FromColorImage(ImageColor);
-        }
-
         // 1) Move around the border and FF for each 'Unvisited', fill background ( dark ) with 'Background'
         // 2) During FF mark some white field and now start FF and fill light area with 'WhiteField'
         //    We assume white field is one big connected area ( with 'holes' for calibration shapes )
@@ -94,20 +83,19 @@ namespace CalibrationModule
         //    for it and add its points, save index in pixel codes
         public override void FindCalibrationPoints()
         {
-            if(UseMedianFilter)
-            {
-                // Preprocess with median filter to remove some noise (edges should stay in same place )
-                MedianFilter filter = new MedianFilter();
-                filter.FilterBorder = false;
-                filter.Image = ImageGray.ImageMatrix;
-                filter.WindowRadius = MedianFilterRadius;
-                ImageGray.ImageMatrix = filter.ApplyFilter();
-            }
+            //if(UseMedianFilter)
+            //{
+            //    // Preprocess with median filter to remove some noise (edges should stay in same place )
+            //    MedianFilter filter = new MedianFilter();
+            //    filter.FilterBorder = false;
+            //    filter.Image = Image.ImageMatrix;
+            //    filter.WindowRadius = MedianFilterRadius;
+            //    ImageGray.ImageMatrix = filter.ApplyFilter();
+            //}
 
-            PrimaryShapeChecker.ImageGray = ImageGray;
-            PrimaryShapeChecker.ImageRGB = ImageColor;
+            PrimaryShapeChecker.Image = Image;
 
-            _pixelCodes = new DenseMatrix(ImageGray.SizeY, ImageGray.SizeX);
+            _pixelCodes = new DenseMatrix(Image.RowCount, Image.ColumnCount);
             CalibShapes = new List<CalibrationShape>(32);
 
             _whiteBorder = new List<TPoint2D<int>>();
@@ -166,35 +154,36 @@ namespace CalibrationModule
         void FillBackground()
         {
             _flood = new ScanLineFloodAlgorithm();
-            _flood.Image = ImageGray.ImageMatrix;
+            _flood.ImageHeight = Image.RowCount;
+            _flood.ImageWidth = Image.ColumnCount;
             _flood.FillCondition = BackgroundFillCondition;
             _flood.FillAction = BackgroundFillAction;
 
             // Left/Right Side
-            for(int dy = 0; dy < ImageGray.SizeY; ++dy)
+            for(int dy = 0; dy < Image.RowCount; ++dy)
             {
                 if(CompareCellCodes(_pixelCodes[dy, 0], CellCode.Unvisited))
                 {
                     _flood.FloodFill(dy, 0);
                 }
 
-                if(CompareCellCodes(_pixelCodes[dy, ImageGray.SizeX - 1], CellCode.Unvisited))
+                if(CompareCellCodes(_pixelCodes[dy, Image.ColumnCount - 1], CellCode.Unvisited))
                 {
-                    _flood.FloodFill(dy, ImageGray.SizeX - 1);
+                    _flood.FloodFill(dy, Image.ColumnCount - 1);
                 }
             }
 
             // Top/Bottom Side
-            for(int dx = 0; dx < ImageGray.SizeX; ++dx)
+            for(int dx = 0; dx < Image.ColumnCount; ++dx)
             {
                 if(CompareCellCodes(_pixelCodes[0, dx], CellCode.Unvisited))
                 {
                     _flood.FloodFill(0, dx);
                 }
 
-                if(CompareCellCodes(_pixelCodes[ImageGray.SizeY - 1, dx], CellCode.Unvisited))
+                if(CompareCellCodes(_pixelCodes[Image.RowCount - 1, dx], CellCode.Unvisited))
                 {
-                    _flood.FloodFill(ImageGray.SizeY - 1, dx);
+                    _flood.FloodFill(Image.RowCount - 1, dx);
                 }
             }
         }
@@ -203,7 +192,7 @@ namespace CalibrationModule
         {
             if(CompareCellCodes(_pixelCodes[y, x], CellCode.Unvisited))
             {
-                if(ImageGray[y, x] < 0.5f)
+                if(Image.HaveValueAt(y, x) == false || Image[y, x] < 0.5)
                 {
                     return true;
                 }
@@ -225,7 +214,8 @@ namespace CalibrationModule
         void FillWhiteField()
         {
             _flood = new ScanLineFloodAlgorithm();
-            _flood.Image = ImageGray.ImageMatrix;
+            _flood.ImageHeight = Image.RowCount;
+            _flood.ImageWidth = Image.ColumnCount;
             _flood.FillCondition = WhiteFieldFillCondition;
             _flood.FillAction = WhiteFieldFillAction;
 
@@ -248,7 +238,7 @@ namespace CalibrationModule
         {
             if(CompareCellCodes(_pixelCodes[y, x], CellCode.Unvisited))
             {
-                if(ImageGray[y, x] > 0.5f)
+                if(Image[y, x] > 0.5f)
                 {
                     return true;
                 }
@@ -270,7 +260,8 @@ namespace CalibrationModule
         void FillShape(int y, int x)
         {
             _flood = new IterativeBasicFloodAlgorithm();
-            _flood.Image = ImageGray.ImageMatrix;
+            _flood.ImageHeight = Image.RowCount;
+            _flood.ImageWidth = Image.ColumnCount;
             _flood.FillCondition = ShapeFillCondition;
             _flood.FillAction = ShapeFillAction;
 
@@ -298,7 +289,7 @@ namespace CalibrationModule
         bool ShapeFillCondition(int y, int x)
         {
             return CompareCellCodes(_pixelCodes[y, x], CellCode.Unvisited) &&
-                ImageGray[y, x] < 0.5f;
+                Image[y, x] < 0.5f;
         }
 
         void ShapeFillAction(int y, int x)
@@ -553,9 +544,17 @@ namespace CalibrationModule
             }
         }
 
+        public override string Name
+        {
+            get
+            {
+                return "CalibShape";
+            }
+        }
+
         public override void InitParameters()
         {
-            Parameters = new List<AlgorithmParameter>();
+            base.InitParameters();
 
             AlgorithmParameter treshLow = new DoubleParameter(
                 "Size Elimination Threshold Low", "SETL", 0.1, 0.0001, 1.0);
@@ -588,6 +587,8 @@ namespace CalibrationModule
 
         public override void UpdateParameters()
         {
+            base.UpdateParameters();
+
             PointSizeTresholdLow = AlgorithmParameter.FindValue<double>("SETL", Parameters);
             PointSizeTresholdHigh = AlgorithmParameter.FindValue<double>("SETH", Parameters);
             UseMedianFilter = AlgorithmParameter.FindValue<bool>("UMF", Parameters);

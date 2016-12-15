@@ -166,7 +166,9 @@ namespace CalibrationModule
                 _currentImagePointFinder.PrimaryShapeChecker = (ShapeChecker)
                     _finderChooseWindow.GetSelectedProcessor("Primary CalibShape Qualifier");
 
-                _currentImagePointFinder.SetBitmapSource(_imageControl.ImageSource);
+                MaskedImage img = new MaskedImage();
+                img.FromBitmapSource(_imageControl.ImageSource);
+                _currentImagePointFinder.Image = img;
                 _currentImagePointFinder.FindCalibrationPoints();
 
                 if(_currentImagePointFinder.Points != null)
@@ -246,10 +248,10 @@ namespace CalibrationModule
             ImageTransformer undistort = new ImageTransformer(ImageTransformer.InterpolationMethod.Quadratic, 1);
             undistort.Transformation = new RadialDistortionTransformation(DistortionModel);
 
-            ColorImage img = new ColorImage();
+            MaskedImage img = new MaskedImage();
             img.FromBitmapSource(_imageControl.ImageSource);
 
-            ColorImage imgFinal = undistort.TransfromImageBackwards(img, true);
+            MaskedImage imgFinal = undistort.TransfromImageBackwards(img, true);
             _imageControl.ImageSource = imgFinal.ToBitmapSource();
         }
 

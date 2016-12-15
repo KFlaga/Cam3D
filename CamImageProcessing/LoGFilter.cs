@@ -15,6 +15,14 @@ namespace CamImageProcessing
         public int WindowRadius { get; set; }
         public double Deviation { get; set; }
 
+        public override string Name
+        {
+            get
+            {
+                return "LoG Filter";
+            }
+        }
+
         public override void InitParameters()
         {
             Parameters = new List<AlgorithmParameter>();

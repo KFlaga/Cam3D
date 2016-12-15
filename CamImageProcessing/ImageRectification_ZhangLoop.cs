@@ -74,7 +74,7 @@ namespace CamImageProcessing
 
             RectificationLeft = _Ht_L * _Hs_L * _Hr_L * _Hp_L;
             RectificationRight = _Ht_R * _Hs_R * _Hr_R * _Hp_R;
-
+            
             RectificationLeft_Inverse = RectificationLeft.Inverse();
             RectificationRight_Inverse = RectificationRight.Inverse();
         }

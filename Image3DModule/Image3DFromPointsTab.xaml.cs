@@ -63,9 +63,9 @@ namespace Image3DModule
                 if(image != null)
                 {
                     if(!(point.Cam1Img.X < 0.0 ||
-                        point.Cam1Img.X > image.SizeX ||
+                        point.Cam1Img.X > image.ColumnCount ||
                         point.Cam1Img.Y < 0.0 ||
-                        point.Cam1Img.Y > image.SizeY))
+                        point.Cam1Img.Y > image.RowCount))
                     {
                         color = new SharpDX.Color4(
                             (float)image[(int)point.Cam1Img.Y, (int)point.Cam1Img.X, RGBChannel.Red],

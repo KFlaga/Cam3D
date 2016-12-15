@@ -352,58 +352,9 @@ namespace CamImageProcessing.ImageMatching
 
             return CostComp.GetCost_Border(basePixel, _matched) + Math.Min(
                 pen0, Math.Min(pen1 + _penaltyLow, pen2 + _penaltyHigh * (1.0 - GradientCoeff *
-                Math.Abs(ImageBase.At(basePixel.Y, basePixel.X) - ImageMatched.At(_matched.Y, _matched.X)))));
+                Math.Abs(ImageBase[basePixel.Y, basePixel.X] - ImageMatched[_matched.Y, _matched.X]))));
         }
-
-        //public void CreateDisparityIndexMap(EpiLine epiLine)
-        //{
-        //    IntVector2 pm = new IntVector2();
-        //    int xmax = epiLine.FindXmax(ImageBase.RowCount, ImageBase.ColumnCount);
-        //    int x0 = epiLine.FindX0(ImageBase.RowCount);
-        //    _dispIndexMap = new List<Disparity>(xmax - x0);
-        //    xmax = xmax - 1;
-
-        //    for(int xm = x0 + 1; xm < xmax; ++xm)
-        //    {
-        //        double ym0 = epiLine.FindYd(xm);
-        //        double ym1 = epiLine.FindYd(xm + 1);
-        //        for(int ym = (int)ym0; ym < (int)ym1; ++ym)
-        //        {
-        //            pm.X = xm;
-        //            pm.Y = ym;
-        //            _dispIndexMap.Add(new Disparity(CurrentPixel, pm, 0.0, 0.0, (int)DisparityFlags.Valid));
-        //        }
-        //    }
-        //}
-
-        //public void CreateDisparityIndexMap_Horizontal(EpiLine epiLine)
-        //{
-        //    IntVector2 pm = new IntVector2();
-        //    _dispIndexMap = new List<Disparity>(ImageBase.ColumnCount);
-        //    int x0 = Math.Max(CurrentPixel.X - MinDisparity, 0);
-        //    int xmax = Math.Min(CurrentPixel.X + MaxDisparity, ImageBase.ColumnCount);
-
-        //    for(int xm = x0; xm < xmax; ++xm)
-        //    {
-        //        pm.X = xm;
-        //        pm.Y = CurrentPixel.Y;
-        //        _dispIndexMap.Add(new Disparity(CurrentPixel, pm, 0.0, 0.0, (int)DisparityFlags.Valid));
-        //    }
-        //}
-
-        //public void CreateDisparityIndexMap_Vertical(EpiLine epiLine)
-        //{
-        //    IntVector2 pm = new IntVector2();
-        //    _dispIndexMap = new List<Disparity>(ImageBase.RowCount);
-
-        //    for(int ym = 0; ym < ImageBase.RowCount; ++ym)
-        //    {
-        //        pm.X = CurrentPixel.Y;
-        //        pm.Y = ym;
-        //        _dispIndexMap.Add(new Disparity(CurrentPixel, pm, 0.0, 0.0, (int)DisparityFlags.Valid));
-        //    }
-        //}
-
+        
         public double GetCost(IntVector2 pixel, Disparity disp)
         {
             return GetCost(pixel, disp.GetMatchedPixel(pixel));
@@ -429,6 +380,7 @@ namespace CamImageProcessing.ImageMatching
             CreateBorderPaths();
             InitBorderPixelGetters();
 
+            int[] paths = IsLeftImageBase ? _pathsInRun_LeftTopDown : _pathsInRun_RightTopDown;
             // 1st run: start from (0,0) move left/downwards
             for(int r = 0; r < ImageBase.RowCount; ++r)
             {
@@ -437,13 +389,14 @@ namespace CamImageProcessing.ImageMatching
                     CurrentPixel.Set(x: c, y: r);
                     _matched.Y = CurrentPixel.Y;
 
-                    foreach(int pathIdx in _pathsInRun_RightTopDown)
+                    foreach(int pathIdx in paths)
                     {
                         FindCostsForPath(pathIdx, false);
                     }
                 }
             }
 
+            paths = IsLeftImageBase ? _pathsInRun_LeftBottomUp : _pathsInRun_RightBottomUp;
             // 2nd run: start from (rows,cols) move right/upwards
             for(int r = ImageBase.RowCount - 1; r >= 0; --r)
             {
@@ -452,7 +405,7 @@ namespace CamImageProcessing.ImageMatching
                     CurrentPixel.Set(x: c, y: r);
                     _matched.Y = CurrentPixel.Y;
 
-                    foreach(int pathIdx in _pathsInRun_RightBottomUp)
+                    foreach(int pathIdx in paths)
                     {
                         FindCostsForPath(pathIdx, true);
                     }
@@ -581,9 +534,12 @@ namespace CamImageProcessing.ImageMatching
             DispComp.UpdateParameters();
         }
 
-        public override string ToString()
+        public override string Name
         {
-            return "Base SGM Cost Aggregator";
+            get
+            {
+                return "SGM Cost Aggregator";
+            }
         }
     }
 }

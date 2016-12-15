@@ -141,6 +141,23 @@ namespace CamCore
             }
         }
 
+        public static Vector<double> Cross(this Vector<double> left, Vector<double> right)
+        {
+            if((left.Count != 3 || right.Count != 3))
+            {
+                string message = "Vectors must have a length of 3.";
+                throw new Exception(message);
+            }
+
+            Vector<double> result = new DenseVector(3);
+            result[0] = left[1] * right[2] - left[2] * right[1];
+            result[1] = -left[0] * right[2] + left[2] * right[0];
+            result[2] = left[0] * right[1] - left[1] * right[0];
+
+            return result;
+        }
+
+
         public class DoubleVectorVisualiser
         {
             Vector<double> _vector;

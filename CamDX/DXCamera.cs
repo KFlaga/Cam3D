@@ -60,13 +60,19 @@ namespace CamDX
             Position += dir * dist;
             LookAt += dir * dist;
         }
-
+        
         public void MoveX(float dist)
         {
             Vector3 dir = DXMisc.CrossProduct(UpDir, (LookAt - Position));
             dir.Normalize();
             Position += dir * dist;
             LookAt += dir * dist;
+        }
+
+        public void MoveY(float dist)
+        {
+            Position += UpDir * dist;
+            LookAt += UpDir * dist;
         }
 
         public void RotateZ(float angle)

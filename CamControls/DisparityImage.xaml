@@ -10,20 +10,29 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="40*"/>
             <RowDefinition Height="40"/>
+            <RowDefinition Height="35"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="40"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <local:DisparityLegend x:Name="_legend" Grid.Column="0" Margin="2,5,2,5"/>
+
+        <Border Grid.Row="2" Grid.ColumnSpan="2" BorderBrush="Black" BorderThickness="1">
+            <StackPanel Orientation="Horizontal" Height="35">
+                <Button x:Name="_butSave" Margin="10,4,3,4" Click="SaveMap">Save Map</Button>
+                <Button x:Name="_butLoad" Margin="3,4,3,4" Click="LoadMap">Load Map</Button>
+                <CheckBox x:Name="_dispDirectionShowCheckBox" Checked="_dispDirectionShowCheckBox_Checked" 
+                          Unchecked="_dispDirectionShowCheckBox_Unchecked" VerticalContentAlignment="Center">
+                    Show Y-Disparity</CheckBox>
+                <Label/>
+            </StackPanel>
+        </Border>
+
+        <local:DisparityLegend x:Name="_legend" Grid.Row="0" Grid.Column="0" Margin="2,5,2,5"/>
+        <Image x:Name="_imageControl" Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" />
+        <Canvas x:Name="_dispBoxCanvas" Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" />
+
         <Button Grid.Column="0" Grid.Row="1" Height="30" Click="SelectRange">Range</Button>
-    <!--    <CamControls:ZoomingScrollControl x:Name="_imageControl" Grid.Column="1" BorderBrush="Black" BorderThickness="1">
-            <CamControls:ZoomingScrollControl.Child>
-                <Image/>
-            </CamControls:ZoomingScrollControl.Child>
-        </CamControls:ZoomingScrollControl> -->
-        <Image x:Name="_imageControl" Grid.Column="1" Grid.RowSpan="2"/>
-        <Canvas x:Name="_dispBoxCanvas" Grid.Column="1" Grid.RowSpan="2"/>
     </Grid>
-    
+
 </UserControl>

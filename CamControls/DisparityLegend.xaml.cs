@@ -119,9 +119,11 @@ namespace CamControls
                 _range.Colors[i][1] = g;
                 _range.Colors[i][2] = b;
 
-                for(int c = 0; c < _legend.SizeX; ++c)
+                for(int c = 0; c < _legend.ColumnCount; ++c)
                 {
-                    _legend[i, c] = _range.Colors[i];
+                    _legend[i, c, 0] = _range.Colors[i][0];
+                    _legend[i, c, 1] = _range.Colors[i][1];
+                    _legend[i, c, 2] = _range.Colors[i][2];
                 }
             }
 

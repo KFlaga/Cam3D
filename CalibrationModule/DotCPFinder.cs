@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Media.Imaging;
+using System;
 
 namespace CalibrationModule
 {
@@ -68,15 +69,8 @@ namespace CalibrationModule
 
     public class DotCPFinder : CalibrationPointsFinder
     {
-        public GrayScaleImage Image { get; set; }
         private List<CalibrationDot> _dots;
         
-        public override void SetBitmapSource(BitmapSource source)
-        {
-            Image = new GrayScaleImage();
-            Image.FromBitmapSource(source);
-        }
-
         public override void FindCalibrationPoints()
         {
             Points = new List<CalibrationPoint>();
@@ -89,9 +83,9 @@ namespace CalibrationModule
             // - add to list all adjacent black points
             // - add this list to dot list
             _dots = new List<CalibrationDot>();
-            for(int y = 0; y < Image.SizeY; y++)
+            for(int y = 0; y < Image.RowCount; y++)
             {
-                for(int x = 0; x < Image.SizeX; x++)
+                for(int x = 0; x < Image.ColumnCount; x++)
                 {
                     // Check if point is black
                     if(Image[y, x] > 0)
@@ -125,10 +119,10 @@ namespace CalibrationModule
         private void BinarizeImage()
         {
             BinarizeFilter binarizer = new BinarizeFilter();
-            binarizer.Image = Image.ImageMatrix;
+            binarizer.Image = Image.GetMatrix();
             binarizer.Threshold = 0.5;
             binarizer.Inverse = true;
-            Image.ImageMatrix = binarizer.ApplyFilter();
+            Image.SetMatrix(binarizer.ApplyFilter(), 0);
         }
 
         // Search for all adjacent black points using algorithm similar to flood fill:
@@ -136,7 +130,7 @@ namespace CalibrationModule
         // - same is repeated for adjacent points
         private void FloodSearchForDotPoints(ref CalibrationDot dot, int y, int x)
         {
-            if(y < 0 || y >= Image.SizeY || x < 0 || x >= Image.SizeX)
+            if(y < 0 || y >= Image.RowCount || x < 0 || x >= Image.ColumnCount)
                 return;
 
             if(Image[y, x] > 0.5f)
@@ -165,13 +159,22 @@ namespace CalibrationModule
             return false;
         }
 
+        public override string Name
+        {
+            get
+            {
+                return "CalibDot";
+            }
+        }
+
         public override void InitParameters()
         {
-            Parameters = new List<CamCore.AlgorithmParameter>();
+            base.InitParameters();
         }
 
         public override void UpdateParameters()
         {
+            base.UpdateParameters();
         }
     }
 }

@@ -58,15 +58,23 @@ namespace DXTestModule
 
             // Create test cube and scene node for it, add to scene
             _testCube = new DXCube(device, new Vector3(10.0f, 15.0f, 5.0f));
-            _testCube.Shader = _resourceManager.ShaderManager.GetShader("ColorShader_NoLight");
+            _testCube.Shader = _resourceManager.ShaderManager.GetShader("TextureShader_NoLight");
             _testCube.SetColor(DXCube.VertexPosition.BotLeftBack, new Color4(1.0f, 1.0f, 0.0f, 1.0f));
+            _testCube.SetTexCoords(DXCube.VertexPosition.BotLeftBack, new Vector2(0.0f, 1.0f));
             _testCube.SetColor(DXCube.VertexPosition.BotLeftFront, new Color4(0.7f, 0.7f, 0.7f, 1.0f));
+            _testCube.SetTexCoords(DXCube.VertexPosition.BotLeftFront, new Vector2(0.0f, 1.0f));
             _testCube.SetColor(DXCube.VertexPosition.BotRightBack, new Color4(1.0f, 0.0f, 1.0f, 1.0f));
+            _testCube.SetTexCoords(DXCube.VertexPosition.BotRightBack, new Vector2(1.0f, 1.0f));
             _testCube.SetColor(DXCube.VertexPosition.BotRightFront, new Color4(0.7f, 0.7f, 0.7f, 1.0f));
+            _testCube.SetTexCoords(DXCube.VertexPosition.BotRightFront, new Vector2(1.0f, 1.0f));
             _testCube.SetColor(DXCube.VertexPosition.TopLeftBack, new Color4(0.0f, 1.0f, 1.0f, 1.0f));
+            _testCube.SetTexCoords(DXCube.VertexPosition.TopLeftBack, new Vector2(0.0f, 0.0f));
             _testCube.SetColor(DXCube.VertexPosition.TopLeftFront, new Color4(0.7f, 0.7f, 0.7f, 1.0f));
+            _testCube.SetTexCoords(DXCube.VertexPosition.TopLeftFront, new Vector2(0.0f, 0.0f));
             _testCube.SetColor(DXCube.VertexPosition.TopRightBack, new Color4(1.0f, 1.0f, 1.0f, 1.0f));
+            _testCube.SetTexCoords(DXCube.VertexPosition.TopRightBack, new Vector2(1.0f, 0.0f));
             _testCube.SetColor(DXCube.VertexPosition.TopRightFront, new Color4(0.7f, 0.7f, 0.7f, 1.0f));
+            _testCube.SetTexCoords(DXCube.VertexPosition.TopRightFront, new Vector2(1.0f, 0.0f));
             _testCube.UpdateBuffers();
 
             _cubeNode = new DXSceneNode();
@@ -77,6 +85,10 @@ namespace DXTestModule
 
             _cubeNode.AttachModel(_testCube);
             _scene.RootNode.Children.Add(_cubeNode);
+
+            // Load texture for test cube
+            var bitmapSource = DXTexture.TextureLoader.LoadBitmap("shaders/tsu0.png");
+            _testCube.Shader.Textures[0].SetBitmapSource(_renderer.DxDevice, bitmapSource);
 
             // Now when all is set, enable dx rendering
             _dxWindow.IsRendering = true;

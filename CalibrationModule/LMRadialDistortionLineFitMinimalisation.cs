@@ -548,7 +548,7 @@ namespace CalibrationModule
         }
 
         // Computes d(ei)/d(P) for ith line numericaly
-        public void ComputeJacobian_Numerical(Matrix<double> J)
+        public new void ComputeJacobian_Numerical(Matrix<double> J)
         {
             Vector<double> error_n = new DenseVector(_currentErrorVector.Count);
             Vector<double> error_p = new DenseVector(_currentErrorVector.Count);

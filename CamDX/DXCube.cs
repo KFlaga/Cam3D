@@ -50,12 +50,12 @@ namespace CamDX
                 SizeInBytes = 36 * sizeof(ushort)
             });
 
-            _primitiveType = PrimitiveTopology.TriangleList;
-            _vertexStride = Vertex_P4N3C4T2.Size;
-            _isIndexed = true;
-            _indicesCount = 36;
-            _vertexCount = 8;
-            _vertices = new Vertex_P4N3C4T2[_vertexCount];
+            PrimitiveType = PrimitiveTopology.TriangleList;
+            VertexStride = Vertex_P4N3C4T2.Size;
+            IsIndexed = true;
+            IndicesCount = 36;
+            VertexCount = 8;
+            _vertices = new Vertex_P4N3C4T2[VertexCount];
 
             _isVertexBufMutable = true;
             _isIndexBufMutable = false;

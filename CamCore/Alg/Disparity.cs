@@ -26,9 +26,10 @@ namespace CamCore
 
         public Disparity()
         {
+            Flags = (int)DisparityFlags.Invalid;
         }
 
-        public Disparity(IntVector2 pixelBase, IntVector2 pixelMacthed, double cost = 0.0, double confidence = 0.0, int flags = 0)
+        public Disparity(IntVector2 pixelBase, IntVector2 pixelMacthed, double cost = 0.0, double confidence = 0.0, int flags = (int)DisparityFlags.Invalid)
         {
             DX = pixelMacthed.X - pixelBase.X;
             DY = pixelMacthed.Y - pixelBase.Y;

@@ -314,5 +314,11 @@ namespace CamImageProcessing
         {
             HistogramOperations.SaturateRatioHistogram(image, SaturateRatioLow, SaturateRatioHigh);
         }
+
+        public string Name { get { return "Histogram Saturator"; } }
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

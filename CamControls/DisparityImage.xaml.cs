@@ -2,10 +2,12 @@
 using CamImageProcessing;
 using MathNet.Numerics.LinearAlgebra.Double;
 using System;
+using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Xml;
 
 namespace CamControls
 {
@@ -32,10 +34,13 @@ namespace CamControls
                 {
                     for(int c = 0; c < _map.ColumnCount; ++c)
                     {
-                        RangeX.Min = Math.Min(RangeX.Min, _map[r, c].DX);
-                        RangeX.Max = Math.Max(RangeX.Max, _map[r, c].DX);
-                        RangeY.Min = Math.Min(RangeY.Min, _map[r, c].DY);
-                        RangeY.Max = Math.Max(RangeY.Max, _map[r, c].DY);
+                        if(_map[r, c].IsValid())
+                        {
+                            RangeX.Min = Math.Min(RangeX.Min, _map[r, c].DX);
+                            RangeX.Max = Math.Max(RangeX.Max, _map[r, c].DX);
+                            RangeY.Min = Math.Min(RangeY.Min, _map[r, c].DY);
+                            RangeY.Max = Math.Max(RangeY.Max, _map[r, c].DY);
+                        }
                     }
                 }
                 RangeX.TempMax = RangeX.Max;
@@ -93,6 +98,51 @@ namespace CamControls
         //  private Image _dispImage { get { return (Image)_imageControl.Child; } }
         private Image _dispImage { get { return (Image)_imageControl; } }
 
+        public event EventHandler<EventArgs> MapLoaded;
+
+        bool _enableSaveLoad = true;
+        public bool IsSaveLoadEnabled
+        {
+            get { return _enableSaveLoad; }
+            set
+            {
+                _enableSaveLoad = value;
+                _butSave.IsEnabled = _enableSaveLoad;
+                _butLoad.IsEnabled = _enableSaveLoad;
+            }
+        }
+
+        private void SaveMap(object sender, RoutedEventArgs e)
+        {
+            FileOperations.SaveToFile(SaveMap, "Xml File|*.xml");
+        }
+
+        private void LoadMap(object sender, RoutedEventArgs e)
+        {
+            FileOperations.LoadFromFile(LoadMap, "Xml File|*.xml");
+        }
+
+        private void SaveMap(Stream file, string path)
+        {
+            XmlDocument xmlDoc = new XmlDocument();
+
+            XmlNode mapNode = Map.CreateMapNode(xmlDoc);
+            xmlDoc.InsertAfter(mapNode, xmlDoc.DocumentElement);
+
+            xmlDoc.Save(file);
+        }
+
+        private void LoadMap(Stream file, string path)
+        {
+            XmlDocument xmlDoc = new XmlDocument();
+            xmlDoc.Load(file);
+
+            XmlNode mapNode = xmlDoc.GetElementsByTagName("DisparityMap")[0];
+            Map = DisparityMap.CreateFromNode(mapNode);
+
+            MapLoaded?.Invoke(this, new EventArgs());
+        }
+        
         public DisparityImage()
         {
             InitializeComponent();
@@ -102,6 +152,16 @@ namespace CamControls
             _dispBoxCanvas.Children.Add(_dbox);
 
             _dispImage.MouseDown += MousePressed;
+        }
+        
+        private void _dispDirectionShowCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            IsShownDX = false;
+        }
+
+        private void _dispDirectionShowCheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            IsShownDX = true;
         }
 
         public void UpdateImage()
@@ -195,8 +255,8 @@ namespace CamControls
         private void MoveDispBox(Vector2 mpos)
         {
             Vector2 pixel = new Vector2(mpos.X, mpos.Y);
-            pixel.X *= _image.SizeX / _dispImage.ActualWidth;
-            pixel.Y *= _image.SizeY / _dispImage.ActualHeight;
+            pixel.X *= _image.ColumnCount / _dispImage.ActualWidth;
+            pixel.Y *= _image.RowCount / _dispImage.ActualHeight;
 
 
             // Get/set disparity

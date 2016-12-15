@@ -10,7 +10,6 @@
     <DockPanel>
         <Border Width="150" BorderBrush="Black" BorderThickness="1" DockPanel.Dock="Right">
             <StackPanel>
-                <Button Content="Load Disparity Map" Click="LoadDisparityMap" Margin="5,3,5,3"/>
                 <Button Content="Triangulate" Click="Triangulate" Margin="5,3,5,3"/>
                 <Button Content="Save 3D Points" Click="Save3DPoints" Margin="5,3,5,3"/>
             </StackPanel>

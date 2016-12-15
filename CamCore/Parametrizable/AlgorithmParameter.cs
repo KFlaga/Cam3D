@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
+using System.Xml;
 
 namespace CamCore
 {
@@ -60,6 +61,23 @@ namespace CamCore
                 }
             }
             return default(T);
+        }
+
+        public abstract void ReadFromXml(XmlNode node);
+
+        public static void ReadParametersFromXml(List<AlgorithmParameter> parameters, XmlNode node)
+        {
+            //<Parameters>
+            //  <Parameter id="aaa" value="3"/>
+            //</Parameters>
+
+            for(int i = 0; i < node.ChildNodes.Count; ++i)
+            {
+                XmlNode paramNode = node.ChildNodes[i];
+                string id = paramNode.Attributes["id"].Value;
+                AlgorithmParameter param = parameters.Find((p) => { return p.ShortName == id; });
+                param.ReadFromXml(paramNode);
+            }
         }
     }
 

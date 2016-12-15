@@ -125,7 +125,7 @@ namespace CamImageProcessing.ImageMatching
         {
 
         }
-        
+
         //public override void InitParameters()
         //{
         //    base.InitParameters();
@@ -146,9 +146,12 @@ namespace CamImageProcessing.ImageMatching
         //    InterpolatePixelWise = AlgorithmParameter.FindValue<bool>("IPIX", Parameters);
         //}
 
-        public override string ToString()
+        public override string Name
         {
-            return "Interpolation Disparity Computer";
+            get
+            {
+                return "Interpolation Disparity Computer";
+            }
         }
     }
 }

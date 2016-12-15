@@ -20,7 +20,7 @@ namespace CalibrationModule
         public List<CalibrationPoint> CalibrationPointsRight { get; set; } = new List<CalibrationPoint>();
 
         public List<RealGridData> GridsLeft { get; set; } = new List<RealGridData>();
-        public List<RealGridData> GridsRight { get; set; } = new List<RealGridData>();
+       // public List<RealGridData> GridsRight { get; set; } = new List<RealGridData>();
 
         public List<Vector2> MatchedPointsLeft { get; set; } = new List<Vector2>();
         public List<Vector2> MatchedPointsRight { get; set; } = new List<Vector2>();
@@ -99,6 +99,11 @@ namespace CalibrationModule
             }
         }
 
+        private void SaveCalibMatched(object sender, RoutedEventArgs e)
+        {
+            CamCore.FileOperations.SaveToFile(SaveCalibMatched, "Xml File|*.xml");
+        }
+
         private void Calibrate(object sender, RoutedEventArgs e)
         {
             if(CalibrationData.Data.IsCamLeftCalibrated == false ||
@@ -136,5 +141,57 @@ namespace CalibrationModule
             AlgorithmWindow algWindow = new AlgorithmWindow(_calibrator);
             algWindow.Show();
         }
+        
+        public void SaveCalibMatched(Stream file, string path)
+        {
+            XmlDocument dataDoc = new XmlDocument();
+            var rootNode = dataDoc.CreateElement("Points");
+
+            var calibMatchedLeft = new List<CalibrationPoint>(CalibrationPointsLeft.Count);
+            var calibMatchedRight = new List<CalibrationPoint>(CalibrationPointsRight.Count);
+            for(int i = 0; i < CalibrationPointsLeft.Count; ++i)
+            {
+                var cleft = CalibrationPointsLeft[i];
+                var cright = CalibrationPointsRight.Find((cp) =>
+                {
+                    return cp.GridNum == cleft.GridNum &&
+                        cp.RealCol == cleft.RealCol &&
+                        cp.RealRow == cleft.RealRow;
+                });
+                if(cright != null)
+                {
+                    calibMatchedLeft.Add(cleft);
+                    calibMatchedRight.Add(cright);
+                }
+            }
+
+            for(int i = 0; i < calibMatchedLeft.Count; ++i)
+            {
+                var cpL = calibMatchedLeft[i];
+                var cpR = calibMatchedRight[i];
+
+                var pointNode = dataDoc.CreateElement("Point");
+
+                var attImgX = dataDoc.CreateAttribute("imgx");
+                attImgX.Value = cpL.ImgX.ToString("F3");
+                var attImgY = dataDoc.CreateAttribute("imgy");
+                attImgY.Value = cpL.ImgY.ToString("F3");
+                var attImgX2 = dataDoc.CreateAttribute("imgx2");
+                attImgX2.Value = cpR.ImgX.ToString("F3");
+                var attImgY2 = dataDoc.CreateAttribute("imgy2");
+                attImgY2.Value = cpR.ImgY.ToString("F3");
+
+                pointNode.Attributes.Append(attImgX);
+                pointNode.Attributes.Append(attImgY);
+                pointNode.Attributes.Append(attImgX2);
+                pointNode.Attributes.Append(attImgY2);
+
+                rootNode.AppendChild(pointNode);
+            }
+
+            dataDoc.InsertAfter(rootNode, dataDoc.DocumentElement);
+            dataDoc.Save(file);
+        }
+
     }
 }

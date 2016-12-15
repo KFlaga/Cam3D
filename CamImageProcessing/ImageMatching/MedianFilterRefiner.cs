@@ -84,10 +84,13 @@ namespace CamImageProcessing.ImageMatching
 
             return filtered;
         }
-
-        public override string ToString()
+        
+        public override string Name
         {
-            return "Median filter";
+            get
+            {
+                return "Median Filter";
+            }
         }
     }
 }

@@ -4,6 +4,7 @@ using CamCore;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
+using System;
 
 namespace Image3DModule
 {
@@ -13,8 +14,6 @@ namespace Image3DModule
         public DisparityMap DispMap { get { return _dispImage.Map; } }
 
         Image3DWindow _3dwindow;
-
-        private ParametrizedProcessorsSelectionWindow _featuresMatchOpts;
 
         public Image3DWithDisparityTab()
         {
@@ -47,36 +46,103 @@ namespace Image3DModule
                 _3dwindow = new Image3DWindow();
                 _3dwindow.Show();
             }
-            
+
             ColorImage image = null;
             if(_imageControl.ImageSource != null)
             {
                 image = new ColorImage();
                 image.FromBitmapSource(_imageControl.ImageSource);
             }
-
-            foreach(var point in Points3D)
+            else
             {
+                MessageBox.Show("Need to set image");
+                return;
+            }
 
+            if(DispMap == null)
+            {
+                MessageBox.Show("Need to set disparity map");
+                return;
+            }
 
-                //SharpDX.Vector3 pos = new SharpDX.Vector3((float)point.Real.X, (float)point.Real.Y, (float)point.Real.Z);
-                //SharpDX.Color4 color = new SharpDX.Color4(1.0f);
-                //if(image != null)
-                //{
-                //    if(!(point.Cam1Img.X < 0.0 ||
-                //        point.Cam1Img.X > image.SizeX ||
-                //        point.Cam1Img.Y < 0.0 ||
-                //        point.Cam1Img.Y > image.SizeY))
-                //    {
-                //        color = new SharpDX.Color4(
-                //            (float)image[(int)point.Cam1Img.Y, (int)point.Cam1Img.X, RGBChannel.Red],
-                //            (float)image[(int)point.Cam1Img.Y, (int)point.Cam1Img.X, RGBChannel.Green],
-                //            (float)image[(int)point.Cam1Img.Y, (int)point.Cam1Img.X, RGBChannel.Blue],
-                //            1.0f);
-                //    }
-                //}
+            ClosePointsSegmentation segmentation = new ClosePointsSegmentation();
+            segmentation.MaxPointsDiff = 2.1;
+            segmentation.SegmentDisparity(DispMap);
 
-                //_3dwindow.AddPointCube(pos, color);
+            var segments = segmentation.Segments;
+            var segmentAssignments = segmentation.SegmentAssignments;
+            TPoint2D<int>[] segmentMin = new TPoint2D<int>[segments.Count];
+            TPoint2D<int>[] segmentMax = new TPoint2D<int>[segments.Count];
+
+            for(int i = 0; i < segments.Count; ++i)
+            {
+                segmentMin[i] = new TPoint2D<int>(DispMap.ColumnCount + 1, DispMap.RowCount + 1);
+                segmentMax[i] = new TPoint2D<int>(-1, -1);
+            }
+
+            // 1) Find segments sizes
+            foreach(var point3d in Points3D)
+            {
+                TPoint2D<int> imgPoint = new TPoint2D<int>(y: (int)point3d.Cam1Img.Y, x: (int)point3d.Cam1Img.X);
+                int idx = segmentAssignments[imgPoint.Y, imgPoint.X];
+                if(idx >= 0)
+                {
+                    segmentMin[idx] = new TPoint2D<int>(y: Math.Min(segmentMin[idx].Y, imgPoint.Y),
+                        x: Math.Min(segmentMin[idx].X, imgPoint.X));
+                    segmentMax[idx] = new TPoint2D<int>(y: Math.Max(segmentMax[idx].Y, imgPoint.Y),
+                        x: Math.Max(segmentMax[idx].X, imgPoint.X));
+                }
+            }
+
+            // 2) For each segment create Dx surface model
+            DXGridSurface[] surfaces = new DXGridSurface[segments.Count];
+            for(int i = 0; i < segments.Count; ++i)
+            {
+                if(!(segmentMin[i].X > DispMap.ColumnCount || segmentMax[i].X < 0))
+                {
+                    surfaces[i] = new DXGridSurface(_3dwindow.Renderer.DxDevice,
+                        segmentMax[i].Y - segmentMin[i].Y + 1, segmentMax[i].X - segmentMin[i].X + 1);
+                }
+            }
+
+            // 3) For each point add it to surface
+            for(int i = 0; i < Points3D.Count; ++i)
+            {
+                TPoint2D<int> imgPoint = new TPoint2D<int>(
+                    y: (int)Points3D[i].Cam1Img.Y, x: (int)Points3D[i].Cam1Img.X);
+                int idx = segmentAssignments[imgPoint.Y, imgPoint.X];
+                if(idx >= 0 && surfaces[idx] != null)
+                {
+                    SharpDX.Vector3 pos = new SharpDX.Vector3(
+                        (float)Points3D[i].Real.X, (float)Points3D[i].Real.Y, (float)Points3D[i].Real.Z);
+                    SharpDX.Vector2 texCoords = new SharpDX.Vector2(
+                        (float)Points3D[i].Cam1Img.X / (float)DispMap.ColumnCount,
+                        (float)Points3D[i].Cam1Img.Y / (float)DispMap.RowCount);
+                    SharpDX.Color4 color = new SharpDX.Color4(
+                        (float)image[imgPoint.Y, imgPoint.X, RGBChannel.Red], 
+                        (float)image[imgPoint.Y, imgPoint.X, RGBChannel.Green], 
+                        (float)image[imgPoint.Y, imgPoint.X, RGBChannel.Blue], 1.0f);
+
+                    surfaces[idx].AddVertex(imgPoint.Y - segmentMin[idx].Y, imgPoint.X - segmentMin[idx].X, pos, texCoords, color);
+                }
+            }
+
+            // 4) Update surfaces
+            // 5) For each surface create scene node centered on center
+            // 6) Set each surface texture shader with image as texture (or use colored one)
+            // 7) Add each surface to window
+            for(int i = 0; i < surfaces.Length; ++i)
+            {
+                if(surfaces[i] != null)
+                {
+                    surfaces[i].UpdateBuffers();
+                    if(surfaces[i].IndicesCount >= 3)
+                    {
+                        CamDX.DXSceneNode node = _3dwindow.Scene.RootNode.CreateChildNode();
+                        node.AttachModel(surfaces[i]);
+                        surfaces[i].Shader = _3dwindow.ResourcesManager.ShaderManager.GetShader("ColorShader_NoLight");
+                    }
+                }
             }
         }
     }

@@ -23,10 +23,8 @@ namespace CamCore
         public AlgorithmStatus CurrentStatus;
     }
 
-    public interface IControllableAlgorithm
+    public interface IControllableAlgorithm : INamed
     {
-        string Name { get; }
-
         bool SupportsFinalResults { get; }
         bool SupportsPartialResults { get; }
 

@@ -56,8 +56,9 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="MathNet.Numerics">
-      <HintPath>..\CamMain\bin\Debug\MathNet.Numerics.dll</HintPath>
+    <Reference Include="MathNet.Numerics, Version=3.13.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MathNet.Numerics.3.13.1\lib\net40\MathNet.Numerics.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -119,6 +120,7 @@
     <Compile Include="Alg\Point3D.cs" />
     <Compile Include="Parametrizable\AlgorithmParameter.cs" />
     <Compile Include="Parametrizable\FinalParameters.cs" />
+    <Compile Include="Parametrizable\INamed.cs" />
     <Compile Include="Parametrizable\IParametrizable.cs" />
     <Compile Include="Parametrizable\ParamterInput.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -143,6 +145,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

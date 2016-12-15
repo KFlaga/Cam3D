@@ -82,9 +82,12 @@ namespace CamImageProcessing.ImageMatching
             // Look over whole map, and :
         }
 
-        public override string ToString()
+        public override string Name
         {
-            return "WTA Disparity Computer";
+            get
+            {
+                return "WTA Disparity Computer";
+            }
         }
     }
 }

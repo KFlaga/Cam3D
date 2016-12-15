@@ -8,11 +8,19 @@
     <DockPanel>
         <Menu x:Name="_mainMenu" IsMainMenu="True" DockPanel.Dock="Top" VerticalAlignment="Top" BorderBrush="Black" BorderThickness="1">
             <MenuItem x:Name="_menuFile" Header="_File">
-                <MenuItem Header="Reload Modules" IsEnabled="True" Click="ReloadModules"/>
-                <Separator/>
+               <!-- <MenuItem Header="Reload Modules" IsEnabled="True" Click="ReloadModules"/>
+                <Separator/> -->
                 <MenuItem x:Name="_submenuExit" Header="Exit" IsEnabled="True" Click="Exit"/>
             </MenuItem>
-            <MenuItem x:Name="_menuModules" Header="_Modules"/>
+            <MenuItem x:Name="_menuModules" Header="_Modules">
+                <MenuItem x:Name="_headerCalibration" Header="Calibration Module" Click="OpenModule"/>
+                <MenuItem x:Name="_headerRectification" Header="Rectification Module" Click="OpenModule"/>
+                <MenuItem x:Name="_headerMatching" Header="Image Matching Module" Click="OpenModule"/>
+                <MenuItem x:Name="_headerTriangulation" Header="Triangulation Module" Click="OpenModule"/>
+                <MenuItem x:Name="_headerImage3D" Header="Image3D Module" Click="OpenModule"/>
+                <MenuItem x:Name="_headerCapture" Header="Camera Capture Module" Click="OpenModule"/>
+
+            </MenuItem>
             <MenuItem x:Name="_menuCalib" Header="_Calibration">
                 <MenuItem Header="Load Calibration Data" IsEnabled="True" Click="LoadCalibrationData"/>
                 <MenuItem Header="Save Calibration Data" IsEnabled="True" Click="SaveCalibrationData"/>

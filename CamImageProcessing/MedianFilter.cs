@@ -96,6 +96,14 @@ namespace CamImageProcessing
             return filtered;
         }
 
+        public override string Name
+        {
+            get
+            {
+                return "Median Filter";
+            }
+        }
+
         public override void InitParameters()
         {
             Parameters = new List<AlgorithmParameter>();

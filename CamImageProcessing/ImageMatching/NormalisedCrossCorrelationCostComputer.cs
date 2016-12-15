@@ -26,11 +26,15 @@ namespace CamImageProcessing.ImageMatching
                 {
                     for(int dy = -MaskHeight; dy <= MaskHeight; ++dx)
                     {
-                        double pr = ImageBase[pixelBase.Y + dy, pixelBase.X + dx];
-                        double pt = ImageMatched[pixelMatched.Y + dy, pixelMatched.X + dx];
-                        corr += pr * pt;
-                        sqLenRef += pr * pr;
-                        sqLenTest += pt * pt;
+                        if(ImageBase.HaveValueAt(pixelBase.Y + dy, pixelBase.X + dx) &&
+                            ImageBase.HaveValueAt(pixelMatched.Y + dy, pixelMatched.X + dx))
+                        {
+                            double pr = ImageBase[pixelBase.Y + dy, pixelBase.X + dx];
+                            double pt = ImageMatched[pixelMatched.Y + dy, pixelMatched.X + dx];
+                            corr += pr * pt;
+                            sqLenRef += pr * pr;
+                            sqLenTest += pt * pt;
+                        }
                     }
                 }
 
@@ -49,13 +53,18 @@ namespace CamImageProcessing.ImageMatching
                 {
                     for(int dy = -MaskHeight; dy <= MaskHeight; ++dx)
                     {
-                        double pr = ImageBase[pixelBase.Y + dy, pixelBase.X + dx];
-                        double pt = ImageMatched[pixelMatched.Y + dy, pixelMatched.X + dx];
-                        gauss = Math.Exp(
-                            ((dx - MaskWidth) * (dx - MaskWidth) + (dy - MaskHeight) * (dy - MaskHeight)) / sgm2) * norm_coeff;
-                        corr += gauss * pr * pt;
-                        sqDevRef += gauss * pr * pr;
-                        sqDevTest += gauss * pt * pt;
+
+                        if(ImageBase.HaveValueAt(pixelBase.Y + dy, pixelBase.X + dx) &&
+                            ImageBase.HaveValueAt(pixelMatched.Y + dy, pixelMatched.X + dx))
+                        {
+                            double pr = ImageBase[pixelBase.Y + dy, pixelBase.X + dx];
+                            double pt = ImageMatched[pixelMatched.Y + dy, pixelMatched.X + dx];
+                            gauss = Math.Exp(
+                                ((dx - MaskWidth) * (dx - MaskWidth) + (dy - MaskHeight) * (dy - MaskHeight)) / sgm2) * norm_coeff;
+                            corr += gauss * pr * pt;
+                            sqDevRef += gauss * pr * pr;
+                            sqDevTest += gauss * pt * pt;
+                        }
                     }
                 }
 
@@ -85,11 +94,15 @@ namespace CamImageProcessing.ImageMatching
                         px_m = Math.Max(0, Math.Min(ImageMatched.ColumnCount - 1, pixelBase.X + dx));
                         py_m = Math.Max(0, Math.Min(ImageMatched.RowCount - 1, pixelMatched.Y + dy));
 
-                        double pr = ImageBase[py_b, px_b];
-                        double pt = ImageMatched[py_m, px_m];
-                        corr += pr * pt;
-                        sqLenRef += pr * pr;
-                        sqLenTest += pt * pt;
+                        if(ImageBase.HaveValueAt(py_b, px_b) &&
+                            ImageBase.HaveValueAt(py_m, px_m))
+                        {
+                            double pr = ImageBase[py_b, px_b];
+                            double pt = ImageMatched[py_m, px_m];
+                            corr += pr * pt;
+                            sqLenRef += pr * pr;
+                            sqLenTest += pt * pt;
+                        }
                     }
                 }
 
@@ -113,13 +126,17 @@ namespace CamImageProcessing.ImageMatching
                         px_m = Math.Max(0, Math.Min(ImageMatched.ColumnCount - 1, pixelBase.X + dx));
                         py_m = Math.Max(0, Math.Min(ImageMatched.RowCount - 1, pixelMatched.Y + dy));
 
-                        double pr = ImageBase[py_b, px_b];
-                        double pt = ImageMatched[py_m, px_m];
-                        gauss = Math.Exp(
-                            ((dx - MaskWidth) * (dx - MaskWidth) + (dy - MaskHeight) * (dy - MaskHeight)) / sgm2) * norm_coeff;
-                        corr += gauss * pr * pt;
-                        sqDevRef += gauss * pr * pr;
-                        sqDevTest += gauss * pt * pt;
+                        if(ImageBase.HaveValueAt(py_b, px_b) &&
+                            ImageBase.HaveValueAt(py_m, px_m))
+                        {
+                            double pr = ImageBase[py_b, px_b];
+                            double pt = ImageMatched[py_m, px_m];
+                            gauss = Math.Exp(
+                                ((dx - MaskWidth) * (dx - MaskWidth) + (dy - MaskHeight) * (dy - MaskHeight)) / sgm2) * norm_coeff;
+                            corr += gauss * pr * pt;
+                            sqDevRef += gauss * pr * pr;
+                            sqDevTest += gauss * pt * pt;
+                        }
                     }
                 }
 
@@ -142,8 +159,18 @@ namespace CamImageProcessing.ImageMatching
             // Correlation needs no updates
         }
 
+
+        public override string Name
+        {
+            get
+            {
+                return "CrossCorelation Cost Computer";
+            }
+        }
+
         public override void InitParameters()
         {
+            base.InitParameters();
             AlgorithmParameter maskW = new IntParameter(
                 "Mask Width Radius", "MWR", 3, 1, 6);
             _parameters.Add(maskW);
@@ -163,6 +190,7 @@ namespace CamImageProcessing.ImageMatching
 
         public override void UpdateParameters()
         {
+            base.UpdateParameters();
             MaskWidth = AlgorithmParameter.FindValue<int>("MWR", Parameters);
             MaskHeight = AlgorithmParameter.FindValue<int>("MHR", Parameters);
             UseSmoothing = AlgorithmParameter.FindValue<bool>("UGS", Parameters);

@@ -7,7 +7,6 @@ using System.Windows.Controls;
 using CamImageProcessing.ImageMatching;
 using System;
 using System.Windows.Media.Imaging;
-using CamImageProcessing.ImageMatching;
 
 namespace CalibrationModule
 {

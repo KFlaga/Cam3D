@@ -23,12 +23,7 @@ namespace CamDX
     public abstract class DXModel : IModel
     {
         protected Buffer _vertexBuf;
-        protected int _vertexStride;
-        protected int _vertexCount;
         protected Buffer _indicesBuf;
-        protected bool _isIndexed;
-        protected int _indicesCount;
-        protected PrimitiveTopology _primitiveType;
 
         protected DXShader _shader;
         protected AABB _bounds;
@@ -37,24 +32,14 @@ namespace CamDX
         public DXShader Shader { get { return _shader; } set { _shader = value; } }
         public AABB ModelAABB { get { return _bounds; } }
         public DXSceneNode SceneNode { set; get; }
+        
+        public int VertexStride { protected set; get; }
+        public int VertexCount { protected set; get; }
+        public bool IsIndexed { protected set; get; }
+        public int IndicesCount { protected set; get; }
+        public PrimitiveTopology PrimitiveType { protected set; get; }
 
-        public virtual void Render(DeviceContext device)
-        {
-            if(_vertexCount <= 0)
-                return;
-
-            device.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(_vertexBuf, _vertexStride, 0));
-            device.InputAssembler.PrimitiveTopology = _primitiveType;
-            if(_isIndexed)
-            {
-                device.InputAssembler.SetIndexBuffer(_indicesBuf, Format.R16_UInt, 0);
-                device.DrawIndexed(_indicesCount, 0, 0);
-            }
-            else
-            {
-                device.Draw(_vertexCount, 0);
-            }
-        }
+        public abstract void Render(DeviceContext device);
 
         public abstract void UpdateBuffers();
         public abstract void UpdateAABB();
@@ -83,17 +68,17 @@ namespace CamDX
         }
     }
 
-    public class DXModel<VT> : DXModel where VT : struct, IVertex
+    public abstract class  DXModel<VT, IT> : DXModel where VT : struct, IVertex where IT: struct
     {
         protected VT[] _vertices;
         public VT[] VertexList { get { return _vertices; } }
 
-        protected ushort[] _indices;
-        public ushort[] IndexList { get { return _indices; } }
+        protected IT[] _indices;
+        public IT[] IndexList { get { return _indices; } }
 
         protected bool _isVertexBufMutable;
         protected bool _isIndexBufMutable;
-
+        
         public override void UpdateBuffers()
         {
             DeviceContext device = _vertexBuf.Device.ImmediateContext;
@@ -108,7 +93,7 @@ namespace CamDX
                 stream.Dispose();
             }
 
-            if(_isIndexed && _isIndexBufMutable)
+            if(IsIndexed && _isIndexBufMutable)
             {
                 var dataBox = device.MapSubresource(_indicesBuf, 0, MapMode.WriteDiscard, SharpDX.Direct3D11.MapFlags.None);
                 stream = new DataStream(dataBox.DataPointer, _indicesBuf.Description.SizeInBytes, true, true);
@@ -124,6 +109,49 @@ namespace CamDX
             foreach(var vertex in _vertices)
             {
                 aabb.EnclosePoint(vertex.Position);
+            }
+        }
+    }
+
+    public class DXModel<VT> : DXModel<VT, ushort> where VT : struct, IVertex
+    {
+        public override void Render(DeviceContext device)
+        {
+            if(VertexCount <= 0)
+                return;
+
+            device.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(_vertexBuf, VertexStride, 0));
+            device.InputAssembler.PrimitiveTopology = PrimitiveType;
+            if(IsIndexed)
+            {
+                device.InputAssembler.SetIndexBuffer(_indicesBuf, Format.R16_UInt, 0);
+                device.DrawIndexed(IndicesCount, 0, 0);
+            }
+            else
+            {
+                device.Draw(VertexCount, 0);
+            }
+        }
+    }
+
+
+    public class DXModelUIntIndexed<VT> : DXModel<VT, uint> where VT : struct, IVertex
+    {
+        public override void Render(DeviceContext device)
+        {
+            if(VertexCount <= 0)
+                return;
+
+            device.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(_vertexBuf, VertexStride, 0));
+            device.InputAssembler.PrimitiveTopology = PrimitiveType;
+            if(IsIndexed)
+            {
+                device.InputAssembler.SetIndexBuffer(_indicesBuf, Format.R32_UInt, 0);
+                device.DrawIndexed(IndicesCount, 0, 0);
+            }
+            else
+            {
+                device.Draw(VertexCount, 0);
             }
         }
     }

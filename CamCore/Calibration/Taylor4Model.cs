@@ -14,6 +14,7 @@ namespace CamCore
 
     public class Taylor4Model : RadialDistortionModel, IParameterizable
     {
+        public string Name { get { return "Taylor 4 Model"; } }
         public override int ParametersCount
         {
             get

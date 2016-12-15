@@ -11,7 +11,7 @@ namespace CamCore
     {
         public override void FloodFill(int y, int x)
         {
-            if(y < 0 || y >= Image.RowCount || x < 0 || x >= Image.ColumnCount)
+            if(y < 0 || y >= ImageHeight || x < 0 || x >= ImageWidth)
                 return;
 
             if(FillCondition(y, x) == true)
@@ -26,7 +26,7 @@ namespace CamCore
 
         public override bool FloodSearch(int y, int x, ref int foundX, ref int foundY)
         {
-            if(y < 0 || y >= Image.RowCount || x < 0 || x >= Image.ColumnCount)
+            if(y < 0 || y >= ImageHeight || x < 0 || x >= ImageWidth)
                 return false;
 
             if(FillCondition(y, x) == true)

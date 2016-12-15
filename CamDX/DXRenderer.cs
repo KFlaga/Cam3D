@@ -57,9 +57,13 @@ namespace CamDX
                 };
 
                 // Create Device and SwapChain
+#if DEBUG
+                Device.CreateWithSwapChain(DriverType.Hardware,
+                   DeviceCreationFlags.Debug, swapchainDesc, out _dxDevice, out _swapChain);
+#else
                 Device.CreateWithSwapChain(DriverType.Hardware,
                    DeviceCreationFlags.None, swapchainDesc, out _dxDevice, out _swapChain);
-
+#endif
                 // Ignore all windows events 
                 //    var factory = _swapChain.GetParent<Factory>();
                 //    factory.MakeWindowAssociation(windowHandle, WindowAssociationFlags.None);

@@ -55,7 +55,7 @@ namespace UnitTestProject1
 
             trangulation._pL = _imagePointsLeft[0];
             trangulation._pR = _imagePointsRight[0];
-            trangulation.ComputeBackprojected3DPoint();
+         //   trangulation.ComputeBackprojected3DPoint();
             var point3d = trangulation._p3D;
 
             Assert.IsTrue((point3d - _realPoints[0]).L2Norm() < 1e-6);
@@ -436,7 +436,7 @@ namespace UnitTestProject1
             {
                 trangulation._pL = noisedLeft[i];
                 trangulation._pR = noisedRight[i];
-                trangulation.ComputeBackprojected3DPoint();
+              //  trangulation.ComputeBackprojected3DPoint();
                 var point3d = trangulation._p3D;
                 var rpoint = _realPointsNorm[i];
 
@@ -475,7 +475,7 @@ namespace UnitTestProject1
             {
                 trangulation._pL = noisedLeft[i];
                 trangulation._pR = noisedRight[i];
-                trangulation.ComputeBackprojected3DPoint();
+               // trangulation.ComputeBackprojected3DPoint();
                 var point3d = trangulation._p3D; // To compare with linear
                 var realPoint = _realPointsNorm[i];
                 var ep3d = ePoints3D[i];
@@ -507,7 +507,7 @@ namespace UnitTestProject1
             trangulation.EpipoleRight = _epi_R;
             trangulation.Fundamental = _F;
 
-            trangulation.ComputeEpilineFitCost(10.0);
+          //  trangulation.ComputeEpilineFitCost(10.0);
         }
 
         public void CreateEpiGeometry_Normalized()

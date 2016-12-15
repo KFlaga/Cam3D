@@ -23,9 +23,7 @@ namespace CamDX
         // For texture-shaders (actual textures are stored in DXShader)
         int[] _textureIndices;
         public int[] TextureIndices { get { return _textureIndices; } }
-        int[] _samplersIndices;
-        public int[] SamplersIndices { get { return _samplersIndices; } }
-        // For texture-shaders (actual illumination info are stored in DXShader)
+        // For light-shaders (actual illumination info are stored in DXShader)
         int _illuminationIndex = -1;
         public int IlluminationIndex { get { return _illuminationIndex; } }
         
@@ -44,9 +42,6 @@ namespace CamDX
             //      <TextureIndices>
             //          <Index value="0"/>
             //      </TextureIndices>
-            //      <SamplerIndices>
-            //          <Index value="0"/>
-            //      </SamplerIndices>
             //      <Options/Flags/>
             // </Pass>
 
@@ -76,19 +71,6 @@ namespace CamDX
                 {
                     _textureIndices[i] = int.Parse(texNode.Attributes["value"].Value);
                     texNode = texNode.NextSibling;
-                }
-            }
-
-            node = passNode.SelectSingleNode("SamplerIndices");
-            if(node != null && node.ChildNodes.Count > 0)
-            {
-                _samplersIndices = new int[node.ChildNodes.Count];
-                var sampNode = node.FirstChild;
-                int i = 0;
-                while(node != null)
-                {
-                    _samplersIndices[i] = int.Parse(sampNode.Attributes["value"].Value);
-                    sampNode = sampNode.NextSibling;
                 }
             }
         }

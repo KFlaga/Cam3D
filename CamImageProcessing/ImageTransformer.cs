@@ -46,34 +46,6 @@ namespace CamImageProcessing
 
         int InterpolationRadius = 1;
 
-        public enum ProjectionMethod
-        {
-            Forward,
-            Backward
-        }
-
-        ProjectionMethod _projMethod;
-        public ProjectionMethod UsedProjectionMethod
-        {
-            get { return _projMethod; }
-            set
-            {
-                _projMethod = value;
-                switch(value)
-                {
-                    case ProjectionMethod.Forward:
-                        // _computeDistance = FindDistance_linear;
-                        break;
-                    case ProjectionMethod.Backward:
-                        //_computeDistance = FindDistance_quadratic;
-                        break;
-                    default:
-                        // _computeDistance = FindDistance_linear;
-                        break;
-                }
-            }
-        }
-
         private IntVector2 _finalSize;
         private IntVector2 _finalTopLeft;
 
@@ -85,124 +57,88 @@ namespace CamImageProcessing
 
         #region FORWARD
 
-        public GrayScaleImage TransfromImageForwards(GrayScaleImage image, bool preserveSize = false)
+        public MaskedImage TransfromImageForwards(IImage image, bool preserveSize = false)
         {
-            GrayScaleImage undistorted = new GrayScaleImage();
-            var influences = FindInfluenceMatrix(image.SizeY, image.SizeX);
+            MaskedImage undistorted;
+            var influences = FindInfluenceMatrix(image.RowCount, image.ColumnCount);
+            Matrix<double>[] matrices = new Matrix<double>[image.ChannelsCount];
 
-            Matrix<double> imageMatrix;
             if(preserveSize)
             {
                 // New image is in old one's coords
-                imageMatrix = new DenseMatrix(image.SizeY, image.SizeX);
+                undistorted = new MaskedImage(image.Clone());
+                for(int i = 0; i < image.ChannelsCount; ++i)
+                {
+                    matrices[i] = new DenseMatrix(image.RowCount, image.ColumnCount);
+                    undistorted.SetMatrix(matrices[i], i);
+                }
+
                 // Bound processing to smaller of images in each dimesions
                 int minX = Math.Max(0, _finalTopLeft.X);
-                int maxX = Math.Min(image.SizeX, _finalSize.X + _finalTopLeft.X);
+                int maxX = Math.Min(image.ColumnCount, _finalSize.X + _finalTopLeft.X);
                 int minY = Math.Max(0, _finalTopLeft.Y);
-                int maxY = Math.Min(image.SizeY, _finalSize.Y + _finalTopLeft.Y);
+                int maxY = Math.Min(image.RowCount, _finalSize.Y + _finalTopLeft.Y);
                 for(int x = minX; x < maxX; ++x)
                 {
                     for(int y = minY; y < maxY; ++y)
                     {
                         double influenceTotal = 0.0;
-                        double intensityTotal = 0.0;
+                        double[] val = new double[image.ChannelsCount];
                         foreach(var inf in influences[y - _finalTopLeft.Y, x - _finalTopLeft.X]) // Move Pu to influence matrix coords
                         {
-                            intensityTotal += image[inf.Yd, inf.Xd] * inf.Influence;
+                            for(int i = 0; i < image.ChannelsCount; ++i)
+                                val[i] += image[inf.Yd, inf.Xd, i] * inf.Influence;
                             influenceTotal += inf.Influence;
                         }
-                        imageMatrix[y, x] = intensityTotal / influenceTotal;
+                        if(influenceTotal > 0.25)
+                        {
+                            for(int i = 0; i < image.ChannelsCount; ++i)
+                                matrices[i].At(y, x, val[i] / influenceTotal);
+                            undistorted.SetMaskAt(y, x, true);
+                        }
+                        else
+                        {
+                            undistorted.SetMaskAt(y, x, false);
+                        }
                     }
                 }
             }
             else
             {
                 // New image is in same coords as influence matrix
-                imageMatrix = new DenseMatrix(_finalSize.Y, _finalSize.X);
+                for(int i = 0; i < image.ChannelsCount; ++i)
+                    matrices[i] = new DenseMatrix(_finalSize.Y, _finalSize.X);
+                IImage img = image.Clone();
+                for(int i = 0; i < image.ChannelsCount; ++i)
+                    img.SetMatrix(matrices[i], i);
+                undistorted = new MaskedImage(image.Clone());
+
                 for(int x = 0; x < _finalSize.X; ++x)
                 {
                     for(int y = 0; y < _finalSize.Y; ++y)
                     {
                         double influenceTotal = 0.0;
-                        double intensityTotal = 0.0;
+                        double[] val = new double[image.ChannelsCount];
                         foreach(var inf in influences[y, x])
                         {
-                            intensityTotal += image[inf.Yd, inf.Xd] * inf.Influence;
+                            for(int i = 0; i < image.ChannelsCount; ++i)
+                                val[i] += image[inf.Yd, inf.Xd, i] * inf.Influence;
                             influenceTotal += inf.Influence;
                         }
-                        imageMatrix[y, x] = intensityTotal / influenceTotal;
-                    }
-                }
-            }
-
-            undistorted.ImageMatrix = imageMatrix;
-
-            return undistorted;
-        }
-
-        public ColorImage TransfromImageForwards(ColorImage image, bool preserveSize = false)
-        {
-            ColorImage undistorted = image;
-            var influences = FindInfluenceMatrix(image.SizeY, image.SizeX);
-
-            Matrix<double> redMatrix, blueMatrix, greenMatrix;
-            if(preserveSize)
-            {
-                // New image is in old one's coords
-                redMatrix = new DenseMatrix(image.SizeY, image.SizeX);
-                blueMatrix = new DenseMatrix(image.SizeY, image.SizeX);
-                greenMatrix = new DenseMatrix(image.SizeY, image.SizeX);
-                // Bound processing to smaller of images in each dimesions
-                int minX = Math.Max(0, _finalTopLeft.X);
-                int maxX = Math.Min(image.SizeX, _finalSize.X + _finalTopLeft.X);
-                int minY = Math.Max(0, _finalTopLeft.Y);
-                int maxY = Math.Min(image.SizeY, _finalSize.Y + _finalTopLeft.Y);
-                for(int x = minX; x < maxX; ++x)
-                {
-                    for(int y = minY; y < maxY; ++y)
-                    {
-                        double influenceTotal = 0.0;
-                        double red = 0.0, blue = 0.0, green = 0.0;
-                        foreach(var inf in influences[y - _finalTopLeft.Y, x - _finalTopLeft.X]) // Move Pu to influence matrix coords
+                        if(influenceTotal > 0.5)
                         {
-                            red += image[RGBChannel.Red][inf.Yd, inf.Xd] * inf.Influence;
-                            blue += image[RGBChannel.Blue][inf.Yd, inf.Xd] * inf.Influence;
-                            green += image[RGBChannel.Green][inf.Yd, inf.Xd] * inf.Influence;
-                            influenceTotal += inf.Influence;
+                            for(int i = 0; i < image.ChannelsCount; ++i)
+                                matrices[i].At(y, x, val[i] / influenceTotal);
+                            undistorted.SetMaskAt(y, x, true);
                         }
-                        redMatrix[y, x] = red / influenceTotal;
-                        blueMatrix[y, x] = blue / influenceTotal;
-                        greenMatrix[y, x] = green / influenceTotal;
-                    }
-                }
-            }
-            else
-            {
-                // New image is in same coords as influence matrix
-                redMatrix = new DenseMatrix(_finalSize.Y, _finalSize.X);
-                blueMatrix = new DenseMatrix(_finalSize.Y, _finalSize.X);
-                greenMatrix = new DenseMatrix(_finalSize.Y, _finalSize.X);
-                for(int x = 0; x < _finalSize.X; ++x)
-                {
-                    for(int y = 0; y < _finalSize.Y; ++y)
-                    {
-                        double influenceTotal = 0.0;
-                        double red = 0.0, blue = 0.0, green = 0.0;
-                        foreach(var inf in influences[y, x])
+                        else
                         {
-                            red += image[RGBChannel.Red][inf.Yd, inf.Xd] * inf.Influence;
-                            blue += image[RGBChannel.Blue][inf.Yd, inf.Xd] * inf.Influence;
-                            green += image[RGBChannel.Green][inf.Yd, inf.Xd] * inf.Influence;
-                            influenceTotal += inf.Influence;
+                            undistorted.SetMaskAt(y, x, false);
                         }
-                        redMatrix.At(y, x, red / influenceTotal);
-                        blueMatrix.At(y, x, blue / influenceTotal);
-                        greenMatrix.At(y, x, green / influenceTotal);
                     }
                 }
             }
 
-            undistorted.ImageMatrix = new Matrix<double>[3] { redMatrix, greenMatrix, blueMatrix };
             return undistorted;
         }
 
@@ -319,112 +255,54 @@ namespace CamImageProcessing
         #endregion FORWARD
         #region BACKWARD
 
-        public GrayScaleImage TransfromImageBackwards(GrayScaleImage image, bool preserveSize = false)
+        public MaskedImage TransfromImageBackwards(IImage image, bool preserveSize = false)
         {
-            GrayScaleImage undistorted = new GrayScaleImage();
-            FindTransformedImageSize(image.SizeY, image.SizeX);
+            MaskedImage undistorted;
+            FindTransformedImageSize(image.RowCount, image.ColumnCount);
 
-            Matrix<double> imageMatrix;
+            Matrix<double>[] matrices = new Matrix<double>[image.ChannelsCount];
             if(preserveSize)
             {
-                imageMatrix = new DenseMatrix(image.SizeY, image.SizeX);
-            }
-            else
-            {
-                imageMatrix = new DenseMatrix(_finalSize.Y, _finalSize.X);
-            }
-
-            int R = InterpolationRadius;
-            int R21 = R * 2 + 1;
-            for(int x = 0; x < imageMatrix.ColumnCount; ++x)
-            {
-                for(int y = 0; y < imageMatrix.RowCount; ++y)
+                undistorted = new MaskedImage(image.Clone());
+                for(int i = 0; i < image.ChannelsCount; ++i)
                 {
-                    // Cast point from new image to old one
-                    Vector2 oldCoords = Transformation.TransformPointBackwards(new Vector2(y, x));
-                    IntVector2 oldPixel = new IntVector2(oldCoords);
-                    // Check if point is in old image range
-                    if(oldCoords.X < 0 || oldCoords.X > image.SizeX ||
-                        oldCoords.Y < 0 || oldCoords.Y > image.SizeY)
-                    {
-                        // Point out of range, so set to black
-                        imageMatrix.At(y, x, 0.0);
-                    }
-                    else
-                    {
-                        // Interpolate value from patch in old image
-                        double[,] influence = new double[R21, R21];
-                        double totalInf = 0;
-                        // For each pixel in neighbourhood find its distance and influence of Pu on it
-                        for(int dx = -R; dx <= R; ++dx)
-                        {
-                            for(int dy = -R; dy <= R; ++dy)
-                            {
-                                double distance = _computeDistance(oldCoords, oldPixel.X + dx, oldPixel.Y + dy);
-                                influence[dx + R, dy + R] = 1.0 / distance;
-                                totalInf += influence[dx + R, dy + R];
-                            }
-                        }
-                        double infScale = 1.0 / totalInf; // Scale influence, so that its sum over all pixels in radius is 1
-                        double color = 0.0;
-                        for(int dx = -R; dx <= R; ++dx)
-                        {
-                            for(int dy = -R; dy <= R; ++dy)
-                            {
-                                // Store color for new point considering influence from neighbours
-                                color += image[y, x] * influence[dx + R, dy + R] * infScale;
-                            }
-                        }
-                        imageMatrix.At(y, x, color);
-                    }
+                    matrices[i] = new DenseMatrix(image.RowCount, image.ColumnCount);
+                    undistorted.SetMatrix(matrices[i], i);
                 }
             }
-
-            undistorted.ImageMatrix = imageMatrix;
-
-            return undistorted;
-        }
-
-        public ColorImage TransfromImageBackwards(ColorImage image, bool preserveSize = false)
-        {
-            ColorImage undistorted = new ColorImage();
-            FindTransformedImageSize(image.SizeY, image.SizeX);
-
-            Matrix<double> redMatrix;
-            Matrix<double> blueMatrix;
-            Matrix<double> greenMatrix;
-            if(preserveSize)
-            {
-                redMatrix = new DenseMatrix(image.SizeY, image.SizeX);
-                blueMatrix = new DenseMatrix(image.SizeY, image.SizeX);
-                greenMatrix = new DenseMatrix(image.SizeY, image.SizeX);
-            }
             else
             {
-                redMatrix = new DenseMatrix(_finalSize.Y, _finalSize.X);
-                blueMatrix = new DenseMatrix(_finalSize.Y, _finalSize.X);
-                greenMatrix = new DenseMatrix(_finalSize.Y, _finalSize.X);
+                IImage img = image.Clone();
+                for(int i = 0; i < image.ChannelsCount; ++i)
+                {
+                    matrices[i] = new DenseMatrix(_finalSize.Y, _finalSize.X);
+                    img.SetMatrix(matrices[i], i);
+                }
+                undistorted = new MaskedImage(image.Clone());
             }
 
             int R = InterpolationRadius;
             int R21 = R * 2 + 1;
-            for(int x = 0; x < redMatrix.ColumnCount; ++x)
+            for(int x = 0; x < matrices[0].ColumnCount; ++x)
             {
-                for(int y = 0; y < redMatrix.RowCount; ++y)
+                for(int y = 0; y < matrices[0].RowCount; ++y)
                 {
                     // Cast point from new image to old one
                     Vector2 oldCoords = Transformation.TransformPointBackwards(new Vector2(x: x, y: y));
                     Vector2 aa = Transformation.TransformPointForwards(oldCoords);
 
                     IntVector2 oldPixel = new IntVector2(oldCoords);
-                    // Check if point is in old image range
-                    if(oldCoords.X < 0 || oldCoords.X > image.SizeX ||
-                        oldCoords.Y < 0 || oldCoords.Y > image.SizeY)
+                    // Check if point is in old image range or points to undefined point
+                    if(oldCoords.X < 0 || oldCoords.X > image.ColumnCount ||
+                        oldCoords.Y < 0 || oldCoords.Y > image.RowCount ||
+                        image.HaveValueAt(oldPixel.Y, oldPixel.X) == false)
                     {
                         // Point out of range, so set to black
-                        redMatrix.At(y, x, 0.0);
-                        blueMatrix.At(y, x, 0.0);
-                        greenMatrix.At(y, x, 0.0);
+                        for(int i = 0; i < image.ChannelsCount; ++i)
+                        {
+                            matrices[i].At(y, x, 0.0);
+                            undistorted.SetMaskAt(y, x, false);
+                        }
                     }
                     else
                     {
@@ -442,31 +320,28 @@ namespace CamImageProcessing
                             }
                         }
                         double infScale = 1.0 / totalInf; // Scale influence, so that its sum over all pixels in radius is 1
-                        double red = 0.0, green = 0.0, blue = 0.0;
+                        double[] val = new double[image.ChannelsCount];
                         for(int dx = -R; dx <= R; ++dx)
                         {
                             for(int dy = -R; dy <= R; ++dy)
                             {
                                 double inf = influence[dx + R, dy + R] * infScale;
                                 // Store color for new point considering influence from neighbours
-                                int ix = Math.Max(0, Math.Min(image.SizeX - 1, oldPixel.X + dx));
-                                int iy = Math.Max(0, Math.Min(image.SizeY - 1, oldPixel.Y + dy));
-
-                                red += image[iy, ix, RGBChannel.Red] * inf;
-                                green += image[iy, ix, RGBChannel.Green] * inf;
-                                blue += image[iy, ix, RGBChannel.Blue] * inf;
+                                int ix = Math.Max(0, Math.Min(image.ColumnCount - 1, oldPixel.X + dx));
+                                int iy = Math.Max(0, Math.Min(image.RowCount - 1, oldPixel.Y + dy));
+                                for(int i = 0; i < image.ChannelsCount; ++i)
+                                {
+                                    val[i] += image[iy, ix, i] * inf;
+                                }
                             }
                         }
-                        redMatrix.At(y, x, red);
-                        greenMatrix.At(y, x, green);
-                        blueMatrix.At(y, x, blue);
+                        for(int i = 0; i < image.ChannelsCount; ++i)
+                        {
+                            matrices[i].At(y, x, val[i]);
+                        }
                     }
                 }
             }
-
-            undistorted[RGBChannel.Red] = redMatrix;
-            undistorted[RGBChannel.Green] = greenMatrix;
-            undistorted[RGBChannel.Blue] = blueMatrix;
 
             return undistorted;
         }

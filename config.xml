@@ -42,4 +42,10 @@
 		<ClassName>MatchingModule</ClassName>
 		<ModuleName>Image Matching Module</ModuleName>
 	</Module>
+	<Module>
+		<Assembly>d:\copy_c\docs\Documents\Visual Studio 2012\Projects\Cam3D\RectificationModule\bin\Debug\RectificationModule.dll</Assembly>
+		<Namespace>RectificationModule</Namespace>
+		<ClassName>RectModule</ClassName>
+		<ModuleName>Rectification Module</ModuleName>
+	</Module>
 </Modules>

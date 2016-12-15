@@ -11,11 +11,12 @@ using static CamCore.MatrixExtensions;
 namespace CamImageProcessing
 {
     [DebuggerTypeProxy(typeof(GrayImageDebugView))]
-    public class GrayScaleImage
+    public class GrayScaleImage : IImage
     {
         public Matrix<double> ImageMatrix { get; set; }
-        public int SizeX { get { return ImageMatrix.ColumnCount; } }
-        public int SizeY { get { return ImageMatrix.RowCount; } }
+        public int ColumnCount { get { return ImageMatrix.ColumnCount; } }
+        public int RowCount { get { return ImageMatrix.RowCount; } }
+        public int ChannelsCount { get { return 1; } }
 
         // Bitmap data saved when image created from bitmapsource
         public double DpiX { get; set; }
@@ -25,22 +26,61 @@ namespace CamImageProcessing
         {
             get
             {
-                return ImageMatrix[y, x];
+                return ImageMatrix.At(y, x);
             }
             set
             {
-                ImageMatrix[y, x] = value;
+                ImageMatrix.At(y, x, value);
             }
+        }
+
+        public double this[int y, int x, int channel]
+        {
+            get
+            {
+                return this[y, x];
+            }
+            set
+            {
+                this[y, x] = value;
+            }
+        }
+
+        public bool HaveValueAt(int y, int x) { return true; }
+
+        public Matrix<double> GetMatrix(int channel)
+        {
+            return ImageMatrix;
+        }
+
+        public Matrix<double> GetMatrix()
+        {
+            return ImageMatrix;
+        }
+
+        public void SetMatrix(Matrix<double> matrix, int channel)
+        {
+            ImageMatrix = matrix;
+        }
+
+        public IImage Clone()
+        {
+            return new GrayScaleImage() { ImageMatrix = ImageMatrix.Clone() };
+        }
+
+        object ICloneable.Clone()
+        {
+            return new GrayScaleImage() { ImageMatrix = ImageMatrix.Clone() };
         }
 
         public void FromColorImage(ColorImage cimage)
         {
-            ImageMatrix = new DenseMatrix(cimage.SizeY, cimage.SizeX);
+            ImageMatrix = new DenseMatrix(cimage.RowCount, cimage.ColumnCount);
             int x, y;
 
-            for(x = 0; x < SizeX; ++x)
+            for(x = 0; x < ColumnCount; ++x)
             {
-                for(y = 0; y < SizeY; ++y)
+                for(y = 0; y < RowCount; ++y)
                 {
                     ImageMatrix[y, x] = (cimage[y, x, 0] +
                         cimage[y, x, 1] + cimage[y, x, 2]) / 3;
@@ -117,18 +157,18 @@ namespace CamImageProcessing
 
         public BitmapSource ToBitmapSource()
         {
-            int stride = SizeX * sizeof(float);
-            float[] data = new float[SizeY * SizeX];
+            int stride = ColumnCount * sizeof(float);
+            float[] data = new float[RowCount * ColumnCount];
 
-            for(int imgy = 0; imgy < SizeY; ++imgy)
+            for(int imgy = 0; imgy < RowCount; ++imgy)
             {
-                for(int imgx = 0; imgx < SizeX; ++imgx)
+                for(int imgx = 0; imgx < ColumnCount; ++imgx)
                 {
-                    data[imgy * SizeX + imgx] = (float)ImageMatrix[imgy, imgx];
+                    data[imgy * ColumnCount + imgx] = (float)ImageMatrix[imgy, imgx];
                 }
             }
 
-            return BitmapSource.Create(SizeX, SizeY, DpiX, DpiY,
+            return BitmapSource.Create(ColumnCount, RowCount, DpiX, DpiY,
                 PixelFormats.Gray32Float, null, data, stride);
         }
 
@@ -141,11 +181,11 @@ namespace CamImageProcessing
             {
                 for(int imgx = 0; imgx < area.Width; ++imgx)
                 {
-                    data[imgy * SizeX + imgx] = (float)ImageMatrix[area.Y + imgy, area.X + imgx];
+                    data[imgy * ColumnCount + imgx] = (float)ImageMatrix[area.Y + imgy, area.X + imgx];
                 }
             }
 
-            return BitmapSource.Create(SizeX, SizeY, DpiX, DpiY, PixelFormats.Gray32Float, null,data, stride);
+            return BitmapSource.Create(ColumnCount, RowCount, DpiX, DpiY, PixelFormats.Gray32Float, null,data, stride);
         }
 
         internal class GrayImageDebugView
@@ -169,7 +209,7 @@ namespace CamImageProcessing
             {
                 get
                 {
-                    return _image.SizeY;
+                    return _image.RowCount;
                 }
             }
 
@@ -177,7 +217,7 @@ namespace CamImageProcessing
             {
                 get
                 {
-                    return _image.SizeX;
+                    return _image.ColumnCount;
                 }
             }
 

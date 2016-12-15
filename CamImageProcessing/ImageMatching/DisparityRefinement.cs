@@ -13,8 +13,8 @@ namespace CamImageProcessing.ImageMatching
         public DisparityMap MapLeft { get; set; } // Also used if only one, fused map is used 
         public DisparityMap MapRight { get; set; }
 
-        public Matrix<double> ImageLeft { get; set; } // Also used if only one image is used 
-        public Matrix<double> ImageRight { get; set; }
+        public IImage ImageLeft { get; set; } // Also used if only one image is used 
+        public IImage ImageRight { get; set; }
 
         public virtual void Init() { }
         public abstract void RefineMaps();
@@ -35,9 +35,10 @@ namespace CamImageProcessing.ImageMatching
 
         }
 
+        public abstract string Name { get; }
         public override string ToString()
         {
-            return "Disparity Refinement - Base";
+            return Name;
         }
     }
 }

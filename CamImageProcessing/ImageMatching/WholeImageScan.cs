@@ -15,7 +15,7 @@ namespace CamImageProcessing.ImageMatching
         public int MaxDisp_NegX { get; set; }
         public int MaxDisp_PosY { get; set; }
         public int MaxDisp_NegY { get; set; }
-        
+
         public override void ComputeMatchingCosts()
         {
             IntVector2 pm = new IntVector2();
@@ -32,23 +32,26 @@ namespace CamImageProcessing.ImageMatching
 
                 for(int r = 0; r < ImageBase.RowCount; ++r)
                 {
-                    Vector2 pb_d = new Vector2(x: c, y: r);
                     CurrentPixel = new IntVector2(x: c, y: r);
-
-                    int ymin = Math.Max(0, r + mindx);
-                    int ymax = Math.Min(ImageBase.RowCount, r + maxdy);
-
-                    for(int xm = xmin; xm < xmax; ++xm)
+                    if(ImageBase.HaveValueAt(r, c))
                     {
-                        for(int ym = ymin; ym < ymax; ++ym)
+                        int ymin = Math.Max(0, r + mindx);
+                        int ymax = Math.Min(ImageBase.RowCount, r + maxdy);
+
+                        for(int xm = xmin; xm < xmax; ++xm)
                         {
-                            pm.X = xm;
-                            pm.Y = ym;
-                            double cost = CostComp.GetCost_Border(CurrentPixel, pm);
-                            DispComp.StoreDisparity(CurrentPixel, pm, cost);
+                            for(int ym = ymin; ym < ymax; ++ym)
+                            {
+                                if(ImageMatched.HaveValueAt(ym, xm))
+                                {
+                                    pm.X = xm;
+                                    pm.Y = ym;
+                                    double cost = CostComp.GetCost_Border(CurrentPixel, pm);
+                                    DispComp.StoreDisparity(CurrentPixel, pm, cost);
+                                }
+                            }
                         }
                     }
-
                     DispComp.FinalizeForPixel(CurrentPixel);
                 }
             }
@@ -61,17 +64,20 @@ namespace CamImageProcessing.ImageMatching
             {
                 for(int r = 0; r < ImageBase.RowCount; ++r)
                 {
-                    Vector2 pb_d = new Vector2(x: c, y: r);
                     CurrentPixel = new IntVector2(x: c, y: r);
-
-                    for(int xm = 0; xm < ImageMatched.ColumnCount; ++xm)
+                    if(ImageBase.HaveValueAt(r, c))
                     {
-                        pm.X = xm;
-                        pm.Y = r;
-                        double cost = CostComp.GetCost_Border(CurrentPixel, pm);
-                        DispComp.StoreDisparity(CurrentPixel, pm, cost);
+                        for(int xm = 0; xm < ImageMatched.ColumnCount; ++xm)
+                        {
+                            if(ImageMatched.HaveValueAt(r, xm))
+                            {
+                                pm.X = xm;
+                                pm.Y = r;
+                                double cost = CostComp.GetCost_Border(CurrentPixel, pm);
+                                DispComp.StoreDisparity(CurrentPixel, pm, cost);
+                            }
+                        }
                     }
-
                     DispComp.FinalizeForPixel(CurrentPixel);
                 }
             }
@@ -125,9 +131,13 @@ namespace CamImageProcessing.ImageMatching
             DispComp.UpdateParameters();
         }
 
-        public override string ToString()
+
+        public override string Name
         {
-            return "Whole Image Scan Cost Aggregator";
+            get
+            {
+                return "Whole Image Scan Cost Aggregator";
+            }
         }
     }
 }

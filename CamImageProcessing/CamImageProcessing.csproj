@@ -55,8 +55,8 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="MathNet.Numerics, Version=3.7.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MathNet.Numerics.3.7.0\lib\net40\MathNet.Numerics.dll</HintPath>
+    <Reference Include="MathNet.Numerics, Version=3.13.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MathNet.Numerics.3.13.1\lib\net40\MathNet.Numerics.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="PresentationCore" />
@@ -76,24 +76,31 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AreaBasedCorrelationImageMatcher.cs" />
+    <Compile Include="AnisotropicDiffusionFilter.cs" />
+    <Compile Include="Features\AreaBasedCorrelationImageMatcher.cs" />
     <Compile Include="BinarizeFilter.cs" />
-    <Compile Include="CalibratedAreaBasedCorrelationImageMatcher.cs" />
-    <Compile Include="CalibratedImageMatcher.cs" />
+    <Compile Include="Features\CalibratedAreaBasedCorrelationImageMatcher.cs" />
+    <Compile Include="Features\CalibratedImageMatcher.cs" />
+    <Compile Include="ClosePointsSegmentation.cs" />
     <Compile Include="ColorImage.cs" />
-    <Compile Include="CornerSUSANDetector.cs" />
-    <Compile Include="FeaturesDetector.cs" />
-    <Compile Include="FeaturesMatcher.cs" />
+    <Compile Include="Features\CensusFeatureMatcher.cs" />
+    <Compile Include="Features\FeatureHarrisStephensDetector.cs" />
+    <Compile Include="Features\FeatureSUSANDetector.cs" />
+    <Compile Include="Features\FeaturesDetector.cs" />
+    <Compile Include="Features\FeaturesMatcher.cs" />
+    <Compile Include="Features\MomentsFeatureMatcher.cs" />
     <Compile Include="GaussFilter.cs" />
     <Compile Include="GrayScaleImage.cs" />
     <Compile Include="HistogramOperations.cs" />
     <Compile Include="HSIImage.cs" />
+    <Compile Include="IImage.cs" />
+    <Compile Include="ImageMatching\AnisotopicDiffusionRefiner.cs" />
     <Compile Include="ImageMatching\CrossCheckRefiner.cs" />
     <Compile Include="ImageMatching\DisparityComputer.cs" />
     <Compile Include="ImageMatching\DisparityRefinement.cs" />
-    <Compile Include="ImageMatching\DisparityRefinementChain.cs" />
     <Compile Include="ImageMatching\ImageMatchingAlgorithm.cs" />
     <Compile Include="ImageMatching\InterpolationDisparityComputer.cs" />
+    <Compile Include="ImageMatching\InvalidateLowConfidenceRefiner.cs" />
     <Compile Include="ImageMatching\LimitRangeRefiner.cs" />
     <Compile Include="ImageMatching\MatchConfidenceComputer.cs" />
     <Compile Include="ImageMatching\MedianFilterRefiner.cs" />
@@ -103,6 +110,7 @@
     <Compile Include="ImageMatching\WholeImageScan.cs" />
     <Compile Include="ImageMatching\WTADisparityComputer.cs" />
     <Compile Include="ImageRectification.cs" />
+    <Compile Include="ImageRectification_FusielloCalibrated.cs" />
     <Compile Include="ImageRectification_FussieloUncalibrated.cs" />
     <Compile Include="ImageResampler.cs" />
     <Compile Include="ImageFilter.cs" />
@@ -116,28 +124,29 @@
     <Compile Include="ImageProcessingUtils.cs" />
     <Compile Include="ImageRectification_ZhangLoop.cs" />
     <Compile Include="ImageSegmentation.cs" />
-    <Compile Include="ImagesMatcher.cs" />
+    <Compile Include="Features\ImagesMatcher.cs" />
     <Compile Include="ImageTransformation.cs" />
     <Compile Include="ImageTransformer.cs" />
-    <Compile Include="LoGCorrelationFeaturesMatcher.cs" />
+    <Compile Include="Features\LoGCorrelationFeaturesMatcher.cs" />
     <Compile Include="LoGFilter.cs" />
     <Compile Include="ImageMatching\MatchingCostComputer.cs" />
     <Compile Include="MeanShiftSegmentation.cs" />
     <Compile Include="MedianFilter.cs" />
     <Compile Include="ImageMatching\MutualInformationCostComputer.cs" />
     <Compile Include="ImageMatching\NormalisedCrossCorrelationCostComputer.cs" />
-    <Compile Include="Patch.cs" />
+    <Compile Include="Features\Patch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ImageMatching\SeperateChannelCostComputer.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
+    <Compile Include="MaskedImage.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CamCore\CamCore.csproj">
       <Project>{30ab90ed-775c-49e5-96a8-b419d08d2204}</Project>
       <Name>CamCore</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

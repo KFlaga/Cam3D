@@ -26,15 +26,13 @@ namespace CamImageProcessing.ImageMatching
                 {
                     for(int c = 0; c < MapLeft.ColumnCount; ++c)
                     {
-                        if(MapLeft[r, c].DX > MaxLeftDisparity_X || 
-                           MapLeft[r, c].DX < MinLeftDisparity_X ||
-                           MapLeft[r, c].DY > MaxLeftDisparity_Y ||
-                           MapLeft[r, c].DY < MinLeftDisparity_Y)
+                        Disparity d = MapLeft[r, c];
+                        if(d.DX > MaxLeftDisparity_X ||
+                           d.DX < MinLeftDisparity_X ||
+                           d.DY > MaxLeftDisparity_Y ||
+                           d.DY < MinLeftDisparity_Y)
                         {
-                            MapLeft.Set(r, c, new Disparity()
-                            {
-                                Flags = (int)DisparityFlags.Invalid
-                            });
+                            MapLeft[r, c].Flags = (int)DisparityFlags.Invalid;
                         }
                     }
                 }
@@ -46,15 +44,13 @@ namespace CamImageProcessing.ImageMatching
                 {
                     for(int c = 0; c < MapRight.ColumnCount; ++c)
                     {
-                        if(MapRight[r, c].DX > MaxRightDisparity_X ||
-                           MapRight[r, c].DX < MinRightDisparity_X ||
-                           MapRight[r, c].DY > MaxRightDisparity_Y ||
-                           MapRight[r, c].DY < MinRightDisparity_Y)
+                        Disparity d = MapRight[r, c];
+                        if(d.DX > MaxRightDisparity_X ||
+                           d.DX < MinRightDisparity_X ||
+                           d.DY > MaxRightDisparity_Y ||
+                           d.DY < MinRightDisparity_Y)
                         {
-                            MapRight.Set(r, c, new Disparity()
-                            {
-                                Flags = (int)DisparityFlags.Invalid
-                            });
+                            MapRight[r, c].Flags = (int)DisparityFlags.Invalid;
                         }
                     }
                 }
@@ -112,9 +108,12 @@ namespace CamImageProcessing.ImageMatching
             MinRightDisparity_Y = AlgorithmParameter.FindValue<int>("MIN_RIGHT_Y", Parameters);
         }
 
-        public override string ToString()
+        public override string Name
         {
-            return "Limit Disparity Range";
+            get
+            {
+                return "Limit Disparity Range";
+            }
         }
     }
 }

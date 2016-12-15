@@ -40,7 +40,7 @@ namespace CamImageProcessing
 
     public class RectificationTransformation : IImageTransformation
     {
-        public ImageRectification_ZhangLoop Rectifier { get; set; }
+        public ImageRectification Rectifier { get; set; }
         
         public enum ImageIndex
         {

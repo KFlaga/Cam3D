@@ -430,6 +430,51 @@ namespace CamCore
                 DistortionModelRight = model;
         }
 
+        public Matrix<double> _rectificationLeft;
+        public Matrix<double> RectificationLeft
+        {
+            get { return _rectificationLeft; }
+            set
+            {
+                _rectificationLeft = value;
+                NotifyPropertyChanged("RectificationLeft");
+            }
+        }
+
+        public Matrix<double> _rectificationRight;
+        public Matrix<double> RectificationRight
+        {
+            get { return _rectificationRight; }
+            set
+            {
+                _rectificationRight = value;
+                NotifyPropertyChanged("RectificationRight");
+            }
+        }
+
+        public Matrix<double> _rectificationInverseLeft;
+        public Matrix<double> RectificationInverseLeft
+        {
+            get { return _rectificationInverseLeft; }
+            set
+            {
+                _rectificationInverseLeft = value;
+                NotifyPropertyChanged("RectificationInverseLeft");
+            }
+        }
+
+        public Matrix<double> _rectificationInverseRight;
+        public Matrix<double> RectificationInverseRight
+        {
+            get { return _rectificationInverseRight; }
+            set
+            {
+                _rectificationInverseRight = value;
+                NotifyPropertyChanged("RectificationInverseRight");
+            }
+        }
+
+
         #region INotifyPropertyChanged
 
         public event PropertyChangedEventHandler PropertyChanged;

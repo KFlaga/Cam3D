@@ -24,6 +24,9 @@
                 <ListBoxItem HorizontalContentAlignment="Stretch">
                     <Button x:Name="_butLoGFilter" Click="_butLoGFilter_Click">LoG Filter</Button>
                 </ListBoxItem>
+                <ListBoxItem HorizontalContentAlignment="Stretch">
+                    <Button x:Name="_butDiffusionFilter" Click="_butDiffusionFilter_Click">Diffusion Filter</Button>
+                </ListBoxItem>
                 <Rectangle Height="2" Fill="Black" Margin="0,0,0,0"/>
                 <ListBoxItem HorizontalContentAlignment="Stretch">
                     <Button x:Name="_butComputeHistogram" Click="_butComputeHistogram_Click">Compute Histogram</Button>

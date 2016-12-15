@@ -15,10 +15,10 @@ namespace Image3DModule
 {
     class Image3DWindow : DX11Window
     {
-        DXCamera _camera = null;
-        DXScene _scene = null;
+        public DXCamera Camera { get; protected set; }
+        public DXScene Scene { get; protected set; }
+        public DXResourceManager ResourcesManager { get; protected set; }
 
-        DXResourceManager _resourcesManager;
         List<DXCube> _cubePointsMap = new List<DXCube>();
 
         public Image3DWindow()
@@ -36,7 +36,7 @@ namespace Image3DModule
         public void AddPointCube(SharpDX.Vector3 point, Color4 color)
         {
             DXCube cube = new DXCube(_renderer.DxDevice, new SharpDX.Vector3(1.0f), new SharpDX.Vector3());
-            cube.Shader = _resourcesManager.ShaderManager.GetShader("ColorShader_NoLight");
+            cube.Shader = ResourcesManager.ShaderManager.GetShader("ColorShader_NoLight");
 
             for(int i = 0; i < 8; ++i)
             {
@@ -46,7 +46,7 @@ namespace Image3DModule
 
             _cubePointsMap.Add(cube);
 
-            DXSceneNode node = _scene.RootNode.CreateChildNode();
+            DXSceneNode node = Scene.RootNode.CreateChildNode();
             node.Position = point;
             node.Orientation = Quaternion.RotationAxis(SharpDX.Vector3.UnitY, 0.0f);
             node.UpdateTransfromMatrix();
@@ -82,9 +82,9 @@ namespace Image3DModule
         protected override void UpdateSize()
         {
             base.UpdateSize();
-            if (_camera != null)
+            if (Camera != null)
             {
-                _camera.Aspect = (float)(this.ActualWidth / this.ActualHeight);
+                Camera.Aspect = (float)(this.ActualWidth / this.ActualHeight);
             }
         }
 
@@ -94,12 +94,12 @@ namespace Image3DModule
             base.Show();
 
             // Create camera
-            _camera = new CamDX.DXCamera();
-            _camera.FarBound = 2000.0f;
-            _camera.NearBound = 1.0f;
-            _camera.Position = new SharpDX.Vector3(0.0f, 000.0f, 300.0f);
-            _camera.LookAt = new SharpDX.Vector3(0.0f, 0.0f, 0.0f);
-            // _camera.UpDir = SharpDX.Vector3.Down;
+            Camera = new CamDX.DXCamera();
+            Camera.FarBound = 2000.0f;
+            Camera.NearBound = 1.0f;
+            Camera.Position = new SharpDX.Vector3(0.0f, 000.0f, 300.0f);
+            Camera.LookAt = new SharpDX.Vector3(0.0f, 0.0f, 0.0f);
+            Camera.UpDir = SharpDX.Vector3.Up;
 
             // Create renderer for window
             _renderer = new DXRenderer(WinHanldle, new Size2(800, 600));
@@ -109,16 +109,16 @@ namespace Image3DModule
             XmlDocument resDoc = new XmlDocument();
             resDoc.Load("resources.xml");
             XmlNode dxResourcesNode = resDoc.SelectSingleNode("//DXResources");
-            _resourcesManager = new DXResourceManager(device, dxResourcesNode);
+            ResourcesManager = new DXResourceManager(device, dxResourcesNode);
 
             // Create scene
-            _scene = new CamDX.DXScene(_renderer.DxDevice);
-            _scene.GlobalLights = new GlobalLightsData()
+            Scene = new CamDX.DXScene(_renderer.DxDevice);
+            Scene.GlobalLights = new GlobalLightsData()
             {
                 Ambient = new Color4(1.0f)
             };
-            _renderer.CurrentScene = _scene;
-            _scene.CurrentCamera = _camera;
+            _renderer.CurrentScene = Scene;
+            Scene.CurrentCamera = Camera;
 
             base.Hide();
         }
@@ -144,7 +144,7 @@ namespace Image3DModule
                 cube.Dispose();
             }
             _cubePointsMap.Clear();
-            _scene.Dispose();
+            Scene.Dispose();
             Renderer.Dispose();
             base.Close();
             _closingInternal = false;
@@ -159,7 +159,7 @@ namespace Image3DModule
                     cube.Dispose();
                 }
                 _cubePointsMap.Clear();
-                _scene.Dispose();
+                Scene.Dispose();
                 Renderer.Dispose();
             }
         }
@@ -172,42 +172,62 @@ namespace Image3DModule
             {
                 ctrlDown = true;
             }
+            else if(e.Key == Key.E)
+            {
+                Camera.Position = new SharpDX.Vector3(Camera.Position.X, Camera.Position.Y, - Camera.Position.Z);
+            }
             if (!ctrlDown)
             { 
                 if (e.Key == Key.Up)
                 {
-                    _camera.MoveZ(10f);
+                    Camera.MoveZ(10f);
                 }
                 else if (e.Key == Key.Down)
                 {
-                    _camera.MoveZ(-10f);
+                    Camera.MoveZ(-10f);
                 }
                 else if (e.Key == Key.Left)
                 {
-                    _camera.MoveX(-10f);
+                    Camera.MoveX(-10f);
                 }
                 else if (e.Key == Key.Right)
                 {
-                    _camera.MoveX(10f);
+                    Camera.MoveX(10f);
+                }
+                else if(e.Key == Key.Z)
+                {
+                    Camera.MoveY(-10f);
+                }
+                else if(e.Key == Key.X)
+                {
+                    Camera.MoveY(10f);
                 }
             }
             else
             {
                 if (e.Key == Key.Up)
                 {
-                    _camera.RotateY(-(float)Math.PI / 90);
+                    Camera.RotateY(-(float)Math.PI / 90);
                 }
                 else if (e.Key == Key.Down)
                 {
-                    _camera.RotateY((float)Math.PI / 90);
+                    Camera.RotateY((float)Math.PI / 90);
                 }
                 else if (e.Key == Key.Left)
                 {
-                    _camera.RotateX(-(float)Math.PI / 90);
+                    Camera.RotateX(-(float)Math.PI / 90);
                 }
                 else if (e.Key == Key.Right)
                 {
-                    _camera.RotateX((float)Math.PI / 90);
+                    Camera.RotateX((float)Math.PI / 90);
+                }
+                else if(e.Key == Key.Z)
+                {
+                    Camera.RotateZ(-(float)Math.PI / 90);
+                }
+                else if(e.Key == Key.X)
+                {
+                    Camera.RotateZ(-(float)Math.PI / 90);
                 }
             }
         }

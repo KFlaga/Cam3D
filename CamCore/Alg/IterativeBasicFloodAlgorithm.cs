@@ -33,7 +33,7 @@ namespace CamCore
                     FillAction(point.Y - 1, point.X);
                     _pointStack.Push(new Point2D(y : point.Y - 1, x : point.X));
                 }
-                if(point.Y + 1 < Image.RowCount && FillCondition(point.Y + 1, point.X))
+                if(point.Y + 1 < ImageHeight && FillCondition(point.Y + 1, point.X))
                 {
                     FillAction(point.Y + 1, point.X);
                     _pointStack.Push(new Point2D(y: point.Y + 1, x: point.X));
@@ -43,7 +43,7 @@ namespace CamCore
                     FillAction(point.Y, point.X - 1);
                     _pointStack.Push(new Point2D(y: point.Y, x: point.X - 1));
                 }
-                if(point.X + 1 < Image.ColumnCount && FillCondition(point.Y, point.X + 1))
+                if(point.X + 1 < ImageWidth && FillCondition(point.Y, point.X + 1))
                 {
                     FillAction(point.Y, point.X + 1);
                     _pointStack.Push(new Point2D(y: point.Y, x: point.X + 1));
@@ -81,7 +81,7 @@ namespace CamCore
                     }
                     _pointStack.Push(new Point2D(point.Y - 1, point.X));
                 }
-                if(point.Y + 1 < Image.RowCount && FillCondition(point.Y + 1, point.X))
+                if(point.Y + 1 < ImageHeight && FillCondition(point.Y + 1, point.X))
                 {
                     if(SearchCondition(point.Y + 1, point.X) == true)
                     {
@@ -101,7 +101,7 @@ namespace CamCore
                     }
                     _pointStack.Push(new Point2D(point.Y, point.X - 1));
                 }
-                if(point.X + 1 < Image.ColumnCount && FillCondition(point.Y, point.X + 1))
+                if(point.X + 1 < ImageWidth && FillCondition(point.Y, point.X + 1))
                 {
                     if(SearchCondition(point.Y, point.X + 1) == true)
                     {

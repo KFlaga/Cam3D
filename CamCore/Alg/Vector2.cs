@@ -355,5 +355,32 @@ namespace CamCore
         {
             return "X: " + X + ", Y: " + Y;
         }
+
+        public XmlNode CreateXmlNode(XmlDocument xmlDoc, string nodeName = "IntVector2")
+        {
+            XmlNode node = xmlDoc.CreateElement(nodeName);
+
+            var attX = xmlDoc.CreateAttribute("X");
+            attX.Value = X.ToString();
+            var attY = xmlDoc.CreateAttribute("Y");
+            attY.Value = Y.ToString();
+            node.Attributes.Append(attX);
+            node.Attributes.Append(attY);
+
+            return node;
+        }
+
+        public void ReadFromXmlNode(XmlNode node)
+        {
+            X = int.Parse(node.Attributes["X"]?.Value);
+            Y = int.Parse(node.Attributes["Y"]?.Value);
+        }
+
+        public static IntVector2 CreateFromXmlNode(XmlNode node)
+        {
+            return new IntVector2(
+                int.Parse(node.Attributes["X"]?.Value),
+                int.Parse(node.Attributes["Y"]?.Value));
+        }
     }
 }

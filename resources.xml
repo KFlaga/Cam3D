@@ -5,6 +5,7 @@
 		<Shaders>
 			<ShaderFile>shaders/ColorShader_NoLight.xml</ShaderFile>
 			<ShaderFile>shaders/ColorShader_WithLight.xml</ShaderFile>
+			<ShaderFile>shaders/TextureShader_NoLight.xml</ShaderFile>
 		</Shaders>
 	</DXResources>
 </Resources>

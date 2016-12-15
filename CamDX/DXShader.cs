@@ -28,16 +28,14 @@ namespace CamDX
         List<VertexShader> _vertexShaders = new List<VertexShader>();
         List<PixelShader> _pixelShaders = new List<PixelShader>();
         List<InputLayout> _inputLayouts = new List<InputLayout>();
-        List<ShaderResourceView> _textureResources = new List<ShaderResourceView>();
-        List<SamplerState> _samplers = new List<SamplerState>();
+        List<DXTexture> _textures = new List<DXTexture>();
         List<MaterialIlluminationData> _illumiantionDatas = new List<MaterialIlluminationData>();
 
         public DXShaderPass CurrentPass { get { return _currentPass; } }
         public List<VertexShader> VertexShaders { get { return _vertexShaders; } }
         public List<PixelShader> PixelShaders { get { return _pixelShaders; } }
         public List<InputLayout> InputLayouts { get { return _inputLayouts; } }
-        public List<ShaderResourceView> TextureResources { get { return _textureResources; } }
-        public List<SamplerState> Samplers { get { return _samplers; } }
+        public List<DXTexture> Textures { get { return _textures; } }
         public List<MaterialIlluminationData> IllumiantionDatas { get { return _illumiantionDatas; } }
 
         public VertexShader CurrentVertexShader { get { return _vertexShaders[_currentPass.VertexShaderIndex]; } }
@@ -67,8 +65,8 @@ namespace CamDX
             {
                 for(int i = 0; i < _currentPass.TextureIndices.Length; ++i)
                 {
-                    deviceContext.PixelShader.SetSampler(i, _samplers[_currentPass.SamplersIndices[i]]);
-                    deviceContext.PixelShader.SetShaderResource(i, _textureResources[_currentPass.TextureIndices[i]]);
+                    deviceContext.PixelShader.SetSampler(i, _textures[_currentPass.TextureIndices[i]].Sampler);
+                    deviceContext.PixelShader.SetShaderResource(i, _textures[_currentPass.TextureIndices[i]].DxResource);
                 }
             }
 
@@ -102,8 +100,8 @@ namespace CamDX
             {
                 for(int i = 0; i < _currentPass.TextureIndices.Length; ++i)
                 {
-                    deviceContext.PixelShader.SetSampler(i, _samplers[_currentPass.SamplersIndices[i]]);
-                    deviceContext.PixelShader.SetShaderResource(i, _textureResources[_currentPass.TextureIndices[i]]);
+                    deviceContext.PixelShader.SetSampler(i, _textures[_currentPass.TextureIndices[i]].Sampler);
+                    deviceContext.PixelShader.SetShaderResource(i, _textures[_currentPass.TextureIndices[i]].DxResource);
                 }
             }
 
@@ -212,27 +210,16 @@ namespace CamDX
                         StructureByteStride = 0
                     });
                 }
+                //<Textures>
+                //    <Texture>
+                var texList = shaderNode.SelectNodes("Textures/Texture");
+                foreach(XmlNode texNode in texList)
+                {
+                    DXTexture texture = new DXTexture();
+                    texture.Load(dxDevice, texNode);
+                    _textures.Add(texture);
+                }
             }
-        }
-
-        public void LoadTexture(SharpDX.Direct3D11.Device dxDevice, XmlNode textureNode)
-        {
-            // Load texture from files
-
-            // Create a texture sampler state description
-            //_sampleState = new SamplerState(dxDevice, new SamplerStateDescription()
-            //{
-            //    AddressU = TextureAddressMode.Wrap,
-            //    AddressW = TextureAddressMode.Wrap,
-            //    AddressV = TextureAddressMode.Wrap,
-            //    BorderColor = new SharpDX.Mathematics.Interop.RawColor4(0.0f, 0.0f, 0.0f, 0.0f),
-            //    ComparisonFunction = Comparison.Always,
-            //    Filter = Filter.ComparisonMinMagLinearMipPoint,
-            //    MaximumAnisotropy = 1,
-            //    MaximumLod = 1e12f,
-            //    MinimumLod = 0.0f,
-            //    MipLodBias = 0.0f
-            //});
         }
 
         ~DXShader() { Dispose(false); }
@@ -261,17 +248,12 @@ namespace CamDX
             }
             _inputLayouts.Clear();
 
-            foreach(var res in _textureResources)
+            foreach(var res in _textures)
             {
                 res.Dispose();
             }
-            _textureResources.Clear();
-
-            foreach(var sam in _samplers)
-            {
-                sam.Dispose();
-            }
-            _samplers.Clear();
+            _textures.Clear();
+            
             this.SetField(ref _illuminationBuffer, null);
 
             Loaded = false;
