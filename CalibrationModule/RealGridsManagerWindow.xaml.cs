@@ -83,10 +83,6 @@ namespace CalibrationModule
         {
             Save();
             DialogResult = true;
-            for(int grid = 0; grid < _gridsList.Count; grid++)
-            {
-                _savedList[grid].Update();
-            }
             Close();
         }
 
@@ -204,100 +200,33 @@ namespace CalibrationModule
             }
         }
 
-        public void SaveToFile(object sender, RoutedEventArgs e)
+        private void SaveToFile(object sender, RoutedEventArgs e)
         {
             CamCore.FileOperations.SaveToFile(SaveToFile, "Xml File|*.xml");
         }
 
-        public void LoadFromFile(object sender, RoutedEventArgs e)
+        private void LoadFromFile(object sender, RoutedEventArgs e)
         {
             CamCore.FileOperations.LoadFromFile(LoadFromFile, "Xml File|*.xml");
         }
 
-        public void LoadFromFile(Stream file, string path)
+        private void LoadFromFile(Stream file, string path)
         {
-            XmlDocument dataDoc = new XmlDocument();
-            dataDoc.Load(file);
+            _savedList = CamCore.XmlSerialisation.CreateFromFile<List<RealGridData>>(file);
 
             _gridsList.Clear();
-            XmlNodeList grids = dataDoc.GetElementsByTagName("Grid");
-            foreach (XmlNode gridNode in grids)
+            foreach(var grid in _savedList)
             {
-                RealGridData grid = new RealGridData();
-                var gridNum = gridNode.Attributes["num"];
-                if (gridNum != null)
-                    grid.Num = int.Parse(gridNum.Value);
-
-                var gridLabel = gridNode.Attributes["label"];
-                if (gridLabel != null)
-                    grid.Label = gridLabel.Value;
-
-                XmlNode topleftNode = gridNode.SelectSingleNode("child::TopLeft");
-                grid.TopLeft = Vector3.CreateFromXmlNode(topleftNode);
-
-                XmlNode toprightNode = gridNode.SelectSingleNode("child::TopRight");
-                grid.TopRight = Vector3.CreateFromXmlNode(toprightNode);
-
-                XmlNode botleftNode = gridNode.SelectSingleNode("child::BotLeft");
-                grid.BotLeft = Vector3.CreateFromXmlNode(botleftNode);
-
-                XmlNode botrightNode = gridNode.SelectSingleNode("child::BotRight");
-                grid.BotRight = Vector3.CreateFromXmlNode(botrightNode);
-
-                var rowsNode = gridNode.SelectSingleNode("child::Rows");
-                if(rowsNode != null)
-                    grid.Rows = int.Parse(rowsNode.Attributes["count"].Value);
-
-                var colsNode = gridNode.SelectSingleNode("child::Columns");
-                if(colsNode != null)
-                    grid.Columns = int.Parse(colsNode.Attributes["count"].Value);
-
-                grid.Update();
-
                 _gridsList.Add(grid);
             }
         }
 
-        public void SaveToFile(Stream file, string path)
+        private void SaveToFile(Stream file, string path)
         {
-            XmlDocument dataDoc = new XmlDocument();
-            var rootNode = dataDoc.CreateElement("Grids");
-
-            foreach (var grid in _gridsList)
-            {
-                var gridNode = dataDoc.CreateElement("Grid");
-                var gridAttNum = dataDoc.CreateAttribute("num");
-                gridAttNum.Value = grid.Num.ToString();
-                var gridAttLabel = dataDoc.CreateAttribute("label");
-                gridAttLabel.Value = grid.Label;
-                gridNode.Attributes.Append(gridAttNum);
-                gridNode.Attributes.Append(gridAttLabel);
-                
-                gridNode.AppendChild(grid.TopLeft.CreateXmlNode(dataDoc, "TopLeft"));
-                gridNode.AppendChild(grid.TopRight.CreateXmlNode(dataDoc, "TopRight"));
-                gridNode.AppendChild(grid.BotLeft.CreateXmlNode(dataDoc, "BotLeft"));
-                gridNode.AppendChild(grid.BotRight.CreateXmlNode(dataDoc, "BotRight"));
-
-                XmlNode rowsNode = dataDoc.CreateElement("Rows");
-                var rowsAtt = dataDoc.CreateAttribute("count");
-                rowsAtt.Value = grid.Rows.ToString();
-                rowsNode.Attributes.Append(rowsAtt);
-                gridNode.AppendChild(rowsNode);
-
-                XmlNode colsNode = dataDoc.CreateElement("Columns");
-                var colsAtt = dataDoc.CreateAttribute("count");
-                colsAtt.Value = grid.Columns.ToString();
-                colsNode.Attributes.Append(colsAtt);
-                gridNode.AppendChild(colsNode);
-
-                rootNode.AppendChild(gridNode);
-            }
-
-            dataDoc.InsertAfter(rootNode, dataDoc.DocumentElement);
-            dataDoc.Save(file);
+            CamCore.XmlSerialisation.SaveToFile(_savedList, file);
         }
 
-        public void UpdateFromP1P4(object sender, RoutedEventArgs e)
+        private void UpdateFromP1P4(object sender, RoutedEventArgs e)
         {
             RealGridData grid = (RealGridData)_gridListView.SelectedItem;
 

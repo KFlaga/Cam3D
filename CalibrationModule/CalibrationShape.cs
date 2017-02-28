@@ -9,7 +9,7 @@ namespace CalibrationModule
     {
         public List<Vector2> Points { get; set; }
         public uint Index { get; set; }
-        public TPoint2D<int> GridPos { get; set; }
+        public Point2D<int> GridPos { get; set; }
         public bool IsInvalid { get; set; }
 
         private Rect _bbox;
@@ -29,7 +29,7 @@ namespace CalibrationModule
         {
             Points = new List<Vector2>();
             _bbox = new Rect(1e6, 1e6, 0, 0);
-            GridPos = new TPoint2D<int>(-1, -1);
+            GridPos = new Point2D<int>(-1, -1);
             IsInvalid = false;
         }
 

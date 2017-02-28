@@ -63,6 +63,7 @@ namespace CalibrationModule
             }
 
             base.Init();
+            UpdateAll();
 
             for(int line = 0; line < LinePoints.Count; ++line)
             {
@@ -71,9 +72,14 @@ namespace CalibrationModule
                 base.UpdateLineOrientations(line);
                 base.ComputeLineCoeffs(line);
 
-                BaseDistortionDirections[line] = DistortionModel.DirectionFromLine(
-                    LinePoints[line], LineCoeffs[line, 0], LineCoeffs[line, 1], LineCoeffs[line, 2]);
+                BaseDistortionDirections[line] = LineDistortionDirections[line];
             }
+        }
+
+        public void FindInitialParametersEstimation()
+        {
+            // 1) Fit curves
+            // 2) 
         }
 
         public override DistortionPoint CreateDistortionPoint()
@@ -87,9 +93,9 @@ namespace CalibrationModule
             base.ComputeSums(line);
             base.UpdateLineOrientations(line);
             base.ComputeLineCoeffs(line);
-            UpdateLineDistortionDirection(line);
             FindFitPoint(line);
             FitQuadricThroughPoint(line);
+            UpdateLineDistortionDirection(line);
             ComputeLineCoeffs(line);
         }
 
@@ -104,20 +110,23 @@ namespace CalibrationModule
         public void UpdateLineDistortionDirection(int line)
         {
             var corrPoints = CorrectedPoints[line];
-            LineDistortionDirections[line] = DistortionModel.DirectionFromLine(
-                corrPoints, LineCoeffs[line, 0], LineCoeffs[line, 1], LineCoeffs[line, 2]);
+            //LineDistortionDirections[line] = DistortionModel.DirectionFromLine(
+            //    corrPoints, LineCoeffs[line, 0], LineCoeffs[line, 1], LineCoeffs[line, 2]);
+            LineDistortionDirections[line] = DistortionModel.DirectionFromFitQuadric(
+                corrPoints, FitQuadrics[line], DistortionModel.DistortionCenter, corrPoints[FitPoints[line]].Pf);
         }
 
         public void FindFitPoint(int line)
         {
-            if(LineDistortionDirections[line] == DistortionDirection.Barrel)
-            {
-                FitPoints[line] = GetPointFurthestFromCenter(line);
-            }
-            else
-            {
-                FitPoints[line] = GetPointClosestToCenter(line);
-            }
+            FitPoints[line] = GetPointClosestToCenter(line);
+            //if(LineDistortionDirections[line] == DistortionDirection.Barrel)
+            //{
+            //    FitPoints[line] = GetPointFurthestFromCenter(line);
+            //}
+            //else
+            //{
+            //    FitPoints[line] = GetPointClosestToCenter(line);
+            //}
         }
 
         public int GetPointClosestToCenter(int line)

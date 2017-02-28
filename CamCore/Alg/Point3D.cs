@@ -4,14 +4,18 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace CamCore
 {
     [DebuggerDisplay("X = {X}, Y = {Y}, Z = {Z}")]
     public class Point3D
     {
+        [XmlAttribute("X")]
         public double X { get; set; }
+        [XmlAttribute("Y")]
         public double Y { get; set; }
+        [XmlAttribute("Z")]
         public double Z { get; set; }
 
         public Point3D()

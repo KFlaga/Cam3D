@@ -1,24 +1,16 @@
 ﻿
 using CamCore;
 using System.Xml;
+using System.Xml.Serialization;
 
 namespace CalibrationModule
 {
     public class RealGridData
     {
+        [XmlAttribute("Num")]
         public int Num { get; set; }
+        [XmlAttribute("Label")]
         public string Label { get; set; } = "";
-
-        // Old data model
-        //public double WidthX { get; set; } // Lenght of cell along local X axis in global frame
-        //public double WidthY { get; set; }
-        //public double WidthZ { get; set; }
-        //public double HeightX { get; set; } // Lenght of cell along local Y axis in global frame
-        //public double HeightY { get; set; }
-        //public double HeightZ { get; set; }
-        //public double ZeroX { get; set; } // Position of (0,0,0) point on real grid in reference to global reference point
-        //public double ZeroY { get; set; }
-        //public double ZeroZ { get; set; }
 
         public override string ToString()
         {
@@ -33,26 +25,29 @@ namespace CalibrationModule
 
         public int Rows { get; set; }
         public int Columns { get; set; }
-        public IntVector2 Offset { get; set; } = new IntVector2(0, 0);
+        public IntVector2 OffsetLeft { get; set; } = new IntVector2(0, 0);
+        public IntVector2 OffsetRight { get; set; } = new IntVector2(0, 0);
 
-        public Vector3 WidthTop { get; set; } = new Vector3(); // TR - TL
-        public Vector3 WidthBot { get; set; } = new Vector3(); // BR - BL
+        private double WidthTop_X { get { return TopRight.X - TopLeft.X; } }
+        private double WidthTop_Y { get { return TopRight.Y - TopLeft.Y; } }
+        private double WidthTop_Z { get { return TopRight.Z - TopLeft.Z; } }
+        
+        private double WidthBot_X { get { return BotRight.X - BotLeft.X; } }
+        private double WidthBot_Y { get { return BotRight.Y - BotLeft.Y; } }
+        private double WidthBot_Z { get { return BotRight.Z - BotLeft.Z; } }
+        
+        private double HeightLeft_X { get { return BotLeft.X - TopLeft.X; } }
+        private double HeightLeft_Y { get { return BotLeft.Y - TopLeft.Y; } }
+        private double HeightLeft_Z { get { return BotLeft.Z - TopLeft.Z; } }
 
-        public Vector3 HeightLeft { get; set; } = new Vector3(); // BL - TL
-        public Vector3 HeightRight { get; set; } = new Vector3(); // BR - TR
-
-        public void Update()
-        {
-            WidthTop = TopRight - TopLeft;
-            WidthBot = BotRight - BotLeft;
-            HeightLeft = BotLeft - TopLeft;
-            HeightRight = BotRight - TopRight;
-        }
+        private double HeightRight_X { get { return BotRight.X - TopRight.X; } }
+        private double HeightRight_Y { get { return BotRight.Y - TopRight.Y; } }
+        private double HeightRight_Z { get { return BotRight.Z - TopRight.Z; } }
 
         public Vector3 GetRealFromCell(int row, int col)
         {
-            double ry = (double)(row + Offset.Y) / (double)(Rows-1);
-            double rx = (double)(col + Offset.X) / (double)(Columns-1);
+            double ry = (double)row / (double)(Rows-1);
+            double rx = (double)col / (double)(Columns-1);
             return GetRealFromRatio(ry, rx);
         }
 
@@ -65,12 +60,12 @@ namespace CalibrationModule
         {
             double rx1 = 1.0 - rx, ry1 = 1.0 - ry;
             return new Vector3(
-                0.5 * ((rx1 + ry1) * (TopLeft.X + WidthTop.X * rx + HeightLeft.X * ry) +
-                (rx + ry) * (BotRight.X - WidthBot.X * rx1 - HeightRight.X * ry1)),
-                0.5 * ((rx1 + ry1) * (TopLeft.Y + WidthTop.Y * rx + HeightLeft.Y * ry) +
-                (rx + ry) * (BotRight.Y - WidthBot.Y * rx1 - HeightRight.Y * ry1)),
-                0.5 * ((rx1 + ry1) * (TopLeft.Z + WidthTop.Z * rx + HeightLeft.Z * ry) +
-                (rx + ry) * (BotRight.Z - WidthBot.Z * rx1 - HeightRight.Z * ry1)));
+                0.5 * ((rx1 + ry1) * (TopLeft.X + WidthTop_X * rx + HeightLeft_X * ry) +
+                (rx + ry) * (BotRight.X - WidthBot_X * rx1 - HeightRight_X * ry1)),
+                0.5 * ((rx1 + ry1) * (TopLeft.Y + WidthTop_Y * rx + HeightLeft_Y * ry) +
+                (rx + ry) * (BotRight.Y - WidthBot_Y * rx1 - HeightRight_Y * ry1)),
+                0.5 * ((rx1 + ry1) * (TopLeft.Z + WidthTop_Z * rx + HeightLeft_Z * ry) +
+                (rx + ry) * (BotRight.Z - WidthBot_Z * rx1 - HeightRight_Z * ry1)));
             //return new Vector3((TopLeft.X + WidthTop.X * rx + HeightLeft.X * ry),
             //    (TopLeft.Y + WidthTop.Y * rx + HeightLeft.Y * ry),
             //    (TopLeft.Z + WidthTop.Z * rx + HeightLeft.Z * ry));
@@ -96,72 +91,6 @@ namespace CalibrationModule
             TopRight = p7p - w_top_per_mm * 8.5 + h_right_per_mm * 8.5;
             BotLeft = p1 + w_bot_per_mm * 8.5 - h_left_per_mm * 8.5;
             BotRight = p1p - w_bot_per_mm * 8.5 - h_right_per_mm * 8.5;
-
-            Update();
-        }
-
-        public static RealGridData FromXml(XmlNode gridNode)
-        {
-            RealGridData grid = new RealGridData();
-
-            grid.Num = int.Parse(gridNode.Attributes["id"].Value);
-            grid.Label = gridNode.Attributes["label"].Value;      
-            grid.Rows = int.Parse(gridNode.Attributes["rows"].Value);
-            grid.Columns = int.Parse(gridNode.Attributes["columns"].Value);
-
-            XmlNode topleftNode = gridNode.SelectSingleNode("child::TopLeft");
-            grid.TopLeft = Vector3.CreateFromXmlNode(topleftNode);
-
-            XmlNode toprightNode = gridNode.SelectSingleNode("child::TopRight");
-            grid.TopRight = Vector3.CreateFromXmlNode(toprightNode);
-
-            XmlNode botleftNode = gridNode.SelectSingleNode("child::BotLeft");
-            grid.BotLeft = Vector3.CreateFromXmlNode(botleftNode);
-
-            XmlNode botrightNode = gridNode.SelectSingleNode("child::BotRight");
-            grid.BotRight = Vector3.CreateFromXmlNode(botrightNode);
-
-            XmlNode offsetNode = gridNode.SelectSingleNode("child::Offset");
-            grid.Offset = IntVector2.CreateFromXmlNode(botrightNode);
-
-            grid.Update();
-
-            return grid;
-        }
-
-        public XmlNode ToXml(XmlDocument dataDoc)
-        {
-            return ToXml(this, dataDoc);
-        }
-
-        public static XmlNode ToXml(RealGridData grid, XmlDocument dataDoc)
-        {
-            var gridNode = dataDoc.CreateElement("Grid");
-
-            var gridAttNum = dataDoc.CreateAttribute("id");
-            gridAttNum.Value = grid.Num.ToString();
-
-            var gridAttLabel = dataDoc.CreateAttribute("label");
-            gridAttLabel.Value = grid.Label;
-
-            var gridAttRows = dataDoc.CreateAttribute("rows");
-            gridAttLabel.Value = grid.Rows.ToString();
-
-            var gridAttCols = dataDoc.CreateAttribute("columns");
-            gridAttLabel.Value = grid.Columns.ToString();
-
-            gridNode.Attributes.Append(gridAttNum);
-            gridNode.Attributes.Append(gridAttLabel);
-            gridNode.Attributes.Append(gridAttRows);
-            gridNode.Attributes.Append(gridAttCols);
-
-            gridNode.AppendChild(grid.TopLeft.CreateXmlNode(dataDoc, "TopLeft"));
-            gridNode.AppendChild(grid.TopRight.CreateXmlNode(dataDoc, "TopRight"));
-            gridNode.AppendChild(grid.BotLeft.CreateXmlNode(dataDoc, "BotLeft"));
-            gridNode.AppendChild(grid.BotRight.CreateXmlNode(dataDoc, "BotRight"));
-            gridNode.AppendChild(grid.Offset.CreateXmlNode(dataDoc, "Offset"));
-            
-            return gridNode;
         }
     }
 }

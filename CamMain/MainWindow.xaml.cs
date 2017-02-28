@@ -45,6 +45,7 @@ namespace CamMain
                  { _headerTriangulation, new TriangulationModule.TriModule() },
                  { _headerImage3D, new Image3DModule.Image3DConstructionModule() },
                  { _headerCapture, new CaptureModule.CamCaptureModule() },
+                 { _headerOperations, new CamImageOperationsModule.ImageOperationsModule() },
             };
 
             InitCalibrationResultsAnimation();
@@ -122,6 +123,12 @@ namespace CamMain
             FileOperations.SaveToFile(CalibrationData.Data.SaveToFile, "Xml File|*.xml");
         }
 
+        private void StartChainProcess(object sender, RoutedEventArgs e)
+        {
+            ProcessingChain pc = new ProcessingChain();
+            pc.Process();
+        }
+        
 
         //private void LoadModules(string file)
         //{

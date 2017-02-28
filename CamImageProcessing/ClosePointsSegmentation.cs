@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Point2D = CamCore.TPoint2D<int>;
+using Point2D = CamCore.Point2D<int>;
 using MathNet.Numerics.LinearAlgebra;
 
 namespace CamImageProcessing

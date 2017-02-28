@@ -125,9 +125,6 @@
       <DependentUpon>MatchedPointsManagerWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="RadialCorrectionTester.cs" />
-    <Compile Include="RealGridsManagerWindow_Old.xaml.cs">
-      <DependentUpon>RealGridsManagerWindow_Old.xaml</DependentUpon>
-    </Compile>
     <Compile Include="ShapeChecker.cs" />
     <Compile Include="LMRadialDistortionLineFitMinimalisation.cs" />
     <Compile Include="RadialDistortionCorrector.cs" />
@@ -187,10 +184,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="MatchedPointsManagerWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="RealGridsManagerWindow_Old.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

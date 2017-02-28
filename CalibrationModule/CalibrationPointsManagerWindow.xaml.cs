@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Xml;
+using System.Xml.Serialization;
 
 namespace CalibrationModule
 {
@@ -199,92 +200,20 @@ namespace CalibrationModule
             CamCore.FileOperations.LoadFromFile(LoadFromFile, "Xml File|*.xml");
         }
 
-        public void LoadFromFile(Stream file, string path)
+        private void LoadFromFile(Stream file, string path)
         {
-            XmlDocument dataDoc = new XmlDocument();
-            dataDoc.Load(file);
+            _savedList = CamCore.XmlSerialisation.CreateFromFile<List<CalibrationPoint>>(file);
 
             _pointList.Clear();
-            XmlNodeList points = dataDoc.GetElementsByTagName("Point");
-            foreach(XmlNode pointNode in points)
+            foreach (var cpoint in _savedList)
             {
-                CalibrationPoint cpoint = new CalibrationPoint();
-                var imgx = pointNode.Attributes["imgx"];
-                if(imgx != null)
-                    cpoint.ImgX = double.Parse(imgx.Value);
-
-                var imgy = pointNode.Attributes["imgy"];
-                if(imgy != null)
-                    cpoint.ImgY = double.Parse(imgy.Value);
-
-                var gridNum = pointNode.Attributes["grid"];
-                if(gridNum != null)
-                    cpoint.GridNum = int.Parse(gridNum.Value);
-
-                var col = pointNode.Attributes["gridColumn"];
-                if(col != null)
-                    cpoint.RealCol = int.Parse(col.Value);
-
-                var row = pointNode.Attributes["gridRow"];
-                if(row != null)
-                    cpoint.RealRow = int.Parse(row.Value);
-
-                var realx = pointNode.Attributes["realx"];
-                if(realx != null)
-                    cpoint.RealX = double.Parse(realx.Value);
-
-                var realy = pointNode.Attributes["realy"];
-                if(realy != null)
-                    cpoint.RealY = double.Parse(realy.Value);
-
-                var realz = pointNode.Attributes["realz"];
-                if(realz != null)
-                    cpoint.RealZ = double.Parse(realz.Value);
-
                 _pointList.Add(cpoint);
             }
         }
 
-        public void SaveToFile(Stream file, string path)
+        private void SaveToFile(Stream file, string path)
         {
-            XmlDocument dataDoc = new XmlDocument();
-            var rootNode = dataDoc.CreateElement("Points");
-
-            foreach(var cpoint in _pointList)
-            {
-                var pointNode = dataDoc.CreateElement("Point");
-
-                var attImgX = dataDoc.CreateAttribute("imgx");
-                attImgX.Value = cpoint.ImgX.ToString("F3");
-                var attImgY = dataDoc.CreateAttribute("imgy");
-                attImgY.Value = cpoint.ImgY.ToString("F3");
-                var attGridNum = dataDoc.CreateAttribute("grid");
-                attGridNum.Value = cpoint.GridNum.ToString();
-                var attRow = dataDoc.CreateAttribute("gridRow");
-                attRow.Value = cpoint.RealRow.ToString();
-                var attCol = dataDoc.CreateAttribute("gridColumn");
-                attCol.Value = cpoint.RealCol.ToString();
-                var attRealX = dataDoc.CreateAttribute("realx");
-                attRealX.Value = cpoint.RealX.ToString("F3");
-                var attRealY = dataDoc.CreateAttribute("realy");
-                attRealY.Value = cpoint.RealY.ToString("F3");
-                var attRealZ = dataDoc.CreateAttribute("realz");
-                attRealZ.Value = cpoint.RealZ.ToString("F3");
-
-                pointNode.Attributes.Append(attImgX);
-                pointNode.Attributes.Append(attImgY);
-                pointNode.Attributes.Append(attGridNum);
-                pointNode.Attributes.Append(attRow);
-                pointNode.Attributes.Append(attCol);
-                pointNode.Attributes.Append(attRealX);
-                pointNode.Attributes.Append(attRealY);
-                pointNode.Attributes.Append(attRealZ);
-
-                rootNode.AppendChild(pointNode);
-            }
-
-            dataDoc.InsertAfter(rootNode, dataDoc.DocumentElement);
-            dataDoc.Save(file);
+            CamCore.XmlSerialisation.SaveToFile(_savedList, file);
         }
 
         private void TestSet_30(object sender, RoutedEventArgs e)

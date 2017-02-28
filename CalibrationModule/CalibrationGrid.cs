@@ -62,15 +62,15 @@ namespace CalibrationModule
 
             if(ShapesGrid[y,x] != null)
             {
-                ShapesGrid[y, x].GridPos = new TPoint2D<int>(-1, -1);
+                ShapesGrid[y, x].GridPos = new Point2D<int>(-1, -1);
             }
 
             ShapesGrid[y, x] = shape;
-            ShapesGrid[y, x].GridPos = new TPoint2D<int>(x, y);
+            ShapesGrid[y, x].GridPos = new Point2D<int>(x, y);
         }
 
         // Adds new shape to grid ( position may exceed Row/Cols count )
-        public void Add(TPoint2D<int> p, CalibrationShape shape)
+        public void Add(Point2D<int> p, CalibrationShape shape)
         {
             Add(p.X, p.Y, shape);
         }
@@ -80,15 +80,15 @@ namespace CalibrationModule
         {
             if(ShapesGrid[y, x] != null)
             {
-                ShapesGrid[y, x].GridPos = new TPoint2D<int>(-1, -1);
+                ShapesGrid[y, x].GridPos = new Point2D<int>(-1, -1);
             }
 
             ShapesGrid[y, x] = shape;
-            ShapesGrid[y, x].GridPos = new TPoint2D<int>(x, y);
+            ShapesGrid[y, x].GridPos = new Point2D<int>(x, y);
         }
 
         // Set new shape to grid ( position must not exceed Row/Cols count )
-        public void Set(TPoint2D<int> p, CalibrationShape shape)
+        public void Set(Point2D<int> p, CalibrationShape shape)
         {
             Set(p.X, p.Y, shape);
         }

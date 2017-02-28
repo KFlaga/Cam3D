@@ -1,25 +1,28 @@
 ﻿using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
+using System.Xml.Serialization;
 
 namespace CamCore
 {
-    [DebuggerDisplay("X = {_x}, Y = {_y}, Z = {_z}")]
+    [DebuggerDisplay("X = {X}, Y = {Y}, Z = {Z}")]
     public class Vector3
     {
-        private double _x;
-        private double _y;
-        private double _z;
+        [XmlAttribute("X")]
+        public double X { get; set; }
+        [XmlAttribute("Y")]
+        public double Y { get; set; }
+        [XmlAttribute("Z")]
+        public double Z { get; set; }
 
-        public double X { get { return _x; } set { _x = value; } }
-        public double Y { get { return _y; } set { _y = value; } }
-        public double Z { get { return _z; } set { _z = value; } }
+        public Vector3()
+        {
+            X = 0;
+            Y = 0;
+            Z = 0;
+        }
 
         public Vector3(double x = 0.0f, double y = 0.0f, double z = 0.0f)
         {
@@ -28,9 +31,9 @@ namespace CamCore
 
         public Vector3(Vector3 other)
         {
-            _x = other.X;
-            _y = other.Y;
-            _z = other.Z;
+            X = other.X;
+            Y = other.Y;
+            Z = other.Z;
         }
 
         public Vector3(Vector<double> other)
@@ -38,33 +41,33 @@ namespace CamCore
             if(other.Count == 4)
             {
                 // Treat input vector as homogenous 3d vector
-                _x = other.At(0) / other.At(3);
-                _y = other.At(1) / other.At(3);
-                _z = other.At(2) / other.At(3);
+                X = other.At(0) / other.At(3);
+                Y = other.At(1) / other.At(3);
+                Z = other.At(2) / other.At(3);
             }
             else
             {
-                _x = other.At(0);
-                _y = other.At(1);
-                _z = other.At(2);
+                X = other.At(0);
+                Y = other.At(1);
+                Z = other.At(2);
             }
         }
 
         public void Set(double x, double y, double z)
         {
-            _x = x;
-            _y = y;
-            _z = z;
+            X = x;
+            Y = y;
+            Z = z;
         }
 
         public Vector<double> ToMathNetVector3()
         {
-            return new DenseVector(new double[3] { _x, _y, _z });
+            return new DenseVector(new double[3] { X, Y, Z });
         }
 
         public Vector<double> ToMathNetVector4()
         {
-            return new DenseVector(new double[4] { _x, _y, _z, 1.0 });
+            return new DenseVector(new double[4] { X, Y, Z, 1.0 });
         }
 
         public static Vector3 operator +(Vector3 p1, Vector3 p2)
@@ -174,7 +177,7 @@ namespace CamCore
         //    return (double)Math.Asin((X * v.Y - Y * v.X) / (Length() * v.Length()));
         //}
 
-        //// Returns value in radians. Assumes both vector are normalised
+        //// Returns value in radians. Assumes both vector are normalized
         //public double AngleToNormalized(Vector3 v)
         //{
         //    return (double)Math.Asin(X * v.Y - Y * v.X);

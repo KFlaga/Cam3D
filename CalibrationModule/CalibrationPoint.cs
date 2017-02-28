@@ -1,35 +1,49 @@
-﻿using CamCore;
+﻿using System.Xml;
+using System.Xml.Serialization;
+using CamCore;
 
 namespace CalibrationModule
 {
+    [XmlRoot("Point")]
     public class CalibrationPoint
     {
-        private Vector2 _img;
+        private readonly Vector2 _img;
+        [XmlIgnore]
         public Vector2 Img { get { return _img; } set { _img.X = value.X; _img.Y = value.Y; } }
 
-        private Vector3 _real;
+        private readonly Vector3 _real;
+        [XmlIgnore]
         public Vector3 Real { get { return _real; } set { _real.X = value.X; _real.Y = value.Y; _real.Z = value.Z; } }
 
-        private TPoint2D<int> _realGridPos;
-        public TPoint2D<int> RealGridPos { get { return _realGridPos; } set { _realGridPos.X = value.X; _realGridPos.Y = value.Y; } }
+        private Point2D<int> _realGridPos;
+        [XmlIgnore]
+        public Point2D<int> RealGridPos { get { return _realGridPos; } set { _realGridPos.X = value.X; _realGridPos.Y = value.Y; } }
 
+        [XmlAttribute("ImgX")]
         public double ImgX { get { return Img.X; } set { Img.X = value; } }
+        [XmlAttribute("ImgY")]
         public double ImgY { get { return Img.Y; } set { Img.Y = value; } }
 
+        [XmlAttribute("GridRow")]
         public int RealRow { get { return _realGridPos.Y; } set { _realGridPos.Y = value; } }
+        [XmlAttribute("GridCol")]
         public int RealCol { get { return _realGridPos.X; } set { _realGridPos.X = value; } }
 
+        [XmlAttribute("GridNum")]
         public int GridNum { get; set; }
 
+        [XmlAttribute("RealX")]
         public double RealX { get { return Real.X; } set { Real.X = value; } }
+        [XmlAttribute("RealY")]
         public double RealY { get { return Real.Y; } set { Real.Y = value; } }
+        [XmlAttribute("RealZ")]
         public double RealZ { get { return Real.Z; } set { Real.Z = value; } }
 
         public CalibrationPoint()
         {
             _img = new Vector2();
             _real = new Vector3();
-            _realGridPos = new TPoint2D<int>(-1, -1);
+            _realGridPos = new Point2D<int>(-1, -1);
         }
 
         public override string ToString()

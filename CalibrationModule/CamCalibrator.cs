@@ -232,8 +232,7 @@ namespace CalibrationModule
                 corner = NormReal * corner;
                 corner.DivideThis(corner.At(3));
                 gridNorm.BotRight = new Vector3(corner.At(0), corner.At(1), corner.At(2));
-
-                gridNorm.Update();
+                
                 GridsNormalised.Add(gridNorm);
             }
         }

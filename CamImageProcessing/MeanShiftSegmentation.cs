@@ -2,7 +2,7 @@
 using MathNet.Numerics.LinearAlgebra;
 using System;
 using System.Collections.Generic;
-using Point2D = CamCore.TPoint2D<int>;
+using Point2D = CamCore.Point2D<int>;
 
 namespace CamImageProcessing
 {

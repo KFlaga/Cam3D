@@ -86,6 +86,7 @@
     <Compile Include="Alg\IControllableAlgorithm.cs" />
     <Compile Include="Alg\IFloodAlgorithm.cs" />
     <Compile Include="Alg\IterativeBasicFloodAlgorithm.cs" />
+    <Compile Include="Alg\Line.cs" />
     <Compile Include="Alg\MultivariateFunctionMinimalisation.cs" />
     <Compile Include="Alg\OneVariableFunctionRootsFinder.cs" />
     <Compile Include="Alg\OneVariableMinimisation.cs" />
@@ -141,6 +142,7 @@
     <Compile Include="Alg\SvdSolver.cs" />
     <Compile Include="Calibration\RadialDistortionModel.cs" />
     <Compile Include="XmlExtensions.cs" />
+    <Compile Include="XmlSerialisation.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CamCore;
-using Point2D = CamCore.TPoint2D<int>;
+using Point2D = CamCore.Point2D<int>;
 using System.Diagnostics;
 
 namespace CamImageProcessing.ImageMatching
@@ -48,7 +48,7 @@ namespace CamImageProcessing.ImageMatching
         {
             // Initialize pixel cells
             _segmentedMap = new Cell[map.RowCount, map.ColumnCount];
-            _segments = new List<List<TPoint2D<int>>>();
+            _segments = new List<List<Point2D<int>>>();
             for(int r = 0; r < map.RowCount; ++r)
             {
                 for(int c = 0; c < map.ColumnCount; ++c)

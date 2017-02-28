@@ -10,6 +10,7 @@
             <MenuItem x:Name="_menuFile" Header="_File">
                <!-- <MenuItem Header="Reload Modules" IsEnabled="True" Click="ReloadModules"/>
                 <Separator/> -->
+                <MenuItem x:Name="_submenuProcessChain" Header="Chain-Process" IsEnabled="True" Click="StartChainProcess"/>
                 <MenuItem x:Name="_submenuExit" Header="Exit" IsEnabled="True" Click="Exit"/>
             </MenuItem>
             <MenuItem x:Name="_menuModules" Header="_Modules">
@@ -19,6 +20,7 @@
                 <MenuItem x:Name="_headerTriangulation" Header="Triangulation Module" Click="OpenModule"/>
                 <MenuItem x:Name="_headerImage3D" Header="Image3D Module" Click="OpenModule"/>
                 <MenuItem x:Name="_headerCapture" Header="Camera Capture Module" Click="OpenModule"/>
+                <MenuItem x:Name="_headerOperations" Header="Image Operations Module" Click="OpenModule"/>
 
             </MenuItem>
             <MenuItem x:Name="_menuCalib" Header="_Calibration">

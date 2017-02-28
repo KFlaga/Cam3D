@@ -351,7 +351,6 @@ namespace CalibrationModule
                 grids[i].BotRight.X = ResultsVector.At(gridPos + 9);
                 grids[i].BotRight.Y = ResultsVector.At(gridPos + 10);
                 grids[i].BotRight.Z = ResultsVector.At(gridPos + 11);
-                grids[i].Update();
             }
         }
 

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CamCore
 {
-    using Point2D = TPoint2D<int>;
+    using Point2D = Point2D<int>;
 
     public class IterativeBasicFloodAlgorithm : IFloodAlgorithm
     {
@@ -22,7 +22,7 @@ namespace CamCore
 
             FillAction(y, x);
 
-            _pointStack = new Stack<TPoint2D<int>>();
+            _pointStack = new Stack<Point2D<int>>();
             _pointStack.Push(new Point2D(x, y));
             while(_pointStack.Count > 0)
             {

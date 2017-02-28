@@ -1,23 +1,25 @@
 ﻿using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
+using System.Xml.Serialization;
 
 namespace CamCore
 {
-    [DebuggerDisplay("X = {_x}, Y = {_y}")]
+    [DebuggerDisplay("X = {X}, Y = {Y}")]
     public class Vector2
     {
-        private double _x;
-        private double _y;
+        [XmlAttribute("X")]
+        public double X { get; set; }
+        [XmlAttribute("Y")]
+        public double Y { get; set; }
 
-        public double X { get { return _x; } set { _x = value; } }
-        public double Y { get { return _y; } set { _y = value; } }
+        public Vector2()
+        {
+            X = 0.0;
+            Y = 0.0;
+        }
 
         public Vector2(double x = 0.0f, double y = 0.0f)
         {
@@ -26,63 +28,63 @@ namespace CamCore
 
         public Vector2(Vector2 other)
         {
-            _x = other.X;
-            _y = other.Y;
+            X = other.X;
+            Y = other.Y;
         }
         
         public Vector2(IntVector2 other)
         {
-            _x = (double)other.X;
-            _y = (double)other.Y;
+            X = (double)other.X;
+            Y = (double)other.Y;
         }
 
         public Vector2(Vector<double> other)
         {
             if(other.Count == 3)
             {
-                // Treat input vector as homogenous 2d vector
-                _x = other.At(0) / other.At(2);
-                _y = other.At(1) / other.At(2);
+                // Treat input vector as homogeneous 2d vector
+                X = other.At(0) / other.At(2);
+                Y = other.At(1) / other.At(2);
             }
             else
             {
-                _x = other.At(0);
-                _y = other.At(1);
+                X = other.At(0);
+                Y = other.At(1);
             }
         }
 
         public void Set(double x, double y)
         {
-            _x = x;
-            _y = y;
+            X = x;
+            Y = y;
         }
 
         public Vector<double> ToMathNetVector2()
         {
-            return new DenseVector(new double[2] { _x, _y });
+            return new DenseVector(new double[2] { X, Y });
         }
 
         public Vector<double> ToMathNetVector3()
         {
-            return new DenseVector(new double[3] { _x, _y, 1.0 });
+            return new DenseVector(new double[3] { X, Y, 1.0 });
         }
 
-        public static Vector2 operator +(TPoint2D<double> p1, Vector2 p2)
+        public static Vector2 operator +(Point2D<double> p1, Vector2 p2)
         {
             return new Vector2(p1.X + p2.X, p1.Y + p2.Y);
         }
 
-        public static Vector2 operator +(Vector2 p1, TPoint2D<double> p2)
+        public static Vector2 operator +(Vector2 p1, Point2D<double> p2)
         {
             return new Vector2(p1.X + p2.X, p1.Y + p2.Y);
         }
 
-        public static Vector2 operator -(TPoint2D<double> p1, Vector2 p2)
+        public static Vector2 operator -(Point2D<double> p1, Vector2 p2)
         {
             return new Vector2(p1.X - p2.X, p1.Y - p2.Y);
         }
 
-        public static Vector2 operator -(Vector2 p1, TPoint2D<double> p2)
+        public static Vector2 operator -(Vector2 p1, Point2D<double> p2)
         {
             return new Vector2(p1.X - p2.X, p1.Y - p2.Y);
         }
@@ -193,7 +195,7 @@ namespace CamCore
             return (double)Math.Asin((X * v.Y - Y * v.X) / (Length() * v.Length()));
         }
 
-        // Returns value in radians. Assumes both vector are normalised
+        // Returns value in radians. Assumes both vector are normalized
         public double AngleToNormalized(Vector2 v)
         {
             return (double)Math.Asin(X * v.Y - Y * v.X);
@@ -205,7 +207,7 @@ namespace CamCore
             return (X * v.Y - Y * v.X) / (Length() * v.Length());
         }
 
-        // Returns sinus of angle to v, value in radians. Assumes both vector are normalised
+        // Returns sinus of angle to v, value in radians. Assumes both vector are normalized
         public double SinusToNormalized(Vector2 v)
         {
             return (X * v.Y - Y * v.X);
@@ -216,7 +218,7 @@ namespace CamCore
             return (X * v.X + Y * v.Y) / (Length() * v.Length());
         }
 
-        // Returns cosinus of angle to v, value in radians. Assumes both vector are normalised
+        // Returns cosinus of angle to v, value in radians. Assumes both vector are normalized
         public double CosinusToNormalized(Vector2 v)
         {
             return (X * v.X + Y * v.Y);
@@ -226,42 +228,21 @@ namespace CamCore
         {
             return "X: " + X + ", Y: " + Y;
         }
-        
-        public XmlNode CreateXmlNode(XmlDocument xmlDoc, string nodeName = "Vector2")
-        {
-            XmlNode node = xmlDoc.CreateElement(nodeName);
-
-            var attX = xmlDoc.CreateAttribute("X");
-            attX.Value = X.ToString();
-            var attY = xmlDoc.CreateAttribute("Y");
-            attY.Value = Y.ToString();
-            node.Attributes.Append(attX);
-            node.Attributes.Append(attY);
-
-            return node;
-        }
-
-        public void ReadFromXmlNode(XmlNode node)
-        {
-            X = double.Parse(node.Attributes["X"]?.Value);
-            Y = double.Parse(node.Attributes["Y"]?.Value);
-        }
-
-        public static Vector2 CreateFromXmlNode(XmlNode node)
-        {
-            return new Vector2(
-                double.Parse(node.Attributes["X"]?.Value),
-                double.Parse(node.Attributes["Y"]?.Value));
-        }
     }
 
-    [DebuggerDisplay("X = {_x}, Y = {_y}")]
+    [DebuggerDisplay("X = {X}, Y = {Y}")]
     public class IntVector2
     {
-        private int _x;
-        private int _y;
-        public int X { get { return _x; } set { _x = value; } }
-        public int Y { get { return _y; } set { _y = value; } }
+        [XmlAttribute("X")]
+        public int X { get; set; }
+        [XmlAttribute("Y")]
+        public int Y { get; set; }
+
+        public IntVector2()
+        {
+            X = 0;
+            Y = 0;
+        }
 
         public IntVector2(int x = 0, int y = 0)
         {
@@ -270,38 +251,38 @@ namespace CamCore
 
         public IntVector2(IntVector2 other)
         {
-            _x = other.X;
-            _y = other.Y;
+            X = other.X;
+            Y = other.Y;
         }
 
         public IntVector2(Vector2 other)
         {
-            _x = (int)other.X;
-            _y = (int)other.Y;
+            X = (int)other.X;
+            Y = (int)other.Y;
         }
 
         public void Set(int x, int y)
         {
-            _x = x;
-            _y = y;
+            X = x;
+            Y = y;
         }
 
-        public static IntVector2 operator +(TPoint2D<int> p1, IntVector2 p2)
+        public static IntVector2 operator +(Point2D<int> p1, IntVector2 p2)
         {
             return new IntVector2(p1.X + p2.X, p1.Y + p2.Y);
         }
 
-        public static IntVector2 operator +(IntVector2 p1, TPoint2D<int> p2)
+        public static IntVector2 operator +(IntVector2 p1, Point2D<int> p2)
         {
             return new IntVector2(p1.X + p2.X, p1.Y + p2.Y);
         }
 
-        public static IntVector2 operator -(TPoint2D<int> p1, IntVector2 p2)
+        public static IntVector2 operator -(Point2D<int> p1, IntVector2 p2)
         {
             return new IntVector2(p1.X - p2.X, p1.Y - p2.Y);
         }
 
-        public static IntVector2 operator -(IntVector2 p1, TPoint2D<int> p2)
+        public static IntVector2 operator -(IntVector2 p1, Point2D<int> p2)
         {
             return new IntVector2(p1.X - p2.X, p1.Y - p2.Y);
         }
@@ -354,33 +335,6 @@ namespace CamCore
         public override string ToString()
         {
             return "X: " + X + ", Y: " + Y;
-        }
-
-        public XmlNode CreateXmlNode(XmlDocument xmlDoc, string nodeName = "IntVector2")
-        {
-            XmlNode node = xmlDoc.CreateElement(nodeName);
-
-            var attX = xmlDoc.CreateAttribute("X");
-            attX.Value = X.ToString();
-            var attY = xmlDoc.CreateAttribute("Y");
-            attY.Value = Y.ToString();
-            node.Attributes.Append(attX);
-            node.Attributes.Append(attY);
-
-            return node;
-        }
-
-        public void ReadFromXmlNode(XmlNode node)
-        {
-            X = int.Parse(node.Attributes["X"]?.Value);
-            Y = int.Parse(node.Attributes["Y"]?.Value);
-        }
-
-        public static IntVector2 CreateFromXmlNode(XmlNode node)
-        {
-            return new IntVector2(
-                int.Parse(node.Attributes["X"]?.Value),
-                int.Parse(node.Attributes["Y"]?.Value));
         }
     }
 }

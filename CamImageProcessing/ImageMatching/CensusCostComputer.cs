@@ -52,31 +52,10 @@ namespace CamImageProcessing.ImageMatching
             // Compute census transfor for each pixel for which mask is within bounds
             int maxY = ImageBase.RowCount - MaskHeight, maxX = ImageBase.ColumnCount - MaskWidth;
 
-            for(int x = MaskWidth; x < maxX; ++x)
-            {
-                for(int y = MaskHeight; y < maxY; ++y)
-                {
-                    CensusTransform(y, x, maskWordBase, maskWordMatched);
-                }
-            }
-
-            // For the rest let pixels outside boundary have same value as symmetricaly placed one on image
-            // 1) Top border
-            for(int y = 0; y < MaskHeight; ++y)
-                for(int x = 0; x < ImageBase.ColumnCount; ++x)
-                    CensusTransform_Border(y, x, maskWordBase, maskWordMatched);
-            // 2) Right border
-            for(int y = MaskHeight; y < ImageBase.RowCount; ++y)
-                for(int x = ImageBase.ColumnCount - MaskWidth; x < ImageBase.ColumnCount; ++x)
-                    CensusTransform_Border(y, x, maskWordBase, maskWordMatched);
-            // 3) Bottom border
-            for(int y = ImageBase.RowCount - MaskHeight; y < ImageBase.RowCount; ++y)
-                for(int x = 0; x < maxX; ++x)
-                    CensusTransform_Border(y, x, maskWordBase, maskWordMatched);
-            // 4) Left border
-            for(int y = MaskHeight; y < maxY; ++y)
-                for(int x = 0; x < MaskWidth; ++x)
-                    CensusTransform_Border(y, x, maskWordBase, maskWordMatched);
+            BorderFunction<CensusCostComputer>.DoBorderFunction(this,
+                (thisObj, y, x) => { CensusTransform(y, x, maskWordBase, maskWordMatched); },
+                (thisObj, y, x) => { CensusTransform_Border(y, x, maskWordBase, maskWordMatched); },
+                MaskWidth, MaskHeight, ImageBase.ColumnCount, ImageBase.RowCount); 
         }
 
         public void CensusTransform(int y, int x, uint[] maskBase, uint[] maskMatch)

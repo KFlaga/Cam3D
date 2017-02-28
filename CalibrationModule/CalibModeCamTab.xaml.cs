@@ -152,7 +152,7 @@ namespace CalibrationModule
 
         // Finds automatically calibration points on standard calibration image
         // (that is big black dots on white background )
-        // In point managment one still have to set correct grid number for each point
+        // In point management one still have to set correct grid number for each point
         private void FindCalibrationPoints(object sender, RoutedEventArgs e)
         {
             if(_imageControl.ImageSource == null)
@@ -192,9 +192,10 @@ namespace CalibrationModule
             }
             if(_imageControl.ImageSource == null)
             {
-                MessageBox.Show("Calibratiion image must be set");
+                MessageBox.Show("Calibration image must be set");
                 return;
             }
+
             for(int p = 0; p < CalibrationPoints.Count; p++)
             {
                 CalibrationPoint cp = CalibrationPoints[p];
@@ -205,6 +206,12 @@ namespace CalibrationModule
                 }
                 // First compute real point for every calib point
                 RealGridData grid = RealGrids[cp.GridNum];
+
+                cp.RealCol += CameraIndex == CalibrationData.CameraIndex.Left
+                    ? grid.OffsetLeft.X : grid.OffsetRight.X;
+                cp.RealRow += CameraIndex == CalibrationData.CameraIndex.Left
+                    ? grid.OffsetLeft.Y : grid.OffsetRight.Y;
+
                 cp.Real = grid.GetRealFromCell(cp.RealRow, cp.RealCol);
             }
 
@@ -245,8 +252,10 @@ namespace CalibrationModule
 
         private void UndistortImage(object sender, RoutedEventArgs e)
         {
-            ImageTransformer undistort = new ImageTransformer(ImageTransformer.InterpolationMethod.Quadratic, 1);
-            undistort.Transformation = new RadialDistortionTransformation(DistortionModel);
+            ImageTransformer undistort = new ImageTransformer(ImageTransformer.InterpolationMethod.Quadratic, 1)
+            {
+                Transformation = new RadialDistortionTransformation(DistortionModel)
+            };
 
             MaskedImage img = new MaskedImage();
             img.FromBitmapSource(_imageControl.ImageSource);
@@ -355,12 +364,12 @@ namespace CalibrationModule
             result.AppendLine("Points count: " + CalibrationPoints.Count.ToString());
             result.AppendLine("Total: " + error.ToString("F4"));
             result.AppendLine("Mean: " + (error / CalibrationPoints.Count).ToString("F4"));
-            result.AppendLine("Realtive: " + (relerror).ToString("F4"));
-            result.AppendLine("Realtive mean: " + (relerror / CalibrationPoints.Count).ToString("F4"));
-            result.AppendLine("Realtive in X: " + (rerrx).ToString("F4"));
-            result.AppendLine("Realtive in X mean: " + (rerrx / CalibrationPoints.Count).ToString("F4"));
-            result.AppendLine("Realtive in Y: " + (rerry).ToString("F4"));
-            result.AppendLine("Realtive in Y mean: " + (rerry / CalibrationPoints.Count).ToString("F4"));
+            result.AppendLine("Relative: " + (relerror).ToString("F4"));
+            result.AppendLine("Relative mean: " + (relerror / CalibrationPoints.Count).ToString("F4"));
+            result.AppendLine("Relative in X: " + (rerrx).ToString("F4"));
+            result.AppendLine("Relative in X mean: " + (rerrx / CalibrationPoints.Count).ToString("F4"));
+            result.AppendLine("Relative in Y: " + (rerry).ToString("F4"));
+            result.AppendLine("Relative in Y mean: " + (rerry / CalibrationPoints.Count).ToString("F4"));
 
             MessageBox.Show(result.ToString());
         }

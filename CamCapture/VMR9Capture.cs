@@ -116,14 +116,14 @@ namespace CamCapture
 
         private void FreeSurfaces()
         {
-            if (_surfaces != null)
+            if (_surfaces == null)
+                return;
+
+            foreach (Surface surface in _surfaces)
             {
-                for (int s = 0; s < _surfaces.Length; s++)
-                {
-                    _surfaces[s].Dispose();
-                }
-                _surfaces = null;
+                surface.Dispose();
             }
+            _surfaces = null;
         }
 
         #endregion
@@ -178,8 +178,7 @@ namespace CamCapture
                 BackBufferCount = 1
             };
 
-            if (_d3Device != null)
-                _d3Device.Dispose();
+            _d3Device?.Dispose();
 
             _d3Device = new Device(_d3d, _d3d.Adapters[0].Adapter, DeviceType.Hardware, _windowHandle,
                 CreateFlags.Multithreaded | CreateFlags.HardwareVertexProcessing, pparams);

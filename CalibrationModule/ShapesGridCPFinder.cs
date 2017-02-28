@@ -18,7 +18,7 @@ namespace CalibrationModule
 
         public CalibrationGrid CalibGrid { get; set; }
 
-        private List<TPoint2D<int>> _whiteBorder;
+        private List<Point2D<int>> _whiteBorder;
         int _currentWhiteField;
 
         public double PointSizeTresholdHigh { get; set; } // How much bigger than primary shape calib shape can be to accept it
@@ -98,7 +98,7 @@ namespace CalibrationModule
             _pixelCodes = new DenseMatrix(Image.RowCount, Image.ColumnCount);
             CalibShapes = new List<CalibrationShape>(32);
 
-            _whiteBorder = new List<TPoint2D<int>>();
+            _whiteBorder = new List<Point2D<int>>();
             // Fill whole background first
             FillBackground();
 
@@ -199,7 +199,7 @@ namespace CalibrationModule
                 else
                 {
                     _pixelCodes[y, x] = CellCodeToFloat(CellCode.WhiteField);
-                    _whiteBorder.Add(new TPoint2D<int>(y: y, x: x));
+                    _whiteBorder.Add(new Point2D<int>(y: y, x: x));
                     return false;
                 }
             }
@@ -352,7 +352,7 @@ namespace CalibrationModule
 
             while(CalibShapes.Count > 0)
             {
-                TPoint2D<int> fromPoint;
+                Point2D<int> fromPoint;
                 if(isRow)
                     ComputeDistanceToNextPoint_Row(x, y, ref d, out fromPoint);
                 else
@@ -392,45 +392,45 @@ namespace CalibrationModule
             }
         }
 
-        private void ComputeDistanceToNextPoint_Row(int x, int y, ref Vector2 d, out TPoint2D<int> fromPoint)
+        private void ComputeDistanceToNextPoint_Row(int x, int y, ref Vector2 d, out Point2D<int> fromPoint)
         {
             if(x > 1)
             {
                 d = CalibGrid[y, x - 1].GravityCenter - CalibGrid[y, x - 2].GravityCenter;
-                fromPoint = new TPoint2D<int>(y: y, x: x - 1);
+                fromPoint = new Point2D<int>(y: y, x: x - 1);
             }
             else if(x == 1)
             {
                 // Adding second in row -> use d from point 'above'
                 d = CalibGrid[y - 1, x].GravityCenter - CalibGrid[y - 1, x - 1].GravityCenter;
-                fromPoint = new TPoint2D<int>(y: y, x: x - 1);
+                fromPoint = new Point2D<int>(y: y, x: x - 1);
             }
             else // x == 0
             {
                 // Adding first in row -> move in y direction from 'above'
                 d = CalibGrid[y - 1, x].GravityCenter - CalibGrid[y - 2, x].GravityCenter;
-                fromPoint = new TPoint2D<int>(y: y - 1, x: x);
+                fromPoint = new Point2D<int>(y: y - 1, x: x);
             }
         }
 
-        private void ComputeDistanceToNextPoint_Column(int x, int y, ref Vector2 d, out TPoint2D<int> fromPoint)
+        private void ComputeDistanceToNextPoint_Column(int x, int y, ref Vector2 d, out Point2D<int> fromPoint)
         {
             if(y > 1)
             {
                 d = CalibGrid[y - 1, x].GravityCenter - CalibGrid[y - 2, x].GravityCenter;
-                fromPoint = new TPoint2D<int>(y: y - 1, x: x);
+                fromPoint = new Point2D<int>(y: y - 1, x: x);
             }
             else if(y == 1)
             {
                 // Adding second in column -> use d from point on 'left'
                 d = CalibGrid[y, x - 1].GravityCenter - CalibGrid[y - 1, x - 1].GravityCenter;
-                fromPoint = new TPoint2D<int>(y: y - 1, x: x);
+                fromPoint = new Point2D<int>(y: y - 1, x: x);
             }
             else //y == 0
             {
                 // Adding first in column -> move in x direction on 'left'
                 d = CalibGrid[y, x - 1].GravityCenter - CalibGrid[y, x - 2].GravityCenter;
-                fromPoint = new TPoint2D<int>(y: y, x: x - 1);
+                fromPoint = new Point2D<int>(y: y, x: x - 1);
             }
         }
 
@@ -442,7 +442,7 @@ namespace CalibrationModule
             CalibGrid.Add(y, x, dummy);
         }
 
-        private void ComputeEstimatedPoint(int x, int y, Vector2 d, TPoint2D<int> fromPoint, out Vector2 eP, out int minIndex, out double edx, out double edy)
+        private void ComputeEstimatedPoint(int x, int y, Vector2 d, Point2D<int> fromPoint, out Vector2 eP, out int minIndex, out double edx, out double edy)
         {
             eP = CalibGrid[fromPoint.Y, fromPoint.X].GravityCenter + d;
             minIndex = 0;
