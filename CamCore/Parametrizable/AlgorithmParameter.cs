@@ -20,7 +20,7 @@ namespace CamCore
         public abstract object ActualValue { get; }
         public abstract IParameterInput Input { get; set; }
 
-        public AlgorithmParameter(string name, string sname, string typename)
+        protected AlgorithmParameter(string name, string sname, string typename)
         {
             Name = name;
             ShortName = sname;
@@ -65,18 +65,26 @@ namespace CamCore
 
         public abstract void ReadFromXml(XmlNode node);
 
+        // Expects 'node' to constain childs with parameters with attributes 'id' and 'value'
         public static void ReadParametersFromXml(List<AlgorithmParameter> parameters, XmlNode node)
         {
             //<Parameters>
             //  <Parameter id="aaa" value="3"/>
             //</Parameters>
-
-            for(int i = 0; i < node.ChildNodes.Count; ++i)
+            
+            foreach(XmlNode paramNode in node.ChildNodes)
             {
-                XmlNode paramNode = node.ChildNodes[i];
-                string id = paramNode.Attributes["id"].Value;
-                AlgorithmParameter param = parameters.Find((p) => { return p.ShortName == id; });
-                param.ReadFromXml(paramNode);
+                if(paramNode.Attributes != null && 
+                    paramNode.Attributes.GetNamedItem("id") != null)
+                {
+                    string id = paramNode.Attributes["id"].Value;
+                    AlgorithmParameter param = parameters.Find((p) => { return p.ShortName == id; });
+#if DEBUG
+                    param.ReadFromXml(paramNode);
+#else
+                    param?.ReadFromXml(paramNode);
+#endif
+                }
             }
         }
     }
@@ -110,7 +118,7 @@ namespace CamCore
             }
         }
 
-        public AlgorithmParameter(string name, string sname, string typename) : 
+        protected AlgorithmParameter(string name, string sname, string typename) : 
             base(name, sname, typename)
         {
             DefaultValue = default(T);
@@ -119,7 +127,7 @@ namespace CamCore
             Value = default(T);
         }
 
-        public AlgorithmParameter(string name, string sname, string typename, 
+        protected AlgorithmParameter(string name, string sname, string typename, 
             T defVal, T minVal, T maxVal) : 
             base(name, sname, typename)
         {

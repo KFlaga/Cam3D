@@ -259,8 +259,10 @@ namespace CalibrationModule
             UpdateRealPoints(CalibPointsLeft, _grids, _reals);
             UpdateImagePoints();
 
-            _triangulation.CameraLeft = CameraLeft;
-            _triangulation.CameraRight = CameraRight;
+            CalibrationData cdata = new CalibrationData();
+            cdata.CameraLeft = CameraLeft;
+            cdata.CameraRight = CameraRight;
+            _triangulation.CalibData = cdata;
            // _triangulation.PointsLeft = new List<Vector<double>>(_imgsLeft);
            // _triangulation.PointsRight = new List<Vector<double>>(_imgsRight);
             _triangulation.Estimate3DPoints();
@@ -629,14 +631,14 @@ namespace CalibrationModule
                 result.AppendLine();
                 result.AppendLine();
 
-                ResultsMatrices(result, CalibrationData.CameraIndex.Left);
+                ResultsMatrices(result, CameraIndex.Left);
                 result.AppendLine();
                 result.AppendLine();
-                ResultsMatrices(result, CalibrationData.CameraIndex.Right);
+                ResultsMatrices(result, CameraIndex.Right);
                 result.AppendLine();
                 result.AppendLine();
-                ResultReprojectionError(result, CalibrationData.CameraIndex.Left);
-                ResultReprojectionError(result, CalibrationData.CameraIndex.Right);
+                ResultReprojectionError(result, CameraIndex.Left);
+                ResultReprojectionError(result, CameraIndex.Right);
 
                 double error = 0.0;
                 for(int i = 0; i < CalibPointsLeft.Count; ++i)
@@ -675,14 +677,14 @@ namespace CalibrationModule
             }
         }
 
-        private void ResultReprojectionError(StringBuilder result, CalibrationData.CameraIndex camIdx)
+        private void ResultReprojectionError(StringBuilder result, CameraIndex camIdx)
         {
             Matrix<double> camera = CalibrationData.Data.GetCameraMatrix(camIdx);
-            var imgs = camIdx == CalibrationData.CameraIndex.Left ? _imgsLeft : _imgsRight;
-            var reals = _reals; //camIdx == CalibrationData.CameraIndex.Left ? _realsLeft : _realsRight;
-            var cpoints = camIdx == CalibrationData.CameraIndex.Left ? CalibPointsLeft : CalibPointsRight;
-            var grids = CalibGrids;  //camIdx == CalibrationData.CameraIndex.Left ? GridsLeft : GridsRight;
-            string name = camIdx == CalibrationData.CameraIndex.Left ? "Left" : "Right";
+            var imgs = camIdx == CameraIndex.Left ? _imgsLeft : _imgsRight;
+            var reals = _reals; //camIdx == CameraIndex.Left ? _realsLeft : _realsRight;
+            var cpoints = camIdx == CameraIndex.Left ? CalibPointsLeft : CalibPointsRight;
+            var grids = CalibGrids;  //camIdx == CameraIndex.Left ? GridsLeft : GridsRight;
+            string name = camIdx == CameraIndex.Left ? "Left" : "Right";
 
             double error = 0.0;
             double error2 = 0.0;
@@ -717,9 +719,9 @@ namespace CalibrationModule
 
         }
 
-        private void ResultsMatrices(StringBuilder result, CalibrationData.CameraIndex camIdx)
+        private void ResultsMatrices(StringBuilder result, CameraIndex camIdx)
         {
-            if(camIdx == CalibrationData.CameraIndex.Left)
+            if(camIdx == CameraIndex.Left)
             {
                 result.AppendLine("Camera Matrix Left: ");
             }

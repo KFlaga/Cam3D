@@ -145,211 +145,162 @@ namespace UnitTestProject1
         [TestMethod]
         public void Test_EstimateCameraMatrix_Minimised()
         {
-            PrepareCameraMatrix();
-            var points = GenerateCalibrationPoints_Random(100);
-            var noisedPoints = AddNoise(points, _varianceReal, _varianceImage, 200);
-            PrepareCalibrator(noisedPoints);
+            // CHANGE TEST TO REAL-GRID BASED
 
-            _calib.HomoPoints();
-            _calib.NormalizeImagePoints();
-            _calib.NormalizeRealPoints();
-            _calib._pointsNormalised = true;
-            _calib.CameraMatrix = _calib.FindLinearEstimationOfCameraMatrix();
-            //    _calib.FindNormalisedVariances();
-            _calib.DenormaliseCameraMatrix();
-            _calib._pointsNormalised = false;
+  //          PrepareCameraMatrix();
+  //          var points = GenerateCalibrationPoints_Random(100);
+  //          var noisedPoints = AddNoise(points, _varianceReal, _varianceImage, 200);
+  //          PrepareCalibrator(noisedPoints);
 
-            _eCM = _calib.CameraMatrix;
-            double totalDiff = 0.0;
-            for(int p = 0; p < _pointsCount; ++p)
-            {
-                var cp = points[p];
-                Vector<double> rp = new DenseVector(4);
-                rp[0] = cp.RealX;
-                rp[1] = cp.RealY;
-                rp[2] = cp.RealZ;
-                rp[3] = 1.0;
-                var imagePoint = _eCM * rp;
+  //          _calib.HomoPoints();
+  //          _calib.NormalizeImagePoints();
+  //          _calib.NormalizeRealPoints();
+  //          _calib._pointsNormalised = true;
+  //          _calib.CameraMatrix = _calib.FindLinearEstimationOfCameraMatrix();
+  //          //    _calib.FindNormalisedVariances();
+  //          _calib.DenormaliseCameraMatrix();
+  //          _calib._pointsNormalised = false;
 
-                Vector2 ip = new Vector2(imagePoint[0] / imagePoint[2], imagePoint[1] / imagePoint[2]);
-                totalDiff += (ip - cp.Img).Length();
-                Assert.IsTrue((ip - cp.Img).Length() < 1.0,
-                    "Point after linear estimation too far : " + (ip - cp.Img).Length());
-            }
+  //          _eCM = _calib.CameraMatrix;
+  //          double totalDiff = 0.0;
+  //          for(int p = 0; p < _pointsCount; ++p)
+  //          {
+  //              var cp = points[p];
+  //              Vector<double> rp = new DenseVector(4);
+  //              rp[0] = cp.RealX;
+  //              rp[1] = cp.RealY;
+  //              rp[2] = cp.RealZ;
+  //              rp[3] = 1.0;
+  //              var imagePoint = _eCM * rp;
 
-            _calib.HomoPoints();
-             _calib.NormalizeImagePoints();
-             _calib.NormalizeRealPoints();
-            _calib.CameraMatrix = _calib.FindLinearEstimationOfCameraMatrix();
-            _calib._pointsNormalised = true;
-            _calib.FindNormalisedVariances();
-            _calib.UseCovarianceMatrix = true;
-            var lecm = _eCM.Clone();
+  //              Vector2 ip = new Vector2(imagePoint[0] / imagePoint[2], imagePoint[1] / imagePoint[2]);
+  //              totalDiff += (ip - cp.Img).Length();
+  //              Assert.IsTrue((ip - cp.Img).Length() < 1.0,
+  //                  "Point after linear estimation too far : " + (ip - cp.Img).Length());
+  //          }
 
-            // Disturb camera matrix a little
-  //          _calib.CameraMatrix = AddNoise(_calib.CameraMatrix);
+  //          _calib.HomoPoints();
+  //           _calib.NormalizeImagePoints();
+  //           _calib.NormalizeRealPoints();
+  //          _calib.CameraMatrix = _calib.FindLinearEstimationOfCameraMatrix();
+  //          _calib._pointsNormalised = true;
+  //          _calib.FindNormalisedVariances();
+  //          _calib.UseCovarianceMatrix = true;
+  //          var lecm = _eCM.Clone();
 
-            _calib._miniAlg.DoComputeJacobianNumerically = true;
-            _calib._miniAlg.NumericalDerivativeStep = 1e-4;
-            _calib.MinimizeError();
+  //          // Disturb camera matrix a little
+  ////          _calib.CameraMatrix = AddNoise(_calib.CameraMatrix);
 
-            // _calib.DenormaliseCameraMatrix();
-            _calib.DecomposeCameraMatrix();
-            _eCM = _calib.CameraMatrix;
+  //          _calib._miniAlg.DoComputeJacobianNumerically = true;
+  //          _calib._miniAlg.NumericalDerivativeStep = 1e-4;
+  //          _calib.MinimizeError();
 
-            var errVec = _eCM.PointwiseDivide_NoNaN(lecm);
-            double err = errVec.L2Norm();
+  //          // _calib.DenormaliseCameraMatrix();
+  //          _calib.DecomposeCameraMatrix();
+  //          _eCM = _calib.CameraMatrix;
 
-            double scaleK = 1.0 / _calib.CameraInternalMatrix[2, 2];
-            _eCM.MultiplyThis(-scaleK);
+  //          var errVec = _eCM.PointwiseDivide_NoNaN(lecm);
+  //          double err = errVec.L2Norm();
 
-            var eK = _calib.CameraInternalMatrix.Multiply(scaleK);
-            var eR = -_calib.CameraRotationMatrix;
-            var eC = -(_eCM.SubMatrix(0, 3, 0, 3).Inverse() * _eCM.Column(3));
+  //          double scaleK = 1.0 / _calib.CameraInternalMatrix[2, 2];
+  //          _eCM.MultiplyThis(-scaleK);
 
-            Matrix<double> eExt = new DenseMatrix(3, 4);
-            eExt.SetSubMatrix(0, 0, eR);
-            eExt.SetColumn(3, -eR * eC);
+  //          var eK = _calib.CameraInternalMatrix.Multiply(scaleK);
+  //          var eR = -_calib.CameraRotationMatrix;
+  //          var eC = -(_eCM.SubMatrix(0, 3, 0, 3).Inverse() * _eCM.Column(3));
 
-            var eCM = eK * eExt;
+  //          Matrix<double> eExt = new DenseMatrix(3, 4);
+  //          eExt.SetSubMatrix(0, 0, eR);
+  //          eExt.SetColumn(3, -eR * eC);
 
-            // var errVec = _CM.PointwiseDivide_NoNaN(_eCM);
-            // double err = errVec.L2Norm();
-            // Assert.IsTrue(
-            //    Math.Abs(err - Math.Sqrt(12)) < Math.Sqrt(12) / 1000.0 || // max 0.1% diffrence
-            //    (_eCM - _CM).FrobeniusNorm() < 1e-3);
+  //          var eCM = eK * eExt;
 
-            double estDiff = 0;
-            for(int p = 0; p < _pointsCount; ++p)
-            {
-                var cp = points[p];
-                Vector<double> rp = new DenseVector(4);
-                rp[0] = cp.RealX;
-                rp[1] = cp.RealY;
-                rp[2] = cp.RealZ;
-                rp[3] = 1.0;
-                var imagePoint = _eCM * rp;
+  //          // var errVec = _CM.PointwiseDivide_NoNaN(_eCM);
+  //          // double err = errVec.L2Norm();
+  //          // Assert.IsTrue(
+  //          //    Math.Abs(err - Math.Sqrt(12)) < Math.Sqrt(12) / 1000.0 || // max 0.1% diffrence
+  //          //    (_eCM - _CM).FrobeniusNorm() < 1e-3);
 
-                Vector2 ip = new Vector2(imagePoint[0] / imagePoint[2], imagePoint[1] / imagePoint[2]);
-                estDiff += (ip - cp.Img).Length();
-                Assert.IsTrue((ip - cp.Img).Length() < 1.5,
-                        "Point after error minimalisation too far : " + (ip - cp.Img).Length());
-            }
+  //          double estDiff = 0;
+  //          for(int p = 0; p < _pointsCount; ++p)
+  //          {
+  //              var cp = points[p];
+  //              Vector<double> rp = new DenseVector(4);
+  //              rp[0] = cp.RealX;
+  //              rp[1] = cp.RealY;
+  //              rp[2] = cp.RealZ;
+  //              rp[3] = 1.0;
+  //              var imagePoint = _eCM * rp;
 
-            var minialg = _calib._miniAlg;
-            // Test conovergence :
-            // ||mX-rX|| = ||mX-eX|| + ||rX-eX|| (or squared??)
-            // rX - real point from 'points'
-            // mX - measured point, noised
-            // eX = estimated X from result vector for 3d points and ePeX for image point
-            double len2_mr = 0;
-            double len2_me = 0;
-            double len2_re = 0;
-            for(int i = 0; i < points.Count; ++i)
-            {
-                double rX = points[i].RealX;
-                double rY = points[i].RealY;
-                double rZ = points[i].RealZ;
-                double rx = points[i].ImgX;
-                double ry = points[i].ImgY;
+  //              Vector2 ip = new Vector2(imagePoint[0] / imagePoint[2], imagePoint[1] / imagePoint[2]);
+  //              estDiff += (ip - cp.Img).Length();
+  //              Assert.IsTrue((ip - cp.Img).Length() < 1.5,
+  //                      "Point after error minimalisation too far : " + (ip - cp.Img).Length());
+  //          }
 
-                double mX = noisedPoints[i].RealX;
-                double mY = noisedPoints[i].RealY;
-                double mZ = noisedPoints[i].RealZ;
-                double mx = noisedPoints[i].ImgX;
-                double my = noisedPoints[i].ImgY;
+  //          var minialg = _calib._miniAlg;
+  //          // Test conovergence :
+  //          // ||mX-rX|| = ||mX-eX|| + ||rX-eX|| (or squared??)
+  //          // rX - real point from 'points'
+  //          // mX - measured point, noised
+  //          // eX = estimated X from result vector for 3d points and ePeX for image point
+  //          double len2_mr = 0;
+  //          double len2_me = 0;
+  //          double len2_re = 0;
+  //          for(int i = 0; i < points.Count; ++i)
+  //          {
+  //              double rX = points[i].RealX;
+  //              double rY = points[i].RealY;
+  //              double rZ = points[i].RealZ;
+  //              double rx = points[i].ImgX;
+  //              double ry = points[i].ImgY;
 
-                double eX = minialg.BestResultVector[3 * i + 12];
-                double eY = minialg.BestResultVector[3 * i + 13];
-                double eZ = minialg.BestResultVector[3 * i + 14];
+  //              double mX = noisedPoints[i].RealX;
+  //              double mY = noisedPoints[i].RealY;
+  //              double mZ = noisedPoints[i].RealZ;
+  //              double mx = noisedPoints[i].ImgX;
+  //              double my = noisedPoints[i].ImgY;
 
-                Vector<double> rp = new DenseVector(4);
-                rp[0] = eX;
-                rp[1] = eY;
-                rp[2] = eZ;
-                rp[3] = 1.0;
-                var imagePoint = _eCM * rp;
-                double ex = imagePoint[0] / imagePoint[2];
-                double ey = imagePoint[1] / imagePoint[2];
+  //              double eX = minialg.BestResultVector[3 * i + 12];
+  //              double eY = minialg.BestResultVector[3 * i + 13];
+  //              double eZ = minialg.BestResultVector[3 * i + 14];
 
-                len2_re += (rX - eX) * (rX - eX);
-                len2_re += (rY - eY) * (rY - eY);
-                len2_re += (rZ - eZ) * (rZ - eZ);
-                len2_re += (rx - ex) * (rx - ex);
-                len2_re += (ry - ey) * (ry - ey);
+  //              Vector<double> rp = new DenseVector(4);
+  //              rp[0] = eX;
+  //              rp[1] = eY;
+  //              rp[2] = eZ;
+  //              rp[3] = 1.0;
+  //              var imagePoint = _eCM * rp;
+  //              double ex = imagePoint[0] / imagePoint[2];
+  //              double ey = imagePoint[1] / imagePoint[2];
 
-                len2_me += (mX - eX) * (mX - eX);
-                len2_me += (mY - eY) * (mY - eY);
-                len2_me += (mZ - eZ) * (mZ - eZ);
-                len2_me += (mx - ex) * (mx - ex);
-                len2_me += (my - ey) * (my - ey);
+  //              len2_re += (rX - eX) * (rX - eX);
+  //              len2_re += (rY - eY) * (rY - eY);
+  //              len2_re += (rZ - eZ) * (rZ - eZ);
+  //              len2_re += (rx - ex) * (rx - ex);
+  //              len2_re += (ry - ey) * (ry - ey);
 
-                len2_mr += (rX - mX) * (rX - mX);
-                len2_mr += (rY - mY) * (rY - mY);
-                len2_mr += (rZ - mZ) * (rZ - mZ);
-                len2_mr += (rx - mx) * (rx - mx);
-                len2_mr += (ry - my) * (ry - my);
-            }
+  //              len2_me += (mX - eX) * (mX - eX);
+  //              len2_me += (mY - eY) * (mY - eY);
+  //              len2_me += (mZ - eZ) * (mZ - eZ);
+  //              len2_me += (mx - ex) * (mx - ex);
+  //              len2_me += (my - ey) * (my - ey);
 
-            Assert.IsTrue( Math.Abs(len2_mr - len2_re - len2_me) < len2_mr/100.0 ||
-                 Math.Abs(Math.Sqrt(len2_mr) - Math.Sqrt(len2_re) - Math.Sqrt(len2_me)) < Math.Sqrt(len2_mr) / 100.0,
-                "Triangle test failed."+" Points distances: LinearDiff = " + totalDiff +
-                 ". MiniDiff = " + estDiff);
+  //              len2_mr += (rX - mX) * (rX - mX);
+  //              len2_mr += (rY - mY) * (rY - mY);
+  //              len2_mr += (rZ - mZ) * (rZ - mZ);
+  //              len2_mr += (rx - mx) * (rx - mx);
+  //              len2_mr += (ry - my) * (ry - my);
+  //          }
 
-            Assert.IsTrue(estDiff < totalDiff,
-                 "Points after minimalisation are too far. LinearDiff = " + totalDiff +
-                 ". MiniDiff = " + estDiff);
-        }
+  //          Assert.IsTrue( Math.Abs(len2_mr - len2_re - len2_me) < len2_mr/100.0 ||
+  //               Math.Abs(Math.Sqrt(len2_mr) - Math.Sqrt(len2_re) - Math.Sqrt(len2_me)) < Math.Sqrt(len2_mr) / 100.0,
+  //              "Triangle test failed."+" Points distances: LinearDiff = " + totalDiff +
+  //               ". MiniDiff = " + estDiff);
 
-
-        [TestMethod]
-        public void Test_CameraMatrix_Jacobian()
-        {
-            PrepareCameraMatrix();
-            var points = GenerateCalibrationPoints_Random();
-            PrepareCalibrator(
-                AddNoise(points, _varianceReal, _varianceImage));
-
-            _calib.HomoPoints();
-            //_calib.NormalizeImagePoints();
-            // _calib.NormalizeRealPoints();
-            _calib.CameraMatrix = _calib.FindLinearEstimationOfCameraMatrix();
-            // _calib.FindNormalisedVariances();
-
-            _eCM = _calib.CameraMatrix;
-            for(int p = 0; p < _pointsCount; ++p)
-            {
-                var cp = points[p];
-                Vector<double> rp = new DenseVector(4);
-                rp[0] = cp.RealX;
-                rp[1] = cp.RealY;
-                rp[2] = cp.RealZ;
-                rp[3] = 1.0;
-                var imagePoint = _eCM * rp;
-
-                Vector2 ip = new Vector2(imagePoint[0] / imagePoint[2], imagePoint[1] / imagePoint[2]);
-                Assert.IsTrue((ip - cp.Img).Length() < 0.4);
-            }
-
-            _calib.DecomposeCameraMatrix();
-
-            var miniAlg = _calib._miniAlg;
-            _calib.PrepareMinimalisationAlg();
-            miniAlg.Init();
-
-            miniAlg.DoComputeJacobianNumerically = false;
-            Matrix<double> testedJacobian = new DenseMatrix(miniAlg.MeasurementsVector.Count, miniAlg.ParametersVector.Count);
-            miniAlg.ComputeJacobian(testedJacobian);
-
-            miniAlg.DoComputeJacobianNumerically = true;
-            Matrix<double> numericJacobian = new DenseMatrix(miniAlg.MeasurementsVector.Count, miniAlg.ParametersVector.Count);
-            miniAlg.ComputeJacobian(numericJacobian);
-
-            int size = testedJacobian.RowCount * testedJacobian.ColumnCount;
-            double jacobian_diff = numericJacobian.PointwiseDivide_NoNaN(testedJacobian).FrobeniusNorm();
-            Assert.IsTrue(Math.Abs(jacobian_diff - Math.Sqrt(size)) < Math.Sqrt(size) / 100.0 || // 1% diffrence max
-                (numericJacobian - testedJacobian).FrobeniusNorm() < 1e-6,
-                "Analitical and numeric jacobians differ");
+  //          Assert.IsTrue(estDiff < totalDiff,
+  //               "Points after minimalisation are too far. LinearDiff = " + totalDiff +
+  //               ". MiniDiff = " + estDiff);
         }
 
         int _pointsCount = 100;
@@ -366,8 +317,8 @@ namespace UnitTestProject1
         double _rangeImage_MinX = -5.0;
         double _rangeImage_MaxX = 5.0;
 
-        double _varianceReal = 1.5;
-        double _varianceImage = 0.1;
+        double _varianceReal = 1;
+        double _varianceImage = 0.01;
 
         public List<CalibrationPoint> GenerateCalibrationPoints_Random(int seed = 0)
         {

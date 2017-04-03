@@ -71,25 +71,25 @@ namespace Image3DModule
 
             var segments = segmentation.Segments;
             var segmentAssignments = segmentation.SegmentAssignments;
-            TPoint2D<int>[] segmentMin = new TPoint2D<int>[segments.Count];
-            TPoint2D<int>[] segmentMax = new TPoint2D<int>[segments.Count];
+            Point2D<int>[] segmentMin = new Point2D<int>[segments.Count];
+            Point2D<int>[] segmentMax = new Point2D<int>[segments.Count];
 
             for(int i = 0; i < segments.Count; ++i)
             {
-                segmentMin[i] = new TPoint2D<int>(DispMap.ColumnCount + 1, DispMap.RowCount + 1);
-                segmentMax[i] = new TPoint2D<int>(-1, -1);
+                segmentMin[i] = new Point2D<int>(DispMap.ColumnCount + 1, DispMap.RowCount + 1);
+                segmentMax[i] = new Point2D<int>(-1, -1);
             }
 
             // 1) Find segments sizes
             foreach(var point3d in Points3D)
             {
-                TPoint2D<int> imgPoint = new TPoint2D<int>(y: (int)point3d.Cam1Img.Y, x: (int)point3d.Cam1Img.X);
+                Point2D<int> imgPoint = new Point2D<int>(y: (int)point3d.Cam1Img.Y, x: (int)point3d.Cam1Img.X);
                 int idx = segmentAssignments[imgPoint.Y, imgPoint.X];
                 if(idx >= 0)
                 {
-                    segmentMin[idx] = new TPoint2D<int>(y: Math.Min(segmentMin[idx].Y, imgPoint.Y),
+                    segmentMin[idx] = new Point2D<int>(y: Math.Min(segmentMin[idx].Y, imgPoint.Y),
                         x: Math.Min(segmentMin[idx].X, imgPoint.X));
-                    segmentMax[idx] = new TPoint2D<int>(y: Math.Max(segmentMax[idx].Y, imgPoint.Y),
+                    segmentMax[idx] = new Point2D<int>(y: Math.Max(segmentMax[idx].Y, imgPoint.Y),
                         x: Math.Max(segmentMax[idx].X, imgPoint.X));
                 }
             }
@@ -108,7 +108,7 @@ namespace Image3DModule
             // 3) For each point add it to surface
             for(int i = 0; i < Points3D.Count; ++i)
             {
-                TPoint2D<int> imgPoint = new TPoint2D<int>(
+                Point2D<int> imgPoint = new Point2D<int>(
                     y: (int)Points3D[i].Cam1Img.Y, x: (int)Points3D[i].Cam1Img.X);
                 int idx = segmentAssignments[imgPoint.Y, imgPoint.X];
                 if(idx >= 0 && surfaces[idx] != null)

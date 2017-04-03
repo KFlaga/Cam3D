@@ -28,17 +28,17 @@
             </ScrollViewer>
         </Border>
 
-        <CamControls:DisparityImage x:Name="_disparityMapImage" Grid.Column="1" Grid.Row="1" BorderBrush="Black" BorderThickness="1"/>
+        <CamControls:DisparityImage x:Name="_disparityMapImage" 
+                                    Grid.Column="1" Grid.Row="1" BorderBrush="Black" BorderThickness="1"/>
 
         <Border Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="3" BorderBrush="Black" BorderThickness="1">
             <DockPanel DockPanel.Dock="Bottom" Height="35" Background="LightGray">
                 <Button Margin="10,4,3,4" Click="UpdateMaps">Update Maps</Button>
+                <Button Margin="10,4,3,4" Click="UpdateImages">Update Images</Button>
                 <Button Margin="10,4,3,4" Click="ResetMaps">Reset Maps</Button>
 
                 <Button Margin="10,4,3,4" Click="RestoreMap" DockPanel.Dock="Right">Restore Map</Button>
                 <Button Margin="10,4,3,4" Click="StoreMap" DockPanel.Dock="Right">Store Map</Button>
-                <Button Margin="10,4,3,4" Click="SaveMapToFile" DockPanel.Dock="Right">Save Map To File</Button>
-                <Button Margin="10,4,3,4" Click="LoadMapFromFile" DockPanel.Dock="Right">Load Map From File</Button>
                 <Label></Label>
             </DockPanel>
         </Border>

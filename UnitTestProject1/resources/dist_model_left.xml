@@ -1,0 +1,10 @@
+<DistortionModel name="Rational3">
+  <Parameters>
+    <Parameter>0.0379541299246401</Parameter>
+    <Parameter>-0.0380029628779754</Parameter>
+    <Parameter>-0.013693687090047</Parameter>
+    <Parameter>0.408701716458535</Parameter>
+    <Parameter>0.297467637588093</Parameter>
+  </Parameters>
+  <ImageScale>0.00125</ImageScale>
+</DistortionModel>

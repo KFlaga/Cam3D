@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfRealGridData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <RealGridData Num="0" Label="far_front">
+    <TopLeft X="-110.5" Y="196.016" Z="0" />
+    <BotLeft X="-113.014" Y="34.016" Z="0" />
+    <BotRight X="120.755" Y="34.484" Z="0" />
+    <TopRight X="118.032" Y="196.484" Z="0" />
+    <Rows>7</Rows>
+    <Columns>10</Columns>
+    <OffsetLeft X="0" Y="0" />
+    <OffsetRight X="0" Y="0" />
+  </RealGridData>
+  <RealGridData Num="1" Label="far_left">
+    <TopLeft X="-104.282" Y="196.016" Z="-60.799" />
+    <BotLeft X="-103.246" Y="34.016" Z="-59.835" />
+    <BotRight X="105.588" Y="34.484" Z="60.783" />
+    <TopRight X="103.624" Y="196.484" Z="60.747" />
+    <Rows>7</Rows>
+    <Columns>10</Columns>
+    <OffsetLeft X="0" Y="0" />
+    <OffsetRight X="0" Y="0" />
+  </RealGridData>
+  <RealGridData Num="2" Label="far_right">
+    <TopLeft X="-106.21" Y="196.033" Z="61.852" />
+    <BotLeft X="-105.248" Y="34.033" Z="60.852" />
+    <BotRight X="103.693" Y="34.967" Z="-59.247" />
+    <TopRight X="103.657" Y="196.967" Z="-58.247" />
+    <Rows>7</Rows>
+    <Columns>10</Columns>
+    <OffsetLeft X="0" Y="0" />
+    <OffsetRight X="0" Y="0" />
+  </RealGridData>
+  <RealGridData Num="3" Label="close_front">
+    <TopLeft X="-113.187" Y="196.5" Z="-207" />
+    <BotLeft X="-111.187" Y="34.5" Z="-207" />
+    <BotRight X="129.477" Y="34.5" Z="-207" />
+    <TopRight X="127.477" Y="196.5" Z="-207" />
+    <Rows>7</Rows>
+    <Columns>10</Columns>
+    <OffsetLeft X="0" Y="0" />
+    <OffsetRight X="0" Y="2" />
+  </RealGridData>
+  <RealGridData Num="4" Label="close_left">
+    <TopLeft X="-95.746" Y="196.516" Z="-266.868" />
+    <BotLeft X="-94.746" Y="34.516" Z="-265.868" />
+    <BotRight X="114.141" Y="34.984" Z="-146.237" />
+    <TopRight X="113.141" Y="196.984" Z="-147.237" />
+    <Rows>7</Rows>
+    <Columns>10</Columns>
+    <OffsetLeft X="1" Y="1" />
+    <OffsetRight X="0" Y="2" />
+  </RealGridData>
+  <RealGridData Num="5" Label="close_right">
+    <TopLeft X="-94.778" Y="196.5" Z="-145.672" />
+    <BotLeft X="-93.778" Y="34.5" Z="-146.599" />
+    <BotRight X="114.173" Y="34.5" Z="-265.401" />
+    <TopRight X="113.173" Y="196.5" Z="-266.328" />
+    <Rows>7</Rows>
+    <Columns>10</Columns>
+    <OffsetLeft X="0" Y="0" />
+    <OffsetRight X="0" Y="0" />
+  </RealGridData>
+</ArrayOfRealGridData>

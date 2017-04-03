@@ -63,7 +63,6 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
     <Reference Include="WindowsBase" />
     <Reference Include="WriteableBitmapEx.Wpf">
@@ -77,9 +76,6 @@
     <Compile Include="ImageMatchingModule.cs" />
     <Compile Include="ImageMatchingModeTabs.xaml.cs">
       <DependentUpon>ImageMatchingModeTabs.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="DisparityLegend.xaml.cs">
-      <DependentUpon>DisparityLegend.xaml</DependentUpon>
     </Compile>
     <Compile Include="DisparityMapTab.xaml.cs">
       <DependentUpon>DisparityMapTab.xaml</DependentUpon>
@@ -118,10 +114,6 @@
     <Page Include="ImageMatchingModeTabs.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="DisparityLegend.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="DisparityMapTab.xaml">
       <Generator>MSBuild:Compile</Generator>

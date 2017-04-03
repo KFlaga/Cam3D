@@ -1,6 +1,7 @@
 ﻿using CamCore;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
+using System;
 using System.Collections.Generic;
 
 namespace CamCore
@@ -162,8 +163,8 @@ namespace CamCore
             double fitA, double fitB, double fitC)
         {
             // We need to take 2 ends of the line ( points should be sorted )
-            Vector2 p1 = line[0].Pf;
-            Vector2 p2 = line[line.Count - 1].Pf;
+           Vector2 p1 = line[0].Pf;
+           Vector2 p2 = line[line.Count - 1].Pf;
 
             return DirectionFromLineEnds(p1, p2, fitA, fitB, fitC);
         }
@@ -199,5 +200,63 @@ namespace CamCore
 
             return DistortionDirection.Unknown;
         }
+
+        public DistortionDirection DirectionFromFitQuadric(List<DistortionPoint> linePoints,
+            Quadric quadric, Vector2 distCenter, Vector2 fitPoint)
+        {
+            // 1) Get tangent coeffs
+            // 2) Find if points are closer to tangent than center or further
+            // 3) If at least 75% of points lies on the same side then we have direction
+            //      if not then we have no radial distortion
+            
+            Line2D tangent = quadric.GetTangetThroughPoint(fitPoint);
+
+            // Find crossing point of tangent and every point
+            int centerCloserToQuadCount = 0, centerCloserToTangnetCount = 0;
+            for(int i = 0; i < linePoints.Count; ++i)
+            {
+                var pt = linePoints[i].Pf;
+
+                // Find line from center to fit point
+                Line2D centerToFit = new Line2D(distCenter, pt);
+                Vector2 intPoint = Line2D.IntersectionPoint(tangent, centerToFit);
+
+                if(Math.Abs(intPoint.X * tangent.A + intPoint.Y * tangent.B + tangent.C) > 1e-3)
+                {
+                    int a = 0;
+                }
+
+                if(intPoint != null)
+                {
+                    // Check distance from center to line point and tangent point
+                    double dToQuad = distCenter.DistanceToSquared(pt);
+                    double dToTangent = distCenter.DistanceToSquared(intPoint);
+
+                    if(dToQuad > dToTangent)
+                        centerCloserToTangnetCount += 1;
+                    else
+                        centerCloserToQuadCount += 1;
+                }
+            }
+
+            if(centerCloserToQuadCount > linePoints.Count * 0.75)
+            {
+                // Almost all points on quad are closer to center, so we have barrel distortion
+                return DistortionDirection.Barrel;
+            }
+            else if(centerCloserToTangnetCount > linePoints.Count * 0.75)
+            {
+                // Almost all points on tangent are closer to center, so we have cushion distortion
+                return DistortionDirection.Cushion;
+            }
+            else
+            {
+                // We have no distortion/undefined
+                return DistortionDirection.None;
+            }
+        }
+
+        public abstract void SetInitialParametersFromQuadrics(List<Quadric> quadrics,
+            List<List<Vector2>> linePoints, List<int> fitPoints);
     }
 }

@@ -106,12 +106,16 @@ namespace CalibrationModule
             _minimalisation.NumericalDerivativeStep = 1e-4;
             _minimalisation.UseCovarianceMatrix = false;
             _minimalisation.DumpingMethodUsed = LevenbergMarquardtBaseAlgorithm.DumpingMethod.Multiplicative;
+            _minimalisation.FindInitialModelParameters = false;
         }
 
         // Computes parameters of model (CorrectionLines should be set)
         public void ComputeCorrectionParameters()
         {
-            _modelParams.CopyTo(DistortionModel.Parameters);
+            if(_modelParams != null)
+            {
+                _modelParams.CopyTo(DistortionModel.Parameters);
+            }
             // 1) Scale lines so that max radius sqrt(w^2+h^2) is equal to 1
             Scale = 1.0 / Math.Sqrt(ImageHeight * ImageHeight + ImageWidth * ImageWidth);
             DistortionModel.ImageScale = Scale;
@@ -133,14 +137,17 @@ namespace CalibrationModule
             var dc = DistortionModel.DistortionCenter;
             double scaledWidth = dc.X * Scale;
             double scaledHeight = dc.Y * Scale;
+            DistortionModel.InitialCenterEstimation = new Vector2(scaledWidth, scaledHeight);
             DistortionModel.DistortionCenter = new Vector2(scaledWidth, scaledHeight);
-            
+
             // 3) Init minimalisation algorithm
+            _minimalisation.DistortionModel = DistortionModel;
             Vector<double> parVec = new DenseVector(DistortionModel.ParametersCount);
             DistortionModel.Parameters.CopyTo(parVec);
             _minimalisation.ParametersVector = parVec;
             _minimalisation.LinePoints = scaledLines;
             _minimalisation.Terminate = false;
+            _minimalisation.FindInitialModelParameters = (_modelParams == null);
 
             _minimalisation.MaximumResidiual = 0.0;
             Vector2 imgCenter = new Vector2(ImageWidth * Scale, ImageHeight * Scale);
@@ -148,7 +155,7 @@ namespace CalibrationModule
             {
                 foreach(var point in points)
                 {
-                    _minimalisation.MaximumResidiual += point.DistanceToSquared(imgCenter) * 0.0001 * Scale;
+                    _minimalisation.MaximumResidiual += point.DistanceToSquared(imgCenter) * 0.01 * Scale * Scale;
                 }
             }
             

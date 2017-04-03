@@ -9,7 +9,7 @@ namespace CamImageProcessing.ImageMatching
 {
     public class ImageMatchingAlgorithm : IParameterizable
     {
-        public CostAggregator Aggregator { get; protected set; }
+        public CostAggregator Aggregator { get; set; }
 
         public DisparityMap MapLeft { get; set; }
         public DisparityMap MapRight { get; set; }

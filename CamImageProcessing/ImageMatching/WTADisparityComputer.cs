@@ -23,6 +23,7 @@ namespace CamImageProcessing.ImageMatching
 
         public override void Init()
         {
+            base.Init();
             _dispForPixel = new List<Disparity>(ImageBase.RowCount + ImageBase.ColumnCount);
              _minIdx = -1;
              _min2Idx = -1;

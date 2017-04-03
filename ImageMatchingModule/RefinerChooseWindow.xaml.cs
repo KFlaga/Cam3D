@@ -68,10 +68,20 @@ namespace ImageMatchingModule
             limitRefiner.InitParameters();
             _availableRefiners.Add(limitRefiner);
 
+            InvalidateLowConfidenceRefiner confidenceRefiner = new InvalidateLowConfidenceRefiner();
+            confidenceRefiner.InitParameters();
+            _availableRefiners.Add(confidenceRefiner);
+
+            AnisotopicDiffusionRefiner diffusionRefiner = new AnisotopicDiffusionRefiner();
+            diffusionRefiner.InitParameters();
+            _availableRefiners.Add(diffusionRefiner);
+
             _refinersCombo.Items.Add(medianRefiner);
             _refinersCombo.Items.Add(peakRefiner);
             _refinersCombo.Items.Add(crossRefiner);
             _refinersCombo.Items.Add(limitRefiner);
+            _refinersCombo.Items.Add(confidenceRefiner);
+            _refinersCombo.Items.Add(diffusionRefiner);
         }
 
         private void _refinersCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)

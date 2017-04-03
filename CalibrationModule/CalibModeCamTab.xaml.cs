@@ -16,7 +16,7 @@ namespace CalibrationModule
 {
     public partial class CalibModeCamTab : UserControl, IDisposable
     {
-        public CalibrationData.CameraIndex CameraIndex { get; set; }
+        public CameraIndex CameraIndex { get; set; }
 
         private List<CalibrationPoint> _currentImageGrid = new List<CalibrationPoint>();
         private CalibrationPointsFinder _currentImagePointFinder = null;
@@ -207,9 +207,9 @@ namespace CalibrationModule
                 // First compute real point for every calib point
                 RealGridData grid = RealGrids[cp.GridNum];
 
-                cp.RealCol += CameraIndex == CalibrationData.CameraIndex.Left
+                cp.RealCol += CameraIndex == CameraIndex.Left
                     ? grid.OffsetLeft.X : grid.OffsetRight.X;
-                cp.RealRow += CameraIndex == CalibrationData.CameraIndex.Left
+                cp.RealRow += CameraIndex == CameraIndex.Left
                     ? grid.OffsetLeft.Y : grid.OffsetRight.Y;
 
                 cp.Real = grid.GetRealFromCell(cp.RealRow, cp.RealCol);
@@ -421,7 +421,7 @@ namespace CalibrationModule
                 var cameraNode = xmlDoc.CreateElement("Camera");
 
                 var cam1AttNum = xmlDoc.CreateAttribute("num");
-                cam1AttNum.Value = CameraIndex == CalibrationData.CameraIndex.Left ? "1" : "2";
+                cam1AttNum.Value = CameraIndex == CameraIndex.Left ? "1" : "2";
                 cameraNode.Attributes.Append(cam1AttNum);
 
                 cameraNode.AppendChild(XmlExtensions.CreateMatrixNode(xmlDoc, CameraMatrix));

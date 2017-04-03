@@ -1,4 +1,5 @@
 ﻿using CamCore;
+using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
 using System;
 using System.Collections.Generic;
@@ -40,18 +41,12 @@ namespace CamImageProcessing
 
     public class RectificationTransformation : IImageTransformation
     {
-        public ImageRectification Rectifier { get; set; }
+        public Matrix<double> RectificationMatrix { get; set; }
+        public Matrix<double> RectificationMatrixInverse { get; set; }
         
-        public enum ImageIndex
-        {
-            Left, Right
-        }
-        public ImageIndex WhichImage { get; set; } = ImageIndex.Left;
-
         public Vector2 TransformPointBackwards(Vector2 point)
         {
-            var H = WhichImage == ImageIndex.Left ?
-                Rectifier.RectificationLeft_Inverse : Rectifier.RectificationRight_Inverse;
+            var H = RectificationMatrixInverse;
             double x = H[0, 0] * point.X + H[0, 1] * point.Y + H[0, 2];
             double y = H[1, 0] * point.X + H[1, 1] * point.Y + H[1, 2];
             double w = H[2, 0] * point.X + H[2, 1] * point.Y + H[2, 2];
@@ -60,8 +55,7 @@ namespace CamImageProcessing
 
         public Vector2 TransformPointForwards(Vector2 point)
         {
-            var H = WhichImage == ImageIndex.Left ?
-                Rectifier.RectificationLeft : Rectifier.RectificationRight;
+            var H = RectificationMatrix;
             double x = H[0, 0] * point.X + H[0, 1] * point.Y + H[0, 2];
             double y = H[1, 0] * point.X + H[1, 1] * point.Y + H[1, 2];
             double w = H[2, 0] * point.X + H[2, 1] * point.Y + H[2, 2];

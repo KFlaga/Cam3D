@@ -25,4 +25,22 @@ namespace CamImageProcessing
         BitmapSource ToBitmapSource();
     }
 
+    public class ImagesPair
+    {
+        public IImage Left { get; set; }
+        public IImage Right { get; set; }
+
+        public IImage GetImage(CamCore.CameraIndex idx)
+        {
+            return idx == CamCore.CameraIndex.Left ? Left : Right;
+        }
+
+        public void SetImage(CamCore.CameraIndex idx, IImage image)
+        {
+            if(idx == CamCore.CameraIndex.Left)
+                Left = image;
+            else
+                Right = image;
+        }
+    }
 }

@@ -142,10 +142,9 @@ namespace CalibrationModule
 
         public virtual void UpdateLinePoints(int line)
         {
-            var points = LinePoints[line];
             var corrPoints = CorrectedPoints[line];
             var corrPfs = _correctedPf[line];
-            for(int p = 0; p < points.Count; ++p)
+            for(int p = 0; p < corrPoints.Count; ++p)
             {
                 var dpoint = corrPoints[p];
                 DistortionModel.FullUpdate(dpoint);
@@ -610,16 +609,43 @@ namespace CalibrationModule
             ComputeErrorVector(_currentErrorVector);
             
             ComputeDelta(_delta);
-            var oldRes = ResultsVector.Clone();
+            var oldRes = DistortionModel.Parameters.Clone();
 
+            DistortionModel.Parameters.CopyTo(ResultsVector);
             ResultsVector += _delta;
             ResultsVector.CopyTo(DistortionModel.Parameters);
-            UpdateAll();
 
-            _lastResidiual = _currentResidiual;
-            // Compute new residiual
-            ComputeErrorVector(_currentErrorVector);
-            _currentResidiual = ComputeResidiual();
+            try
+            {
+                UpdateAll();
+
+                _lastResidiual = _currentResidiual;
+                // Compute new residiual
+                ComputeErrorVector(_currentErrorVector);
+                _currentResidiual = ComputeResidiual();
+            }
+            catch(Exception e)
+            {
+                // New parameters resulted in throwing -> enlarge lambda
+                _lam *= 100.0;
+                oldRes.CopyTo(ResultsVector);
+                ResultsVector.CopyTo(DistortionModel.Parameters);
+                return;
+            }
+
+            if(_currentResidiual < MinimumResidiual)
+            {
+                // Update lambda -> lower only if new residiual is good enough
+                _lam *= 0.1;
+            }
+            else if(_currentResidiual < _lastResidiual)
+            {
+                _lam *= 2;
+            }
+            else
+            {
+                _lam *= 10.0;
+            }
             
             if(MinimumResidiual > _currentResidiual)
             {
@@ -629,17 +655,7 @@ namespace CalibrationModule
             else
             {
                 oldRes.CopyTo(ResultsVector);
-            }
-
-            if(_currentResidiual < MinimumResidiual * 1.01)
-            {
-                // Update lambda -> lower only if new residiual is good enough
-                // (1% difference as it tends to stuck with high lambda and almost no change in results)
-                _lam *= 0.1;
-            }
-            else if(_currentResidiual >= _lastResidiual)
-            {
-                _lam *= 10.0;
+                ResultsVector.CopyTo(DistortionModel.Parameters);
             }
         }
 

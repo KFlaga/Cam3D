@@ -15,7 +15,7 @@ namespace UnitTestProject1
         [TestMethod]
         public void Test_Compute_ABC()
         {
-            LMDistortionBasicLineFitMinimalisation miniAlg = new LMDistortionBasicLineFitMinimalisation();
+            LMDistortionDirectionalLineFitMinimalisation miniAlg = new LMDistortionDirectionalLineFitMinimalisation();
 
             // Create some lines with known A,B,C
             // Check if 'minimalisation' computes them ok
@@ -27,8 +27,6 @@ namespace UnitTestProject1
             miniAlg.ParametersVector = new DenseVector(1);
 
             miniAlg.Init();
-            miniAlg.ComputeSums();
-            miniAlg.ComputeLineCoeffs();
 
             var coeffs = miniAlg.LineCoeffs;
             Matrix<double> expectedMatrix = new DenseMatrix(3, 3);
@@ -106,7 +104,7 @@ namespace UnitTestProject1
             _model.Parameters[2] = 1e-3; // k3
             _model.Parameters[3] = 0.25; // cx
             _model.Parameters[4] = 0.5; // cy
-            _model.Parameters[5] = 1.0; // sx
+            //_model.Parameters[5] = 1.0; // sx
 
             // Just test if analitic jacobian is close to numeric one
             // 2) Compute jacobian for lines
@@ -118,58 +116,11 @@ namespace UnitTestProject1
             _miniAlg.ParametersVector = _model.Parameters;
 
             _miniAlg.Init();
+            _miniAlg.UpdateAll();
         }
 
         [TestMethod]
-        public void Test_ComputeJacobian_Ver2()
-        {
-            // Just test if analitic jacobian is close to numeric one
-            PrepareMinimalizationAlgorithm_JacobianTests();
-
-            Matrix<double> testedJacobian = new DenseMatrix(_pointsCount, _model.ParametersCount);
-            _miniAlg.ComputeJacobian(testedJacobian);
-
-            // 3) Compute numeric jacobian : change params by small value and find error change
-            Matrix<double> numericJacobian = new DenseMatrix(_pointsCount, _model.ParametersCount);
-            Vector<double> error_n = new DenseVector(_pointsCount);
-            Vector<double> error_p = new DenseVector(_pointsCount);
-            for(int k = 0; k < _model.ParametersCount; ++k)
-            {
-                double oldK = _model.Parameters[k];
-                double k_n = oldK > float.Epsilon ? oldK * (1 - 1e-6) : -1e-8;
-                double k_p = oldK > float.Epsilon ? oldK * (1 + 1e-6) : 1e-8;
-
-                _model.Parameters[k] = k_n;
-                _model.Parameters.CopyTo(_miniAlg.ResultsVector);
-                _miniAlg.ComputeSums();
-                _miniAlg.ComputeLineCoeffs();
-
-                _miniAlg.ComputeErrorVector(error_n);
-
-                _model.Parameters[k] = k_p;
-                _model.Parameters.CopyTo(_miniAlg.ResultsVector);
-                _miniAlg.ComputeSums();
-                _miniAlg.ComputeLineCoeffs();
-
-                _miniAlg.ComputeErrorVector(error_p);
-
-                Vector<double> diff_e = (1.0 / (k_p - k_n)) * (error_p - error_n);
-                numericJacobian.SetColumn(k, diff_e);
-
-                _model.Parameters[k] = oldK;
-            }
-
-            var line2NJ = numericJacobian.SubMatrix(20, 10, 0, 6);
-            var line2TJ = testedJacobian.SubMatrix(20, 10, 0, 6);
-
-            double jacobian_diff = line2NJ.PointwiseDivide_NoNaN(line2TJ).FrobeniusNorm();
-            Assert.IsTrue(Math.Abs(jacobian_diff - Math.Sqrt(60)) < Math.Sqrt(60) / 100.0 || // 1% diffrence max
-                (line2NJ - line2TJ).FrobeniusNorm() < line2NJ.FrobeniusNorm() / 100.0,
-                "Analitical and numeric jacobians differ");
-        }
-
-        [TestMethod]
-        public void Test_ComputeDerivatives_Ver2()
+        public void Test_ComputeDerivatives()
         {
             PrepareMinimalizationAlgorithm_JacobianTests();
 
@@ -181,12 +132,12 @@ namespace UnitTestProject1
             diff_C_T = _miniAlg.GetDiff_C(1);
             diff_dist_T = _miniAlg.GetDiff_d1(1, 5);
 
-            Vector<double> diff_a = new DenseVector(6);
-            Vector<double> diff_b = new DenseVector(6);
-            Vector<double> diff_D = new DenseVector(6);
-            Vector<double> diff_A = new DenseVector(6);
-            Vector<double> diff_C = new DenseVector(6);
-            Vector<double> diff_dist = new DenseVector(6);
+            Vector<double> diff_a = new DenseVector(_model.ParametersCount);
+            Vector<double> diff_b = new DenseVector(_model.ParametersCount);
+            Vector<double> diff_D = new DenseVector(_model.ParametersCount);
+            Vector<double> diff_A = new DenseVector(_model.ParametersCount);
+            Vector<double> diff_C = new DenseVector(_model.ParametersCount);
+            Vector<double> diff_dist = new DenseVector(_model.ParametersCount);
             for(int k = 0; k < _model.ParametersCount; ++k)
             {
                 double oldK = _model.Parameters[k];
@@ -262,7 +213,7 @@ namespace UnitTestProject1
         {
             _model = new Rational3RDModel();
             _model.InitialAspectEstimation = 1.0;
-            _model.InitialCenterEstimation = new Vector2(0.5, 0.5);
+            _model.InitialCenterEstimation = new Vector2(0.45, 0.55);
             _model.InitParameters();
 
             _model.Parameters[0] = 1e-1; // k1
@@ -272,12 +223,12 @@ namespace UnitTestProject1
             _model.UseNumericDerivative = true;
             _model.NumericDerivativeStep = 1e-4;
 
-            _realParameters = new DenseVector(6);
+            _realParameters = new DenseVector(_model.ParametersCount);
             _model.Parameters.CopyTo(_realParameters);
 
             _distLines = DistortLines(_model, GenerateTestLines_Many());
 
-            _miniAlg = new LMDistortionBasicLineFitMinimalisation();
+            _miniAlg = new LMDistortionDirectionalLineFitMinimalisation();
 
             _miniAlg.DistortionModel = _model;
             _miniAlg.LinePoints = _distLines;
@@ -290,7 +241,7 @@ namespace UnitTestProject1
         }
 
         [TestMethod]
-        public void Test_MinimiseParameters_JVer2_ClosestInitialGuess()
+        public void Test_MinimiseParameters_ClosestInitialGuess()
         {
             PrepareMinimalizationAlgorithm_MinimalisationTests();
 
@@ -298,41 +249,46 @@ namespace UnitTestProject1
             _model.Parameters[0] = 0.11; // k1 = 0.1
             _model.Parameters[1] = -0.022; // k2 = -0.02
             _model.Parameters[2] = 0.0055; // k3 = 0.005
-            _model.Parameters[3] = 0.49; // kx = 0.5
-            _model.Parameters[4] = 0.51; // cy = 0.5
-            _model.Parameters[5] = 1.0; // sx = 1.0
+            _model.Parameters[3] = 0.46; // cx = 0.45
+            _model.Parameters[4] = 0.54; // cy = 0.55
+           // _model.Parameters[5] = 1.0; // sx = 1.0
 
             _miniAlg.ParametersVector = _model.Parameters;
+            _miniAlg.MaximumResidiual = 1e-8;
+            _miniAlg.MaximumIterations = 100;
+            ((LMDistortionDirectionalLineFitMinimalisation)_miniAlg).FindInitialModelParameters = false;
             _miniAlg.Process();
 
             double residiual = _miniAlg.ComputeResidiual();
             double result_ratio = _miniAlg.ResultsVector.PointwiseDivide(_realParameters).L2Norm();
             Assert.IsTrue(Math.Abs(result_ratio - Math.Sqrt(6)) < Math.Sqrt(6) / 100.0 || // Max 1% difference
-                _miniAlg.ComputeResidiual() < 0.01, // or very small residiual reached -> in general it is how it works
+                _miniAlg.ComputeResidiual() < 1e-6, // or very small residiual reached -> in general it is how it works
                 "Parameters approximation failed: residiual = " + residiual);
         }
         
         [TestMethod]
-        public void Test_MinimiseParameters_JVer2_ZeroInitialGuess()
+        public void Test_MinimiseParameters_ZeroInitialGuess()
         {
             PrepareMinimalizationAlgorithm_MinimalisationTests();
 
             // Set close initial values
-            _model.Parameters[0] = 0.0; // k1 = 1e-1
-            _model.Parameters[1] = 0.0; // k2 = -2e-2
-            _model.Parameters[2] = 0.0; // k3 =5e-3
-            _model.Parameters[3] = 0.5; // kx = 0.25
-            _model.Parameters[4] = 0.5; // cy = 0.5
-            _model.Parameters[5] = 1.0; // sx = 1.0
+            _model.InitialCenterEstimation = new Vector2(0.5, 0.5);
+            _model.InitParameters();
 
-            _miniAlg.DumpingMethodUsed = LevenbergMarquardtBaseAlgorithm.DumpingMethod.None;
             _miniAlg.ParametersVector = _model.Parameters;
+            _miniAlg.MaximumResidiual = 1e-10;
+            _miniAlg.MaximumIterations = 100;
+            ((LMDistortionDirectionalLineFitMinimalisation)_miniAlg).FindInitialModelParameters = true;
+            _miniAlg.DumpingMethodUsed = LevenbergMarquardtBaseAlgorithm.DumpingMethod.Multiplicative;
             _miniAlg.Process();
 
             double residiual = _miniAlg.ComputeResidiual();
+            var result_ratio_v = _miniAlg.ResultsVector.PointwiseDivide(_realParameters);
             double result_ratio = _miniAlg.ResultsVector.PointwiseDivide(_realParameters).L2Norm();
+            Assert.IsTrue(Math.Abs(_miniAlg.BestResultVector[3] - 0.45) < 0.02, "Estimated center X too far");
+            Assert.IsTrue(Math.Abs(_miniAlg.BestResultVector[4] - 0.55) < 0.02, "Estimated center Y too far");
             Assert.IsTrue(Math.Abs(result_ratio - Math.Sqrt(6)) < Math.Sqrt(6) / 100.0 || // Max 1% difference
-                _miniAlg.ComputeResidiual() < 1e-8, // or very small residiual reached -> in general it is how it works
+                _miniAlg.ComputeResidiual() < 1e-10, // or very small residiual reached -> in general it is how it works
                 "Parameters approximation failed: residiual = " + residiual);
         }
 
@@ -350,7 +306,7 @@ namespace UnitTestProject1
             
             _distLines = DistortLines(_model, GenerateTestLines_Many());
             
-            _miniAlg = new LMDistortionBasicLineFitMinimalisation();
+            _miniAlg = new LMDistortionDirectionalLineFitMinimalisation();
             
             _miniAlg.DistortionModel = new DummyModel();
             _miniAlg.DistortionModel.InitParameters();
@@ -359,8 +315,6 @@ namespace UnitTestProject1
             _miniAlg.ParametersVector = new DenseVector(1);
 
             _miniAlg.Init();
-            _miniAlg.ComputeSums();
-            _miniAlg.ComputeLineCoeffs();
             var fitCoeffs = _miniAlg.LineCoeffs;
 
             // For each line find direction -> all should be cushion ?
@@ -381,8 +335,7 @@ namespace UnitTestProject1
             _distLines = DistortLines(_model, GenerateTestLines_Many());
 
             _miniAlg.LinePoints = _distLines;
-            _miniAlg.ComputeSums();
-            _miniAlg.ComputeLineCoeffs();
+            _miniAlg.Init();
             fitCoeffs = _miniAlg.LineCoeffs;
 
             // For each line find direction -> all should be barrel ?
@@ -395,6 +348,31 @@ namespace UnitTestProject1
 
                 Assert.IsTrue(dir == DistortionDirection.Barrel);
             }
+        }
+        [TestMethod]
+        public void Test_InitalModelParameters()
+        {
+            _model = new Rational3RDModel();
+            _model.InitialAspectEstimation = 1.0;
+            _model.InitialCenterEstimation = new Vector2(0.55, 0.45);
+            _model.InitParameters();
+
+            _model.Parameters[0] = -1e-1; // k1
+            _model.Parameters[1] = 2e-2; // k2
+            _model.Parameters[2] = 5e-3; // k3
+
+            _distLines = DistortLines(_model, GenerateTestLines_Many());
+
+            _miniAlg = new LMDistortionDirectionalLineFitMinimalisation();
+
+            _miniAlg.DistortionModel = new Rational3RDModel();
+            _miniAlg.DistortionModel.InitialCenterEstimation = new Vector2(0.5, 0.5);
+            _miniAlg.DistortionModel.InitParameters();
+            _miniAlg.LinePoints = _distLines;
+            _miniAlg.MeasurementsVector = new DenseVector(_distLines.Count);
+            _miniAlg.ParametersVector = new DenseVector(1);
+
+            _miniAlg.Init();
         }
 
         [TestMethod]
@@ -462,7 +440,7 @@ namespace UnitTestProject1
             _model.Parameters[2] = 1e-3; // k3
             _model.Parameters[3] = 0.25; // cx
             _model.Parameters[4] = 0.5; // cy
-            _model.Parameters[5] = 1.0; // sx
+           // _model.Parameters[5] = 1.0; // sx
 
             _miniAlg = new LMDistortionDirectionalLineFitMinimalisation();
 
@@ -471,6 +449,7 @@ namespace UnitTestProject1
             _miniAlg.ParametersVector = _model.Parameters;
 
             _miniAlg.Init();
+            _miniAlg.UpdateAll();
 
             int size = 10 * _model.ParametersCount;
             _miniAlg.DoComputeJacobianNumerically = false;
@@ -482,11 +461,12 @@ namespace UnitTestProject1
             Matrix<double> numericJacobian = new DenseMatrix(_pointsCount, _model.ParametersCount);
             _miniAlg.ComputeJacobian(numericJacobian);
             
-            var line2NJ = numericJacobian.SubMatrix(10, 10, 0, 6);
-            var line2TJ = testedJacobian.SubMatrix(10, 10, 0, 6);
+            var line2NJ = numericJacobian.SubMatrix(10, 10, 0, _model.ParametersCount);
+            var line2TJ = testedJacobian.SubMatrix(10, 10, 0, _model.ParametersCount);
 
-            double jacobian_diff = line2NJ.PointwiseDivide_NoNaN(line2TJ).FrobeniusNorm();
-            Assert.IsTrue(Math.Abs(jacobian_diff - Math.Sqrt(size)) < Math.Sqrt(size) / 100.0 || // 1% diffrence max
+            var jacobian_diff = line2NJ.PointwiseDivide_NoNaN(line2TJ);
+            double err = jacobian_diff.FrobeniusNorm();
+            Assert.IsTrue(Math.Abs(err - Math.Sqrt(size)) < Math.Sqrt(size) / 100.0 || // 1% diffrence max
                 (line2NJ - line2TJ).FrobeniusNorm() < line2NJ.FrobeniusNorm() / 100.0,
                 "Analitical and numeric jacobians differ");
         }
@@ -627,6 +607,94 @@ namespace UnitTestProject1
                 "Minimum alg-residiual: " + _miniAlg.MinimumResidiual + ", alg-base: " + _miniAlg.BaseResidiual + "\r\n" +
                 "Distorted residiual: " + baseResidiual + ", final: " + realResidiual);
         }
+        
+        [TestMethod]
+        public void Test_IntersectionPoints()
+        {
+            Test_IntersectionPoint(
+                new Vector2(0,0), new Vector2(4,4), 
+                new Vector2(3,0), new Vector2(2,5), 
+                new Vector2(2.5,2.5));
+
+            Test_IntersectionPoint(
+                new Vector2(5, 5), new Vector2(5, -5),
+                new Vector2(3, 3), new Vector2(6, -3),
+                new Vector2(5, -1));
+
+            Test_IntersectionPoint(
+                new Vector2(3, 3), new Vector2(6, -3),
+                new Vector2(5, 5), new Vector2(5, -5),
+                new Vector2(5, -1));
+        }
+
+        void Test_IntersectionPoint(Vector2 p11, Vector2 p12, Vector2 p21, Vector2 p22, Vector2 expectedPoint)
+        {
+            Line2D line1 = new Line2D(p11, p12);
+            Line2D line2 = new Line2D(p21, p22);
+            Vector2 intPoint = Line2D.IntersectionPoint(line1, line2);
+
+            Assert.IsTrue(intPoint.DistanceToSquared(expectedPoint) < 1e-6);
+        }
+
+        [TestMethod]
+        public void Test_DistortionDirection_Quadric()
+        {
+            _model = new Rational3RDModel();
+            _model.InitialAspectEstimation = 1.0;
+            _model.InitialCenterEstimation = new Vector2(0.5, 0.5);
+            _model.InitParameters();
+
+            _model.Parameters[0] = 0.2; // k1
+            _model.Parameters[1] = -0.2; // k2
+            _model.Parameters[2] = 0.01; // k3
+
+            _distLines = DistortLines(_model, GenerateTestLines_Many());
+
+            _miniAlg = new LMDistortionDirectionalLineFitMinimalisation();
+            var miniAlg = (LMDistortionDirectionalLineFitMinimalisation)_miniAlg;
+
+            miniAlg.DistortionModel = _model;
+            _model.Parameters[0] = 0.0;
+            _model.Parameters[1] = 0.0;
+            _model.Parameters[2] = 0.0;
+            miniAlg.LinePoints = _distLines;
+            miniAlg.MeasurementsVector = new DenseVector(_distLines.Count);
+            miniAlg.ParametersVector = new DenseVector(1);
+
+            miniAlg.Init();
+            miniAlg.UpdateAll();
+
+            // For each line find direction -> all should be cushion ?
+
+            for(int l = 0; l < _distLines.Count; ++l)
+            {
+                DistortionDirection dir = miniAlg.LineDistortionDirections[l];
+
+                Assert.IsTrue(dir == DistortionDirection.Cushion);
+            }
+
+            _model.Parameters[0] = -1e-1; // k1
+            _model.Parameters[1] = 2e-2; // k2
+            _model.Parameters[2] = -5e-3; // k3
+
+            _distLines = DistortLines(_model, GenerateTestLines_Many());
+
+            _model.Parameters[0] = 0.0;
+            _model.Parameters[1] = 0.0;
+            _model.Parameters[2] = 0.0;
+            _miniAlg.LinePoints = _distLines;
+            miniAlg.Init();
+            miniAlg.UpdateAll();
+
+            // For each line find direction -> all should be barrel ?
+
+            for(int l = 0; l < _distLines.Count; ++l)
+            {
+                DistortionDirection dir = miniAlg.LineDistortionDirections[l];
+
+                Assert.IsTrue(dir == DistortionDirection.Barrel);
+            }
+        }
 
         // Returns 3 lines, each 10 points, coeffs:
         // L1 : A = 0, B = 1, C = -0.5 (horizontal)
@@ -765,13 +833,7 @@ namespace UnitTestProject1
 
         class DummyModel : RadialDistortionModel
         {
-            public override int ParametersCount
-            {
-                get
-                {
-                    return 1;
-                }
-            }
+            public override int ParametersCount => 1;
 
             public override void FullUpdate()
             {
@@ -793,6 +855,14 @@ namespace UnitTestProject1
                 Pu = new Vector2();
                 Pd = new Vector2();
                 Pf = new Vector2();
+
+                Aspect = 1.0;
+                DistortionCenter = new Vector2(0.5, 0.5);
+            }
+
+            public override void SetInitialParametersFromQuadrics(List<Quadric> quadrics, List<List<Vector2>> linePoints, List<int> fitPoints)
+            {
+                InitParameters();
             }
 
             public override void Undistort()

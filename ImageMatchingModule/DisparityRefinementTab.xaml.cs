@@ -1,24 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using CamImageProcessing;
 using CamImageProcessing.ImageMatching;
 using System.ComponentModel;
 using CamCore;
-using System.IO;
-using System.Xml;
-using MathNet.Numerics.LinearAlgebra;
+using CamControls;
 
 namespace ImageMatchingModule
 {
@@ -55,11 +42,48 @@ namespace ImageMatchingModule
 
         DisparityMap _storedLeft;
         DisparityMap _storedRight;
-        
-        public Matrix<double> ImageLeft { get; set; }
-        public Matrix<double> ImageRight { get; set; }
 
-        public event EventHandler<EventArgs> RequsestDisparityMapsUpdate; 
+        ColorImage _imgLeft;
+        ColorImage _imgRight;
+        GrayScaleImage _imgGrayLeft;
+        GrayScaleImage _imgGrayRight;
+        public ColorImage ImageLeft
+        {
+            get { return _imgLeft; }
+            set
+            {
+                _imgLeft = value;
+                if(_imgLeft != null)
+                {
+                    _imgGrayLeft = new GrayScaleImage();
+                    _imgGrayLeft.FromColorImage(_imgLeft);
+                }
+                else
+                {
+                    _imgGrayLeft = null;
+                }
+            }
+        }
+        public ColorImage ImageRight
+        {
+            get { return _imgRight; }
+            set
+            {
+                _imgRight = value;
+                if(_imgRight != null)
+                {
+                    _imgGrayRight = new GrayScaleImage();
+                    _imgGrayRight.FromColorImage(_imgRight);
+                }
+                else
+                {
+                    _imgGrayRight = null;
+                }
+            }
+        }
+
+        public event EventHandler<EventArgs> RequsestDisparityMapsUpdate;
+        public event EventHandler<EventArgs> RequsestImagesUpdate;
 
         private BindingList<RefinementBlock> _refinerBlocks = new BindingList<RefinementBlock>();
 
@@ -69,14 +93,20 @@ namespace ImageMatchingModule
 
             AddNewBlock();
             _refinerBlocksView.ItemsSource = _refinerBlocks;
+
+            _disparityMapImage.MapLoaded += (s, e) =>
+            {
+                _finalMap = MapLeftBase = _disparityMapImage.Map;
+                MapRightCurrent = MapRightBase = null;
+            };
         }
 
         private void ResetMaps(object sender, RoutedEventArgs e)
         {
             if(MapLeftBase != null)
-                MapLeftCurrent = (DisparityMap)MapLeftBase.Clone();
+                _finalMap = (DisparityMap)MapLeftBase.Clone();
             else
-                MapLeftCurrent = null;
+                _finalMap = null;
 
             if(MapRightBase != null)
                 MapRightCurrent = (DisparityMap)MapRightBase.Clone();
@@ -86,22 +116,27 @@ namespace ImageMatchingModule
 
         private void UpdateMaps(object sender, RoutedEventArgs e)
         {
-            RequsestDisparityMapsUpdate(this, new EventArgs());
+            RequsestDisparityMapsUpdate?.Invoke(this, new EventArgs());
+        }
+
+        private void UpdateImages(object sender, RoutedEventArgs e)
+        {
+            RequsestImagesUpdate?.Invoke(this, new EventArgs());
         }
 
         private void ApplyOnBase(object sender, RoutedEventArgs e)
         {
-            if(_baseLeft == null || _baseRight == null)
+            if(_baseLeft == null)
                 return;
 
             int index = (int)((Button)sender).Tag;
             RefinementBlock block = _refinerBlocks[index];
 
             var refiner = block.Refiner;
-            refiner.ImageLeft = ImageLeft;
-            refiner.ImageRight = ImageRight;
+            refiner.ImageLeft = _imgGrayLeft;
+            refiner.ImageRight = _imgGrayRight;
             refiner.MapLeft = (DisparityMap)_baseLeft.Clone();
-            refiner.MapRight = (DisparityMap)_baseRight.Clone();
+            refiner.MapRight = _baseRight != null ? (DisparityMap)_baseRight.Clone() : null;
             refiner.Init();
             refiner.RefineMaps();
             MapLeftCurrent = refiner.MapLeft;
@@ -110,15 +145,15 @@ namespace ImageMatchingModule
 
         private void ApplyOnCurrent(object sender, RoutedEventArgs e)
         {
-            if(MapLeftCurrent == null || MapRightCurrent == null)
+            if(MapLeftCurrent == null)
                 return;
 
             int index = (int)((Button)sender).Tag;
             RefinementBlock block = _refinerBlocks[index];
 
             var refiner = block.Refiner;
-            refiner.ImageLeft = ImageLeft;
-            refiner.ImageRight = ImageRight;
+            refiner.ImageLeft = _imgGrayLeft;
+            refiner.ImageRight = _imgGrayRight;
             refiner.MapLeft = MapLeftCurrent;
             refiner.MapRight = MapRightCurrent;
             refiner.Init();
@@ -141,8 +176,8 @@ namespace ImageMatchingModule
             {
                 var refiner = _refinerBlocks[i].Refiner;
 
-                refiner.ImageLeft = ImageLeft;
-                refiner.ImageRight = ImageRight;
+                refiner.ImageLeft = _imgGrayLeft;
+                refiner.ImageRight = _imgGrayRight;
                 refiner.MapLeft = MapLeftCurrent;
                 refiner.MapRight = MapRightCurrent;
                 refiner.Init();
@@ -164,8 +199,8 @@ namespace ImageMatchingModule
             {
                 var refiner = _refinerBlocks[i].Refiner;
 
-                refiner.ImageLeft = ImageLeft;
-                refiner.ImageRight = ImageRight;
+                refiner.ImageLeft = _imgGrayLeft;
+                refiner.ImageRight = _imgGrayRight;
                 refiner.MapLeft = MapLeftCurrent;
                 refiner.MapRight = MapRightCurrent;
                 refiner.Init();
@@ -233,43 +268,14 @@ namespace ImageMatchingModule
 
         private void StoreMap(object sender, RoutedEventArgs e)
         {
-            _storedLeft = (DisparityMap)MapLeftCurrent.Clone();
-            _storedRight = (DisparityMap)MapRightCurrent.Clone();
+            _storedLeft = MapLeftCurrent != null ? (DisparityMap)MapLeftCurrent.Clone() : null;
+            _storedRight = MapRightCurrent != null ? (DisparityMap)MapRightCurrent.Clone() : null;
         }
 
         private void RestoreMap(object sender, RoutedEventArgs e)
         {
-            MapLeftCurrent = (DisparityMap)_storedLeft.Clone();
-            MapRightCurrent = (DisparityMap)_storedRight.Clone();
-        }
-
-        private void SaveMapToFile(object sender, RoutedEventArgs e)
-        {
-            FileOperations.SaveToFile(SaveMapToFile, "Xml File|*.xml");
-        }
-
-        private void LoadMapFromFile(object sender, RoutedEventArgs e)
-        {
-            FileOperations.LoadFromFile(LoadMapFromFile, "Xml File|*.xml");
-        }
-
-        private void SaveMapToFile(Stream file, string path)
-        {
-            XmlDocument xmlDoc = new XmlDocument();
-
-            XmlNode mapNode = MapLeftCurrent.CreateMapNode(xmlDoc);
-            xmlDoc.InsertAfter(mapNode, xmlDoc.DocumentElement);
-
-            xmlDoc.Save(file);
-        }
-
-        private void LoadMapFromFile(Stream file, string path)
-        {
-            XmlDocument xmlDoc = new XmlDocument();
-            xmlDoc.Load(file);
-
-            XmlNode mapNode = xmlDoc.GetElementsByTagName("DisparityMap")[0];
-            MapLeftCurrent = DisparityMap.CreateFromNode(mapNode);
+            MapLeftCurrent = MapLeftCurrent != null ? (DisparityMap)_storedLeft.Clone() : null;
+            MapRightCurrent = MapRightCurrent != null ? (DisparityMap)_storedRight.Clone() : null;
         }
     }
 

@@ -12,8 +12,8 @@ namespace CalibrationModule
         {
             InitializeComponent();
 
-            _tabCam1.CameraIndex = CamCore.CalibrationData.CameraIndex.Left;
-            _tabCam2.CameraIndex = CamCore.CalibrationData.CameraIndex.Right;
+            _tabCam1.CameraIndex = CamCore.CameraIndex.Left;
+            _tabCam2.CameraIndex = CamCore.CameraIndex.Right;
         }
 
         public void Dispose()

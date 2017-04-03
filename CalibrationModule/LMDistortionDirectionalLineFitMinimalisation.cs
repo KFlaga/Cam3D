@@ -34,8 +34,9 @@ namespace CalibrationModule
         public List<DistortionDirection> BaseDistortionDirections { get; private set; } // Direction of distortion on inital lines
         public List<int> FitPoints { get; set; }
 
-        public List<Vector<double>> FitQuadrics; // Each vector is [A,B,C,D,E,F]
-        public List<Vector2> StationaryPoints { get; set; }
+        public List<Quadric> FitQuadrics;
+
+        public bool FindInitialModelParameters { get; set; } = true;
 
         public class DistortionPoint_Directional : DistortionPoint
         {
@@ -53,13 +54,18 @@ namespace CalibrationModule
             LineDistortionDirections = new List<DistortionDirection>();
             BaseDistortionDirections = new List<DistortionDirection>();
             FitPoints = new List<int>();
-            FitQuadrics = new List<Vector<double>>();
+            FitQuadrics = new List<Quadric>();
             for(int i = 0; i < LinePoints.Count; ++i)
             {
                 LineDistortionDirections.Add(DistortionDirection.None);
                 BaseDistortionDirections.Add(DistortionDirection.None);
                 FitPoints.Add(0);
                 FitQuadrics.Add(null);
+            }
+
+            if(FindInitialModelParameters)
+            {
+                DistortionModel.InitParameters();
             }
 
             base.Init();
@@ -74,12 +80,12 @@ namespace CalibrationModule
 
                 BaseDistortionDirections[line] = LineDistortionDirections[line];
             }
-        }
 
-        public void FindInitialParametersEstimation()
-        {
-            // 1) Fit curves
-            // 2) 
+            if(FindInitialModelParameters)
+            {
+                DistortionModel.SetInitialParametersFromQuadrics(
+                    FitQuadrics, LinePoints, FitPoints);
+            }
         }
 
         public override DistortionPoint CreateDistortionPoint()
@@ -119,14 +125,6 @@ namespace CalibrationModule
         public void FindFitPoint(int line)
         {
             FitPoints[line] = GetPointClosestToCenter(line);
-            //if(LineDistortionDirections[line] == DistortionDirection.Barrel)
-            //{
-            //    FitPoints[line] = GetPointFurthestFromCenter(line);
-            //}
-            //else
-            //{
-            //    FitPoints[line] = GetPointClosestToCenter(line);
-            //}
         }
 
         public int GetPointClosestToCenter(int line)
@@ -167,71 +165,12 @@ namespace CalibrationModule
 
         public void FitQuadric(int line)
         {
-            // | 0 |   |x1^2  x1  x1y1  y1  y1^2  1| | A |
-            // |   |   |                           | | B |
-            // |   |   |                           | | C |
-            // |   | = |                           | | D |
-            // |   |   |                           | | E |
-            // | 0 |   |xn^2  xn  xnyn  yn  yn^2  1| | F |
-
-            var points = _correctedPf[line];
-            Matrix<double> X = new DenseMatrix(LinePoints[line].Count, 6);
-            for(int p = 0; p < LinePoints[line].Count; ++p)
-            {
-                var point = points[p];
-                X[p, 0] = point.X * point.X;
-                X[p, 1] = point.X;
-                X[p, 2] = point.X * point.Y;
-                X[p, 3] = point.Y;
-                X[p, 4] = point.Y * point.Y ;
-                X[p, 5] = 1.0;
-            }
-
-            var coeffs = SvdZeroFullrankSolver.Solve(X);
-            FitQuadrics[line] = coeffs;
+            FitQuadrics[line] = Quadric.FitQuadricToPoints(_correctedPf[line]);
         }
 
         public void FitQuadricThroughPoint(int line)
         {
-            // | 0 |   |x1^2-x0^2  x1-x0  x1y1-x0y0  y1-y0  y1^2-y0^2| | A |
-            // |   |   |                                             | | B |
-            // |   | = |                                             | | C |
-            // |   |   |                                             | | D |
-            // | 0 |   |xn^2-x0^2  xn-x0  xnyn-x0y0  yn-y0  yn^2-y0^2| | E |
-
-            var points = _correctedPf[line];
-            Vector2 fp = points[FitPoints[line]];
-            Matrix<double> X = new DenseMatrix(LinePoints[line].Count - 1, 5);
-            for(int p = 0; p < FitPoints[line]; ++p)
-            {
-                var point = points[p];
-                X[p, 0] = point.X * point.X - fp.X * fp.X;
-                X[p, 1] = point.X - fp.X;
-                X[p, 2] = point.X * point.Y - fp.X * fp.Y;
-                X[p, 3] = point.Y - fp.Y;
-                X[p, 4] = point.Y * point.Y - fp.Y * fp.Y;
-            }
-
-            for(int p = FitPoints[line] + 1; p < LinePoints[line].Count; ++p)
-            {
-                var point = points[p];
-                X[p - 1, 0] = point.X * point.X - fp.X * fp.X;
-                X[p - 1, 1] = point.X - fp.X;
-                X[p - 1, 2] = point.X * point.Y - fp.X * fp.Y;
-                X[p - 1, 3] = point.Y - fp.Y;
-                X[p - 1, 4] = point.Y * point.Y - fp.Y * fp.Y;
-            }
-
-            var coeffs = SvdZeroFullrankSolver.Solve(X);
-
-            double F = -(coeffs[0] * fp.X * fp.X + coeffs[1] * fp.X +
-                coeffs[2] * fp.X * fp.Y + coeffs[3] * fp.Y + coeffs[4] * fp.Y * fp.Y);
-
-            var coeffs_f = new DenseVector(6);
-            coeffs_f.SetSubVector(0, 5, coeffs);
-            coeffs_f[5] = F;
-
-            FitQuadrics[line] = coeffs_f;
+            FitQuadrics[line] = Quadric.FitQuadricThroughPoint(_correctedPf[line], FitPoints[line]);
         }
 
         public void FindFitPointOnQuadric(int line)
@@ -279,7 +218,7 @@ namespace CalibrationModule
             //    return CorrectedPoints[line][point].Ru / CorrectedPoints[line][point].Rd;
 
             double R = CorrectedPoints[line][point].Ru / CorrectedPoints[line][point].Rd;
-            return Math.Max(R, 1.0/R);
+            return Math.Max(R, 1.0 / R);
         }
 
         public override double ComputeErrorForPoint(int l, int p)
@@ -289,7 +228,7 @@ namespace CalibrationModule
             double R = Get_RadiusErrorCoeff(l, p);
             double d = LineCoeffs[l, 0] * point.Pf.X + LineCoeffs[l, 1] * point.Pf.Y + LineCoeffs[l, 2];
             double error = d * R / Math.Sqrt(LineCoeffs[l, 0] * LineCoeffs[l, 0] + LineCoeffs[l, 1] * LineCoeffs[l, 1]);
-           // double error = d *d * R * R / (LineCoeffs[l, 0] * LineCoeffs[l, 0] + LineCoeffs[l, 1] * LineCoeffs[l, 1]);
+            //double error = d * d * R * R / (LineCoeffs[l, 0] * LineCoeffs[l, 0] + LineCoeffs[l, 1] * LineCoeffs[l, 1]);
             return error;
         }
 
@@ -298,6 +237,5 @@ namespace CalibrationModule
         {
             ComputeMappingFucntion(error);
         }
-        
     }
 }

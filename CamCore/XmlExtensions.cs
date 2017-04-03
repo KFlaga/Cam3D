@@ -6,10 +6,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using System.Xml.Serialization;
+using System.Xml.Schema;
 
 namespace CamCore
 {
-    public static class XmlExtensions
+    public static partial class XmlExtensions
     {
         public static XmlNode FirstChildWithName(this XmlNode node, string childName, bool caseSensitive = true)
         {
@@ -26,7 +28,7 @@ namespace CamCore
             }
             return null;
         }
-        
+
         public static Matrix<double> MatrixFromNode(XmlNode matNode)
         {
             int rows = int.Parse(matNode.Attributes["rows"].Value);
@@ -70,7 +72,7 @@ namespace CamCore
                 for(int col = 0; col < matrix.ColumnCount; ++col)
                 {
                     double val = matrix[row, col];
-                    nums.Append(val);
+                    nums.Append(val.ToString("F5"));
                     nums.Append('|');
                 }
                 nums.Remove(nums.Length - 1, 1);
@@ -84,7 +86,7 @@ namespace CamCore
         }
 
         public static RadialDistortionModel DistortionModelFromNode(XmlNode modelNode)
-        { 
+        {
             // <DistortionModel name="Rational3">
             //      <Parameters>
             //          <Parameter>1</Parameter>
@@ -101,7 +103,7 @@ namespace CamCore
             }
             else
                 throw new XmlException("Unsupported distortion model name: " + name);
-            
+
             var paramsNode = modelNode.SelectSingleNode("Parameters");
             var paramNode = paramsNode.FirstChild;
             for(int k = 0; k < model.ParametersCount; ++k)
@@ -149,6 +151,72 @@ namespace CamCore
             modelNode.AppendChild(scaleNode);
 
             return modelNode;
+        }
+
+        public class MatrixXmlSerializer : IXmlSerializable
+        {
+            public Matrix<double> Mat { get; set; }
+
+            public MatrixXmlSerializer()
+            {
+                Mat = null;
+            }
+
+            public MatrixXmlSerializer(Matrix<double> matrix)
+            {
+                Mat = matrix;
+            }
+
+            public XmlSchema GetSchema()
+            {
+                return null;
+            }
+
+            public void ReadXml(XmlReader reader)
+            {
+                reader.MoveToContent(); // Should move to begining of <Matrix>
+                int rows = int.Parse(reader.GetAttribute("rows"));
+                int cols = int.Parse(reader.GetAttribute("columns"));
+
+                Mat = new DenseMatrix(rows, cols);
+                reader.ReadStartElement(); // Moves to first <Row>
+
+                for(int row = 0; row < Mat.RowCount; ++row)
+                {
+                    string rowString = reader.ReadElementContentAsString(); // Reads from <Row> and moves to next one
+
+                    string[] nums = rowString.Split('|');
+                    for(int num = 0; num < cols; ++num)
+                    {
+                        double val = double.Parse(nums[num]);
+                        Mat.At(row, num, val);
+                    }
+                }
+                reader.ReadEndElement(); // Should read </Matrix>
+            }
+
+            public void WriteXml(XmlWriter writer)
+            {
+                // writer is on 'Matrix' node
+                // write size attributes first
+                writer.WriteAttributeString("rows", Mat.RowCount.ToString());
+                writer.WriteAttributeString("columns", Mat.ColumnCount.ToString());
+
+                // For each row write 'Row' element with row contents
+                for(int row = 0; row < Mat.RowCount; ++row)
+                {
+                    StringBuilder nums = new StringBuilder();
+                    for(int col = 0; col < Mat.ColumnCount; ++col)
+                    {
+                        double val = Mat.At(row, col);
+                        nums.Append(val.ToString("F5"));
+                        nums.Append('|');
+                    }
+                    nums.Remove(nums.Length - 1, 1);
+
+                    writer.WriteElementString("Row", nums.ToString());
+                }
+            }
         }
     }
 }

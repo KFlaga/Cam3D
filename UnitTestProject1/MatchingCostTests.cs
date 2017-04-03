@@ -98,15 +98,15 @@ namespace UnitTestProject1
             Assert.IsTrue(costCpu.RankBase[2, 2] == 3, "Wrong rank transform in point [2,2]. Expected: 3; Actual: " + costCpu.RankBase[2, 2]);
 
             // Expected matching cost in points (base, matched):
-            // ([2,2], [2,3]) : 36/9
+            // ([2,2], [2,3]) : 36
             // ([2,2], [2,4]) : 0
-            // ([2,2], [2,2]) : 36/9
+            // ([2,2], [2,2]) : 36
             double cost = costCpu.GetCost(new IntVector2(2, 2), new IntVector2(3, 2));
-            Assert.IsTrue(Math.Abs(cost - 36.0 / 9.0) < 1e-6, "Wrong rank cost in points ([2,2],[2,3]). Expected: 4; Actual: " + cost);
+            Assert.IsTrue(Math.Abs(cost - 36.0) < 1e-6, "Wrong rank cost in points ([2,2],[2,3]). Expected: 4; Actual: " + cost);
             cost = costCpu.GetCost(new IntVector2(2, 2), new IntVector2(4, 2));
             Assert.IsTrue(Math.Abs(cost - 0.0) < 1e-6, "Wrong rank cost in points ([2,2],[2,4]). Expected: 0; Actual: " + cost);
             cost = costCpu.GetCost(new IntVector2(2, 2), new IntVector2(2, 2));
-            Assert.IsTrue(Math.Abs(cost - 36.0 / 9.0) < 1e-6, "Wrong rank cost in points ([2,2],[2,2]). Expected: 4; Actual: " + cost);
+            Assert.IsTrue(Math.Abs(cost - 36.0) < 1e-6, "Wrong rank cost in points ([2,2],[2,2]). Expected: 4; Actual: " + cost);
         }
 
         [TestMethod]

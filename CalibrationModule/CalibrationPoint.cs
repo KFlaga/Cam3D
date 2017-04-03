@@ -15,9 +15,9 @@ namespace CalibrationModule
         [XmlIgnore]
         public Vector3 Real { get { return _real; } set { _real.X = value.X; _real.Y = value.Y; _real.Z = value.Z; } }
 
-        private Point2D<int> _realGridPos;
+        private IntVector2 _realGridPos;
         [XmlIgnore]
-        public Point2D<int> RealGridPos { get { return _realGridPos; } set { _realGridPos.X = value.X; _realGridPos.Y = value.Y; } }
+        public IntVector2 RealGridPos { get { return _realGridPos; } set { _realGridPos.X = value.X; _realGridPos.Y = value.Y; } }
 
         [XmlAttribute("ImgX")]
         public double ImgX { get { return Img.X; } set { Img.X = value; } }
@@ -43,7 +43,18 @@ namespace CalibrationModule
         {
             _img = new Vector2();
             _real = new Vector3();
-            _realGridPos = new Point2D<int>(-1, -1);
+            _realGridPos = new IntVector2(-1, -1);
+        }
+
+        public CalibrationPoint Clone()
+        {
+            return new CalibrationPoint()
+            {
+                Img = this.Img,
+                Real = this.Real,
+                GridNum = this.GridNum,
+                RealGridPos = this.RealGridPos
+            };
         }
 
         public override string ToString()

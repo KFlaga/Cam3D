@@ -3,16 +3,18 @@ using System;
 using System.Collections.Generic;
 using CamCore;
 using MathNet.Numerics.LinearAlgebra.Double;
+using System.Xml.Serialization;
+using System.Xml;
 
 namespace CamImageProcessing
 {
-    public class ImageRectification_FussieloUncalibrated : ImageRectification
+    [XmlRoot("Rectification_FusielloUncalibrated")]
+    public class ImageRectification_FussieloUncalibrated : ImageRectificationComputer
     {
-        public List<Vector2> PointsLeft { get; set; }
-        public List<Vector2> PointsRight { get; set; }
         public bool UseInitialCalibration { get; set; }
-        Minimalisation _minimalisation;
-        Matrix<double> _H_L, _H_R, _Ht_L, _Ht_R;
+
+        private Minimalisation _minimalisation;
+        private Matrix<double> _H_L, _H_R, _Ht_L, _Ht_R;
 
         public override void ComputeRectificationMatrices()
         {
@@ -25,30 +27,30 @@ namespace CamImageProcessing
             _minimalisation.NumericalDerivativeStep = 1e-4;
 
             _minimalisation.ParametersVector = new DenseVector(Minimalisation._paramsCount);
-            if(UseInitialCalibration && CalibrationData.Data.IsCamLeftCalibrated && CalibrationData.Data.IsCamRightCalibrated)
+            if(UseInitialCalibration && CalibData.IsCamLeftCalibrated && CalibData.IsCamRightCalibrated)
             {
                 _minimalisation.ParametersVector.At(Minimalisation._flIdx,
-                    0.5 * (CalibrationData.Data.CalibrationLeft.At(0, 0) +
-                    CalibrationData.Data.CalibrationLeft.At(1, 1)));
+                    0.5 * (CalibData.CalibrationLeft.At(0, 0) +
+                    CalibData.CalibrationLeft.At(1, 1)));
                 // _minimalisation.ParametersVector.At(Minimalisation._pxlIdx,
-                //     CalibrationData.Data.CalibrationLeft.At(0, 2));
+                //     CalibData.CalibrationLeft.At(0, 2));
                 // _minimalisation.ParametersVector.At(Minimalisation._pylIdx,
-                //     CalibrationData.Data.CalibrationLeft.At(1, 2));
+                //     CalibData.CalibrationLeft.At(1, 2));
 
                 Vector<double> euler = new DenseVector(3);
-                RotationConverter.MatrixToEuler(euler, CalibrationData.Data.RotationLeft);
+                RotationConverter.MatrixToEuler(euler, CalibData.RotationLeft);
                 _minimalisation.ParametersVector.At(Minimalisation._eYlIdx, euler.At(1));
                 _minimalisation.ParametersVector.At(Minimalisation._eZlIdx, euler.At(2));
 
                 _minimalisation.ParametersVector.At(Minimalisation._frIdx,
-                    0.5 * (CalibrationData.Data.CalibrationRight.At(0, 0) +
-                    CalibrationData.Data.CalibrationRight.At(1, 1)));
+                    0.5 * (CalibData.CalibrationRight.At(0, 0) +
+                    CalibData.CalibrationRight.At(1, 1)));
                 // _minimalisation.ParametersVector.At(Minimalisation._pxrIdx,
-                //     CalibrationData.Data.CalibrationRight.At(0, 2));
+                //     CalibData.CalibrationRight.At(0, 2));
                 // _minimalisation.ParametersVector.At(Minimalisation._pyrIdx,
-                //     CalibrationData.Data.CalibrationRight.At(1, 2));
+                //     CalibData.CalibrationRight.At(1, 2));
 
-                RotationConverter.MatrixToEuler(euler, CalibrationData.Data.RotationRight);
+                RotationConverter.MatrixToEuler(euler, CalibData.RotationRight);
                 _minimalisation.ParametersVector.At(Minimalisation._eXrIdx, euler.At(0));
                 _minimalisation.ParametersVector.At(Minimalisation._eYrIdx, euler.At(1));
                 _minimalisation.ParametersVector.At(Minimalisation._eZrIdx, euler.At(2));
@@ -84,10 +86,10 @@ namespace CamImageProcessing
 
             _minimalisation.PointsLeft = new List<Vector<double>>();
             _minimalisation.PointsRight = new List<Vector<double>>();
-            for(int i = 0; i < PointsLeft.Count; ++i)
+            for(int i = 0; i < MatchedPairs.Count; ++i)
             {
-                _minimalisation.PointsLeft.Add(PointsLeft[i].ToMathNetVector3());
-                _minimalisation.PointsRight.Add(PointsRight[i].ToMathNetVector3());
+                _minimalisation.PointsLeft.Add(MatchedPairs[i].V1.ToMathNetVector3());
+                _minimalisation.PointsRight.Add(MatchedPairs[i].V2.ToMathNetVector3());
             }
 
             _minimalisation.ImageHeight = ImageHeight;
@@ -110,9 +112,6 @@ namespace CamImageProcessing
 
             RectificationLeft = _Ht_L * _H_L;
             RectificationRight = _Ht_R * _H_R;
-
-            RectificationLeft_Inverse = RectificationLeft.Inverse();
-            RectificationRight_Inverse = RectificationRight.Inverse();
         }
 
         public void ComputeScalingMatrices(int imgWidth, int imgHeight)

@@ -79,6 +79,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Alg\BasicFloodAlgorithm.cs" />
+    <Compile Include="Alg\DictionaryExtensions.cs" />
     <Compile Include="Alg\Disparity.cs" />
     <Compile Include="Alg\DisparityMap.cs" />
     <Compile Include="Alg\EpiLine.cs" />
@@ -87,12 +88,14 @@
     <Compile Include="Alg\IFloodAlgorithm.cs" />
     <Compile Include="Alg\IterativeBasicFloodAlgorithm.cs" />
     <Compile Include="Alg\Line.cs" />
+    <Compile Include="Alg\Math.cs" />
     <Compile Include="Alg\MultivariateFunctionMinimalisation.cs" />
     <Compile Include="Alg\OneVariableFunctionRootsFinder.cs" />
     <Compile Include="Alg\OneVariableMinimisation.cs" />
     <Compile Include="Alg\Point2D.cs" />
     <Compile Include="Alg\PolynomialRootFinder.cs" />
     <Compile Include="Alg\Polynomial.cs" />
+    <Compile Include="Alg\Quadric.cs" />
     <Compile Include="Alg\RotationConverter.cs" />
     <Compile Include="Alg\ScanLineFloodAlgorithm.cs" />
     <Compile Include="Alg\TwoPointsTriangulation.cs" />

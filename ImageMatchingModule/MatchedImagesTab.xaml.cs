@@ -44,10 +44,27 @@ namespace ImageMatchingModule
 
         public event EventHandler<DisparityChangedEventArgs> LeftMapChanged;
         public event EventHandler<DisparityChangedEventArgs> RightMapChanged;
-        
+
+        ColorImage _imgLeft;
+        ColorImage _imgRight;
+        public ColorImage ImageLeft { get { return _imgLeft; } }
+        public ColorImage ImageRight { get { return _imgRight; } }
+
         public MatchedImagesTab()
         {
             InitializeComponent();
+
+            _camImageFirst.ImageSourceChanged += (s, e) =>
+            {
+                _imgLeft = new ColorImage();
+                _imgLeft.FromBitmapSource(e.NewImage);
+            };
+
+            _camImageSec.ImageSourceChanged += (s, e) =>
+            {
+                _imgRight = new ColorImage();
+                _imgRight.FromBitmapSource(e.NewImage);
+            };
         }
 
         private void RectifyImages(object sender, RoutedEventArgs e)
@@ -70,35 +87,28 @@ namespace ImageMatchingModule
                 return;
             }
 
-            ImageRectification_ZhangLoop rectifier = new ImageRectification_ZhangLoop();
-            RectificationTransformation rectTransformation = new RectificationTransformation();
-            rectTransformation.Rectifier = rectifier;
-
-            ImageTransformer transformer = new ImageTransformer();
-            transformer.Transformation = rectTransformation;
-            transformer.UsedInterpolationMethod = ImageTransformer.InterpolationMethod.Quadratic;
-
+            ImageRectification rectifier = new ImageRectification(new ImageRectification_ZhangLoop());
             rectifier.ImageHeight = _camImageFirst.ImageSource.PixelHeight;
             rectifier.ImageWidth = _camImageFirst.ImageSource.PixelWidth;
-            rectifier.EpiCrossLeft = CalibrationData.Data.EpipoleCrossLeft;
-            rectifier.EpiCrossRight = CalibrationData.Data.EpipoleCrossRight;
-            rectifier.EpipoleLeft = CalibrationData.Data.EpipoleLeft;
-            rectifier.EpipoleRight = CalibrationData.Data.EpipoleRight;
-            rectifier.IsEpiLeftInInfinity = CalibrationData.Data.EpiLeftInInfinity;
-            rectifier.IsEpiRightInInfinity = CalibrationData.Data.EpiRightInInfinity;
-            rectifier.FundamentalMatrix = CalibrationData.Data.Fundamental;
+            rectifier.CalibData = CalibrationData.Data;
             rectifier.ComputeRectificationMatrices();
 
-            ColorImage imgLeft = new ColorImage();
-            imgLeft.FromBitmapSource(_camImageFirst.ImageSource);
-            ColorImage imgRight = new ColorImage();
-            imgRight.FromBitmapSource(_camImageSec.ImageSource);
+            ImageTransformer transformer = new ImageTransformer();
+            transformer.UsedInterpolationMethod = ImageTransformer.InterpolationMethod.Quadratic;
+            
+            transformer.Transformation = new RectificationTransformation()
+            {
+                RectificationMatrix = rectifier.RectificationLeft,
+                RectificationMatrixInverse = rectifier.RectificationLeft_Inverse,
+            }; ;
+            MaskedImage rectLeft = transformer.TransfromImageBackwards(_imgLeft, true);
 
-            rectTransformation.WhichImage = RectificationTransformation.ImageIndex.Left;
-            ColorImage rectLeft = transformer.TransfromImageBackwards(imgLeft, true);
-
-            rectTransformation.WhichImage = RectificationTransformation.ImageIndex.Right;
-            ColorImage rectRight = transformer.TransfromImageBackwards(imgRight, true);
+            transformer.Transformation = new RectificationTransformation()
+            {
+                RectificationMatrix = rectifier.RectificationRight,
+                RectificationMatrixInverse = rectifier.RectificationRight_Inverse,
+            }; ;
+            MaskedImage rectRight = transformer.TransfromImageBackwards(_imgRight, true);
 
             _camImageFirst.ImageSource = rectLeft.ToBitmapSource();
             _camImageSec.ImageSource = rectRight.ToBitmapSource();
@@ -124,13 +134,8 @@ namespace ImageMatchingModule
                 return;
             }
 
-            ColorImage imgLeft = new ColorImage();
-            imgLeft.FromBitmapSource(_camImageFirst.ImageSource);
-            ColorImage imgRight = new ColorImage();
-            imgRight.FromBitmapSource(_camImageSec.ImageSource);
-
-            _alg.ImageLeft = imgLeft;
-            _alg.ImageRight = imgRight;
+            _alg.ImageLeft = _imgLeft;
+            _alg.ImageRight = _imgRight;
             _alg.StatusChanged += _alg_StatusChanged;
 
             _matcherWindow = new AlgorithmWindow(_alg);

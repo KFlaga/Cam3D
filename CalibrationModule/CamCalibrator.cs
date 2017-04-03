@@ -36,6 +36,8 @@ namespace CalibrationModule
 
         public bool OverwriteGridsWithEstimated { get; set; }
 
+        public int MaxIterations { get; set; }
+
         public Matrix<double> NormReal { get; private set; }
         public Matrix<double> NormImage { get; private set; }
         public Matrix<double> RealPoints { get; private set; }
@@ -256,6 +258,7 @@ namespace CalibrationModule
                     -ImagePoints[0, p] * RealPoints[2, p], -ImagePoints[0, p]});
             }
 
+            var eqI = equationsMat.ColumnSums();
             _linearSolver.EquationsMatrix = equationsMat;
             _linearSolver.Solve();
             Vector<double> p_vec = _linearSolver.ResultVector;
@@ -333,6 +336,7 @@ namespace CalibrationModule
 
         public void PrepareMinimalisationAlg()
         {
+            _miniAlg.MaximumIterations = MaxIterations;
             // M = [Xr | xi]
             _miniAlg.MeasurementsVector = new DenseVector(Points.Count * 2 + Grids.Count * 12);
             for(int i = 0; i < Points.Count; ++i)
@@ -437,6 +441,7 @@ namespace CalibrationModule
         LMCameraMatrixZeroSkewMinimalisation _zeroSkewMini = new LMCameraMatrixZeroSkewMinimalisation();
         public void PrepareSkewMiniAlg()
         {
+            _zeroSkewMini.MaximumIterations = MaxIterations;
             // M = [Xr | xi]
             _zeroSkewMini.MeasurementsVector = new DenseVector(Points.Count * 5);
             for(int i = 0; i < Points.Count; ++i)
@@ -593,6 +598,10 @@ namespace CalibrationModule
             AlgorithmParameter overGrids = new BooleanParameter(
                "Overwrite grids with estimated", "OVERG", false);
             Parameters.Add(overGrids);
+
+            AlgorithmParameter maxIters = new IntParameter(
+               "MaxIterations", "ITER", 100, 1, 1000);
+            Parameters.Add(maxIters);
         }
 
         public void UpdateParameters()
@@ -612,6 +621,7 @@ namespace CalibrationModule
             EliminateOuliers = AlgorithmParameter.FindValue<bool>("ELIM", Parameters);
             OutliersCoeff = AlgorithmParameter.FindValue<double>("ECOEFF", Parameters);
             OverwriteGridsWithEstimated = AlgorithmParameter.FindValue<bool>("OVERG", Parameters);
+            MaxIterations = AlgorithmParameter.FindValue<int>("ITER", Parameters);
         }
         #endregion
 

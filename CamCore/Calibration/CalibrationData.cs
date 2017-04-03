@@ -11,17 +11,17 @@ using System.ComponentModel;
 
 namespace CamCore
 {
+    public enum CameraIndex
+    {
+        Left = 0,
+        Right = 1
+    }
+
     public class CalibrationData : INotifyPropertyChanged
     {
         private static CalibrationData _data = new CalibrationData();
         public static CalibrationData Data { get { return _data; } }
-
-        public enum CameraIndex
-        {
-            Left = 0,
-            Right = 1
-        }
-
+        
         private Matrix<double> _camLeft = null;
         private Matrix<double> _camRight = null;
 

@@ -97,8 +97,8 @@ namespace CamCore
             Parameters[_cyIdx] = InitialCenterEstimation.Y;
            // Parameters[_sxIdx] = InitialAspectEstimation;
 
-            DistortionCenter.X = Parameters[_cxIdx];
-            DistortionCenter.Y = Parameters[_cyIdx];
+            //DistortionCenter.X = Parameters[_cxIdx];
+            //DistortionCenter.Y = Parameters[_cyIdx];
         }
 
         public override void FullUpdate()
@@ -369,6 +369,11 @@ namespace CamCore
             Parameters[_k2Idx] = AlgorithmParameter.FindValue<double>("IK2", _procParams);
             Parameters[_k3Idx] = AlgorithmParameter.FindValue<double>("IK3", _procParams);
             Parameters[_k4Idx] = AlgorithmParameter.FindValue<double>("IK3", _procParams);
+        }
+
+        public override void SetInitialParametersFromQuadrics(List<Quadric> quadrics, List<List<Vector2>> linePoints, List<int> fitPoints)
+        {
+            InitParameters();
         }
     }
 }

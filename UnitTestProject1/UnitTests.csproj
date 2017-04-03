@@ -58,6 +58,7 @@
       <HintPath>..\CalibrationModule\bin\Debug\MathNet.Numerics.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Xml" />
     <Reference Include="WriteableBitmapEx.Wpf">
       <HintPath>..\CalibrationModule\bin\Debug\WriteableBitmapEx.Wpf.dll</HintPath>
     </Reference>
@@ -87,6 +88,7 @@
     <Compile Include="CameraMatrixComputationTests.cs" />
     <Compile Include="RectificationTests.cs" />
     <Compile Include="TriangulationTests.cs" />
+    <Compile Include="ProcessingChainTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CalibrationModule\CalibrationModule.csproj">
@@ -105,6 +107,26 @@
       <Project>{3077792d-e973-4d3f-83c6-8553287a6604}</Project>
       <Name>CamImageProcessing</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CamMain\CamMain.csproj">
+      <Project>{252716e3-a96e-4552-8750-4456f828f335}</Project>
+      <Name>CamMain</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="resources\CalibPic_Left_1_Post.png" />
+    <Content Include="resources\CalibPic_Left_2_Post.png" />
+    <Content Include="resources\CalibPic_Left_3_Post.png" />
+    <Content Include="resources\CalibPic_Left_4_Post.png" />
+    <Content Include="resources\CalibPic_Left_5_Post.png" />
+    <Content Include="resources\CalibPic_Left_6_Post.png" />
+    <Content Include="resources\CalibPic_Right_1_Post.png" />
+    <Content Include="resources\CalibPic_Right_2_Post.png" />
+    <Content Include="resources\CalibPic_Right_3_Post.png" />
+    <Content Include="resources\CalibPic_Right_4_Post.png" />
+    <Content Include="resources\CalibPic_Right_5_Post.png" />
+    <Content Include="resources\CalibPic_Right_6_Post.png" />
+    <Content Include="resources\calib_input_test.xml" />
+    <Content Include="resources\Grids6.xml" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

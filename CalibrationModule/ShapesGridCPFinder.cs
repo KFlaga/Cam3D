@@ -34,7 +34,7 @@ namespace CalibrationModule
         public Vector2 AxisY { get; private set; } // Local grid y-axis in image coords
 
         private IFloodAlgorithm _flood;
-        
+
         enum CellCode : ulong
         {
             Unvisited = 0,
@@ -48,7 +48,7 @@ namespace CalibrationModule
         {
             var bytes = BitConverter.GetBytes(pixelCode);
             uint code = BitConverter.ToUInt32(bytes, 0);
-            return (CellCode)(code - ((code>>4)<<4)) == cellCode;
+            return (CellCode)(code - ((code >> 4) << 4)) == cellCode;
         }
 
         double CellCodeToFloat(CellCode cellCode)
@@ -144,7 +144,7 @@ namespace CalibrationModule
                     Points.Add(new CalibrationPoint()
                     {
                         Img = shape.GravityCenter,
-                        RealGridPos = shape.GridPos
+                        RealGridPos = new IntVector2(x: shape.GridPos.X, y: shape.GridPos.Y)
                     });
             }
 
@@ -512,7 +512,7 @@ namespace CalibrationModule
             //        break;
             //    }
             //}
-            
+
             Vector2 direction_2 = (CalibShapes[2].GravityCenter - CalibShapes[0].GravityCenter);
             direction_2.Normalise();
             double cos2 = Math.Abs(direction_1.CosinusTo(direction_2));

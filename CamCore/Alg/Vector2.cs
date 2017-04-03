@@ -307,6 +307,16 @@ namespace CamCore
             return new IntVector2(p1.X / p2.X, p1.Y / p2.Y);
         }
 
+        public static bool operator ==(IntVector2 p1, IntVector2 p2)
+        {
+            return p1.X == p2.X && p1.Y == p2.Y;
+        }
+
+        public static bool operator !=(IntVector2 p1, IntVector2 p2)
+        {
+            return p1.X != p2.X || p1.Y != p2.Y;
+        }
+
         public int DotProduct(IntVector2 v)
         {
             return X * v.X + Y * v.Y;

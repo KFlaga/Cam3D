@@ -24,19 +24,15 @@ namespace CamImageProcessing.ImageMatching
         public virtual void Init()
         {
             CostComp.ImageBase = ImageBase;
-            CostComp.ImageMatched = ImageMatched;
-            
+            CostComp.ImageMatched = ImageMatched;         
             CostComp.Init();
 
-            if(DispComp != null)
-            {
                 DispComp.CostComp = CostComp;
                 DispComp.ImageBase = ImageBase;
                 DispComp.ImageMatched = ImageMatched;
                 DispComp.IsLeftImageBase = IsLeftImageBase;
                 DispComp.DisparityMap = DisparityMap;
                 DispComp.Init();
-            }
         }
 
         public abstract void ComputeMatchingCosts();
@@ -61,6 +57,8 @@ namespace CamImageProcessing.ImageMatching
             var rank = new RankCostComputer();
             rank.InitParameters();
             costParam.Parameterizables.Add(rank);
+
+            costParam.DefaultValue = cens;
 
             _params.Add(costParam);
         }

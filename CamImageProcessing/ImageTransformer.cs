@@ -278,7 +278,7 @@ namespace CamImageProcessing
                     matrices[i] = new DenseMatrix(_finalSize.Y, _finalSize.X);
                     img.SetMatrix(matrices[i], i);
                 }
-                undistorted = new MaskedImage(image.Clone());
+                undistorted = new MaskedImage(img.Clone());
             }
 
             int R = InterpolationRadius;

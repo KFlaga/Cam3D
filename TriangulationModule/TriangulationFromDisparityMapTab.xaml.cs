@@ -63,11 +63,7 @@ namespace TriangulationModule
                 }
             }
 
-            _triangulation.CameraLeft = CalibrationData.Data.CameraLeft;
-            _triangulation.CameraRight = CalibrationData.Data.CameraRight;
-            _triangulation.EpipoleLeft = CalibrationData.Data.EpipoleLeft;
-            _triangulation.EpipoleRight = CalibrationData.Data.EpipoleRight;
-            _triangulation.Fundamental = CalibrationData.Data.Fundamental;
+            _triangulation.CalibData = CalibrationData.Data;
             _triangulation.UseLinearEstimationOnly = true;
             _triangulation.PointsLeft = _left;
             _triangulation.PointsRight = _right;

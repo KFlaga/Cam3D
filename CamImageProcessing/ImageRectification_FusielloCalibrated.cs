@@ -6,10 +6,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace CamImageProcessing
 {
-    public class ImageRectification_FusielloCalibrated : ImageRectification
+    [XmlRoot("Rectification_FusielloCalibrated")]
+    public class ImageRectification_FusielloCalibrated : ImageRectificationComputer
     {
         Matrix<double> _R;
         Matrix<double> _K;
@@ -45,11 +47,11 @@ namespace CamImageProcessing
             //% rectifying image transformation
             //T1 = Pn1(1:3, 1:3) * inv(Po1(1:3, 1:3));
             //T2 = Pn2(1:3,1:3)* inv(Po2(1:3,1:3));
-            Vector<double> c1 = CalibrationData.Data.TranslationLeft;
-            Vector<double> c2 = CalibrationData.Data.TranslationRight;
+            Vector<double> c1 = CalibData.TranslationLeft;
+            Vector<double> c2 = CalibData.TranslationRight;
 
             Vector<double> v1 = c1 - c2;
-            Vector<double> v2 = CalibrationData.Data.RotationLeft.Row(2).Cross(v1);
+            Vector<double> v2 = CalibData.RotationLeft.Row(2).Cross(v1);
             Vector<double> v3 = v1.Cross(v2);
 
             _R = new DenseMatrix(3, 3);
@@ -61,17 +63,15 @@ namespace CamImageProcessing
             RotationConverter.EulerToMatrix(new double[] { 0.0, 0.0, Math.PI }, halfRevolve);
             _R = halfRevolve * _R;
 
-            _K = (CalibrationData.Data.CalibrationLeft + CalibrationData.Data.CalibrationRight).Multiply(0.5);
+            _K = (CalibData.CalibrationLeft + CalibData.CalibrationRight).Multiply(0.5);
             _K[0, 1] = 0.0;
             
-            RectificationLeft = (_K * _R) * ((CalibrationData.Data.CalibrationLeft * CalibrationData.Data.RotationLeft).Inverse());
-            RectificationRight = (_K * _R) * ((CalibrationData.Data.CalibrationRight * CalibrationData.Data.RotationRight).Inverse());
+            RectificationLeft = (_K * _R) * ((CalibData.CalibrationLeft * CalibData.RotationLeft).Inverse());
+            RectificationRight = (_K * _R) * ((CalibData.CalibrationRight * CalibData.RotationRight).Inverse());
             ComputeScalingMatrices(ImageWidth, ImageHeight);
 
             RectificationLeft = _Ht_L * RectificationLeft;
             RectificationLeft = _Ht_R * RectificationRight;
-            RectificationLeft_Inverse = RectificationLeft.Inverse();
-            RectificationRight_Inverse = RectificationRight.Inverse();
         }
 
 

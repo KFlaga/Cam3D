@@ -6,13 +6,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace CamImageProcessing
 {
     // Computes rectification matrices for 2 cameras from CalibrationData
     // 
     //
-    public class ImageRectification_ZhangLoop : ImageRectification
+    [XmlRoot("Rectification_ZhangLoop")]
+    public class ImageRectification_ZhangLoop : ImageRectificationComputer
     {
         private Matrix<double> _A_L;
         private Matrix<double> _B_L;
@@ -30,53 +32,24 @@ namespace CamImageProcessing
 
         public override void ComputeRectificationMatrices()
         {
-            if(IsEpiLeftInInfinity)
+            if(CalibData.EpiLeftInInfinity)
             {
                 ComputeProjectiveMatrices_LeftEpiInInfinity(ImageWidth, ImageHeight);
             }
-            else if(IsEpiRightInInfinity)
+            else if(CalibData.EpiRightInInfinity)
             {
                 ComputeProjectiveMatrices_RightEpiInInfinity(ImageWidth, ImageHeight);
             }
             else
                 ComputeProjectiveMatrices(ImageWidth, ImageHeight);
 
-            // Check fundamental and epipoles
-            var F = _Hp_R.Inverse().Transpose() * FundamentalMatrix * _Hp_L.Inverse();
-            var eL = _Hp_L * EpipoleLeft;
-            var eR = _Hp_R * EpipoleRight;
-
-            var oldLeft = CalibrationData.Data.CameraLeft;
-            var oldRight = CalibrationData.Data.CameraRight;
-
-            var cd = CalibrationData.Data;
-            cd.CameraLeft = ( _Hp_L) * oldLeft;
-            cd.CameraRight = ( _Hp_R) * oldRight;
-
-            cd.CameraLeft =  oldLeft;
-            cd.CameraRight =  oldRight;
-
             ComputeSymilarityMatrices (ImageWidth, ImageHeight);
-            
-            F = (_Hr_R * _Hp_R).Inverse().Transpose() * FundamentalMatrix * (_Hr_L * _Hp_L).Inverse();
-            eL = (_Hr_L * _Hp_L) * EpipoleLeft;
-            eR = (_Hr_R * _Hp_R) * EpipoleRight;
-            var i = new DenseMatrix(3, 3);
-            i.At(1, 2, -1.0);
-            i.At(2, 1, 1.0);
-            var Fi = (_Hr_R * _Hp_R).Transpose() * i * (_Hr_L * _Hp_L);
-            
-            cd.CameraLeft = (_Hr_L * _Hp_L) * oldLeft;
-            cd.CameraRight = (_Hr_R * _Hp_R) * oldRight;
 
             ComputeShearingMatrices(ImageWidth, ImageHeight);
             ComputeScalingMatrices(ImageWidth, ImageHeight);
 
             RectificationLeft = _Ht_L * _Hs_L * _Hr_L * _Hp_L;
             RectificationRight = _Ht_R * _Hs_R * _Hr_R * _Hp_R;
-            
-            RectificationLeft_Inverse = RectificationLeft.Inverse();
-            RectificationRight_Inverse = RectificationRight.Inverse();
         }
 
         #region Projective Matrix
@@ -104,19 +77,17 @@ namespace CamImageProcessing
             pcpct[2, 0] = iw1 * 0.5;
             pcpct[2, 1] = ih1 * 0.5;
             pcpct[2, 2] = 1.0;
-
-            Matrix<double> F = FundamentalMatrix;
-
+            
             // As w = [e]x * z, w' = Fz, for some z = [z1 z2 0]
             // Then for both images minimsed sum is equal:
             // zt * [e]x*P*Pt*[e]x * z / (zt * [e]x*pc*pct*[e]x * z) + zt * F*P'*Pt'*F * z / (zt * F*pc'*pct'*F * z)
             // Let A = [e]x*P*Pt*[e]x and B = [e]x*pc*pct*[e]x
             // Only upper 2x2 submatrix is used as z3 = 0
-            _A_L = (EpiCrossLeft.Transpose() * PPt * EpiCrossLeft).SubMatrix(0, 2, 0, 2);
-            _A_R = (FundamentalMatrix.Transpose() * PPt * FundamentalMatrix).SubMatrix(0, 2, 0, 2);
+            _A_L = (CalibData.EpipoleCrossLeft.Transpose() * PPt * CalibData.EpipoleCrossLeft).SubMatrix(0, 2, 0, 2);
+            _A_R = (CalibData.Fundamental.Transpose() * PPt * CalibData.Fundamental).SubMatrix(0, 2, 0, 2);
 
-            _B_L = (EpiCrossLeft.Transpose() * pcpct * EpiCrossLeft).SubMatrix(0, 2, 0, 2);
-            _B_R = (FundamentalMatrix.Transpose() * pcpct * FundamentalMatrix).SubMatrix(0, 2, 0, 2);
+            _B_L = (CalibData.EpipoleCrossLeft.Transpose() * pcpct * CalibData.EpipoleCrossLeft).SubMatrix(0, 2, 0, 2);
+            _B_R = (CalibData.Fundamental.Transpose() * pcpct * CalibData.Fundamental).SubMatrix(0, 2, 0, 2);
 
             // Finally we need to such a z to minimise (z^T * A * z) / (z^T * B * z) + (z^T * A' * z) / (z^T * B' * z)
             // 
@@ -197,8 +168,8 @@ namespace CamImageProcessing
             // w = [e]x * z, w' = Fz
             _Hp_L = DenseMatrix.CreateIdentity(3);
             _Hp_R = DenseMatrix.CreateIdentity(3);
-            var w_L = EpiCrossLeft * z;
-            var w_R = FundamentalMatrix * z;
+            var w_L = CalibData.EpipoleCrossLeft * z;
+            var w_R = CalibData.Fundamental * z;
 
             _Hp_L[2, 0] = w_L[0] / w_L[2];
             _Hp_L[2, 1] = w_L[1] / w_L[2];
@@ -211,13 +182,12 @@ namespace CamImageProcessing
         {
             // Left projective matrix is identity and so w = [0,0,1]
             // Epipole defines direction z (or not?)
-
-            Matrix<double> F = FundamentalMatrix;
+            
             // w = [e]x * z, w' = Fz
             _Hp_L = DenseMatrix.CreateIdentity(3);
             _Hp_R = DenseMatrix.CreateIdentity(3);
             // var w_L = EpiCrossLeft * z;
-            var w_R = FundamentalMatrix * EpipoleLeft;
+            var w_R = CalibData.Fundamental * CalibData.EpipoleLeft;
 
             // _Hp_L[2, 0] = w_L[0] / w_L[2];
             //_Hp_L[2, 1] = w_L[1] / w_L[2];
@@ -230,12 +200,11 @@ namespace CamImageProcessing
         {
             // Right projective matrix is identity and so w = [0,0,1]
             // Epipole defines direction z (or not?)
-
-            Matrix<double> F = FundamentalMatrix;
+            
             // w = [e]x * z, w' = Fz
             _Hp_L = DenseMatrix.CreateIdentity(3);
             _Hp_R = DenseMatrix.CreateIdentity(3);
-            var w_L = EpiCrossLeft * EpipoleRight;
+            var w_L = CalibData.EpipoleCrossLeft * CalibData.EpipoleRight;
             //var w_L = FundamentalMatrix * EpipoleLeft;
 
             _Hp_L[2, 0] = w_L[0] / w_L[2];
@@ -344,7 +313,7 @@ namespace CamImageProcessing
             // in y direction : we can choose v3' so that y coord of each image is 0
             // Start with v3' = 0
 
-            var F = FundamentalMatrix;
+            var F = CalibData.Fundamental;
             _Hr_L = new DenseMatrix(3);
             _Hr_L[0, 0] = F[2, 1] - F[2, 2] * _Hp_L[2, 1];
             _Hr_L[0, 1] = _Hp_L[2, 0] * F[2, 2] - F[2, 0];
@@ -768,5 +737,3 @@ namespace CamImageProcessing
         }
     }
 }
-
-// OLD ONE

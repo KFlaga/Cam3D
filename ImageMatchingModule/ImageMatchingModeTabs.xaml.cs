@@ -20,6 +20,12 @@ namespace ImageMatchingModule
                 _tabRefinement.MapLeftBase = _tabDisparity.DisparityMapLeft;
                 _tabRefinement.MapRightBase = _tabDisparity.DisparityMapRight;
             };
+
+            _tabRefinement.RequsestImagesUpdate += (s, e) =>
+            {
+                _tabRefinement.ImageLeft = _tabMatching.ImageLeft;
+                _tabRefinement.ImageRight = _tabMatching.ImageRight;
+            };
         }
 
         public void Dispose()

@@ -70,7 +70,7 @@ namespace ImageMatchingModule
         {
             return "Run: " + (_matcher.Aggregator.IsLeftImageBase ? "1" : "2") + ". Pixel: (" +
                 _matcher.Aggregator.CurrentPixel.X + ", " + _matcher.Aggregator.CurrentPixel.Y + 
-                ") of [" + ImageLeft.SizeX + ", " + ImageLeft.SizeY + "].";
+                ") of [" + ImageLeft.ColumnCount + ", " + ImageLeft.RowCount + "].";
         }
 
         public void Suspend() { }

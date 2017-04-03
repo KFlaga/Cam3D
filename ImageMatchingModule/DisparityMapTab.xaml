@@ -10,7 +10,6 @@
     <Grid x:Name="_mainLayout">
         <Grid.RowDefinitions>
             <RowDefinition Height="10*"/>
-            <RowDefinition Height="40"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="50*"/>
@@ -19,17 +18,5 @@
         </Grid.ColumnDefinitions>
         <CamControls:DisparityImage x:Name="_dispControlFirst" Grid.Column="0" Grid.Row="0" BorderBrush="Black" BorderThickness="1"/>
         <CamControls:DisparityImage x:Name="_dispControlSec" Grid.Column="2" Grid.Row="0" BorderBrush="Black" BorderThickness="1"/>
-        <Border Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="3" BorderBrush="Black" BorderThickness="1">
-            <DockPanel DockPanel.Dock="Bottom" Height="35" Background="LightGray">
-                <Button Margin="10,4,3,4" Click="SaveLeftMap">Save Left Map</Button>
-                <Button Margin="3,4,3,4" Click="LoadLeftMap">Load Left Map</Button>
-                <Button Margin="3,4,3,4" Click="SaveRightMap">Save Right Map</Button>
-                <Button Margin="3,4,3,4" Click="LoadRightMap">Load Right Map</Button>
-                <CheckBox x:Name="_dispDirectionShowCheckBox" Checked="_dispDirectionShowCheckBox_Checked" 
-                          Unchecked="_dispDirectionShowCheckBox_Unchecked" VerticalContentAlignment="Center">
-                    Show Y-Disparity</CheckBox>
-                <Label/>
-            </DockPanel>
-        </Border>
     </Grid>
 </UserControl>

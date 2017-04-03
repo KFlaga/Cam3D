@@ -1,12 +1,9 @@
-﻿using MathNet.Numerics.LinearAlgebra;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
+using System.Diagnostics;
 
 namespace CamCore
 {
+    [DebuggerDisplay("{DebuggerDisplay, nq}")]
     public class Line2D
     {
         public enum LineDirection
@@ -38,17 +35,17 @@ namespace CamCore
         public Line2D(Vector2 p1, Vector2 p2)
         {
             Vector2 intPoint = new Vector2();
-            if(Math.Abs(p1.X - p2.X) < 1e-6) // Horizontal line
+            if(Math.Abs(p1.X - p2.X) < 1e-6)
             {
-                this.A = 0.0;
-                this.B = 1.0;
-                this.Direction = LineDirection.Horizontal;
-            }
-            else if(Math.Abs(p1.Y - p2.Y) < 1e-6) // Vertical line
-            {
+                this.Direction = LineDirection.Vertical;
                 this.A = 1.0;
                 this.B = 0.0;
-                this.Direction = LineDirection.Vertical;
+            }
+            else if(Math.Abs(p1.Y - p2.Y) < 1e-6)
+            {
+                this.Direction = LineDirection.Horizontal;
+                this.A = 0.0;
+                this.B = 1.0;
             }
             else
             {
@@ -76,51 +73,35 @@ namespace CamCore
         public static Vector2 IntersectionPoint(Line2D l1, Line2D l2)
         {
             Vector2 intPoint = new Vector2();
-            if(l1.Direction == LineDirection.Horizontal)
+            if(l1.Direction == LineDirection.Vertical)
             {
-                if(l2.Direction == LineDirection.Horizontal)
+                if(l2.Direction == LineDirection.Vertical)
                 {
                     return null;
                 }
-                else if(l2.Direction == LineDirection.Vertical)
-                {
-                    intPoint.X = -l2.C / l2.A;
-                    intPoint.Y = -l1.C / l1.B;
-                }
-                else
-                {
-                    intPoint.Y = -l1.C / l1.B;
-                    intPoint.X = -(l2.B * intPoint.Y - l2.C) / l2.A;
-                }
+                intPoint.X = -l1.C / l1.A;
+                intPoint.Y = -(l2.A * intPoint.X + l2.C) / l2.B;
             }
-            else if(l1.Direction == LineDirection.Vertical)
+            else if(l1.Direction == LineDirection.Horizontal)
             {
                 if(l2.Direction == LineDirection.Horizontal)
                 {
-                    intPoint.X = -l1.C / l1.A;
-                    intPoint.Y = -l2.C / l2.B;
-                }
-                else if(l2.Direction == LineDirection.Vertical)
-                {
                     return null;
                 }
-                else
-                {
-                    intPoint.X = -l1.C / l1.A;
-                    intPoint.Y = -(l2.A * intPoint.X - l2.C) / l2.B;
-                }
+                intPoint.Y = -l1.C / l1.B;
+                intPoint.X = -(l2.B * intPoint.Y + l2.C) / l2.A;
             }
             else
             {
-                if(l2.Direction == LineDirection.Horizontal)
+                if(l2.Direction == LineDirection.Vertical)
                 {
-                    intPoint.X = -l2.C / l2.B;
-                    intPoint.Y = -(l1.A * intPoint.X - l1.C) / l1.B;
+                    intPoint.X = -l2.C / l2.A;
+                    intPoint.Y = -(l1.A * intPoint.X + l1.C) / l1.B;
                 }
-                else if(l2.Direction == LineDirection.Vertical)
+                else if(l2.Direction == LineDirection.Horizontal)
                 {
-                    intPoint.Y = -l2.C / l2.A;
-                    intPoint.X = -(l1.B * intPoint.Y - l1.C) / l1.A;
+                    intPoint.Y = -l2.C / l2.B;
+                    intPoint.X = -(l1.B * intPoint.Y + l1.C) / l1.A;
                 }
                 else
                 {
@@ -129,6 +110,28 @@ namespace CamCore
                 }
             }
             return intPoint;
+        }
+
+        private string DebuggerDisplay
+        {
+            get
+            {
+                double a, b, c;
+                if(IsVertical())
+                {
+                    a = 1.0;
+                    b = 0.0;
+                    c = C / A;
+                }
+                else
+                {
+                    b = 1.0;
+                    a = A / B;
+                    c = C / B;
+                }
+
+                return a.ToString("F4") + "x + " + b.ToString("F4") + "y + " + c.ToString("F4");
+            }
         }
     }
 }

@@ -36,29 +36,29 @@ namespace UnitTestProject1
             /* 
              * ============================================================== 
              */
-            model.InitialAspectEstimation = 2;
-            model.InitialCenterEstimation = new Vector2(0.5, 0.5);
-            model.InitParameters();
+            //model.InitialAspectEstimation = 2;
+            //model.InitialCenterEstimation = new Vector2(0.5, 0.5);
+            //model.InitParameters();
 
-            model.Parameters[0] = 1e-2; // k1
-            model.Parameters[1] = -1e-3; // k2
-            model.Parameters[2] = 1e-4; // k3
+            //model.Parameters[0] = 1e-2; // k1
+            //model.Parameters[1] = -1e-3; // k2
+            //model.Parameters[2] = 1e-4; // k3
 
-            model.P = realPoint;
-            model.Distort();
-            distPoint = model.Pf;
+            //model.P = realPoint;
+            //model.Distort();
+            //distPoint = model.Pf;
 
-            double ru = Math.Sqrt(5.0 / 16.0);
-            expectedXd = 0.25 * (1 + ru * model.Parameters[0]) /
-                (1 + ru * model.Parameters[1] + ru * ru * model.Parameters[2]);
+            //double ru = Math.Sqrt(5.0 / 16.0);
+            //expectedXd = 0.25 * (1 + ru * model.Parameters[0]) /
+            //    (1 + ru * model.Parameters[1] + ru * ru * model.Parameters[2]);
 
-            double expectedYd = 0.5 * (1 + ru * model.Parameters[0]) /
-                (1 + ru * model.Parameters[1] + ru * ru * model.Parameters[2]);
+            //double expectedYd = 0.5 * (1 + ru * model.Parameters[0]) /
+            //    (1 + ru * model.Parameters[1] + ru * ru * model.Parameters[2]);
 
-            expectedPoint = new Vector2(expectedXd * 2.0 + 0.5, expectedYd + 0.5);
+            //expectedPoint = new Vector2(expectedXd * 2.0 + 0.5, expectedYd + 0.5);
 
-            Assert.IsTrue(distPoint.DistanceTo(expectedPoint) < 1e-12,
-                "Rational3 model (sx=2) distortion test failed");
+            //Assert.IsTrue(distPoint.DistanceTo(expectedPoint) < 1e-12,
+            //    "Rational3 model (sx=2) distortion test failed");
         }
 
         [TestMethod]
@@ -152,53 +152,53 @@ namespace UnitTestProject1
             Vector2 pu = new Vector2(pd.X * ru / rd, pd.Y * ru / rd);
 
             // Test Diff_Xd
-            Vector<double> diff_x = new DenseVector(6);
+            Vector<double> diff_x = new DenseVector(model.ParametersCount);
             diff_x[0] = 0.0; // k1
             diff_x[1] = 0.0; // k2
             diff_x[2] = 0.0; // k3
             diff_x[3] = -1.0; // cx
             diff_x[4] = 0.0; // cy
-            diff_x[5] = -pd.X; // sx
+           // diff_x[5] = -pd.X; // sx
 
-            Vector<double> diff_y = new DenseVector(6);
+            Vector<double> diff_y = new DenseVector(model.ParametersCount);
             diff_y[0] = 0.0; // k1
             diff_y[1] = 0.0; // k2
             diff_y[2] = 0.0; // k3
             diff_y[3] = 0.0; // cx
             diff_y[4] = -1.0; // cy
-            diff_y[5] = 0.0; // sx
+           // diff_y[5] = 0.0; // sx
 
             Assert.IsTrue((diff_x - model.Diff_Xd).L2Norm() < 1e-8,
                 "Rational3 model Diff_Xd test failed");
 
             // Test Diff_Rd
-            Vector<double> diff_rd = new DenseVector(6);
+            Vector<double> diff_rd = new DenseVector(model.ParametersCount);
             diff_rd[0] = 0.0; // k1
             diff_rd[1] = 0.0; // k2
             diff_rd[2] = 0.0; // k3
             diff_rd[3] = (pd.X / rd) * diff_x[3]; // cx
             diff_rd[4] = (pd.Y / rd) * diff_y[4]; // cy
-            diff_rd[5] = (pd.X / rd) * diff_x[5]; // sx
+           // diff_rd[5] = (pd.X / rd) * diff_x[5]; // sx
 
             Assert.IsTrue((diff_rd - model.Diff_Rd).L2Norm() < 1e-8,
                 "Rational3 model Diff_Rd test failed");
 
             // Test Diff_Ru
-            Vector<double> diff_a = new DenseVector(6);
+            Vector<double> diff_a = new DenseVector(model.ParametersCount);
             diff_a[0] = 1.0; // k1
             diff_a[1] = 0.0; // k2
             diff_a[2] = -rd; // k3
             diff_a[3] = -k3 * diff_rd[3]; // cx
             diff_a[4] = -k3 * diff_rd[4]; // cy
-            diff_a[5] = -k3 * diff_rd[5]; // sx
+          //  diff_a[5] = -k3 * diff_rd[5]; // sx
 
-            Vector<double> diff_b = new DenseVector(6);
+            Vector<double> diff_b = new DenseVector(model.ParametersCount);
             diff_b[0] = 0.0; // k1
             diff_b[1] = -rd; // k2
             diff_b[2] = 0.0; // k3
             diff_b[3] = -k2 * diff_rd[3]; // cx
             diff_b[4] = -k2 * diff_rd[4]; // cy
-            diff_b[5] = -k2 * diff_rd[5]; // sx
+          //  diff_b[5] = -k2 * diff_rd[5]; // sx
 
             Vector<double> diff_c = diff_rd.Negate();
             Vector<double> diff_delta = 2 * b * diff_b - 4 * (a * diff_c + c * diff_a);
@@ -217,13 +217,13 @@ namespace UnitTestProject1
                 "Rational3 model Diff_Xu test failed");
 
             // Test Diff_Xf
-            Vector<double> diff_xf = new DenseVector(6);
+            Vector<double> diff_xf = new DenseVector(model.ParametersCount);
             diff_xf[0] = diff_xu[0]; // k1
             diff_xf[1] = diff_xu[1]; // k2
             diff_xf[2] = diff_xu[2]; // k3
-            diff_xf[3] = diff_xu[3] + 1.0f; // cx
+            diff_xf[3] = diff_xu[3] + 1.0; // cx
             diff_xf[4] = diff_xu[4]; // cy
-            diff_xf[5] = diff_xu[5] + pu.X; // sx
+            //diff_xf[5] = diff_xu[5] + pu.X; // sx
 
             Assert.IsTrue((diff_xf - model.Diff_Xf).L2Norm() < 1e-8,
                 "Rational3 model Diff_Xf test failed");

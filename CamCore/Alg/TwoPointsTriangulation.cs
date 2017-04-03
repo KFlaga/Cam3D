@@ -9,14 +9,8 @@ namespace CamCore
     // made by 2 calibrated cameras (their P, P', F is needed)
     public class TwoPointsTriangulation
     {
-        public Matrix<double> Fundamental { get; set; }
+        public CalibrationData CalibData { get; set; }
         public bool Rectified { get; set; }
-
-        public Matrix<double> CameraLeft { get; set; }
-        public Matrix<double> CameraRight { get; set; }
-
-        public Vector<double> EpipoleLeft { get; set; }
-        public Vector<double> EpipoleRight { get; set; }
 
         public List<Vector<double>> PointsLeft { get; set; }
         public List<Vector<double>> PointsRight { get; set; }
@@ -111,7 +105,7 @@ namespace CamCore
             // 2) Fundamental matrix resulting from appying this transforms
             // over 2 images is equalt to:
             // F_new = T'^-T * F * T^-1
-            _F_T = _Tinv_R.Transpose() * Fundamental * _Tinv_L;
+            _F_T = _Tinv_R.Transpose() * CalibData.Fundamental * _Tinv_L;
         }
 
         void ComputeNormalisedTransformedEpipoles()
@@ -119,8 +113,8 @@ namespace CamCore
             // 3) Compute new e and e' such that e'^T*F = 0 and F*e = 0
             // Normalise them so that || e || == || e' || == 1
             // Of course e_new = T*e_old
-            _e_T_L = _T_L * EpipoleLeft;
-            _e_T_R = _T_R * EpipoleRight;
+            _e_T_L = _T_L * CalibData.EpipoleLeft;
+            _e_T_R = _T_R * CalibData.EpipoleRight;
 
             double scale = 1.0 / Math.Sqrt(_e_T_L[0] * _e_T_L[0] + _e_T_L[1] * _e_T_L[1]);
             _e_T_L.MultiplyThis(scale);
@@ -380,25 +374,25 @@ namespace CamCore
             // p2 = [P21 P22 P23 P24]
             // p3 = [P31 P32 P33 P34]
             Matrix<double> A = new DenseMatrix(4, 4);
-            A[0, 0] = _pL[0] * CameraLeft[2, 0] - CameraLeft[0, 0];
-            A[0, 1] = _pL[0] * CameraLeft[2, 1] - CameraLeft[0, 1];
-            A[0, 2] = _pL[0] * CameraLeft[2, 2] - CameraLeft[0, 2];
-            A[0, 3] = _pL[0] * CameraLeft[2, 3] - CameraLeft[0, 3];
+            A[0, 0] = _pL[0] * CalibData.CameraLeft[2, 0] - CalibData.CameraLeft[0, 0];
+            A[0, 1] = _pL[0] * CalibData.CameraLeft[2, 1] - CalibData.CameraLeft[0, 1];
+            A[0, 2] = _pL[0] * CalibData.CameraLeft[2, 2] - CalibData.CameraLeft[0, 2];
+            A[0, 3] = _pL[0] * CalibData.CameraLeft[2, 3] - CalibData.CameraLeft[0, 3];
 
-            A[1, 0] = _pL[1] * CameraLeft[2, 0] - CameraLeft[1, 0];
-            A[1, 1] = _pL[1] * CameraLeft[2, 1] - CameraLeft[1, 1];
-            A[1, 2] = _pL[1] * CameraLeft[2, 2] - CameraLeft[1, 2];
-            A[1, 3] = _pL[1] * CameraLeft[2, 3] - CameraLeft[1, 3];
+            A[1, 0] = _pL[1] * CalibData.CameraLeft[2, 0] - CalibData.CameraLeft[1, 0];
+            A[1, 1] = _pL[1] * CalibData.CameraLeft[2, 1] - CalibData.CameraLeft[1, 1];
+            A[1, 2] = _pL[1] * CalibData.CameraLeft[2, 2] - CalibData.CameraLeft[1, 2];
+            A[1, 3] = _pL[1] * CalibData.CameraLeft[2, 3] - CalibData.CameraLeft[1, 3];
 
-            A[2, 0] = _pR[0] * CameraRight[2, 0] - CameraRight[0, 0];
-            A[2, 1] = _pR[0] * CameraRight[2, 1] - CameraRight[0, 1];
-            A[2, 2] = _pR[0] * CameraRight[2, 2] - CameraRight[0, 2];
-            A[2, 3] = _pR[0] * CameraRight[2, 3] - CameraRight[0, 3];
+            A[2, 0] = _pR[0] * CalibData.CameraRight[2, 0] - CalibData.CameraRight[0, 0];
+            A[2, 1] = _pR[0] * CalibData.CameraRight[2, 1] - CalibData.CameraRight[0, 1];
+            A[2, 2] = _pR[0] * CalibData.CameraRight[2, 2] - CalibData.CameraRight[0, 2];
+            A[2, 3] = _pR[0] * CalibData.CameraRight[2, 3] - CalibData.CameraRight[0, 3];
 
-            A[3, 0] = _pR[1] * CameraRight[2, 0] - CameraRight[1, 0];
-            A[3, 1] = _pR[1] * CameraRight[2, 1] - CameraRight[1, 1];
-            A[3, 2] = _pR[1] * CameraRight[2, 2] - CameraRight[1, 2];
-            A[3, 3] = _pR[1] * CameraRight[2, 3] - CameraRight[1, 3];
+            A[3, 0] = _pR[1] * CalibData.CameraRight[2, 0] - CalibData.CameraRight[1, 0];
+            A[3, 1] = _pR[1] * CalibData.CameraRight[2, 1] - CalibData.CameraRight[1, 1];
+            A[3, 2] = _pR[1] * CalibData.CameraRight[2, 2] - CalibData.CameraRight[1, 2];
+            A[3, 3] = _pR[1] * CalibData.CameraRight[2, 3] - CalibData.CameraRight[1, 3];
 
             _p3D = SvdZeroFullrankSolver.Solve(A);
             _p3D.DivideThis(_p3D[3]);

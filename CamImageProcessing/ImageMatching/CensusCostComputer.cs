@@ -42,8 +42,8 @@ namespace CamImageProcessing.ImageMatching
             uint[] maskWordBase = new uint[BitWord.Byte4Length];
             uint[] maskWordMatched = new uint[BitWord.Byte4Length];
 
-            BorderHeight = 1;
-            BorderWidth = 1;
+            BorderHeight = MaskHeight;
+            BorderWidth = MaskWidth;
 
             // Compute max cost of census :
             // - max cost if all bits in mask differs (except center pixel itself), so its equal to WordLength - 1
@@ -55,7 +55,7 @@ namespace CamImageProcessing.ImageMatching
             BorderFunction<CensusCostComputer>.DoBorderFunction(this,
                 (thisObj, y, x) => { CensusTransform(y, x, maskWordBase, maskWordMatched); },
                 (thisObj, y, x) => { CensusTransform_Border(y, x, maskWordBase, maskWordMatched); },
-                MaskWidth, MaskHeight, ImageBase.ColumnCount, ImageBase.RowCount); 
+                MaskWidth, MaskHeight, ImageBase.RowCount, ImageBase.ColumnCount); 
         }
 
         public void CensusTransform(int y, int x, uint[] maskBase, uint[] maskMatch)

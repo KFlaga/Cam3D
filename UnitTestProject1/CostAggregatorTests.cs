@@ -115,6 +115,7 @@ namespace UnitTestProject1
             EpilineScanAggregator agg = new EpilineScanAggregator();
             RankCostComputer cost = new RankCostComputer();
             MatchConfidenceComputer conf = new MatchConfidenceComputer();
+            DisparityComputer dcomp = new WTADisparityComputer();
 
             cost.ImageBase = new GrayScaleImage() { ImageMatrix = _imageLeft };
             cost.ImageMatched = new GrayScaleImage() { ImageMatrix = _imageRight };
@@ -132,12 +133,14 @@ namespace UnitTestProject1
             DisparityMap disp = new DisparityMap(_imageLeft.RowCount, _imageLeft.ColumnCount);
             agg.DisparityMap = disp;
 
+            agg.DispComp = dcomp;
+
             agg.ImageBase = cost.ImageBase;
             agg.ImageMatched = cost.ImageMatched;
             agg.IsLeftImageBase = true;
             agg.Fundamental = _F;
 
-            cost.Init();
+            agg.Init();
             agg.ComputeMatchingCosts();
         }
 

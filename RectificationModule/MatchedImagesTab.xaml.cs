@@ -71,32 +71,29 @@ namespace RectificationModule
                 return;
             }
 
-            ImageRectification_ZhangLoop rectifier = new ImageRectification_ZhangLoop();
+            ImageRectification rectifier = new ImageRectification(new ImageRectification_ZhangLoop());
             //ImageRectification_FusielloCalibrated rectifier = new ImageRectification_FusielloCalibrated();
-
-            RectificationTransformation rectTransformation = new RectificationTransformation();
-            rectTransformation.Rectifier = rectifier;
-
-            ImageTransformer transformer = new ImageTransformer();
-            transformer.Transformation = rectTransformation;
-            transformer.UsedInterpolationMethod = ImageTransformer.InterpolationMethod.Quadratic;
-
             rectifier.ImageHeight = _camImageFirst.ImageSource.PixelHeight;
             rectifier.ImageWidth = _camImageFirst.ImageSource.PixelWidth;
-            rectifier.EpiCrossLeft = CalibrationData.Data.EpipoleCrossLeft;
-            rectifier.EpiCrossRight = CalibrationData.Data.EpipoleCrossRight;
-            rectifier.EpipoleLeft = CalibrationData.Data.EpipoleLeft;
-            rectifier.EpipoleRight = CalibrationData.Data.EpipoleRight;
-            rectifier.IsEpiLeftInInfinity = CalibrationData.Data.EpiLeftInInfinity;
-            rectifier.IsEpiRightInInfinity = CalibrationData.Data.EpiRightInInfinity;
-            rectifier.FundamentalMatrix = CalibrationData.Data.Fundamental;
+            rectifier.CalibData = CalibrationData.Data;
             rectifier.ComputeRectificationMatrices();
-            
-            rectTransformation.WhichImage = RectificationTransformation.ImageIndex.Left;
-            MaskedImage rectLeft = transformer.TransfromImageBackwards(_imgLeft, true);
 
-            rectTransformation.WhichImage = RectificationTransformation.ImageIndex.Right;
-            MaskedImage rectRight = transformer.TransfromImageBackwards(_imgRight, true);
+            ImageTransformer transformer = new ImageTransformer();
+            transformer.UsedInterpolationMethod = ImageTransformer.InterpolationMethod.Quadratic;
+            
+            transformer.Transformation = new RectificationTransformation()
+            {
+                RectificationMatrix = rectifier.RectificationLeft,
+                RectificationMatrixInverse = rectifier.RectificationLeft_Inverse,
+            }; ;
+            MaskedImage rectLeft = transformer.TransfromImageBackwards(ImageLeft, true);
+
+            transformer.Transformation = new RectificationTransformation()
+            {
+                RectificationMatrix = rectifier.RectificationRight,
+                RectificationMatrixInverse = rectifier.RectificationRight_Inverse,
+            }; ;
+            MaskedImage rectRight = transformer.TransfromImageBackwards(ImageRight, true);
 
             _camImageFirst.ImageSource = rectLeft.ToBitmapSource();
             _camImageSec.ImageSource = rectRight.ToBitmapSource();

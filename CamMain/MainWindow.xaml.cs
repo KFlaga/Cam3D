@@ -125,7 +125,7 @@ namespace CamMain
 
         private void StartChainProcess(object sender, RoutedEventArgs e)
         {
-            ProcessingChain pc = new ProcessingChain();
+            ProcessingChain1 pc = new ProcessingChain1();
             pc.Process();
         }
         

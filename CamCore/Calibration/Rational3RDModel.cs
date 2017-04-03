@@ -205,7 +205,7 @@ namespace CamCore
             Diff_Yd[_k2Idx] = 0.0;
             Diff_Yd[_k3Idx] = 0.0;
             // d(xd)/d(cx) = -1/sx, d(yd)/d(cx) = 0
-           // Diff_Xd[_cxIdx] = -1.0 / _sx;
+            Diff_Xd[_cxIdx] = -1.0;
             Diff_Yd[_cxIdx] = 0.0;
             // d(xd)/d(cy) = 0, d(yd)/d(cy) = -1
             Diff_Xd[_cyIdx] = 0.0;
@@ -305,17 +305,17 @@ namespace CamCore
             // xu*sx + cx = xf, yu + cy = yf
 
             // d(xf)/d(k) = sx * d(xu)/d(k), d(yf)/d(k) = d(yu)/d(k)
-        //    Diff_Xf[_k1Idx] = _sx * Diff_Xu[_k1Idx];
-        //    Diff_Xf[_k2Idx] = _sx * Diff_Xu[_k2Idx];
-        //    Diff_Xf[_k3Idx] = _sx * Diff_Xu[_k3Idx];
+            Diff_Xf[_k1Idx] = Diff_Xu[_k1Idx];
+            Diff_Xf[_k2Idx] = Diff_Xu[_k2Idx];
+            Diff_Xf[_k3Idx] = Diff_Xu[_k3Idx];
             Diff_Yf[_k1Idx] = Diff_Yu[_k1Idx];
             Diff_Yf[_k2Idx] = Diff_Yu[_k2Idx];
             Diff_Yf[_k3Idx] = Diff_Yu[_k3Idx];
             // d(xu)/d(cx) = sx * d(xu)/d(cx) + 1, d(yf)/d(cx) = d(yu)/d(cx)
-         //   Diff_Xf[_cxIdx] = _sx * Diff_Xu[_cxIdx] + 1.0;
+            Diff_Xf[_cxIdx] = Diff_Xu[_cxIdx] + 1.0;
             Diff_Yf[_cxIdx] = Diff_Yu[_cxIdx];
             // d(xu)/d(cy) = sx * d(xu)/d(cy), d(yf)/d(cy) = d(yu)/d(cy) + 1
-          //  Diff_Xf[_cyIdx] = _sx * Diff_Xu[_cyIdx];
+            Diff_Xf[_cyIdx] = Diff_Xu[_cyIdx];
             Diff_Yf[_cyIdx] = Diff_Yu[_cyIdx] + 1.0;
             // d(xu)/d(sx) = sx * d(xu)/d(cx) + xu, d(yf)/d(sx) = d(yu)/d(sx)
          //   Diff_Xf[_sxIdx] = _sx * Diff_Xu[_sxIdx] + Pu.X;
@@ -371,7 +371,57 @@ namespace CamCore
             ComputePu();
             ComputePf();
         }
-        
+
+        public override void SetInitialParametersFromQuadrics(List<Quadric> quadrics,
+            List<List<Vector2>> linePoints, List<int> fitPoints)
+        {
+            // 1) Simplify model:
+            // - rd = ru(1+k1ru/1+k2ru)
+            // - let k2 = -k1
+            // - rd/ru = (1+k1ru)/(1-k1ru) -> (rd/ru)(1-k1ru) = 1+k1ru -> (rd/ru) - 1 = k1(ru+rd) -> k1 = ((rd-ru)/ru) / (ru+rd) = (rd-ru)/((ru+rd)ru) 
+            // 2) Fit quadrics to lines through closest points, tangents and intersection points of tangent and point-center line
+            // 5) Assume intersection points are Pu and quadric points are Pd - from this compute ru, rd and so k1
+            // 6) Do it for some points far enough from fit point ( at least one point away)
+            // 7) Tangent is further from center than real line, so ru is bigger, rd same.
+            //    In result k1 should be smaller than real one, but ok for the start
+
+            DistortionCenter = InitialCenterEstimation;
+            double k1sum = 0;
+            int count = 0;
+            for(int l = 0; l < linePoints.Count; ++l)
+            {
+                Line2D tangnet = quadrics[l].GetTangetThroughPoint(linePoints[l][fitPoints[l]]);
+                for(int p = 0; p < fitPoints[l] - 1; ++p)
+                {
+                    k1sum += FindK1(linePoints[l][p], tangnet);
+                    ++count;
+                }
+
+                for(int p = fitPoints[l] + 2; p < linePoints[l].Count; ++p)
+                {
+                    k1sum += FindK1(linePoints[l][p], tangnet);
+                    ++count;
+                }
+            }
+            k1sum = k1sum / count;
+            Parameters[_k1Idx] = k1sum;
+            Parameters[_k2Idx] = -k1sum;
+            Parameters[_k3Idx] = 0;
+        }
+
+        public double FindK1(Vector2 quadricPoint, Line2D tangent)
+        {
+            double rd = quadricPoint.DistanceTo(DistortionCenter);
+            Line2D pointToCenter = new Line2D(quadricPoint, DistortionCenter);
+            Vector2 intersection = Line2D.IntersectionPoint(pointToCenter, tangent);
+            double ru = intersection.DistanceTo(DistortionCenter);
+
+            double k1 = 2.0*(rd - ru) / (ru + rd);
+            //double k1 = (rd/ru - 1) / ru;
+            //double k1 = (rd / ru - 1); // this one is the empirical best
+            return k1;
+        }
+
         void IParameterizable.InitParameters()
         {
             _procParams = new List<AlgorithmParameter>();

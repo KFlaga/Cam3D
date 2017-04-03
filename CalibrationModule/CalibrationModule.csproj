@@ -124,7 +124,6 @@
     <Compile Include="MatchedPointsManagerWindow.xaml.cs">
       <DependentUpon>MatchedPointsManagerWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="RadialCorrectionTester.cs" />
     <Compile Include="ShapeChecker.cs" />
     <Compile Include="LMRadialDistortionLineFitMinimalisation.cs" />
     <Compile Include="RadialDistortionCorrector.cs" />

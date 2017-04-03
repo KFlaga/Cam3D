@@ -102,7 +102,22 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ProcessingChain.cs" />
+    <Compile Include="ProcessingChain\CalibrationLink.cs" />
+    <Compile Include="ProcessingChain\ConfigurationLink.cs" />
+    <Compile Include="ProcessingChain\DisparityRefinementLink.cs" />
+    <Compile Include="ProcessingChain\DistortionModelLink.cs" />
+    <Compile Include="ProcessingChain\GlobalData.cs" />
+    <Compile Include="ProcessingChain\ImageMatchingLink.cs" />
+    <Compile Include="ProcessingChain\ILink.cs" />
+    <Compile Include="ProcessingChain\LinkUtilities.cs" />
+    <Compile Include="ProcessingChain\MatchedImagesLink.cs" />
+    <Compile Include="ProcessingChain\ProcessingChain.cs" />
+    <Compile Include="ProcessingChain\RawCalibrationImagesLink.cs" />
+    <Compile Include="ProcessingChain\RectificationLink.cs" />
+    <Compile Include="ProcessingChain\RectifyCalibrationImagesLink.cs" />
+    <Compile Include="ProcessingChain\TriangulationLink.cs" />
+    <Compile Include="ProcessingChain\UndistortImagesLink.cs" />
+    <Compile Include="ProcessingChain\UndistortPointsLink.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

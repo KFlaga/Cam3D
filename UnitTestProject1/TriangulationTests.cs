@@ -13,22 +13,7 @@ namespace UnitTestProject1
     [TestClass]
     public class TriangulationTests
     {
-        Matrix<double> _F;
-
-        Matrix<double> _K_L;
-        Matrix<double> _K_R;
-        Matrix<double> _R_L;
-        Matrix<double> _R_R;
-        Vector<double> _C_L;
-        Vector<double> _C_R;
-        Matrix<double> _CM_L;
-        Matrix<double> _CM_R;
-
-        Vector<double> _epi_L;
-        Vector<double> _epi_R;
-        Matrix<double> _epiX_L;
-        Matrix<double> _epiX_R;
-
+        CalibrationData cData = new CalibrationData();
         List<Vector<double>> _imagePointsLeft;
         List<Vector<double>> _imagePointsRight;
         List<Vector<double>> _realPoints;
@@ -43,22 +28,40 @@ namespace UnitTestProject1
             // 3) Project them onto 2 images using P and P'
             CreateCameraMatrices();
             GeneratePoints_Random(_seed);
-            NormalisePoints();
-            CreateEpiGeometry_Normalized();
+            //NormalisePoints();
             // 4) Using pairs of corresponding points find their 3D back-projection with Triangulation
             TwoPointsTriangulation trangulation = new TwoPointsTriangulation();
-            trangulation.CameraLeft = _CM_L;
-            trangulation.CameraRight = _CM_R;
-            trangulation.EpipoleLeft = _epi_L;
-            trangulation.EpipoleRight = _epi_R;
-            trangulation.Fundamental = _F;
+            trangulation.CalibData = cData;
 
-            trangulation._pL = _imagePointsLeft[0];
-            trangulation._pR = _imagePointsRight[0];
-         //   trangulation.ComputeBackprojected3DPoint();
-            var point3d = trangulation._p3D;
+            trangulation.PointsLeft = _imagePointsLeft;
+            trangulation.PointsRight = _imagePointsRight;
+            trangulation.UseLinearEstimationOnly = true;
+            trangulation.Estimate3DPoints();
+            var point3d = trangulation.Points3D[0];
 
             Assert.IsTrue((point3d - _realPoints[0]).L2Norm() < 1e-6);
+        }
+
+        [TestMethod]
+        public void Test_Triangulation_LinearNoNoiseNormalised()
+        {
+            // 1) We have P, P', F, e, e'
+            // 2) Create set of 3d points in sensible range
+            // 3) Project them onto 2 images using P and P'
+            CreateCameraMatrices();
+            GeneratePoints_Random(_seed);
+            NormalisePoints();
+            // 4) Using pairs of corresponding points find their 3D back-projection with Triangulation
+            TwoPointsTriangulation trangulation = new TwoPointsTriangulation();
+            trangulation.CalibData = cData;
+
+            trangulation.PointsLeft = _imgPointsNormLeft;
+            trangulation.PointsRight = _imgPointsNormRight;
+            trangulation.UseLinearEstimationOnly = true;
+            trangulation.Estimate3DPoints();
+            var point3d = trangulation.Points3D[0];
+
+            Assert.IsTrue((point3d - _realPointsNorm[0]).L2Norm() < 1e-6);
         }
 
         [TestMethod]
@@ -66,17 +69,12 @@ namespace UnitTestProject1
         {
             // 1) We have P, P', F, e, e'
             CreateCameraMatrices();
-            CreateEpiGeometry();
             // 2) Create set of 3d points in sensible range
             // 3) Project them onto 2 images using P and P'
             GeneratePoints_Random(_seed);
             // 4) Using pairs of corresponding points find their 3D back-projection with Triangulation
             TwoPointsTriangulation trangulation = new TwoPointsTriangulation();
-            trangulation.CameraLeft = _CM_L;
-            trangulation.CameraRight = _CM_R;
-            trangulation.EpipoleLeft = _epi_L;
-            trangulation.EpipoleRight = _epi_R;
-            trangulation.Fundamental = _F;
+            trangulation.CalibData = cData;
             trangulation.PointsLeft = _imagePointsLeft;
             trangulation.PointsRight = _imagePointsRight;
 
@@ -111,7 +109,7 @@ namespace UnitTestProject1
 
         public void CreateCameraMatrices()
         {
-            _K_L = new DenseMatrix(3, 3);
+            var _K_L = new DenseMatrix(3, 3);
             _K_L[0, 0] = 10.0; // fx
             _K_L[1, 1] = 10.0; // fy
             _K_L[0, 1] = 0.0; // s
@@ -119,7 +117,7 @@ namespace UnitTestProject1
             _K_L[1, 2] = 250.0; // y0
             _K_L[2, 2] = 1.0; // 1
 
-            _K_R = new DenseMatrix(3, 3);
+            var _K_R = new DenseMatrix(3, 3);
             _K_R[0, 0] = 10.0; // fx
             _K_R[1, 1] = 10.5; // fy
             _K_R[0, 1] = 0.0; // s
@@ -127,15 +125,15 @@ namespace UnitTestProject1
             _K_R[1, 2] = 200.0; // y0
             _K_R[2, 2] = 1.0; // 1
 
-            _R_L = DenseMatrix.CreateIdentity(3);
-            _R_R = DenseMatrix.CreateIdentity(3);
+            var _R_L = DenseMatrix.CreateIdentity(3);
+            var _R_R = DenseMatrix.CreateIdentity(3);
 
-            _C_L = new DenseVector(3);
+            var _C_L = new DenseVector(3);
             _C_L[0] = 50.0;
             _C_L[1] = 50.0;
             _C_L[2] = 0.0;
 
-            _C_R = new DenseVector(3);
+            var _C_R = new DenseVector(3);
             _C_R[0] = 0.0;
             _C_R[1] = 40.0;
             _C_R[2] = 10.0;
@@ -148,56 +146,8 @@ namespace UnitTestProject1
             Ext_r.SetSubMatrix(0, 0, _R_R);
             Ext_r.SetColumn(3, -_R_R * _C_R);
 
-            _CM_L = _K_L * Ext_l;
-            _CM_R = _K_R * Ext_r;
-        }
-
-        public void CreateEpiGeometry()
-        {
-            // Find e_R = P_R*C_L, e_L = P_L*C_R
-            _epi_R = _CM_R * new DenseVector(new double[] { _C_L[0], _C_L[1], _C_L[2], 1.0 });
-            _epi_L = _CM_L * new DenseVector(new double[] { _C_R[0], _C_R[1], _C_R[2], 1.0 });
-            _epi_R.DivideThis(_epi_R[2]);
-            _epi_L.DivideThis(_epi_L[2]);
-
-            _epiX_L = new DenseMatrix(3, 3);
-            _epiX_L[0, 0] = 0.0;
-            _epiX_L[1, 0] = _epi_L[2];
-            _epiX_L[2, 0] = -_epi_L[1];
-            _epiX_L[0, 1] = -_epi_L[2];
-            _epiX_L[1, 1] = 0.0;
-            _epiX_L[2, 1] = _epi_L[0];
-            _epiX_L[0, 2] = _epi_L[1];
-            _epiX_L[1, 2] = -_epi_L[0];
-            _epiX_L[2, 2] = 0.0;
-
-            _epiX_R = new DenseMatrix(3, 3);
-            _epiX_R[0, 0] = 0.0;
-            _epiX_R[1, 0] = _epi_R[2];
-            _epiX_R[2, 0] = -_epi_R[1];
-            _epiX_R[0, 1] = -_epi_R[2];
-            _epiX_R[1, 1] = 0.0;
-            _epiX_R[2, 1] = _epi_R[0];
-            _epiX_R[0, 2] = _epi_R[1];
-            _epiX_R[1, 2] = -_epi_R[0];
-            _epiX_R[2, 2] = 0.0;
-
-            // F = [er]x * Pr * pseudoinv(Pl)
-            _F = _epiX_R * (_CM_R * _CM_L.PseudoInverse());
-            int rank = _F.Rank();
-            if(rank == 3)
-            {
-                // Need to ensure rank 2, so set smallest singular value to 0
-                var svd = _F.Svd();
-                var E = svd.W;
-                E[2, 2] = 0;
-                var oldF = _F;
-                _F = svd.U * E * svd.VT;
-                var diff = _F - oldF; // Difference should be very small if all is correct
-            }
-
-            // Scale F, so that F33 = 1
-            _F = _F.Divide(_F[2, 2]);
+            cData.CameraLeft = _K_L * Ext_l;
+            cData.CameraRight = _K_R * Ext_r;
         }
 
         public void GeneratePoints_Random(int seed = 0)
@@ -223,8 +173,8 @@ namespace UnitTestProject1
                 rp[1] = ry;
                 rp[2] = rz;
                 rp[3] = 1.0;
-                var ip_L = _CM_L * rp;
-                var ip_R = _CM_R * rp;
+                var ip_L = cData.CameraLeft * rp;
+                var ip_R = cData.CameraRight * rp;
 
                 ip_L.DivideThis(ip_L[2]);
                 ip_R.DivideThis(ip_R[2]);
@@ -403,92 +353,71 @@ namespace UnitTestProject1
             }
 
             // Pn = Ni * P * Nr^-1
-            _CMN_L = _Ni_L * _CM_L * _Nr.Inverse();
-            _CMN_R = _Ni_R * _CM_R * _Nr.Inverse();
+            cData.CameraLeft = _Ni_L * cData.CameraLeft * _Nr.Inverse();
+            cData.CameraRight = _Ni_R * cData.CameraRight * _Nr.Inverse();
         }
 
         [TestMethod]
         public void Test_Triangulation_LinearFullNoise()
         {
-            // 1) We have P, P', F, e, e'
             CreateCameraMatrices();
             GeneratePoints_Random(_seed);
             NormalisePoints();
-            
-            // 2) Create set of 3d points in sensible range
-            // 3) Project them onto 2 images using P and P'
-            
+
             var noisedLeft = AddNoise(_imgPointsNormLeft, 1e-12);
             var noisedRight = AddNoise(_imgPointsNormRight, 1e-12);
 
-            //_CMN_L = AddNoise(_CMN_L);
-            //_CMN_R = AddNoise(_CMN_R);
-            CreateEpiGeometry_Normalized();
+            cData.CameraLeft = AddNoise(cData.CameraLeft);
+            cData.CameraRight = AddNoise(cData.CameraRight);
 
-            // 4) Using pairs of corresponding points find their 3D back-projection with Triangulation
             TwoPointsTriangulation trangulation = new TwoPointsTriangulation();
-            trangulation.CameraLeft = _CMN_L;
-            trangulation.CameraRight = _CMN_R;
-            trangulation.EpipoleLeft = _epi_L;
-            trangulation.EpipoleRight = _epi_R;
-            trangulation.Fundamental = _F;
+            trangulation.CalibData = cData;
+
+            trangulation.PointsLeft = noisedLeft;
+            trangulation.PointsRight = noisedRight;
+            trangulation.UseLinearEstimationOnly = false;
+            trangulation.Estimate3DPoints();
+
+            double error = 0;
             for(int i = 0; i < _pointsCount; ++i)
             {
-                trangulation._pL = noisedLeft[i];
-                trangulation._pR = noisedRight[i];
-              //  trangulation.ComputeBackprojected3DPoint();
-                var point3d = trangulation._p3D;
+                var point3d = trangulation.Points3D[i];
                 var rpoint = _realPointsNorm[i];
 
-                double error = (point3d - rpoint).L2Norm();
+                double e = (point3d - rpoint).L2Norm();
+                error += e;
             }
-       //     Assert.IsTrue(error < 1);
+            Assert.IsTrue(error < 1);
         }
 
         [TestMethod]
         public void Test_Triangulation_NoiseImageOnly()
         {
-            // 1) We have P, P', F, e, e'
             CreateCameraMatrices();
             GeneratePoints_Random(_seed);
             NormalisePoints();
 
-            CreateEpiGeometry_Normalized();
-            // 2) Create set of 3d points in sensible range
-            // 3) Project them onto 2 images using P and P'
-            var noisedLeft = AddNoise(_imgPointsNormLeft, 1e-6);
-            var noisedRight = AddNoise(_imgPointsNormRight, 1e-6);
-            // 4) Using pairs of corresponding points find their 3D back-projection with Triangulation
+            var noisedLeft = AddNoise(_imgPointsNormLeft, 1e-12);
+            var noisedRight = AddNoise(_imgPointsNormRight, 1e-12);
+
             TwoPointsTriangulation trangulation = new TwoPointsTriangulation();
-            trangulation.CameraLeft = _CMN_L;
-            trangulation.CameraRight = _CMN_R;
-            trangulation.EpipoleLeft = _epi_L;
-            trangulation.EpipoleRight = _epi_R;
-            trangulation.Fundamental = _F;
+            trangulation.CalibData = cData;
+
             trangulation.PointsLeft = noisedLeft;
             trangulation.PointsRight = noisedRight;
-
+            trangulation.UseLinearEstimationOnly = false;
             trangulation.Estimate3DPoints();
-            var ePoints3D = trangulation.Points3D;
 
+            double error = 0;
             for(int i = 0; i < _pointsCount; ++i)
             {
-                trangulation._pL = noisedLeft[i];
-                trangulation._pR = noisedRight[i];
-               // trangulation.ComputeBackprojected3DPoint();
-                var point3d = trangulation._p3D; // To compare with linear
-                var realPoint = _realPointsNorm[i];
-                var ep3d = ePoints3D[i];
-                var elin = (point3d - realPoint);
+                var point3d = trangulation.Points3D[i];
+                var rpoint = _realPointsNorm[i];
 
-                var errVec = ePoints3D[i].PointwiseDivide_NoNaN(_realPointsNorm[i]);
-                double err = (errVec - DenseVector.Create(4, 1.0)).L2Norm();
-                double err2 = (ePoints3D[i] - _realPointsNorm[i]).L2Norm();
-                double errlin = (point3d - realPoint).L2Norm();
-                //   Assert.IsTrue(
-                //       err < 0.2 || // max 2% diffrence
-                //       (ePoints3D[i] - _realPoints[i]).L2Norm() < 10);
+                double e = (point3d - rpoint).L2Norm();
+                error += e;
             }
+            Assert.IsTrue(error < 1);
         }
 
 
@@ -498,71 +427,11 @@ namespace UnitTestProject1
             CreateCameraMatrices();
             GeneratePoints_Random(_seed);
             NormalisePoints();
-            CreateEpiGeometry_Normalized();
-            
+
             TwoPointsTriangulation trangulation = new TwoPointsTriangulation();
-            trangulation.CameraLeft = _CMN_L;
-            trangulation.CameraRight = _CMN_R;
-            trangulation.EpipoleLeft = _epi_L;
-            trangulation.EpipoleRight = _epi_R;
-            trangulation.Fundamental = _F;
+            trangulation.CalibData = cData;
 
-          //  trangulation.ComputeEpilineFitCost(10.0);
-        }
-
-        public void CreateEpiGeometry_Normalized()
-        {
-            var ChL = new DenseVector(4);
-            _C_L.CopySubVectorTo(ChL, 0, 0, 3);
-            ChL[3] = 1.0;
-            var ChR = new DenseVector(4);
-            _C_R.CopySubVectorTo(ChR, 0, 0, 3);
-            ChR[3] = 1.0;
-
-            // Find e_R = P_R*C_L, e_L = P_L*C_R
-            _epi_R = _CMN_R * (_Nr * ChL);
-            _epi_L = _CMN_L * (_Nr * ChR);
-            _epi_R.DivideThis(_epi_R[2]);
-            _epi_L.DivideThis(_epi_L[2]);
-
-            _epiX_L = new DenseMatrix(3, 3);
-            _epiX_L[0, 0] = 0.0;
-            _epiX_L[1, 0] = _epi_L[2];
-            _epiX_L[2, 0] = -_epi_L[1];
-            _epiX_L[0, 1] = -_epi_L[2];
-            _epiX_L[1, 1] = 0.0;
-            _epiX_L[2, 1] = _epi_L[0];
-            _epiX_L[0, 2] = _epi_L[1];
-            _epiX_L[1, 2] = -_epi_L[0];
-            _epiX_L[2, 2] = 0.0;
-
-            _epiX_R = new DenseMatrix(3, 3);
-            _epiX_R[0, 0] = 0.0;
-            _epiX_R[1, 0] = _epi_R[2];
-            _epiX_R[2, 0] = -_epi_R[1];
-            _epiX_R[0, 1] = -_epi_R[2];
-            _epiX_R[1, 1] = 0.0;
-            _epiX_R[2, 1] = _epi_R[0];
-            _epiX_R[0, 2] = _epi_R[1];
-            _epiX_R[1, 2] = -_epi_R[0];
-            _epiX_R[2, 2] = 0.0;
-
-            // F = [er]x * Pr * pseudoinv(Pl)
-            _F = _epiX_R * (_CMN_R * _CMN_L.PseudoInverse());
-            int rank = _F.Rank();
-            if(rank == 3)
-            {
-                // Need to ensure rank 2, so set smallest singular value to 0
-                var svd = _F.Svd();
-                var E = svd.W;
-                E[2, 2] = 0;
-                var oldF = _F;
-                _F = svd.U * E * svd.VT;
-                var diff = _F - oldF; // Difference should be very small if all is correct
-            }
-
-            // Scale F, so that F33 = 1
-            _F = _F.Divide(_F[2, 2]);
+            //  trangulation.ComputeEpilineFitCost(10.0);
         }
     }
 }

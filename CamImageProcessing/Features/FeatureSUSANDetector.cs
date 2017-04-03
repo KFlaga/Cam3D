@@ -3,7 +3,7 @@ using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
 using System;
 using System.Collections.Generic;
-using Point2D = CamCore.TPoint2D<int>;
+using Point2D = CamCore.Point2D<int>;
 
 namespace CamImageProcessing
 {
@@ -151,7 +151,7 @@ namespace CamImageProcessing
         double _t_seg = 0.1;
         public void FloodFindMaximum(int y, int x)
         {
-            _pointStack = new Stack<TPoint2D<int>>();
+            _pointStack = new Stack<Point2D<int>>();
             _pointStack.Push(new Point2D(x, y));
 
             Point2D maxp = new Point2D(y, x);
