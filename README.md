@@ -15,6 +15,7 @@ I've included all steps necessary for 3d reconstruction:
 - 3d points triangulation ( two points method [1] )
 - 3d visualization (with custom mini rendering engine based on DirectX)
 - additional auxiliary image processing algorithms
+
 Most of algorithms used are my implementations based on published academic works, mostly working as expected for real images, although some minor tweaks may be still needed.
 
 Uses WPF for GUI and Xml serialization for storing most of input or processed data. 
