@@ -196,6 +196,7 @@ namespace CamControls
                 else if(_runAlgTask.WasError)
                 {
                     string text = "Algorithm failed. Error message: " + _runAlgTask.Error.Message;
+                    text += "\r\nStack:\r\n" + _runAlgTask.Error.StackTrace + "\r\n";
                     if(_alg.SupportsPartialResults)
                     {
                         text += "\r\nLast results:\r\n";

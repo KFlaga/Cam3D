@@ -413,5 +413,35 @@ namespace UnitTestProject1
             Assert.IsTrue(_globalData.Get<ImageMatchingLinkData>().MapsLeft != null);
             Assert.IsTrue(_globalData.Get<ImageMatchingLinkData>().MapsRight != null);
         }
+
+        [TestMethod]
+        public void TestDisparityRefinementLink_Process()
+        {
+            PrepareConfiguration();
+            PrepareMatchedImagesData();
+            PrepareImageMatchingData();
+
+            _refinementLink = new DisparityRefinementLink(_globalData)
+            {
+                LoadDataFromDisc = false,
+                StoreDataOnDisc = true
+            };
+            _refinementLink.Load();
+            _refinementLink.Process();
+            _refinementLink.Save();
+
+            Assert.IsTrue(_globalData.Get<DisparityRefinementLinkData>().Maps != null);
+
+            SaveOutput();
+        }
+
+        [TestMethod]
+        public void TestDisparityRefinementLink_LoadFromDisc()
+        {
+            PrepareConfiguration();
+            PrepareDisprityRefinementData();
+
+            Assert.IsTrue(_globalData.Get<DisparityRefinementLinkData>().Maps != null);
+        }
     }
 }

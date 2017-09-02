@@ -15,13 +15,13 @@ namespace ImageMatchingModule
     {
         private ImageMatchingAlgorithm _matcher = new ImageMatchingAlgorithm();
 
-        public ColorImage ImageLeft { get; set; }
-        public ColorImage ImageRight { get; set; }
+        public IImage ImageLeft { get; set; }
+        public IImage ImageRight { get; set; }
 
         public DisparityMap MapLeft { get { return _matcher.MapLeft; } }
         public DisparityMap MapRight { get { return _matcher.MapRight; } }
 
-        public string Name { get; } = "Radial Distortion Model - Parameters Estimation";
+        public string Name { get; } = "Dense Image Matching";
 
         public bool SupportsFinalResults { get; } = true;
         public bool SupportsPartialResults { get; } = true;

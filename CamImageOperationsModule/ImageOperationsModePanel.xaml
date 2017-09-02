@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:CamImageOperationsModule"
              xmlns:CamControls="clr-namespace:CamControls;assembly=CamControls"
              mc:Ignorable="d" 
-             d:DesignHeight="400" d:DesignWidth="600">
+             d:DesignHeight="600" d:DesignWidth="600">
     <DockPanel>
         <Border BorderBrush="Black" BorderThickness="1" DockPanel.Dock="Right">
             <ListBox x:Name="listBox" Width="150
@@ -64,6 +64,9 @@
                 <Rectangle Height="2" Fill="Black" Margin="0,0,0,0"/>
                 <ListBoxItem HorizontalContentAlignment="Stretch">
                     <Button x:Name="_butSegment" Click="_butSegment_Click">Segmentation</Button>
+                </ListBoxItem>
+                <ListBoxItem HorizontalContentAlignment="Stretch">
+                    <Button x:Name="_butLowerCompletion" Click="_butLowerCompletion_Click">Lower Completion</Button>
                 </ListBoxItem>
             </ListBox>
 

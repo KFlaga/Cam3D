@@ -17,7 +17,7 @@ namespace CamCore
         public string Name { get; protected set; }
         public string ShortName { get; protected set; }
         public string TypeName { get; protected set; }
-        public abstract object ActualValue { get; }
+        public abstract object ActualValue { get; set; }
         public abstract IParameterInput Input { get; set; }
 
         protected AlgorithmParameter(string name, string sname, string typename)
@@ -96,6 +96,11 @@ namespace CamCore
             get
             {
                 return Value;
+            }
+
+            set
+            {
+                Value = (T)value;
             }
         }
 

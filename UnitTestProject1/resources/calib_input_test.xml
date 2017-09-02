@@ -130,4 +130,46 @@
     <Image id="5" cam="left" path="image_calibration_rectified_left_5.png" />
     <Image id="5" cam="right" path="image_calibration_rectified_right_5.png" />
   </CalibrationImages_Rectified>
+  <DisparityMaps_Raw_Left>
+    <Map path="map_raw_left_0.xml" id="0" />
+  </DisparityMaps_Raw_Left>
+  <DisparityMaps_Raw_Right>
+    <Map path="map_raw_right_0.xml" id="0" />
+  </DisparityMaps_Raw_Right>
+  <DisparityRefinement>
+    <Refiner name="LimitRangeRefiner">
+      <Parameter desc="Left Max Disparity X" id="MAX_LEFT_X" value="0" />
+      <Parameter desc="Left Min Disparity X" id="MIN_LEFT_X" value="-60" />
+      <Parameter desc="Left Max Disparity Y" id="MAX_LEFT_Y" value="10" />
+      <Parameter desc="Left Min Disparity Y" id="MIN_LEFT_Y" value="-10" />
+      <Parameter desc="Right Max Disparity X" id="MAX_RIGHT_X" value="60" />
+      <Parameter desc="Right Min Disparity X" id="MIN_RIGHT_X" value="0" />
+      <Parameter desc="Right Max Disparity Y" id="MAX_RIGHT_Y" value="10" />
+      <Parameter desc="Right Min Disparity Y" id="MIN_RIGHT_Y" value="-10" />
+    </Refiner>
+    <Refiner name="InvalidateLowConfidenceRefiner">
+      <Parameter desc="Minimum Confidence" id="CONF_TRESH" value="0.5" />
+    </Refiner>
+    <Refiner name="PeakRemovalRefiner">
+      <Parameter desc="Max Disparity Difference Within Segment" id="DIFF" value="2.0" />
+      <Parameter desc="Min Segment Size" id="SEG" value="6" />
+      <Parameter desc="Interpolate Invalidated Segments" id="INT" value="true" />
+    </Refiner>
+    <Refiner name="MedianFilterRefiner">
+    </Refiner>
+    <Refiner name="CrossCheckRefiner">
+      <Parameter desc="Max Disparity Difference (Squared)" id="DIFF" value="2.0" />
+    </Refiner>
+    <Refiner name="AnisotopicDiffusionRefiner">
+      <Parameter desc="Interations" id="ITERS" value="20" />
+      <Parameter desc="Smooth Disparity Map?" id="SMOOTH" value="false" />
+      <Parameter desc="Kernel Coeff" id="KER_COEFF" value="0.5" />
+      <Parameter desc="Step Coeff" id="STEP_COEFF" value="0.5" />
+      <Parameter desc="Spatial Kernel Type" id="KER_TYPE" value="Gaussian" /> <!-- Gaussian, Rational or Constant -->
+      <Parameter desc="Use 8 Gradient Directions" id="EIGHT" value="false" />
+    </Refiner>
+  </DisparityRefinement>
+  <DisparityMaps_Refined>
+    <Map id="0" path="map_refined_left_0.xml" />
+  </DisparityMaps_Refined>
 </CalibrationInput>

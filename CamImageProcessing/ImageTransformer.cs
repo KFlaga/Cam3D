@@ -44,15 +44,15 @@ namespace CamImageProcessing
             }
         }
 
-        int InterpolationRadius = 1;
+        public int InterpolationRadius { get; set; } = 1;
 
         private IntVector2 _finalSize;
         private IntVector2 _finalTopLeft;
 
-        public ImageTransformer(InterpolationMethod method = InterpolationMethod.Linear, int r = 1)
+        public ImageTransformer(InterpolationMethod method = InterpolationMethod.Linear, int interpolationRadius = 1)
         {
             UsedInterpolationMethod = method;
-            InterpolationRadius = r;
+            InterpolationRadius = interpolationRadius;
         }
 
         #region FORWARD
@@ -65,43 +65,7 @@ namespace CamImageProcessing
 
             if(preserveSize)
             {
-                // New image is in old one's coords
-                undistorted = new MaskedImage(image.Clone());
-                for(int i = 0; i < image.ChannelsCount; ++i)
-                {
-                    matrices[i] = new DenseMatrix(image.RowCount, image.ColumnCount);
-                    undistorted.SetMatrix(matrices[i], i);
-                }
-
-                // Bound processing to smaller of images in each dimesions
-                int minX = Math.Max(0, _finalTopLeft.X);
-                int maxX = Math.Min(image.ColumnCount, _finalSize.X + _finalTopLeft.X);
-                int minY = Math.Max(0, _finalTopLeft.Y);
-                int maxY = Math.Min(image.RowCount, _finalSize.Y + _finalTopLeft.Y);
-                for(int x = minX; x < maxX; ++x)
-                {
-                    for(int y = minY; y < maxY; ++y)
-                    {
-                        double influenceTotal = 0.0;
-                        double[] val = new double[image.ChannelsCount];
-                        foreach(var inf in influences[y - _finalTopLeft.Y, x - _finalTopLeft.X]) // Move Pu to influence matrix coords
-                        {
-                            for(int i = 0; i < image.ChannelsCount; ++i)
-                                val[i] += image[inf.Yd, inf.Xd, i] * inf.Influence;
-                            influenceTotal += inf.Influence;
-                        }
-                        if(influenceTotal > 0.25)
-                        {
-                            for(int i = 0; i < image.ChannelsCount; ++i)
-                                matrices[i].At(y, x, val[i] / influenceTotal);
-                            undistorted.SetMaskAt(y, x, true);
-                        }
-                        else
-                        {
-                            undistorted.SetMaskAt(y, x, false);
-                        }
-                    }
-                }
+                undistorted = NewMethod(image, influences, matrices);
             }
             else
             {
@@ -135,6 +99,49 @@ namespace CamImageProcessing
                         {
                             undistorted.SetMaskAt(y, x, false);
                         }
+                    }
+                }
+            }
+
+            return undistorted;
+        }
+
+        private MaskedImage NewMethod(IImage image, List<PointInfluence>[,] influences, Matrix<double>[] matrices)
+        {
+            // New image is in old one's coords
+            MaskedImage undistorted = new MaskedImage(image.Clone());
+            for(int i = 0; i < image.ChannelsCount; ++i)
+            {
+                matrices[i] = new DenseMatrix(image.RowCount, image.ColumnCount);
+                undistorted.SetMatrix(matrices[i], i);
+            }
+
+            // Bound processing to smaller of images in each dimesions
+            int minX = Math.Max(0, _finalTopLeft.X);
+            int maxX = Math.Min(image.ColumnCount, _finalSize.X + _finalTopLeft.X);
+            int minY = Math.Max(0, _finalTopLeft.Y);
+            int maxY = Math.Min(image.RowCount, _finalSize.Y + _finalTopLeft.Y);
+            for(int x = minX; x < maxX; ++x)
+            {
+                for(int y = minY; y < maxY; ++y)
+                {
+                    double influenceTotal = 0.0;
+                    double[] val = new double[image.ChannelsCount];
+                    foreach(var inf in influences[y - _finalTopLeft.Y, x - _finalTopLeft.X]) // Move Pu to influence matrix coords
+                    {
+                        for(int i = 0; i < image.ChannelsCount; ++i)
+                            val[i] += image[inf.Yd, inf.Xd, i] * inf.Influence;
+                        influenceTotal += inf.Influence;
+                    }
+                    if(influenceTotal > 0.25)
+                    {
+                        for(int i = 0; i < image.ChannelsCount; ++i)
+                            matrices[i].At(y, x, val[i] / influenceTotal);
+                        undistorted.SetMaskAt(y, x, true);
+                    }
+                    else
+                    {
+                        undistorted.SetMaskAt(y, x, false);
                     }
                 }
             }

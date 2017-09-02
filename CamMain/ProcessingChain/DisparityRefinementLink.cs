@@ -27,7 +27,7 @@ namespace CamMain.ProcessingChain
                 return LinkType.DisparityRefinement;
             }
         }
-        
+
         bool _storedDataOnDisc = true;
         public bool StoreDataOnDisc
         {
@@ -45,11 +45,10 @@ namespace CamMain.ProcessingChain
         private GlobalData _globalData;
         private ConfigurationLinkData _config;
         private ImagesSizeLinkData _imgSize;
-        private CalibrationLinkData _calibration;
         private MatchedImagesLinkData _matchedImages;
         private ImageMatchingLinkData _disparityRaw;
         private DisparityRefinementLinkData _linkData;
-        
+
         List<DisparityRefinement> _refinementChain;
 
         public DisparityRefinementLink(GlobalData gData)
@@ -61,17 +60,27 @@ namespace CamMain.ProcessingChain
         public void Load()
         {
             _config = _globalData.Get<ConfigurationLinkData>();
-            _imgSize = _globalData.Get<ImagesSizeLinkData>();
-            _calibration = _globalData.Get<CalibrationLinkData>();
-            _matchedImages = _globalData.Get<MatchedImagesLinkData>();
-            _disparityRaw = _globalData.Get<ImageMatchingLinkData>();
 
-            LoadDisparityRefinementChain();
+            if(LoadDataFromDisc)
+            {
+                LoadRefinedDisparityMaps();
+            }
+            else
+            {
+                _imgSize = _globalData.Get<ImagesSizeLinkData>();
+                _matchedImages = _globalData.Get<MatchedImagesLinkData>();
+                _disparityRaw = _globalData.Get<ImageMatchingLinkData>();
+
+                LoadDisparityRefinementChain();
+            }
         }
 
         public void Process()
         {
-            RefineDisparities();
+            if(false == LoadDataFromDisc)
+            {
+                RefineDisparities();
+            }
         }
 
         public void Save()
@@ -100,8 +109,8 @@ namespace CamMain.ProcessingChain
                 try
                 {
                     string className = refinerNode.Attributes["name"].Value;
-                    string fullClassName = "CamImageProcessing.ImageMatching." + className;     
-                                
+                    string fullClassName = "CamImageProcessing.ImageMatching." + className;
+
                     Type refinerType = refinerAssembly.GetType(fullClassName);
                     DisparityRefinement refiner = Activator.CreateInstance(refinerType) as DisparityRefinement;
 
@@ -110,11 +119,13 @@ namespace CamMain.ProcessingChain
                     refiner.UpdateParameters();
 
                     _refinementChain.Add(refiner);
+
+                    refinerNode = refinerNode.NextSibling;
                 }
                 catch(Exception e)
                 {
-                    MessageBox.Show("Failed to load Refiner : " + e.Message + 
-                        Environment.NewLine + ". Stack: " + 
+                    MessageBox.Show("Failed to load Refiner : " + e.Message +
+                        Environment.NewLine + ". Stack: " +
                         Environment.NewLine + e.StackTrace);
                 }
             }
@@ -122,8 +133,9 @@ namespace CamMain.ProcessingChain
 
         void RefineDisparities()
         {
-           foreach(var id in _disparityRaw.MapsLeft.Keys)
-            { 
+            _linkData.Maps = new Dictionary<int, DisparityMap>();
+            foreach(var id in _disparityRaw.MapsLeft.Keys)
+            {
                 // Apply each refiner
                 DisparityMap mapLeft = _disparityRaw.MapsLeft[id];
                 DisparityMap mapRight = _disparityRaw.MapsRight[id];
@@ -149,38 +161,13 @@ namespace CamMain.ProcessingChain
 
         void SaveRefinedDisparityMaps()
         {
-            XmlNode dispMapListNode = _config.ConfigDoc.CreateElement("DisparityMaps_Refined");
-            foreach(var entry in _linkData.Maps)
-            {
-                SaveDisparityMap(entry.Value, dispMapListNode, entry.Key);
-            }
-            _config.RootNode.AppendChild(dispMapListNode);
+            LinkUtilities.SaveDisparityMaps(_linkData.Maps, _config, "DisparityMaps_Refined", "map_refined_left");
         }
 
-        void SaveDisparityMap(DisparityMap map, XmlNode dispMapListNode, int id)
+        void LoadRefinedDisparityMaps()
         {
-            XmlNode dispMapNode = _config.ConfigDoc.CreateElement("Map");
-            XmlAttribute attId = _config.ConfigDoc.CreateAttribute("id");
-            XmlAttribute attPath = _config.ConfigDoc.CreateAttribute("path");
-
-            attId.Value = id.ToString();
-            attPath.Value = "dispmap_refined_" + "_" + attId.Value + ".png";
-            string path = _config.WorkingDirectory + attPath.Value;
-
-            dispMapNode.Attributes.Append(attId);
-            dispMapNode.Attributes.Append(attPath);
-
-            dispMapListNode.AppendChild(dispMapNode);
-
-            XmlDocument dispDoc = new XmlDocument();
-            XmlNode mapNode = map.CreateMapNode(dispDoc);
-
-            dispDoc.InsertAfter(mapNode, dispDoc.DocumentElement);
-
-            using(FileStream file = new FileStream(path, FileMode.Create))
-            {
-                dispDoc.Save(file);
-            }
+            _linkData.Maps = new Dictionary<int, DisparityMap>();
+            LinkUtilities.LoadDisparityMaps(_linkData.Maps, _config, "DisparityMaps_Refined");
         }
     }
 }

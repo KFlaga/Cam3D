@@ -9,7 +9,7 @@ namespace Image3DModule
 {
     public partial class Image3DFromPointsTab : UserControl
     {
-        public List<Camera3DPoint> Points3D { get; set; }
+        public List<TriangulatedPoint> Points3D { get; set; }
 
         Image3DWindow _3dwindow;
 
@@ -17,7 +17,7 @@ namespace Image3DModule
 
         public Image3DFromPointsTab()
         {
-            Points3D = new List<Camera3DPoint>();
+            Points3D = new List<TriangulatedPoint>();
             InitializeComponent();
         }
 
@@ -62,15 +62,15 @@ namespace Image3DModule
                 SharpDX.Color4 color = new SharpDX.Color4(1.0f);
                 if(image != null)
                 {
-                    if(!(point.Cam1Img.X < 0.0 ||
-                        point.Cam1Img.X > image.ColumnCount ||
-                        point.Cam1Img.Y < 0.0 ||
-                        point.Cam1Img.Y > image.RowCount))
+                    if(!(point.ImageLeft.X < 0.0 ||
+                        point.ImageLeft.X > image.ColumnCount ||
+                        point.ImageLeft.Y < 0.0 ||
+                        point.ImageLeft.Y > image.RowCount))
                     {
                         color = new SharpDX.Color4(
-                            (float)image[(int)point.Cam1Img.Y, (int)point.Cam1Img.X, RGBChannel.Red],
-                            (float)image[(int)point.Cam1Img.Y, (int)point.Cam1Img.X, RGBChannel.Green],
-                            (float)image[(int)point.Cam1Img.Y, (int)point.Cam1Img.X, RGBChannel.Blue],
+                            (float)image[(int)point.ImageLeft.Y, (int)point.ImageLeft.X, RGBChannel.Red],
+                            (float)image[(int)point.ImageLeft.Y, (int)point.ImageLeft.X, RGBChannel.Green],
+                            (float)image[(int)point.ImageLeft.Y, (int)point.ImageLeft.X, RGBChannel.Blue],
                             1.0f);
                     }
                 }

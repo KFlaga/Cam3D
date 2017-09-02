@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace CamImageProcessing.ImageMatching
 {
-    public class AnisotopicDiffusionRefiner : DisparityRefinement
+    public class SmoothDisparityMapRefiner : DisparityRefinement
     {
         public enum CoeffKernelType
         {
@@ -41,11 +41,6 @@ namespace CamImageProcessing.ImageMatching
                                               // public bool UseExtendedMethod { get; set; }
         public bool UseEightDirections { get; set; }
         public bool UseConfidenceWeights { get; set; }
-
-        public bool SmoothDisparityMap { get; set; } // When set instead of interpolating bad disparities
-                                                     // from more confident one within color-coherent areas
-                                                     // smooth disparities in disparity-coherent areas
-
 
         IntVector2[] _dirs4 = new IntVector2[4]
         {
@@ -174,20 +169,10 @@ namespace CamImageProcessing.ImageMatching
             //    dispX += _last[y + _dirs[i].Y, x + _dirs[i].X].SubDX * cx * _dinv[i];
             //    dispY += _last[y + _dirs[i].Y, x + _dirs[i].X].SubDY * cy * _dinv[i];
             //}
-            if(SmoothDisparityMap)
-            {
                 GetCxCyForSmoothing(_dirs[i], x, y, gradDispX, gradDispY, out cx, out cy);
 
                 dispX += gradDispX * cx * _dinv[i];
                 dispY += gradDispY * cy * _dinv[i];
-            }
-            else
-            {
-                GetCxCyForDiffusion(_dirs[i], x, y, gradImg, out cx, out cy);
-
-                dispX += gradDispX * cx * _dinv[i];
-                dispY += gradDispY * cy * _dinv[i];
-            }
         }
 
         private void UpdateDisparity(int x, int y, double dispX, double dispY)
@@ -201,7 +186,7 @@ namespace CamImageProcessing.ImageMatching
                 _next[y, x].DY = 0;
                 _next[y, x].Flags = (int)DisparityFlags.Invalid;
             }
-            else if(_next[y, x].IsInvalid() || SmoothDisparityMap)
+            else if(_next[y, x].IsInvalid())
             {
                 _next[y, x].SubDX = dispX;
                 _next[y, x].SubDY = dispY;
@@ -313,7 +298,7 @@ namespace CamImageProcessing.ImageMatching
         {
             get
             {
-                return "Anisotropic Diffusion";
+                return "Map Smoothing";
             }
         }
 
@@ -324,11 +309,7 @@ namespace CamImageProcessing.ImageMatching
             AlgorithmParameter itersParam = new IntParameter(
                 "Max Interations", "ITERS", 10, 1, 1000);
             Parameters.Add(itersParam);
-
-            AlgorithmParameter smoothParam = new BooleanParameter(
-                "Smooth Disparity Map", "SMOOTH", false);
-            Parameters.Add(smoothParam);
-
+            
             AlgorithmParameter kerCoeffParam = new DoubleParameter(
                 "Kernel Coeff", "KER_COEFF", 0.5, 0.001, 100.0);
             Parameters.Add(kerCoeffParam);
@@ -362,12 +343,6 @@ namespace CamImageProcessing.ImageMatching
             KernelCoeff = AlgorithmParameter.FindValue<double>("KER_COEFF", Parameters);
             StepCoeff = AlgorithmParameter.FindValue<double>("STEP_COEFF", Parameters);
             UseEightDirections = AlgorithmParameter.FindValue<bool>("EIGHT", Parameters);
-            SmoothDisparityMap = AlgorithmParameter.FindValue<bool>("SMOOTH", Parameters);
-        }
-
-        public override string ToString()
-        {
-            return "Anisotropic Diffusion";
         }
     }
 }

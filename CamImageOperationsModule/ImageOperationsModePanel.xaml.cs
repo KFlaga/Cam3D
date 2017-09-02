@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 using CamControls;
 using CamImageProcessing;
 using MathNet.Numerics.LinearAlgebra.Double;
+using MathNet.Numerics.LinearAlgebra;
 
 namespace CamImageOperationsModule
 {
@@ -103,7 +104,7 @@ namespace CamImageOperationsModule
                 _imageControl.ImageSource = _colorImage.ToBitmapSource();
             }
         }
-        
+
         private void _butDiffusionFilter_Click(object sender, RoutedEventArgs e)
         {
             _optsWindow_DiffusionFilter.ShowDialog();
@@ -238,5 +239,37 @@ namespace CamImageOperationsModule
                 }
             }
         }
+
+        private void _butLowerCompletion_Click(object sender, RoutedEventArgs e)
+        {
+            if(_imageControl.ImageSource != null)
+            {
+                ColorImage img = new ColorImage();
+                img.FromBitmapSource(_imageControl.ImageSource);
+
+                GrayScaleImage imgGray = new GrayScaleImage();
+                imgGray.FromColorImage(img);
+
+                Matrix<double> lowerComp = WatershedSegmentation.ComputeLowerCompletion(imgGray.GetMatrix());
+
+                ColorImage imgFinal = new ColorImage();
+                imgFinal.ImageMatrix[0] = new DenseMatrix(lowerComp.RowCount, lowerComp.ColumnCount);
+                imgFinal.ImageMatrix[1] = new DenseMatrix(lowerComp.RowCount, lowerComp.ColumnCount);
+                imgFinal.ImageMatrix[2] = new DenseMatrix(lowerComp.RowCount, lowerComp.ColumnCount);
+
+                for(int r = 0; r < img.RowCount; ++r)
+                {
+                    for(int c = 0; c < img.ColumnCount; ++c)
+                    {
+                        imgFinal[r, c, RGBChannel.Red] = lowerComp[r, c];
+                        imgFinal[r, c, RGBChannel.Green] = lowerComp[r, c];
+                        imgFinal[r, c, RGBChannel.Blue] = lowerComp[r, c];
+                    }
+                }
+
+                _imageControl.ImageSource = imgFinal.ToBitmapSource();
+            }
+        }
     }
 }
+

@@ -21,6 +21,8 @@ namespace CamImageProcessing.ImageMatching
         
         public void MatchImages()
         {
+            ConvertImagesToGray();
+
             if(Rectified)
             {
                 Aggregator.Fundamental = new DenseMatrix(3, 3);
@@ -64,6 +66,27 @@ namespace CamImageProcessing.ImageMatching
                 Aggregator.ComputeMatchingCosts();
             }
 
+        }
+
+        private void ConvertImagesToGray()
+        {
+            if(ImageLeft.ChannelsCount == 3)
+            {
+                GrayScaleImage imgGray = new GrayScaleImage();
+                imgGray.SetMatrix(ImageLeft.GetMatrix(), 0);
+
+                ImageLeft = ImageLeft is MaskedImage ?
+                    (IImage)new MaskedImage(imgGray) : (IImage)imgGray;
+            }
+
+            if(ImageRight.ChannelsCount == 3)
+            {
+                GrayScaleImage imgGray = new GrayScaleImage();
+                imgGray.SetMatrix(ImageRight.GetMatrix(), 0);
+
+                ImageRight = ImageRight is MaskedImage ?
+                    (IImage)new MaskedImage(imgGray) : (IImage)imgGray;
+            }
         }
 
         public string Name { get { return "Image Matching Algorithm"; } }

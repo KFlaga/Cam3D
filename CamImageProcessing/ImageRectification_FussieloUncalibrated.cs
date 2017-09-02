@@ -206,7 +206,7 @@ namespace CamImageProcessing
             br_L.DivideThis(br_L.At(2));
         }
 
-        class Minimalisation : LevenbergMarquardtBaseAlgorithm
+        private class Minimalisation : LevenbergMarquardtBaseAlgorithm
         {
             public List<Vector<double>> PointsLeft { get; set; }
             public List<Vector<double>> PointsRight { get; set; }
@@ -233,6 +233,9 @@ namespace CamImageProcessing
             public const int _eYrIdx = 9;
             public const int _eZrIdx = 10;
             public const int _paramsCount = 11;
+
+            private Matrix<double> _H_L;
+            private Matrix<double> _H_R;
 
             public override void Init()
             {

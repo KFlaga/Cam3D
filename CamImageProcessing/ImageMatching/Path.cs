@@ -29,7 +29,7 @@ namespace CamImageProcessing.ImageMatching
         public int PreviousIndex { get { return CurrentIndex - 1; } }
         public bool HaveNextPixel
         {
-            get { return CurrentIndex < Length; }
+            get { return CurrentIndex < Length - 1; }
         }
 
         // Need to be allocated externally

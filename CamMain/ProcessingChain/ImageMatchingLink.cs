@@ -79,7 +79,7 @@ namespace CamMain.ProcessingChain
 
             if(LoadDataFromDisc)
             {
-
+               LoadDisparityMaps();
             }
             else
             {
@@ -171,47 +171,16 @@ namespace CamMain.ProcessingChain
 
         void SaveRawDisparityMaps()
         {
-            XmlNode dispMapListNode = _config.ConfigDoc.CreateElement("DisparityMaps_Raw");
-            foreach(var entry in _linkData.MapsLeft)
-            {
-                SaveDisparityMap(entry.Value, dispMapListNode, entry.Key, CameraIndex.Left);
-            }
-
-            foreach(var entry in _linkData.MapsRight)
-            {
-                SaveDisparityMap(entry.Value, dispMapListNode, entry.Key, CameraIndex.Right);
-
-            }
-            _config.RootNode.AppendChild(dispMapListNode);
+            LinkUtilities.SaveDisparityMaps(_linkData.MapsLeft, _config, "DisparityMaps_Raw_Left", "map_raw_left");
+            LinkUtilities.SaveDisparityMaps(_linkData.MapsRight, _config, "DisparityMaps_Raw_Right", "map_raw_right");
         }
 
-        void SaveDisparityMap(DisparityMap map, XmlNode dispMapListNode, int id, CameraIndex idx)
+        void LoadDisparityMaps()
         {
-            XmlNode dispMapNode = _config.ConfigDoc.CreateElement("Map");
-            XmlAttribute attId = _config.ConfigDoc.CreateAttribute("id");
-            XmlAttribute attCam = _config.ConfigDoc.CreateAttribute("cam");
-            XmlAttribute attPath = _config.ConfigDoc.CreateAttribute("path");
-
-            attId.Value = id.ToString();
-            attCam.Value = idx == CameraIndex.Left ? "left" : "right";
-            attPath.Value = "dispmap_raw_" + attCam.Value + "_" + attId.Value + ".xml";
-            string path = _config.WorkingDirectory + attPath.Value;
-
-            dispMapNode.Attributes.Append(attId);
-            dispMapNode.Attributes.Append(attCam);
-            dispMapNode.Attributes.Append(attPath);
-
-            dispMapListNode.AppendChild(dispMapNode);
-
-            XmlDocument dispDoc = new XmlDocument();
-            XmlNode mapNode = map.CreateMapNode(dispDoc);
-
-            dispDoc.InsertAfter(mapNode, dispDoc.DocumentElement);
-
-            using(FileStream file = new FileStream(path, FileMode.Create))
-            {
-                dispDoc.Save(file);
-            }
+            _linkData.MapsLeft = new Dictionary<int, DisparityMap>();
+            _linkData.MapsRight = new Dictionary<int, DisparityMap>();
+            LinkUtilities.LoadDisparityMaps(_linkData.MapsLeft, _config, "DisparityMaps_Raw_Left");
+            LinkUtilities.LoadDisparityMaps(_linkData.MapsRight, _config, "DisparityMaps_Raw_Right");
         }
     }
 }

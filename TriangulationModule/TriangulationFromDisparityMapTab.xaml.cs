@@ -17,6 +17,7 @@ namespace TriangulationModule
         List<Vector<double>> _left;
         List<Vector<double>> _right;
         List<Vector<double>> _points3D;
+        List<TriangulatedPoint> _triangulatedPoints;
 
         public TriangulationFromDisparityMapTab()
         {
@@ -29,6 +30,16 @@ namespace TriangulationModule
         }
 
         private void Triangulate(object sender, RoutedEventArgs e)
+        {
+            TriangulateBase(1);
+        }
+
+        private void TriangulateSparse(object sender, RoutedEventArgs e)
+        {
+            TriangulateBase(2);
+        }
+
+        private void TriangulateBase(int increment)
         {
             if(CalibrationData.Data.IsCamLeftCalibrated == false ||
                 CalibrationData.Data.IsCamRightCalibrated == false)
@@ -45,9 +56,9 @@ namespace TriangulationModule
 
             _left = new List<Vector<double>>();
             _right = new List<Vector<double>>();
-            for(int r = 0; r < _dispMap.RowCount; ++r)
+            for(int r = 0; r < _dispMap.RowCount; r += increment)
             {
-                for(int c = 0; c < _dispMap.ColumnCount; ++c)
+                for(int c = 0; c < _dispMap.ColumnCount; c += increment)
                 {
                     if(_dispMap[r, c].IsValid())
                     {
@@ -57,7 +68,7 @@ namespace TriangulationModule
                         }));
                         _right.Add(new DenseVector(new double[]
                         {
-                            c + _dispMap[r, c].DX, r + _dispMap[r, c].DY, 1.0
+                            c + _dispMap[r, c].SubDX, r + _dispMap[r, c].SubDY, 1.0
                         }));
                     }
                 }
@@ -71,50 +82,36 @@ namespace TriangulationModule
             _triangulation.Estimate3DPoints();
 
             _points3D = _triangulation.Points3D;
+            StoreTraingulatedPoints(_left, _right, _points3D);
 
             MessageBox.Show("Triangulation finished");
         }
-        
+
+        private void StoreTraingulatedPoints(
+            List<Vector<double>> pointsLeft,
+            List<Vector<double>> pointsRight,
+            List<Vector<double>> points3d)
+        {
+            _triangulatedPoints = new List<TriangulatedPoint>();
+            for(int i = 0; i < points3d.Count; ++i)
+            {
+                _triangulatedPoints.Add(new TriangulatedPoint()
+                {
+                    ImageLeft = new Vector2(pointsLeft[i]),
+                    ImageRight = new Vector2(pointsRight[i]),
+                    Real = new Vector3(points3d[i])
+                });
+            }
+        }
+
         private void Save3DPoints(object sender, RoutedEventArgs e)
         {
             FileOperations.SaveToFile(Save3DPoints, "Xml File|*.xml");
         }
-        
+
         private void Save3DPoints(Stream file, string path)
         {
-            XmlDocument dataDoc = new XmlDocument();
-            var rootNode = dataDoc.CreateElement("Points");
-
-            for(int i= 0; i < _points3D.Count; ++i)
-            {
-                var point3D = _points3D[i];
-                var pointImg = _left[i];
-
-                var pointNode = dataDoc.CreateElement("Point");
-
-                var attRealX = dataDoc.CreateAttribute("realx");
-                attRealX.Value = point3D.At(0).ToString();
-                var attRealY = dataDoc.CreateAttribute("realy");
-                attRealY.Value = point3D.At(1).ToString();
-                var attRealZ = dataDoc.CreateAttribute("realz");
-                attRealZ.Value = point3D.At(2).ToString();
-
-                var attImgX = dataDoc.CreateAttribute("imgx");
-                attImgX.Value = pointImg.At(0).ToString();
-                var attImgY = dataDoc.CreateAttribute("imgy");
-                attImgY.Value = pointImg.At(1).ToString();
-
-                pointNode.Attributes.Append(attRealX);
-                pointNode.Attributes.Append(attRealY);
-                pointNode.Attributes.Append(attRealZ);
-                pointNode.Attributes.Append(attImgX);
-                pointNode.Attributes.Append(attImgY);
-
-                rootNode.AppendChild(pointNode);
-            }
-
-            dataDoc.InsertAfter(rootNode, dataDoc.DocumentElement);
-            dataDoc.Save(file);
+            CamCore.XmlSerialisation.SaveToFile(_triangulatedPoints, file);
         }
     }
 }

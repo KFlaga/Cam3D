@@ -98,6 +98,7 @@
     <Compile Include="Alg\Quadric.cs" />
     <Compile Include="Alg\RotationConverter.cs" />
     <Compile Include="Alg\ScanLineFloodAlgorithm.cs" />
+    <Compile Include="Alg\TriangulatedPoint.cs" />
     <Compile Include="Alg\TwoPointsTriangulation.cs" />
     <Compile Include="Alg\VectorTuples.cs" />
     <Compile Include="Alg\Vector3.cs" />
@@ -110,7 +111,6 @@
     <Compile Include="FileOperations.cs" />
     <Compile Include="Alg\GaussSolver.cs" />
     <Compile Include="Alg\ILinearEquationsSolver.cs" />
-    <Compile Include="Image3DPoint.cs" />
     <Compile Include="Converters\IntToStringConverter.cs" />
     <Compile Include="InterModularConnection.cs" />
     <Compile Include="Alg\LevenbergMarquardtBasicAlgorithm.cs" />

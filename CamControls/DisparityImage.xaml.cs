@@ -28,30 +28,33 @@ namespace CamControls
 
                 _map = value;
                 // Find min/max
-                RangeX.Min = RangeX.Max = _map[0, 0].DX;
-                RangeY.Min = RangeY.Max = _map[0, 0].DY;
-                for(int r = 0; r < _map.RowCount; ++r)
+                if(false == RangeFrozen)
                 {
-                    for(int c = 0; c < _map.ColumnCount; ++c)
+                    RangeX.Min = RangeX.Max = _map[0, 0].DX;
+                    RangeY.Min = RangeY.Max = _map[0, 0].DY;
+                    for(int r = 0; r < _map.RowCount; ++r)
                     {
-                        if(_map[r, c].IsValid())
+                        for(int c = 0; c < _map.ColumnCount; ++c)
                         {
-                            RangeX.Min = Math.Min(RangeX.Min, _map[r, c].DX);
-                            RangeX.Max = Math.Max(RangeX.Max, _map[r, c].DX);
-                            RangeY.Min = Math.Min(RangeY.Min, _map[r, c].DY);
-                            RangeY.Max = Math.Max(RangeY.Max, _map[r, c].DY);
+                            if(_map[r, c].IsValid())
+                            {
+                                RangeX.Min = Math.Min(RangeX.Min, _map[r, c].DX);
+                                RangeX.Max = Math.Max(RangeX.Max, _map[r, c].DX);
+                                RangeY.Min = Math.Min(RangeY.Min, _map[r, c].DY);
+                                RangeY.Max = Math.Max(RangeY.Max, _map[r, c].DY);
+                            }
                         }
                     }
-                }
-                RangeX.TempMax = RangeX.Max;
-                RangeX.TempMin = RangeX.Min;
-                RangeY.TempMax = RangeY.Min;
-                RangeY.TempMin = RangeY.Max;
+                    RangeX.TempMax = RangeX.Max;
+                    RangeX.TempMin = RangeX.Min;
+                    RangeY.TempMax = RangeY.Min;
+                    RangeY.TempMin = RangeY.Max;
 
-                if(_showDX)
-                    _legend.Range = _rangeX;
-                else
-                    _legend.Range = _rangeY;
+                    if(_showDX)
+                        _legend.Range = _rangeX;
+                    else
+                        _legend.Range = _rangeY;
+                }
                 UpdateImage();
             }
         }
@@ -70,6 +73,7 @@ namespace CamControls
                         _legend.Range = _rangeX;
                     else
                         _legend.Range = _rangeY;
+
                     UpdateImage();
                 }
             }
@@ -99,6 +103,8 @@ namespace CamControls
         private Image _dispImage { get { return (Image)_imageControl; } }
 
         public event EventHandler<EventArgs> MapLoaded;
+
+        public bool RangeFrozen { get; set; } = false;
 
         bool _enableSaveLoad = true;
         public bool IsSaveLoadEnabled
@@ -142,7 +148,7 @@ namespace CamControls
 
             MapLoaded?.Invoke(this, new EventArgs());
         }
-        
+
         public DisparityImage()
         {
             InitializeComponent();
@@ -153,7 +159,7 @@ namespace CamControls
 
             _dispImage.MouseDown += MousePressed;
         }
-        
+
         private void _dispDirectionShowCheckBox_Checked(object sender, RoutedEventArgs e)
         {
             IsShownDX = false;
@@ -180,15 +186,17 @@ namespace CamControls
                     {
                         for(int c = 0; c < cols; ++c)
                         {
-                            int idx = _rangeX.GetDisparityIndex(_map[r, c].DX);
+                            int idx1 = _rangeX.GetDisparityIndex((int)_map[r, c].SubDX);
+                            int idx2 = _rangeX.GetDisparityIndex((int)_map[r, c].SubDX + 1);
+                            double ratio = Math.Abs(_map[r, c].SubDX - (double)((int)_map[r, c].SubDX));
                             if((_map[r, c].Flags & (int)DisparityFlags.Valid) != 0 &&
-                                !(idx < 0 || idx >= _rangeX.GetTempDisparityRange()))
+                                !(idx1 < 0 || idx2 >= _rangeX.GetTempDisparityRange()))
                             {
-                                _image[RGBChannel.Red][r, c] = _rangeX.Colors[idx][0];
-                                _image[RGBChannel.Green][r, c] = _rangeX.Colors[idx][1];
-                                _image[RGBChannel.Blue][r, c] = _rangeX.Colors[idx][2];
+                                _image[RGBChannel.Red][r, c] = _rangeX.Colors[idx2][0] * (1 - ratio) + _rangeX.Colors[idx1][0] * ratio;
+                                _image[RGBChannel.Green][r, c] = _rangeX.Colors[idx2][1] * (1 - ratio) + _rangeX.Colors[idx1][1] * ratio;
+                                _image[RGBChannel.Blue][r, c] = _rangeX.Colors[idx2][2] * (1 - ratio) + _rangeX.Colors[idx1][2] * ratio;
                             }
-                            else if(idx < 0 || idx >= _rangeX.GetTempDisparityRange())
+                            else if(idx1 < 0 || idx2 >= _rangeX.GetTempDisparityRange())
                             {
                                 _image[RGBChannel.Red][r, c] = 0.5;
                                 _image[RGBChannel.Green][r, c] = 0.5;
@@ -212,7 +220,7 @@ namespace CamControls
                             int idx = _rangeY.GetDisparityIndex(_map[r, c].DY);
                             if((_map[r, c].Flags & (int)DisparityFlags.Valid) != 0 &&
                                 !(idx < 0 || idx >= _rangeY.GetTempDisparityRange()))
-                            { 
+                            {
                                 _image[RGBChannel.Red][r, c] = _rangeY.Colors[idx][0];
                                 _image[RGBChannel.Green][r, c] = _rangeY.Colors[idx][1];
                                 _image[RGBChannel.Blue][r, c] = _rangeY.Colors[idx][2];
@@ -304,7 +312,7 @@ namespace CamControls
             Canvas.SetLeft(_dbox, 10000);
             Canvas.SetTop(_dbox, 10000);
         }
-        
+
         private void SelectRange(object sender, RoutedEventArgs e)
         {
             RangeSelectionPanel rangeSelect = new RangeSelectionPanel();
@@ -319,6 +327,16 @@ namespace CamControls
                     _legend.Range = _rangeY;
                 UpdateImage();
             }
+        }
+
+        private void FreezeRange(object sender, RoutedEventArgs e)
+        {
+            RangeFrozen = true;
+        }
+
+        private void UnfreezeRange(object sender, RoutedEventArgs e)
+        {
+            RangeFrozen = false;
         }
     }
 }

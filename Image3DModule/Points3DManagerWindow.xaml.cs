@@ -23,9 +23,9 @@ namespace Image3DModule
     /// </summary>
     public partial class Points3DManagerWindow : Window
     {
-        private BindingList<Camera3DPoint> _pointList;
-        private List<Camera3DPoint> _savedList;
-        public List<Camera3DPoint> Points
+        private BindingList<TriangulatedPoint> _pointList;
+        private List<TriangulatedPoint> _savedList;
+        public List<TriangulatedPoint> Points
         {
             get
             {
@@ -46,14 +46,14 @@ namespace Image3DModule
         public Points3DManagerWindow()
         {
             InitializeComponent();
-            _savedList = new List<Camera3DPoint>();
-            _pointList = new BindingList<Camera3DPoint>();
+            _savedList = new List<TriangulatedPoint>();
+            _pointList = new BindingList<TriangulatedPoint>();
             _pointListView.ItemsSource = _pointList;
         }
 
         private void AddPoint(object sender, RoutedEventArgs e)
         {
-            Camera3DPoint point = new Camera3DPoint();
+            TriangulatedPoint point = new TriangulatedPoint();
             _pointList.Add(point);
         }
 
@@ -68,7 +68,7 @@ namespace Image3DModule
                 }
                 else
                 {
-                    Camera3DPoint toRemove = (Camera3DPoint)_pointListView.SelectedItem;
+                    TriangulatedPoint toRemove = (TriangulatedPoint)_pointListView.SelectedItem;
                     if(_pointListView.SelectedIndex == 0)
                         _pointListView.SelectedIndex = 1;
                     else
@@ -136,16 +136,16 @@ namespace Image3DModule
             if(_pointListView.SelectedIndex == -1)
                 return;
             ClearPointProperties();
-            Camera3DPoint addPoint = (Camera3DPoint)e.AddedItems[0];
+            TriangulatedPoint addPoint = (TriangulatedPoint)e.AddedItems[0];
             _tbImgX.SetBinding(TextBox.TextProperty, new Binding("X")
             {
-                Source = addPoint.Cam1Img,
+                Source = addPoint.ImageLeft,
                 Mode = BindingMode.TwoWay,
                 Converter = new CamCore.Converters.DoubleToStringConverter()
             });
             _tbImgY.SetBinding(TextBox.TextProperty, new Binding("Y")
             {
-                Source = addPoint.Cam1Img,
+                Source = addPoint.ImageLeft,
                 Mode = BindingMode.TwoWay,
                 Converter = new CamCore.Converters.DoubleToStringConverter()
             });
@@ -181,71 +181,12 @@ namespace Image3DModule
 
         public void LoadFromFile(Stream file, string path)
         {
-            XmlDocument dataDoc = new XmlDocument();
-            dataDoc.Load(file);
-
-            _pointList.Clear();
-            XmlNodeList points = dataDoc.GetElementsByTagName("Point");
-            foreach(XmlNode pointNode in points)
-            {
-                Camera3DPoint point = new Camera3DPoint();
-                
-                var imgx = pointNode.Attributes["imgx"];
-                if(imgx != null)
-                    point.Cam1Img.X = double.Parse(imgx.Value);
-
-                var imgy = pointNode.Attributes["imgy"];
-                if(imgy != null)
-                    point.Cam1Img.Y = double.Parse(imgy.Value);
-
-                var realx = pointNode.Attributes["realx"];
-                if(imgy != null)
-                    point.Real.X = double.Parse(realx.Value);
-
-                var realy = pointNode.Attributes["realy"];
-                if(realy != null)
-                    point.Real.Y = double.Parse(realy.Value);
-
-                var realz = pointNode.Attributes["realz"];
-                if(realz != null)
-                    point.Real.Z = double.Parse(realz.Value);
-
-                _pointList.Add(point);
-            }
+            Points = XmlSerialisation.CreateFromFile<List<TriangulatedPoint>>(file);
         }
 
         public void SaveToFile(Stream file, string path)
         {
-            XmlDocument dataDoc = new XmlDocument();
-            var rootNode = dataDoc.CreateElement("Points");
-
-            foreach(var point in _pointList)
-            {
-                var pointNode = dataDoc.CreateElement("Point");
-
-                var attImgX = dataDoc.CreateAttribute("imgx");
-                attImgX.Value = point.Cam1Img.X.ToString();
-                var attImgY = dataDoc.CreateAttribute("imgy");
-                attImgY.Value = point.Cam1Img.Y.ToString();
-
-                var attRealX = dataDoc.CreateAttribute("realx");
-                attRealX.Value = point.Real.X.ToString();
-                var attRealY = dataDoc.CreateAttribute("realy");
-                attRealY.Value = point.Real.Y.ToString();
-                var attRealZ = dataDoc.CreateAttribute("realz");
-                attRealZ.Value = point.Real.Z.ToString();
-
-                pointNode.Attributes.Append(attImgX);
-                pointNode.Attributes.Append(attImgY);
-                pointNode.Attributes.Append(attRealX);
-                pointNode.Attributes.Append(attRealY);
-                pointNode.Attributes.Append(attRealZ);
-
-                rootNode.AppendChild(pointNode);
-            }
-
-            dataDoc.InsertAfter(rootNode, dataDoc.DocumentElement);
-            dataDoc.Save(file);
+            XmlSerialisation.SaveToFile(Points, file);
         }
     }
 }

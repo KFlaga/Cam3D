@@ -108,6 +108,8 @@
     <Compile Include="ImageMatching\Path.cs" />
     <Compile Include="ImageMatching\PeakRemovalRefiner.cs" />
     <Compile Include="ImageMatching\SGMDisparityComputer.cs" />
+    <Compile Include="ImageMatching\SmoothDisparityMapRefiner.cs" />
+    <Compile Include="ImageMatching\SmoothSegmentsRefiner.cs" />
     <Compile Include="ImageMatching\WholeImageScan.cs" />
     <Compile Include="ImageMatching\WTADisparityComputer.cs" />
     <Compile Include="ImageRectification.cs" />

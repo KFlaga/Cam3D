@@ -104,7 +104,7 @@ namespace ImageMatchingModule
         private void ResetMaps(object sender, RoutedEventArgs e)
         {
             if(MapLeftBase != null)
-                _finalMap = (DisparityMap)MapLeftBase.Clone();
+                MapLeftBase = (DisparityMap)MapLeftBase.Clone();
             else
                 _finalMap = null;
 

@@ -12,16 +12,6 @@ using System.Xml.Serialization;
 
 namespace CamMain.ProcessingChain
 {
-    public class TriangulatedPoint
-    {
-        [XmlElement("ImageLeft")]
-        public Vector2 ImageLeft { get; set; }
-        [XmlElement("ImageRight")]
-        public Vector2 ImageRight { get; set; }
-        [XmlElement("Real")]
-        public Vector3 Real { get; set; }
-    }
-
     public class TriangulationLinkData
     {
         public Dictionary<int, List<TriangulatedPoint>> Points { get; set; } = new Dictionary<int, List<TriangulatedPoint>>();
@@ -71,18 +61,30 @@ namespace CamMain.ProcessingChain
         public void Load()
         {
             _config = _globalData.Get<ConfigurationLinkData>();
-            _imgSize = _globalData.Get<ImagesSizeLinkData>();
-            _calibration = _globalData.Get<CalibrationLinkData>();
-            _rectification = _globalData.Get<RectificationLinkData>();
-            _matchedImages = _globalData.Get<MatchedImagesLinkData>();
-            _disparity = _globalData.Get<DisparityRefinementLinkData>();
+            if(LoadDataFromDisc)
+            {
+                LoadTriangulationResults();
+            }
+            else
+            {
+                _imgSize = _globalData.Get<ImagesSizeLinkData>();
+                _calibration = _globalData.Get<CalibrationLinkData>();
+                _rectification = _globalData.Get<RectificationLinkData>();
+                _matchedImages = _globalData.Get<MatchedImagesLinkData>();
+                _disparity = _globalData.Get<DisparityRefinementLinkData>();
 
-            LoadTriangulation();
+                _trinagulation = new TwoPointsTriangulation();
+                _trinagulation.CalibData = _calibration.Calibration;
+            }
+
         }
 
         public void Process()
         {
-            Traingulate();
+            if(false == LoadDataFromDisc)
+            {
+                Traingulate();
+            }
         }
 
         public void Save()
@@ -93,12 +95,6 @@ namespace CamMain.ProcessingChain
             }
 
             _globalData.Set(_linkData);
-        }
-
-        void LoadTriangulation()
-        {
-            _trinagulation = new TwoPointsTriangulation();
-            _trinagulation.CalibData = _calibration.Calibration;
         }
 
         void Traingulate()
@@ -192,6 +188,26 @@ namespace CamMain.ProcessingChain
             }
 
             _config.RootNode.AppendChild(triangulationNode);
+        }
+
+        void LoadTriangulationResults()
+        {
+            //<TriangulationResults>
+            //  <Results id="1" path=""/>
+            //</TriangulationResults>
+            _linkData.Points = new Dictionary<int, List<TriangulatedPoint>>();
+
+            XmlNode resultsListNode = _config.RootNode.FirstChildWithName("TriangulationResults");
+
+            foreach(XmlNode mapNode in resultsListNode.ChildNodes)
+            {
+                int id = int.Parse(mapNode.Attributes["id"].Value);
+
+                string path = _config.WorkingDirectory + mapNode.Attributes["path"].Value;
+
+                List<TriangulatedPoint> points = CamCore.XmlSerialisation.CreateFromFile<List<TriangulatedPoint>>(path);
+                _linkData.Points.Add(id, points);
+            }
         }
     }
 }

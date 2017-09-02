@@ -15,10 +15,10 @@ namespace CamControls
             set
             {
                 _disp = value;
-                _textDX.Text = _disp.DX.ToString();
-                _textDY.Text = _disp.DY.ToString();
-                _textCost.Text = _disp.Cost.ToString();
-                _textConf.Text = _disp.Confidence.ToString();
+                _textDX.Text = _disp.SubDX.ToString("F2");
+                _textDY.Text = _disp.SubDY.ToString("F2");
+                _textCost.Text = _disp.Cost.ToString("F3");
+                _textConf.Text = _disp.Confidence.ToString("F3");
             }
         }
 

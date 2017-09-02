@@ -19,15 +19,14 @@ namespace CamImageProcessing.ImageMatching
         public virtual void Init() { }
         public abstract void RefineMaps();
 
-        List<AlgorithmParameter> _params = new List<AlgorithmParameter>();
         public List<AlgorithmParameter> Parameters
         {
-            get { return _params; }
+            get; protected set;
         }
 
         public virtual void InitParameters()
         {
-
+            Parameters = new List<AlgorithmParameter>();
         }
 
         public virtual void UpdateParameters()

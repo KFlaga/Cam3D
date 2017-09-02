@@ -10,14 +10,14 @@ namespace Image3DModule
 {
     public partial class Image3DWithDisparityTab : UserControl
     {
-        public List<Camera3DPoint> Points3D { get; set; }
+        public List<TriangulatedPoint> Points3D { get; set; }
         public DisparityMap DispMap { get { return _dispImage.Map; } }
 
         Image3DWindow _3dwindow;
 
         public Image3DWithDisparityTab()
         {
-            Points3D = new List<Camera3DPoint>();
+            Points3D = new List<TriangulatedPoint>();
             InitializeComponent();
         }
 
@@ -66,13 +66,15 @@ namespace Image3DModule
             }
 
             ClosePointsSegmentation segmentation = new ClosePointsSegmentation();
-            segmentation.MaxPointsDiff = 2.1;
+            segmentation.MaxPointsDiff = 10;
             segmentation.SegmentDisparity(DispMap);
 
             var segments = segmentation.Segments;
             var segmentAssignments = segmentation.SegmentAssignments;
             Point2D<int>[] segmentMin = new Point2D<int>[segments.Count];
             Point2D<int>[] segmentMax = new Point2D<int>[segments.Count];
+            var segSort = new List<ImageSegmentation.Segment>(segments);
+            segSort.Sort((s1, s2) => { return s2.Pixels.Count.CompareTo(s1.Pixels.Count); });
 
             for(int i = 0; i < segments.Count; ++i)
             {
@@ -83,7 +85,7 @@ namespace Image3DModule
             // 1) Find segments sizes
             foreach(var point3d in Points3D)
             {
-                Point2D<int> imgPoint = new Point2D<int>(y: (int)point3d.Cam1Img.Y, x: (int)point3d.Cam1Img.X);
+                Point2D<int> imgPoint = new Point2D<int>(y: (int)point3d.ImageLeft.Y, x: (int)point3d.ImageLeft.X);
                 int idx = segmentAssignments[imgPoint.Y, imgPoint.X];
                 if(idx >= 0)
                 {
@@ -109,15 +111,15 @@ namespace Image3DModule
             for(int i = 0; i < Points3D.Count; ++i)
             {
                 Point2D<int> imgPoint = new Point2D<int>(
-                    y: (int)Points3D[i].Cam1Img.Y, x: (int)Points3D[i].Cam1Img.X);
+                    y: (int)Points3D[i].ImageLeft.Y, x: (int)Points3D[i].ImageLeft.X);
                 int idx = segmentAssignments[imgPoint.Y, imgPoint.X];
                 if(idx >= 0 && surfaces[idx] != null)
                 {
                     SharpDX.Vector3 pos = new SharpDX.Vector3(
                         (float)Points3D[i].Real.X, (float)Points3D[i].Real.Y, (float)Points3D[i].Real.Z);
                     SharpDX.Vector2 texCoords = new SharpDX.Vector2(
-                        (float)Points3D[i].Cam1Img.X / (float)DispMap.ColumnCount,
-                        (float)Points3D[i].Cam1Img.Y / (float)DispMap.RowCount);
+                        (float)Points3D[i].ImageLeft.X / (float)DispMap.ColumnCount,
+                        (float)Points3D[i].ImageLeft.Y / (float)DispMap.RowCount);
                     SharpDX.Color4 color = new SharpDX.Color4(
                         (float)image[imgPoint.Y, imgPoint.X, RGBChannel.Red], 
                         (float)image[imgPoint.Y, imgPoint.X, RGBChannel.Green], 

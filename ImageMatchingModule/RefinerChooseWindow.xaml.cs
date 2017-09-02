@@ -31,13 +31,22 @@ namespace ImageMatchingModule
 
             set
             {
-                _choosenRefiner = value;
                 _changeInternal = true;
                 foreach(var refiner in _availableRefiners)
                 {
                     if(refiner.GetType() == value.GetType())
                     {
                         _refinersCombo.SelectedItem = refiner;
+
+                        refiner.InitParameters();
+                        for(int i = 0; i < refiner.Parameters.Count; ++i)
+                        {
+                            refiner.Parameters[i].ActualValue = value.Parameters[i].ActualValue;
+                        }
+                        refiner.UpdateParameters();
+
+                        _paramsPanel.SetParameters(refiner.Parameters);
+                        _choosenRefiner = refiner;
                     }
                 }
                 _changeInternal = false;
@@ -76,12 +85,17 @@ namespace ImageMatchingModule
             diffusionRefiner.InitParameters();
             _availableRefiners.Add(diffusionRefiner);
 
+            SmoothSegmentsRefiner smoothRefiner = new SmoothSegmentsRefiner();
+            smoothRefiner.InitParameters();
+            _availableRefiners.Add(smoothRefiner);
+
             _refinersCombo.Items.Add(medianRefiner);
             _refinersCombo.Items.Add(peakRefiner);
             _refinersCombo.Items.Add(crossRefiner);
             _refinersCombo.Items.Add(limitRefiner);
             _refinersCombo.Items.Add(confidenceRefiner);
             _refinersCombo.Items.Add(diffusionRefiner);
+            _refinersCombo.Items.Add(smoothRefiner);
         }
 
         private void _refinersCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
