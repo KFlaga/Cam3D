@@ -12,7 +12,9 @@ namespace CalibrationModule
             get
             {
                 if(_calibControl == null)
+                {
                     _calibControl = new CalibrationModeTabs();
+                }
                 return _calibControl;
             }
         }

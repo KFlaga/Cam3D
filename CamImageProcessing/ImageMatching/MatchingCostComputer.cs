@@ -1,12 +1,7 @@
-﻿using MathNet.Numerics.LinearAlgebra;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using CamCore;
 
-namespace CamImageProcessing.ImageMatching
+namespace CamAlgorithms.ImageMatching
 {
     // Base class for computing cost of matching pixels between images
     // If cost is lower, then match is better

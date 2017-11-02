@@ -1,4 +1,5 @@
-﻿using CamImageProcessing;
+﻿using CamAlgorithms;
+using CamCore;
 using Emgu.CV;
 using Emgu.CV.CvEnum;
 using System;
@@ -12,7 +13,7 @@ namespace RectificationModule
 {
     public static class EmguCVUtils
     {
-        public static Mat ImageToMat_Gray(CamImageProcessing.IImage image)
+        public static Mat ImageToMat_Gray(CamCore.IImage image)
         {
             Mat mat = new Emgu.CV.Mat(
                 image.RowCount, image.ColumnCount, DepthType.Cv8U, 1);

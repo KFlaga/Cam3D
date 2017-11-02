@@ -78,6 +78,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CameraCalibrationAlgorithmUi.cs" />
     <Compile Include="CrossCalibrationTab.xaml.cs">
       <DependentUpon>CrossCalibrationTab.xaml</DependentUpon>
     </Compile>
@@ -85,8 +86,8 @@
       <SubType>Code</SubType>
       <DependentUpon>CalibModeCamTab.xaml</DependentUpon>
     </Compile>
-    <Compile Include="CalibrationGrid.cs" />
-    <Compile Include="CalibrationLinesExtractor.cs" />
+    <Compile Include="PointsExtraction\CalibrationGrid.cs" />
+    <Compile Include="PointsExtraction\CalibrationLinesExtractor.cs" />
     <Compile Include="CalibrationModeTabs.xaml.cs">
       <SubType>Code</SubType>
       <DependentUpon>CalibrationModeTabs.xaml</DependentUpon>
@@ -94,10 +95,7 @@
     <Compile Include="CalibrationModule.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CalibrationPoint.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="CalibrationPointsFinder.cs" />
+    <Compile Include="PointsExtraction\CalibrationPointsFinder.cs" />
     <Compile Include="CalibrationLinesManagerWindow.xaml.cs">
       <DependentUpon>CalibrationLinesManagerWindow.xaml</DependentUpon>
     </Compile>
@@ -105,39 +103,26 @@
       <SubType>Code</SubType>
       <DependentUpon>CalibrationPointsManagerWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="CalibrationShape.cs" />
-    <Compile Include="CamCalibrator.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="PointsExtraction\CalibrationShape.cs" />
     <Compile Include="ChooseRealGridPointDialog.xaml.cs">
       <SubType>Code</SubType>
       <DependentUpon>ChooseRealGridPointDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="CrossCalibrationRefiner.cs" />
-    <Compile Include="DotCPFinder.cs" />
-    <Compile Include="LMCameraMatrixGridMinimalisation.cs" />
-    <Compile Include="LMCameraMatrixZeroSkewMini.cs" />
-    <Compile Include="LMDistortionDirectionalLineFitMinimalisation.cs" />
+    <Compile Include="PointsExtraction\CalibrationShapeGridFinder.cs" />
+    <Compile Include="PointsExtraction\CalibrationShapesExtractor.cs" />
     <Compile Include="CalibrationTestTab.xaml.cs">
       <DependentUpon>CalibrationTestTab.xaml</DependentUpon>
     </Compile>
     <Compile Include="MatchedPointsManagerWindow.xaml.cs">
       <DependentUpon>MatchedPointsManagerWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ShapeChecker.cs" />
-    <Compile Include="LMRadialDistortionLineFitMinimalisation.cs" />
-    <Compile Include="RadialDistortionCorrector.cs" />
-    <Compile Include="LMCameraMatrixSparseMinimalisation.cs" />
-    <Compile Include="LMCameraMatrixSimpleMinimalisation.cs" />
+    <Compile Include="PointsExtraction\ReferenceShapeChecker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RealGridData.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="RealGridsManagerWindow.xaml.cs">
       <SubType>Code</SubType>
       <DependentUpon>RealGridsManagerWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ShapesGridCPFinder.cs" />
+    <Compile Include="PointsExtraction\ShapesGridCPFinder.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CamControls\CamControls.csproj">
@@ -148,9 +133,9 @@
       <Project>{30ab90ed-775c-49e5-96a8-b419d08d2204}</Project>
       <Name>CamCore</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CamImageProcessing\CamImageProcessing.csproj">
+    <ProjectReference Include="..\CamImageProcessing\CamAlgorithms.csproj">
       <Project>{3077792d-e973-4d3f-83c6-8553287a6604}</Project>
-      <Name>CamImageProcessing</Name>
+      <Name>CamAlgorithms</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

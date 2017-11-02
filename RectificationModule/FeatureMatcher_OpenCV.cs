@@ -1,5 +1,5 @@
 ﻿using CamCore;
-using CamImageProcessing;
+using CamAlgorithms;
 using Emgu.CV;
 using System;
 using System.Collections.Generic;
@@ -80,7 +80,7 @@ namespace RectificationModule
             //        Matches.Add(pair);
             //    }
             //}
-            CamImageProcessing.ImageMatching.HammingLookup.ComputeWordBitsLookup();
+            CamAlgorithms.ImageMatching.HammingLookup.ComputeWordBitsLookup();
             var matchesLeft = MatchDesriptors(descLeft, descRight);
             var matchesRight = MatchDesriptors(descRight, descLeft);
 
@@ -124,7 +124,7 @@ namespace RectificationModule
                         uint b1 = (uint)desc1.GetByteValue(l, i);
                         uint b2 = (uint)desc2.GetByteValue(r, i);
                         uint b =  b1 ^ b2;
-                        ones += CamImageProcessing.ImageMatching.HammingLookup.OnesCount(b);
+                        ones += CamAlgorithms.ImageMatching.HammingLookup.OnesCount(b);
                     }
 
                     costs.Add(new MatchedPair_Idx()

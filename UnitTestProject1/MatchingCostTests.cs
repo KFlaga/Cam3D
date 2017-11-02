@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
-using CamImageProcessing;
+using CamAlgorithms;
 using CamCore;
-using CamImageProcessing.ImageMatching;
+using CamAlgorithms.ImageMatching;
 
-namespace UnitTestProject1
+namespace CamUnitTest
 {
     /// <summary>
     /// Summary description for MatchingCostTests
@@ -161,6 +161,68 @@ namespace UnitTestProject1
         public void Test_MutualInformation()
         {
 
+        }
+
+        [TestMethod]
+        public void Test_BitWordCost_Interface()
+        {
+            HammingLookup.ComputeWordBitsLookup();
+            int size = 500;
+            IBitWord[,] map0 = new IBitWord[size, size];
+            IBitWord[,] map1 = new IBitWord[size, size];
+
+            for(int x = 0; x < size; ++x)
+            {
+                for(int y = 0; y < size; ++y)
+                {
+                    map0[y, x] = new BitWord_32(new uint[] { 1, 2, 3, 4, 5, 6, 7, 8 });
+                    map1[y, x] = new BitWord_32(new uint[] { 1, 2, 3, 4, 5, 6, 7, 0 });
+                }
+            }
+
+            double totalCost = 0;
+            for(int i = 0; i < 40; ++i)
+            {
+                for(int x = 0; x < size; ++x)
+                {
+                    for(int y = 0; y < size; ++y)
+                    {
+                        totalCost += map0[y, x].GetHammingDistance(map1[y, x]);
+                    }
+                }
+            }
+            System.Console.WriteLine(totalCost);
+        }
+
+        [TestMethod]
+        public void Test_BitWordCost_Concrete()
+        {
+            HammingLookup.ComputeWordBitsLookup();
+            int size = 500;
+            BitWord_32[,] map0 = new BitWord_32[size, size];
+            BitWord_32[,] map1 = new BitWord_32[size, size];
+
+            for(int x = 0; x < size; ++x)
+            {
+                for(int y = 0; y < size; ++y)
+                {
+                    map0[y, x] = new BitWord_32(new uint[] { 1, 2, 3, 4, 5, 6, 7, 8 });
+                    map1[y, x] = new BitWord_32(new uint[] { 1, 2, 3, 4, 5, 6, 7, 0 });
+                }
+            }
+
+            double totalCost = 0;
+            for(int i = 0; i < 50; ++i)
+            {
+                for(int x = 0; x < size; ++x)
+                {
+                    for(int y = 0; y < size; ++y)
+                    {
+                        totalCost += map0[y, x].GetHammingDistance(map1[y, x]);
+                    }
+                }
+            }
+            System.Console.WriteLine(totalCost);
         }
     }
 }

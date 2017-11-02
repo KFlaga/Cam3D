@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using CamCore;
 
-namespace CamImageProcessing.ImageMatching
+namespace CamAlgorithms.ImageMatching
 {
     // Just set disparity with lowest cost
     public class WTADisparityComputer : DisparityComputer

@@ -308,7 +308,7 @@ namespace CamControls
                     }
                 }
             }
-            catch(Exception e)
+            catch(Exception)
             { }
         }
 

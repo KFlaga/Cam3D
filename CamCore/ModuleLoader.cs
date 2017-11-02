@@ -23,7 +23,7 @@ namespace CamCore
             {
                 file = new FileStream(ConfFilePath, FileMode.Open);
             }
-            catch(FileNotFoundException e)
+            catch(FileNotFoundException)
             {
                 MessageBox.Show("Modules load failed - couldn't open config file", "Error");
                 return false;
@@ -45,7 +45,7 @@ namespace CamCore
                     modInfo.ModuleName = moduleNode["ModuleName"].InnerText;
                     modInfoList.Add(modInfo);
                 }
-                catch(NullReferenceException e)
+                catch(NullReferenceException)
                 {
                     // failed to load this module
                 }

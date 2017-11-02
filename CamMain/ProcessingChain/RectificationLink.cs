@@ -1,7 +1,7 @@
 ﻿using CamCore;
 using System.Collections.Generic;
 using System.Xml;
-using CamImageProcessing;
+using CamAlgorithms;
 
 namespace CamMain.ProcessingChain
 {

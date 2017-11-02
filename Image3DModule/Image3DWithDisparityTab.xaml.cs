@@ -1,5 +1,5 @@
 ﻿using CamControls;
-using CamImageProcessing;
+using CamAlgorithms;
 using CamCore;
 using System.Collections.Generic;
 using System.Windows;
@@ -66,7 +66,7 @@ namespace Image3DModule
             }
 
             ClosePointsSegmentation segmentation = new ClosePointsSegmentation();
-            segmentation.MaxPointsDiff = 10;
+            segmentation.MaxDiffSquared = 10;
             segmentation.SegmentDisparity(DispMap);
 
             var segments = segmentation.Segments;

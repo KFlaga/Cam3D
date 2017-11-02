@@ -1,5 +1,5 @@
 ﻿using System;
-using CamImageProcessing;
+using CamAlgorithms;
 using System.Runtime.InteropServices;
 using Emgu.CV.CvEnum;
 using Emgu.CV;

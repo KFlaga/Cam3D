@@ -112,9 +112,7 @@ namespace CamDX
                 {
 
                 }
-
-                // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
-                // TODO: set large fields to null.
+                
                 RemoveAll();
 
                 _disposed = true;

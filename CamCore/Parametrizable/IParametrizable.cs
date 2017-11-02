@@ -5,6 +5,8 @@ using System.Windows.Controls;
 
 namespace CamCore
 {
+    // TODO: ADD XmlSerizalizable interface
+    
     // Interface for arbitrary algorithm etc. that can be parametrized using list of ProcessorParameters
     public interface IParameterizable : INamed
     {

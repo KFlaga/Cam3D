@@ -5,7 +5,7 @@ using CamMain.ProcessingChain;
 using System.Xml;
 using System.IO;
 
-namespace UnitTestProject1
+namespace CamUnitTest
 {
     [TestClass]
     public class ProcessingChainTests

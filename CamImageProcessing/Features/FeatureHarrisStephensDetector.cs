@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using Point2D = CamCore.Point2D<int>;
 
-namespace CamImageProcessing
+namespace CamAlgorithms
 {
     public class FeatureHarrisStephensDetector : FeaturesDetector
     {
@@ -58,7 +58,6 @@ namespace CamImageProcessing
                     gaussLUT[x + WindowRadius, y + WindowRadius] = Math.Exp(-((y * y + x * x) * coeff));
                 }
             }
-            int dymax;
 
             // We need gradients in x and y directions : D(x,y) = [D(x+1,y)-D(x-1,y) D(x,y+1)-D(x,y-1)]^T
             Matrix<double> gradX = new DenseMatrix(Image.RowCount, Image.ColumnCount);

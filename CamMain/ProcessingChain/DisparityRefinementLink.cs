@@ -1,6 +1,6 @@
 ﻿using CamCore;
-using CamImageProcessing;
-using CamImageProcessing.ImageMatching;
+using CamAlgorithms;
+using CamAlgorithms.ImageMatching;
 using System;
 using System.Collections.Generic;
 using System.IO;

@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
-using CameraIndex = CamCore.CameraIndex;
-using CalibrationPoint = CalibrationModule.CalibrationPoint;
 using CamCore;
 using System.Xml;
+using CamAlgorithms;
 
 namespace CamMain.ProcessingChain
 {
@@ -11,17 +10,17 @@ namespace CamMain.ProcessingChain
         public List<CalibrationPoint> PointsLeft { get; set; } = new List<CalibrationPoint>();
         public List<CalibrationPoint> PointsRight { get; set; } = new List<CalibrationPoint>();
         
-        public List<CalibrationPoint> GetCalibrationPoints(CameraIndex idx)
+        public List<CalibrationPoint> GetCalibrationPoints(SideIndex idx)
         {
-            return idx == CameraIndex.Left ? PointsLeft : PointsRight;
+            return idx == SideIndex.Left ? PointsLeft : PointsRight;
         }
 
-        public void AddCalibrationPoint(CameraIndex idx, CalibrationPoint cpoint)
+        public void AddCalibrationPoint(SideIndex idx, CalibrationPoint cpoint)
         {
             GetCalibrationPoints(idx).Add(cpoint);
         }
 
-        public void AddCalibrationPoints(CameraIndex idx, List<CalibrationPoint> cpoints)
+        public void AddCalibrationPoints(SideIndex idx, List<CalibrationPoint> cpoints)
         {
             GetCalibrationPoints(idx).AddRange(cpoints);
         }
@@ -98,11 +97,11 @@ namespace CamMain.ProcessingChain
         
         private void UndistortPoints()
         {
-            UndistortPoints(CameraIndex.Left);
-            UndistortPoints(CameraIndex.Right);
+            UndistortPoints(SideIndex.Left);
+            UndistortPoints(SideIndex.Right);
         }
 
-        private void UndistortPoints(CameraIndex idx)
+        private void UndistortPoints(SideIndex idx)
         {
             RadialDistortionModel model = _distortionData.GetModel(idx);
             foreach(var rawPoint in _rawCalibData.GetCalibrationPoints(idx))

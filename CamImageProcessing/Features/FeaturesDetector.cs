@@ -1,7 +1,7 @@
 ﻿using CamCore;
 using System.Collections.Generic;
 
-namespace CamImageProcessing
+namespace CamAlgorithms
 {
     public abstract class FeaturesDetector : IParameterizable
     {

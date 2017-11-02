@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using Point2D = CamCore.Point2D<int>;
 
-namespace CamImageProcessing
+namespace CamAlgorithms
 {
     public class FeatureSUSANDetector : FeaturesDetector
     {

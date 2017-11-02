@@ -1,4 +1,4 @@
-﻿using CamImageProcessing;
+﻿using CamAlgorithms;
 using System.Collections.Generic;
 using CamCore;
 

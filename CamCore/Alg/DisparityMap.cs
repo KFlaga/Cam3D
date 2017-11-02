@@ -22,6 +22,10 @@ namespace CamCore
             {
                 return Disparities[y, x];
             }
+            set
+            {
+                Disparities[y, x] = value;
+            }
         }
 
         public void Set(int y, int x, Disparity d)

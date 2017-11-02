@@ -2,13 +2,13 @@
 using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using CamCore;
-using CamImageProcessing;
+using CamAlgorithms;
 using System.Collections.Generic;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
 using CalibrationModule;
 
-namespace UnitTestProject1
+namespace CamUnitTest
 {
     [TestClass]
     public class TriangulationTests

@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CamCore;
 using System.Collections;
 
-namespace CamImageProcessing.ImageMatching
+namespace CamAlgorithms.ImageMatching
 {
     // Just set disparity with lowest cost
     public class SGMDisparityComputer : DisparityComputer

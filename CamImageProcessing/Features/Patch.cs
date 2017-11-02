@@ -1,7 +1,7 @@
 ﻿using MathNet.Numerics.LinearAlgebra;
 using System;
 
-namespace CamImageProcessing
+namespace CamAlgorithms
 {
     public class Patch
     {

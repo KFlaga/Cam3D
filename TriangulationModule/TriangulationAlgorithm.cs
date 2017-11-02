@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CamCore;
-using CamImageProcessing;
+using CamAlgorithms;
 using MathNet.Numerics.LinearAlgebra;
 
 namespace TriangulationModule

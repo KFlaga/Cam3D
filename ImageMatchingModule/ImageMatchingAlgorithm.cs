@@ -1,19 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CamCore;
-using CamImageProcessing;
+using CamAlgorithms;
 using MathNet.Numerics.LinearAlgebra;
-using CamImageProcessing.ImageMatching;
+using CamAlgorithms.ImageMatching;
 using CamControls;
 
 namespace ImageMatchingModule
 {
     public class ImageMatchingAlgorithmController : IControllableAlgorithm
     {
-        private ImageMatchingAlgorithm _matcher = new ImageMatchingAlgorithm();
+        //private ImageMatchingAlgorithm _matcher = new GenericImageMatchingAlgorithm();
+        private ImageMatchingAlgorithm _matcher = new CppSgmMatchingAlgorithm();
 
         public IImage ImageLeft { get; set; }
         public IImage ImageRight { get; set; }
@@ -68,9 +67,7 @@ namespace ImageMatchingModule
 
         public string GetProgress()
         {
-            return "Run: " + (_matcher.Aggregator.IsLeftImageBase ? "1" : "2") + ". Pixel: (" +
-                _matcher.Aggregator.CurrentPixel.X + ", " + _matcher.Aggregator.CurrentPixel.Y + 
-                ") of [" + ImageLeft.ColumnCount + ", " + ImageLeft.RowCount + "].";
+            return _matcher.GetProgress();
         }
 
         public void Suspend() { }
@@ -104,28 +101,9 @@ namespace ImageMatchingModule
                 result.Append("Error");
 
             result.AppendLine();
-            result.AppendLine();
 
-            //result.AppendLine("Radial Distrotion Model: " + DistortionModel.ToString());
-            //result.AppendLine("Estmated Paramters:");
-
-            //int paramsCount = DistortionModel.ParametersCount - 2; // Center
-            //paramsCount = DistortionModel.ComputesAspect ? paramsCount - 1 : paramsCount; // Aspect
-            //for(int k = 0; k < paramsCount; ++k)
-            //{
-            //    result.AppendLine("K" + k + ": " + DistortionModel.Parameters[k]);
-            //}
-            //result.AppendLine("Cx: " + DistortionModel.Parameters[paramsCount] / Scale);
-            //result.AppendLine("Cy: " + DistortionModel.Parameters[paramsCount + 1] / Scale);
-            //if(DistortionModel.ComputesAspect)
-            //{
-            //    result.AppendLine("Sx: " + DistortionModel.Parameters[paramsCount + 2]);
-            //}
-
-            //result.AppendLine();
-
-            //result.AppendLine("Minimal residiual: " + _minimalisation.MinimumResidiual);
-            //result.AppendLine("Base residiual: " + _minimalisation.BaseResidiual);
+            result.AppendLine("Current results:");
+            result.Append(_matcher.GetStatus());
 
             return result.ToString();
         }

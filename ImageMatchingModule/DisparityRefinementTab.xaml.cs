@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
-using CamImageProcessing;
-using CamImageProcessing.ImageMatching;
+using CamAlgorithms;
+using CamAlgorithms.ImageMatching;
 using System.ComponentModel;
 using CamCore;
 using CamControls;

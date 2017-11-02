@@ -1,5 +1,5 @@
 ﻿using CamControls;
-using CamImageProcessing;
+using CamAlgorithms;
 using CamCore;
 using System.Collections.Generic;
 using System.Windows;

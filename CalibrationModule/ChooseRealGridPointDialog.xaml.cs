@@ -67,7 +67,7 @@ namespace CalibrationModule
             DialogResult = true;
             if (_tbX.Text.Length == 0 || _tbY.Text.Length == 0 || _tbGridNum.Text.Length == 0)
                 return;
-            // TODO add some warning
+
             X = int.Parse(_tbX.Text);
             Y = int.Parse(_tbY.Text);
             GridNum = int.Parse(_tbGridNum.Text);

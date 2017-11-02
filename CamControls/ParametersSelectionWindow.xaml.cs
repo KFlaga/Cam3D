@@ -16,6 +16,7 @@ using System.Windows.Shapes;
 
 namespace CamControls
 {
+    // TODO: add auto size adjust
     public partial class ParametersSelectionWindow : Window
     {
         public bool Accepted { get; set; }

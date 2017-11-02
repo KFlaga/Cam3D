@@ -1,4 +1,5 @@
-﻿using CamImageProcessing;
+﻿using CamAlgorithms;
+using CamCore;
 using System.Collections.Generic;
 
 namespace CamMain.ProcessingChain

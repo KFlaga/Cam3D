@@ -6,30 +6,31 @@ using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using CamControls;
 using CamCore;
-using CamImageProcessing;
+using CamAlgorithms;
 using MathNet.Numerics.LinearAlgebra.Double;
 using System.Text;
 using System.Xml;
 using System.IO;
+using CalibrationModule.PointsExtraction;
 
 namespace CalibrationModule
 {
     public partial class CalibModeCamTab : UserControl, IDisposable
     {
-        public CameraIndex CameraIndex { get; set; }
+        public SideIndex CameraIndex { get; set; }
 
         private List<CalibrationPoint> _currentImageGrid = new List<CalibrationPoint>();
         private CalibrationPointsFinder _currentImagePointFinder = null;
 
         public List<CalibrationPoint> CalibrationPoints { get; set; } = new List<CalibrationPoint>();
         public List<RealGridData> RealGrids { get; set; } = new List<RealGridData>();
-        public Matrix<double> CameraMatrix { get { return _calibrator.CameraMatrix; } }
+        public Matrix<double> CameraMatrix { get { return _calibrator.Algorithm.CameraMatrix; } }
         public RadialDistortionModel DistortionModel { get { return _distortionCorrector.DistortionModel; } }
 
         private Point _curPoint = new Point();
         private List<List<Vector2>> _calibLines = new List<List<Vector2>>();
 
-        private CamCalibrator _calibrator = new CamCalibrator();
+        private CameraCalibrationAlgorithmUi _calibrator = new CameraCalibrationAlgorithmUi();
         RadialDistortionCorrector _distortionCorrector = new RadialDistortionCorrector();
 
         private CamCore.InterModularDataReceiver _cameraSnaphotReceiver;
@@ -72,10 +73,7 @@ namespace CalibrationModule
             _finderChooseWindow = new ParametrizedProcessorsSelectionWindow();
             _finderChooseWindow.AddProcessorFamily("Calibration Points Finder");
             _finderChooseWindow.AddToFamily("Calibration Points Finder", new ShapesGridCPFinder());
-
-            _finderChooseWindow.AddProcessorFamily("Primary CalibShape Qualifier");
-            _finderChooseWindow.AddToFamily("Primary CalibShape Qualifier", new RedNeighbourhoodChecker());
-
+            
             _imageControl.ImageSourceChanged += (s, e) =>
             {
                 _butAcceptGrid.IsEnabled = false;
@@ -163,8 +161,6 @@ namespace CalibrationModule
             {
                 _currentImagePointFinder = (CalibrationPointsFinder)
                     _finderChooseWindow.GetSelectedProcessor("Calibration Points Finder");
-                _currentImagePointFinder.PrimaryShapeChecker = (ShapeChecker)
-                    _finderChooseWindow.GetSelectedProcessor("Primary CalibShape Qualifier");
 
                 MaskedImage img = new MaskedImage();
                 img.FromBitmapSource(_imageControl.ImageSource);
@@ -201,15 +197,14 @@ namespace CalibrationModule
                 CalibrationPoint cp = CalibrationPoints[p];
                 if(cp.GridNum >= RealGrids.Count)
                 {
-                    // TODO ERROR
                     continue;
                 }
                 // First compute real point for every calib point
                 RealGridData grid = RealGrids[cp.GridNum];
 
-                cp.RealCol += CameraIndex == CameraIndex.Left
+                cp.RealCol += CameraIndex == SideIndex.Left
                     ? grid.OffsetLeft.X : grid.OffsetRight.X;
-                cp.RealRow += CameraIndex == CameraIndex.Left
+                cp.RealRow += CameraIndex == SideIndex.Left
                     ? grid.OffsetLeft.Y : grid.OffsetRight.Y;
 
                 cp.Real = grid.GetRealFromCell(cp.RealRow, cp.RealCol);
@@ -384,7 +379,7 @@ namespace CalibrationModule
             if(DistortionModel != null)
             {
                 XmlDocument xmlDoc = new XmlDocument();
-                xmlDoc.AppendChild(XmlExtensions.CreateDistortionModelNode(xmlDoc, DistortionModel));
+                xmlDoc.AppendChild(CamAlgorithms.XmlExtensions.CreateDistortionModelNode(xmlDoc, DistortionModel));
                 xmlDoc.Save(file);
             }
         }
@@ -403,8 +398,8 @@ namespace CalibrationModule
             if(models.Count == 1)
             {
                 XmlNode modelNode = models[0];
-                _distortionCorrector.DistortionModel = 
-                    XmlExtensions.DistortionModelFromNode(modelNode);
+                _distortionCorrector.DistortionModel =
+                    CamAlgorithms.XmlExtensions.DistortionModelFromNode(modelNode);
             }
         }
 
@@ -421,10 +416,10 @@ namespace CalibrationModule
                 var cameraNode = xmlDoc.CreateElement("Camera");
 
                 var cam1AttNum = xmlDoc.CreateAttribute("num");
-                cam1AttNum.Value = CameraIndex == CameraIndex.Left ? "1" : "2";
+                cam1AttNum.Value = CameraIndex == SideIndex.Left ? "1" : "2";
                 cameraNode.Attributes.Append(cam1AttNum);
 
-                cameraNode.AppendChild(XmlExtensions.CreateMatrixNode(xmlDoc, CameraMatrix));
+                cameraNode.AppendChild(CamCore.XmlExtensions.CreateMatrixNode(xmlDoc, CameraMatrix));
 
                 xmlDoc.AppendChild(cameraNode);
                 xmlDoc.Save(file);
@@ -445,7 +440,7 @@ namespace CalibrationModule
             if(cameras.Count == 1)
             {
                 XmlNode camNode = cameras[0];
-                _calibrator.CameraMatrix = XmlExtensions.MatrixFromNode(camNode.FirstChildWithName("Matrix"));
+                _calibrator.CameraMatrix = CamCore.XmlExtensions.MatrixFromNode(camNode.FirstChildWithName("Matrix"));
             }
         }
     }

@@ -1,13 +1,8 @@
 ﻿using CamCore;
-using MathNet.Numerics.LinearAlgebra;
-using MathNet.Numerics.LinearAlgebra.Double;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace CamImageProcessing.ImageMatching
+namespace CamAlgorithms.ImageMatching
 {
     public class WholeImageScan : CostAggregator
     {

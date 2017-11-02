@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace CamImageProcessing.ImageMatching
+namespace CamAlgorithms.ImageMatching
 {
     public class HammingLookup
     {
@@ -40,9 +36,7 @@ namespace CamImageProcessing.ImageMatching
     public static class BitWord
     {
         public delegate IBitWord CreateBitWordFunction(UInt32[] data);
-        public delegate void UpdateBitWordFunction(IBitWord bw, UInt32[] data);
         public static CreateBitWordFunction CreateBitWord;
-        public static UpdateBitWordFunction UpdateBitWord;
 
         private static int _bitwordLength;
         public static int BitWordLength
@@ -54,45 +48,37 @@ namespace CamImageProcessing.ImageMatching
                 if(_bitwordLength <= 32)
                 {
                     CreateBitWord = BitWord_4.Create;
-                    UpdateBitWord = BitWord_4.Update;
                 }
                 else if(_bitwordLength <= 32 * 2)
                 {
                     CreateBitWord = BitWord_8.Create;
-                    UpdateBitWord = BitWord_8.Update;
                 }
                 else if(_bitwordLength <= 32 * 3)
                 {
                     CreateBitWord = BitWord_12.Create;
-                    UpdateBitWord = BitWord_12.Update;
                 }
                 else if(_bitwordLength <= 32 * 4)
                 {
                     CreateBitWord = BitWord_16.Create;
-                    UpdateBitWord = BitWord_16.Update;
                 }
                 else if(_bitwordLength <= 32 * 5)
                 {
                     CreateBitWord = BitWord_20.Create;
-                    UpdateBitWord = BitWord_20.Update;
                 }
                 else if(_bitwordLength <= 32 * 6)
                 {
                     CreateBitWord = BitWord_24.Create;
-                    UpdateBitWord = BitWord_24.Update;
                 }
                 else if(_bitwordLength <= 32 * 7)
                 {
                     CreateBitWord = BitWord_28.Create;
-                    UpdateBitWord = BitWord_28.Update;
                 }
                 else if(_bitwordLength <= 32 * 8)
                 {
                     CreateBitWord = BitWord_32.Create;
-                    UpdateBitWord = BitWord_32.Update;
                 }
                 else
-                    throw new ArgumentOutOfRangeException("BitWordLength", "Bitword larger than 24 bytes is not implemented");
+                    throw new ArgumentOutOfRangeException("BitWordLength", "Bitword larger than 32 bytes is not implemented");
 
                 _byte4Length = _bitwordLength % 32 == 0 ? 
                     _bitwordLength / 32 : _bitwordLength / 32 + 1;
@@ -125,11 +111,6 @@ namespace CamImageProcessing.ImageMatching
             return new BitWord_4(bytes4);
         }
 
-        public static void Update(IBitWord bw, UInt32[] bytes4)
-        {
-            ((BitWord_4)bw).Byte1to4 = bytes4[0];
-        }
-
         public override string ToString()
         {
             return "["+Convert.ToString(Byte1to4, 16)+"]";
@@ -158,12 +139,6 @@ namespace CamImageProcessing.ImageMatching
             return new BitWord_8(bytes4);
         }
 
-        public static void Update(IBitWord bw, UInt32[] bytes4)
-        {
-            ((BitWord_8)bw).Byte1to4 = bytes4[0];
-            ((BitWord_8)bw).Byte5to8 = bytes4[1];
-        }
-
         public override string ToString()
         {
             StringBuilder res = new StringBuilder();
@@ -174,7 +149,7 @@ namespace CamImageProcessing.ImageMatching
         }
     }
 
-    public class BitWord_12 : IBitWord
+    public struct BitWord_12 : IBitWord
     {
         public UInt32 Byte1to4;
         public UInt32 Byte5to8;
@@ -199,13 +174,6 @@ namespace CamImageProcessing.ImageMatching
             return new BitWord_12(bytes4);
         }
 
-        public static void Update(IBitWord bw, UInt32[] bytes4)
-        {
-            ((BitWord_12)bw).Byte1to4 = bytes4[0];
-            ((BitWord_12)bw).Byte5to8 = bytes4[1];
-            ((BitWord_12)bw).Byte9to12 = bytes4[2];
-        }
-
         public override string ToString()
         {
             StringBuilder res = new StringBuilder();
@@ -217,7 +185,7 @@ namespace CamImageProcessing.ImageMatching
         }
     }
 
-    public class BitWord_16 : IBitWord
+    public struct BitWord_16 : IBitWord
     {
         public UInt32 Byte1to4;
         public UInt32 Byte5to8;
@@ -245,14 +213,6 @@ namespace CamImageProcessing.ImageMatching
             return new BitWord_16(bytes4);
         }
 
-        public static void Update(IBitWord bw, UInt32[] bytes4)
-        {
-            ((BitWord_16)bw).Byte1to4 = bytes4[0];
-            ((BitWord_16)bw).Byte5to8 = bytes4[1];
-            ((BitWord_16)bw).Byte9to12 = bytes4[2];
-            ((BitWord_16)bw).Byte13to16 = bytes4[3];
-        }
-
         public override string ToString()
         {
             StringBuilder res = new StringBuilder();
@@ -265,7 +225,7 @@ namespace CamImageProcessing.ImageMatching
         }
     }
 
-    public class BitWord_20 : IBitWord
+    public struct BitWord_20 : IBitWord
     {
         public UInt32 Byte1to4;
         public UInt32 Byte5to8;
@@ -296,15 +256,6 @@ namespace CamImageProcessing.ImageMatching
             return new BitWord_20(bytes4);
         }
 
-        public static void Update(IBitWord bw, UInt32[] bytes4)
-        {
-            ((BitWord_20)bw).Byte1to4 = bytes4[0];
-            ((BitWord_20)bw).Byte5to8 = bytes4[1];
-            ((BitWord_20)bw).Byte9to12 = bytes4[2];
-            ((BitWord_20)bw).Byte13to16 = bytes4[3];
-            ((BitWord_20)bw).Byte17to20 = bytes4[4];
-        }
-
         public override string ToString()
         {
             StringBuilder res = new StringBuilder();
@@ -318,7 +269,7 @@ namespace CamImageProcessing.ImageMatching
         }
     }
 
-    public class BitWord_24 : IBitWord
+    public struct BitWord_24 : IBitWord
     {
         public UInt32 Byte1to4;
         public UInt32 Byte5to8;
@@ -352,16 +303,6 @@ namespace CamImageProcessing.ImageMatching
             return new BitWord_24(bytes4);
         }
 
-        public static void Update(IBitWord bw, UInt32[] bytes4)
-        {
-            ((BitWord_24)bw).Byte1to4 = bytes4[0];
-            ((BitWord_24)bw).Byte5to8 = bytes4[1];
-            ((BitWord_24)bw).Byte9to12 = bytes4[2];
-            ((BitWord_24)bw).Byte13to16 = bytes4[3];
-            ((BitWord_24)bw).Byte17to20 = bytes4[4];
-            ((BitWord_24)bw).Byte21to24 = bytes4[5];
-        }
-
         public override string ToString()
         {
             StringBuilder res = new StringBuilder();
@@ -376,7 +317,7 @@ namespace CamImageProcessing.ImageMatching
         }
     }
 
-    public class BitWord_28 : IBitWord
+    public struct BitWord_28 : IBitWord
     {
         public UInt32 Byte1to4;
         public UInt32 Byte5to8;
@@ -413,17 +354,6 @@ namespace CamImageProcessing.ImageMatching
             return new BitWord_28(bytes4);
         }
 
-        public static void Update(IBitWord bw, UInt32[] bytes4)
-        {
-            ((BitWord_28)bw).Byte1to4 = bytes4[0];
-            ((BitWord_28)bw).Byte5to8 = bytes4[1];
-            ((BitWord_28)bw).Byte9to12 = bytes4[2];
-            ((BitWord_28)bw).Byte13to16 = bytes4[3];
-            ((BitWord_28)bw).Byte17to20 = bytes4[4];
-            ((BitWord_28)bw).Byte21to24 = bytes4[5];
-            ((BitWord_28)bw).Byte25to28 = bytes4[6];
-        }
-
         public override string ToString()
         {
             StringBuilder res = new StringBuilder();
@@ -439,7 +369,7 @@ namespace CamImageProcessing.ImageMatching
         }
     }
 
-    public class BitWord_32 : IBitWord
+    public struct BitWord_32 : IBitWord
     {
         public UInt32 Byte1to4;
         public UInt32 Byte5to8;
@@ -474,21 +404,21 @@ namespace CamImageProcessing.ImageMatching
                 HammingLookup.OnesCount(Byte29to32 ^ ((BitWord_32)bw).Byte29to32);
         }
 
+        public int GetHammingDistance(BitWord_32 bw)
+        {
+            return HammingLookup.OnesCount(Byte1to4 ^ bw.Byte1to4) +
+                HammingLookup.OnesCount(Byte5to8 ^ bw.Byte5to8) +
+                HammingLookup.OnesCount(Byte9to12 ^ bw.Byte9to12) +
+                HammingLookup.OnesCount(Byte13to16 ^ bw.Byte13to16) +
+                HammingLookup.OnesCount(Byte17to20 ^ bw.Byte17to20) +
+                HammingLookup.OnesCount(Byte21to24 ^ bw.Byte21to24) +
+                HammingLookup.OnesCount(Byte25to28 ^ bw.Byte25to28) +
+                HammingLookup.OnesCount(Byte29to32 ^ bw.Byte29to32);
+        }
+
         public static IBitWord Create(UInt32[] bytes4)
         {
             return new BitWord_32(bytes4);
-        }
-
-        public static void Update(IBitWord bw, UInt32[] bytes4)
-        {
-            ((BitWord_32)bw).Byte1to4 = bytes4[0];
-            ((BitWord_32)bw).Byte5to8 = bytes4[1];
-            ((BitWord_32)bw).Byte9to12 = bytes4[2];
-            ((BitWord_32)bw).Byte13to16 = bytes4[3];
-            ((BitWord_32)bw).Byte17to20 = bytes4[4];
-            ((BitWord_32)bw).Byte21to24 = bytes4[5];
-            ((BitWord_32)bw).Byte25to28 = bytes4[6];
-            ((BitWord_32)bw).Byte29to32 = bytes4[7];
         }
 
         public override string ToString()

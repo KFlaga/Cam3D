@@ -78,44 +78,32 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Alg\BasicFloodAlgorithm.cs" />
-    <Compile Include="Alg\DictionaryExtensions.cs" />
+    <Compile Include="Alg\IControllableAlgorithm.cs" />
+    <Compile Include="Images\BorderFunction.cs" />
+    <Compile Include="Images\ColorImage.cs" />
+    <Compile Include="Images\GrayScaleImage.cs" />
+    <Compile Include="Images\HSIImage.cs" />
+    <Compile Include="Images\IImage.cs" />
+    <Compile Include="Images\ImageResampler.cs" />
+    <Compile Include="Images\MaskedImage.cs" />
+    <Compile Include="Misc\ListExtensions.cs" />
+    <Compile Include="Misc\DictionaryExtensions.cs" />
     <Compile Include="Alg\Disparity.cs" />
     <Compile Include="Alg\DisparityMap.cs" />
-    <Compile Include="Alg\EpiLine.cs" />
-    <Compile Include="Alg\FloatExtensions.cs" />
-    <Compile Include="Alg\IControllableAlgorithm.cs" />
-    <Compile Include="Alg\IFloodAlgorithm.cs" />
-    <Compile Include="Alg\IterativeBasicFloodAlgorithm.cs" />
-    <Compile Include="Alg\Line.cs" />
+    <Compile Include="Misc\FloatExtensions.cs" />
     <Compile Include="Alg\Math.cs" />
-    <Compile Include="Alg\MultivariateFunctionMinimalisation.cs" />
-    <Compile Include="Alg\OneVariableFunctionRootsFinder.cs" />
-    <Compile Include="Alg\OneVariableMinimisation.cs" />
     <Compile Include="Alg\Point2D.cs" />
-    <Compile Include="Alg\PolynomialRootFinder.cs" />
-    <Compile Include="Alg\Polynomial.cs" />
-    <Compile Include="Alg\Quadric.cs" />
     <Compile Include="Alg\RotationConverter.cs" />
-    <Compile Include="Alg\ScanLineFloodAlgorithm.cs" />
-    <Compile Include="Alg\TriangulatedPoint.cs" />
-    <Compile Include="Alg\TwoPointsTriangulation.cs" />
     <Compile Include="Alg\VectorTuples.cs" />
     <Compile Include="Alg\Vector3.cs" />
-    <Compile Include="Alg\VectorExtensions.cs" />
-    <Compile Include="Calibration\CalibrationData.cs" />
-    <Compile Include="Calibration\PointNormalizer.cs" />
-    <Compile Include="Calibration\Rational3RDModel.cs" />
-    <Compile Include="Calibration\Taylor4Model.cs" />
+    <Compile Include="Misc\SideIndex.cs" />
+    <Compile Include="Misc\VectorExtensions.cs" />
+    <Compile Include="Alg\PointNormalization.cs" />
     <Compile Include="Converters\DoubleToStringConverter.cs" />
-    <Compile Include="FileOperations.cs" />
-    <Compile Include="Alg\GaussSolver.cs" />
-    <Compile Include="Alg\ILinearEquationsSolver.cs" />
+    <Compile Include="Misc\FileOperations.cs" />
     <Compile Include="Converters\IntToStringConverter.cs" />
     <Compile Include="InterModularConnection.cs" />
-    <Compile Include="Alg\LevenbergMarquardtBasicAlgorithm.cs" />
-    <Compile Include="Alg\MatrixExtensions.cs" />
-    <Compile Include="Alg\MinimalisationAlgorithm.cs" />
+    <Compile Include="Misc\MatrixExtensions.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="ModuleInfo.cs" />
     <Compile Include="ModuleLoader.cs" />
@@ -142,10 +130,8 @@
     </Compile>
     <Compile Include="Converters\StringToDoubleConverter.cs" />
     <Compile Include="Converters\StringToIntConverter.cs" />
-    <Compile Include="Alg\SvdSolver.cs" />
-    <Compile Include="Calibration\RadialDistortionModel.cs" />
-    <Compile Include="XmlExtensions.cs" />
-    <Compile Include="XmlSerialisation.cs" />
+    <Compile Include="Misc\XmlExtensions.cs" />
+    <Compile Include="Misc\XmlSerialisation.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

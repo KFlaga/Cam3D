@@ -1,0 +1,193 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{3077792D-E973-4D3F-83C6-8553287A6604}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CamImageProcessing</RootNamespace>
+    <AssemblyName>CamImageProcessing</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>
+    </DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>3</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Optimize>true</Optimize>
+    <WarningLevel>3</WarningLevel>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Cam3dCppClrWrapper, Version=1.0.6475.13117, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Cam3dCpp\git\Cam3dCpp\x64\Debug\Cam3dCppClrWrapper.dll</HintPath>
+    </Reference>
+    <Reference Include="MathNet.Numerics, Version=3.13.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MathNet.Numerics.3.13.1\lib\net40\MathNet.Numerics.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Windows" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Algs\BasicFloodAlgorithm.cs" />
+    <Compile Include="Algs\IFloodAlgorithm.cs" />
+    <Compile Include="Algs\IterativeBasicFloodAlgorithm.cs" />
+    <Compile Include="Algs\ScanLineFloodAlgorithm.cs" />
+    <Compile Include="Calibration\CalibrationData.cs" />
+    <Compile Include="Calibration\CalibrationPoint.cs" />
+    <Compile Include="Calibration\CalibrationAlgorithm.cs" />
+    <Compile Include="Calibration\CrossCalibrationRefiner.cs" />
+    <Compile Include="Calibration\EpiLine.cs" />
+    <Compile Include="Calibration\LMCameraMatrixGridMinimalisation.cs" />
+    <Compile Include="Calibration\LMCameraMatrixSimpleMinimalisation.cs" />
+    <Compile Include="Calibration\LMCameraMatrixSparseMinimalisation.cs" />
+    <Compile Include="Calibration\LMCameraMatrixZeroSkewMini.cs" />
+    <Compile Include="Calibration\LMDistortionDirectionalLineFitMinimalisation.cs" />
+    <Compile Include="Calibration\LMRadialDistortionLineFitMinimalisation.cs" />
+    <Compile Include="Calibration\RadialDistortionCorrector.cs" />
+    <Compile Include="Calibration\RadialDistortionModel.cs" />
+    <Compile Include="Calibration\Rational3RDModel.cs" />
+    <Compile Include="Calibration\RealGridData.cs" />
+    <Compile Include="Calibration\Taylor4Model.cs" />
+    <Compile Include="ImageProcessing\AnisotropicDiffusionFilter.cs" />
+    <Compile Include="ImageMatching\CppSgmMatchingAlgorithm.cs" />
+    <Compile Include="Features\AreaBasedCorrelationImageMatcher.cs" />
+    <Compile Include="ImageProcessing\BinarizeFilter.cs" />
+    <Compile Include="Features\CalibratedAreaBasedCorrelationImageMatcher.cs" />
+    <Compile Include="Features\CalibratedImageMatcher.cs" />
+    <Compile Include="ImageProcessing\ClosePointsSegmentation.cs" />
+    <Compile Include="Features\CensusFeatureMatcher.cs" />
+    <Compile Include="Features\FeatureHarrisStephensDetector.cs" />
+    <Compile Include="Features\FeatureSUSANDetector.cs" />
+    <Compile Include="Features\FeaturesDetector.cs" />
+    <Compile Include="Features\FeaturesMatcher.cs" />
+    <Compile Include="Features\MomentsFeatureMatcher.cs" />
+    <Compile Include="ImageProcessing\GaussFilter.cs" />
+    <Compile Include="ImageProcessing\HistogramOperations.cs" />
+    <Compile Include="DisparityRefinement\AnisotopicDiffusionRefiner.cs" />
+    <Compile Include="DisparityRefinement\CrossCheckRefiner.cs" />
+    <Compile Include="DisparityRefinement\DisparityComputer.cs" />
+    <Compile Include="DisparityRefinement\DisparityRefinement.cs" />
+    <Compile Include="ImageMatching\ImageMatchingAlgorithm.cs" />
+    <Compile Include="ImageMatching\GenericImageMatchingAlgorithm.cs" />
+    <Compile Include="ImageMatching\InterpolationDisparityComputer.cs" />
+    <Compile Include="DisparityRefinement\InvalidateLowConfidenceRefiner.cs" />
+    <Compile Include="DisparityRefinement\LimitRangeRefiner.cs" />
+    <Compile Include="ImageMatching\MatchConfidenceComputer.cs" />
+    <Compile Include="DisparityRefinement\MedianFilterRefiner.cs" />
+    <Compile Include="ImageMatching\Path.cs" />
+    <Compile Include="DisparityRefinement\PeakRemovalRefiner.cs" />
+    <Compile Include="ImageMatching\SGMDisparityComputer.cs" />
+    <Compile Include="DisparityRefinement\SmoothDisparityMapRefiner.cs" />
+    <Compile Include="DisparityRefinement\SmoothSegmentsRefiner.cs" />
+    <Compile Include="ImageMatching\WholeImageScan.cs" />
+    <Compile Include="ImageMatching\WTADisparityComputer.cs" />
+    <Compile Include="ImageProcessing\ImageTransformation.cs" />
+    <Compile Include="ImageProcessing\ImageTransformer.cs" />
+    <Compile Include="Math\GaussSolver.cs" />
+    <Compile Include="Math\ILinearEquationsSolver.cs" />
+    <Compile Include="Math\LevenbergMarquardtBasicAlgorithm.cs" />
+    <Compile Include="Math\Line.cs" />
+    <Compile Include="Math\MinimalisationAlgorithm.cs" />
+    <Compile Include="Math\MultivariateFunctionMinimalisation.cs" />
+    <Compile Include="Math\OneVariableMinimisation.cs" />
+    <Compile Include="Math\Polynomial.cs" />
+    <Compile Include="Math\PolynomialRootFinder.cs" />
+    <Compile Include="Math\Quadric.cs" />
+    <Compile Include="Math\SvdSolver.cs" />
+    <Compile Include="Rectification\ImageRectification.cs" />
+    <Compile Include="Rectification\ImageRectification_FusielloCalibrated.cs" />
+    <Compile Include="Rectification\ImageRectification_FussieloUncalibrated.cs" />
+    <Compile Include="ImageProcessing\ImageFilter.cs" />
+    <Compile Include="ImageMatching\SGMAggregator.cs" />
+    <Compile Include="ImageMatching\CensusCostComputer.cs" />
+    <Compile Include="ImageMatching\BitWord.cs" />
+    <Compile Include="ImageMatching\CostAggregator.cs" />
+    <Compile Include="ImageMatching\EpilineScanAggregator.cs" />
+    <Compile Include="ImageMatching\RankCostComputer.cs" />
+    <Compile Include="ImageProcessing\Convolution.cs" />
+    <Compile Include="Rectification\ImageRectification_ZhangLoop.cs" />
+    <Compile Include="ImageProcessing\ImageSegmentation.cs" />
+    <Compile Include="Features\ImagesMatcher.cs" />
+    <Compile Include="Features\LoGCorrelationFeaturesMatcher.cs" />
+    <Compile Include="ImageProcessing\LoGFilter.cs" />
+    <Compile Include="ImageMatching\MatchingCostComputer.cs" />
+    <Compile Include="ImageProcessing\MeanShiftSegmentation.cs" />
+    <Compile Include="ImageProcessing\MedianFilter.cs" />
+    <Compile Include="ImageMatching\NormalisedCrossCorrelationCostComputer.cs" />
+    <Compile Include="Features\Patch.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ImageMatching\SeperateChannelCostComputer.cs" />
+    <Compile Include="ImageProcessing\WatershedSegmentation.cs" />
+    <Compile Include="Triangulation\TriangulatedPoint.cs" />
+    <Compile Include="Triangulation\TwoPointsTriangulation.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CamCore\CamCore.csproj">
+      <Project>{30ab90ed-775c-49e5-96a8-b419d08d2204}</Project>
+      <Name>CamCore</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

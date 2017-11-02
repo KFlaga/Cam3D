@@ -1,4 +1,5 @@
-﻿using CamCore;
+﻿using CamAlgorithms;
+using CamCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

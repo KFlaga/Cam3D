@@ -1,19 +1,19 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using CamCore;
-using CalibrationModule;
 using System.Collections.Generic;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
+using CamAlgorithms;
 
-namespace UnitTestProject1
+namespace CamUnitTest
 {
     [TestClass]
     public class CameraMatrixComputationTests
     {
         Matrix<double> _CM;
         Matrix<double> _eCM;
-        CamCalibrator _calib;
+        CalibrationAlgorithm _calib;
 
         public void PrepareCameraMatrix()
         {
@@ -40,7 +40,7 @@ namespace UnitTestProject1
 
         public void PrepareCalibrator(List<CalibrationPoint> points)
         {
-            _calib = new CamCalibrator();
+            _calib = new CalibrationAlgorithm();
             _calib.Points = points;
 
             _calib.ImageMeasurementVariance_X = _varianceImage;
@@ -59,11 +59,9 @@ namespace UnitTestProject1
             PrepareCalibrator(points);
 
             _calib.HomoPoints();
+            _calib.NormalizePoints();
 
-            _calib.NormalizeImagePoints();
-            _calib.NormalizeRealPoints();
-
-            _calib.CameraMatrix = _calib.FindLinearEstimationOfCameraMatrix();
+            _calib.CameraMatrix = _calib.FindLinearEstimationOfCameraMatrix(_calib.ImagePoints, _calib.RealPoints);
 
             _calib.DenormaliseCameraMatrix();
             _calib.DecomposeCameraMatrix();
@@ -98,11 +96,9 @@ namespace UnitTestProject1
                 AddNoise(points, _varianceReal, _varianceImage));
 
             _calib.HomoPoints();
+            _calib.NormalizePoints();
 
-            _calib.NormalizeImagePoints();
-            _calib.NormalizeRealPoints();
-
-            _calib.CameraMatrix = _calib.FindLinearEstimationOfCameraMatrix();
+            _calib.CameraMatrix = _calib.FindLinearEstimationOfCameraMatrix(_calib.ImagePoints, _calib.RealPoints);
 
             _calib.DenormaliseCameraMatrix();
             _calib.DecomposeCameraMatrix();

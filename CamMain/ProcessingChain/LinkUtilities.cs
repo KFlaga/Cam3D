@@ -1,5 +1,5 @@
 ﻿using CamCore;
-using CamImageProcessing;
+using CamAlgorithms;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -31,14 +31,14 @@ namespace CamMain.ProcessingChain
                 if(imgPair.Left != null)
                 {
                     XmlNode nodeImage = config.ConfigDoc.CreateElement("Image");
-                    SaveImage(nodeImage, config, imgPair.Left, entry.Key, CameraIndex.Left, imageBaseName);
+                    SaveImage(nodeImage, config, imgPair.Left, entry.Key, SideIndex.Left, imageBaseName);
                     node.AppendChild(nodeImage);
                 }
 
                 if(imgPair.Right != null)
                 {
                     XmlNode nodeImage = config.ConfigDoc.CreateElement("Image");
-                    SaveImage(nodeImage, config, imgPair.Right, entry.Key, CameraIndex.Right, imageBaseName);
+                    SaveImage(nodeImage, config, imgPair.Right, entry.Key, SideIndex.Right, imageBaseName);
                     node.AppendChild(nodeImage);
                 }
             }
@@ -54,14 +54,14 @@ namespace CamMain.ProcessingChain
         }
 
         private static void SaveImage(XmlNode nodeImage, ConfigurationLinkData config,
-            IImage image, int id, CameraIndex idx, string imageBaseName)
+            IImage image, int id, SideIndex idx, string imageBaseName)
         {
             XmlAttribute attId = config.ConfigDoc.CreateAttribute("id");
             XmlAttribute attCam = config.ConfigDoc.CreateAttribute("cam");
             XmlAttribute attPath = config.ConfigDoc.CreateAttribute("path");
 
             attId.Value = id.ToString();
-            attCam.Value = idx == CameraIndex.Left ? "left" : "right";
+            attCam.Value = idx == SideIndex.Left ? "left" : "right";
             attPath.Value = imageBaseName + "_" + attCam.Value + "_" + attId.Value + ".png";
             string path = config.WorkingDirectory + attPath.Value;
 
@@ -149,8 +149,8 @@ namespace CamMain.ProcessingChain
             foreach(XmlNode imgNode in imgsNode.ChildNodes)
             {
                 int id = int.Parse(imgNode.Attributes["id"].Value);
-                CameraIndex idx = imgNode.Attributes["cam"].Value.CompareTo("right") == 0 ?
-                       CameraIndex.Right : CameraIndex.Left;
+                SideIndex idx = imgNode.Attributes["cam"].Value.CompareTo("right") == 0 ?
+                       SideIndex.Right : SideIndex.Left;
 
                 string imgPath = config.WorkingDirectory + imgNode.Attributes["path"].Value;
                 BitmapImage bitmap = new BitmapImage(new Uri(imgPath, UriKind.RelativeOrAbsolute));
@@ -161,7 +161,7 @@ namespace CamMain.ProcessingChain
             }
         }
 
-        public static void SetImage(this Dictionary<int, ImagesPair> images, IImage image, int id, CameraIndex idx)
+        public static void SetImage(this Dictionary<int, ImagesPair> images, IImage image, int id, SideIndex idx)
         {
             ImagesPair imgs;
             if(images.TryGetValue(id, out imgs))
@@ -176,7 +176,7 @@ namespace CamMain.ProcessingChain
             }
         }
 
-        public static IImage GetImage(this Dictionary<int, ImagesPair> images, IImage image, int id, CameraIndex idx)
+        public static IImage GetImage(this Dictionary<int, ImagesPair> images, IImage image, int id, SideIndex idx)
         {
             ImagesPair imgs;
             if(images.TryGetValue(id, out imgs))

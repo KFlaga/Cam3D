@@ -1,4 +1,4 @@
-﻿using CamImageProcessing;
+﻿using CamAlgorithms;
 using DirectShowLib;
 using SharpDX.Direct3D9;
 using System;

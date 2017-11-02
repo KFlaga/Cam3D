@@ -174,9 +174,9 @@
       <Project>{3d588c4a-259a-4e7d-a155-c2a96df504c7}</Project>
       <Name>CamImageOperationsModule</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CamImageProcessing\CamImageProcessing.csproj">
+    <ProjectReference Include="..\CamImageProcessing\CamAlgorithms.csproj">
       <Project>{3077792d-e973-4d3f-83c6-8553287a6604}</Project>
-      <Name>CamImageProcessing</Name>
+      <Name>CamAlgorithms</Name>
     </ProjectReference>
     <ProjectReference Include="..\CaptureTestModule\CaptureModule.csproj">
       <Project>{d7eb4fec-ffc9-4b78-a6b8-33d6af071c7e}</Project>

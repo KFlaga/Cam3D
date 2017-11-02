@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
-using CamImageProcessing.ImageMatching;
+using CamAlgorithms.ImageMatching;
 using CamCore;
-using CamImageProcessing;
+using CamAlgorithms;
 
-namespace UnitTestProject1
+namespace CamUnitTest
 {
     /// <summary>
     /// Summary description for MatchingCostTests

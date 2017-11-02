@@ -1,11 +1,8 @@
-﻿using CamImageProcessing;
+﻿using CamAlgorithms;
 using System;
 using System.Collections.Generic;
-using CameraIndex = CamCore.CameraIndex;
-using CalibrationPoint = CalibrationModule.CalibrationPoint;
 using CamCore;
 using System.Xml;
-using System.Windows.Media.Imaging;
 
 namespace CamMain.ProcessingChain
 {
@@ -17,32 +14,32 @@ namespace CamMain.ProcessingChain
         public List<List<Vector2>> LinesLeft { get; set; } = new List<List<Vector2>>();
         public List<List<Vector2>> LinesRight { get; set; } = new List<List<Vector2>>();
 
-        public List<CalibrationPoint> GetCalibrationPoints(CameraIndex idx)
+        public List<CalibrationPoint> GetCalibrationPoints(SideIndex idx)
         {
-            return idx == CameraIndex.Left ? PointsLeft : PointsRight;
+            return idx == SideIndex.Left ? PointsLeft : PointsRight;
         }
 
-        public void AddCalibrationPoint(CameraIndex idx, CalibrationPoint cpoint)
+        public void AddCalibrationPoint(SideIndex idx, CalibrationPoint cpoint)
         {
             GetCalibrationPoints(idx).Add(cpoint);
         }
 
-        public void AddCalibrationPoints(CameraIndex idx, List<CalibrationPoint> cpoints)
+        public void AddCalibrationPoints(SideIndex idx, List<CalibrationPoint> cpoints)
         {
             GetCalibrationPoints(idx).AddRange(cpoints);
         }
 
-        public List<List<Vector2>> GetCalibrationLines(CameraIndex idx)
+        public List<List<Vector2>> GetCalibrationLines(SideIndex idx)
         {
-            return idx == CameraIndex.Left ? LinesLeft : LinesRight;
+            return idx == SideIndex.Left ? LinesLeft : LinesRight;
         }
 
-        public void AddCalibrationLine(CameraIndex idx, List<Vector2> line)
+        public void AddCalibrationLine(SideIndex idx, List<Vector2> line)
         {
             GetCalibrationLines(idx).Add(line);
         }
 
-        public void AddCalibrationLines(CameraIndex idx, List<List<Vector2>> lines)
+        public void AddCalibrationLines(SideIndex idx, List<List<Vector2>> lines)
         {
             GetCalibrationLines(idx).AddRange(lines);
         }
@@ -76,8 +73,8 @@ namespace CamMain.ProcessingChain
         private RawCalibrationImagesLinkData _linkData;
         private ConfigurationLinkData _config;
 
-        private CalibrationModule.CalibrationPointsFinder _calibPointsFinder;
-        private CalibrationModule.ICalibrationLinesExtractor _calibLinesExtractor;
+        private CalibrationModule.PointsExtraction.CalibrationPointsFinder _calibPointsFinder;
+        private CalibrationModule.PointsExtraction.ICalibrationLinesExtractor _calibLinesExtractor;
 
         public RawCalibrationImagesLink(GlobalData gData)
         {
@@ -133,17 +130,17 @@ namespace CamMain.ProcessingChain
                 ImagesPair imgPair = entry.Value;
                 if(imgPair.Left != null)
                 {
-                    ExtractCalibPoints(imgPair.Left, entry.Key, CameraIndex.Left);
+                    ExtractCalibPoints(imgPair.Left, entry.Key, SideIndex.Left);
                 }
 
                 if(imgPair.Right != null)
                 {
-                    ExtractCalibPoints(imgPair.Right, entry.Key, CameraIndex.Right);
+                    ExtractCalibPoints(imgPair.Right, entry.Key, SideIndex.Right);
                 }
             }
         }
 
-        private void ExtractCalibPoints(IImage image, int id_grid, CameraIndex idx)
+        private void ExtractCalibPoints(IImage image, int id_grid, SideIndex idx)
         {
             _calibPointsFinder.Image = image;
             _calibPointsFinder.FindCalibrationPoints();
@@ -177,11 +174,10 @@ namespace CamMain.ProcessingChain
         private void InitDefaultCalibPointsExtractor()
         {
 
-            _calibPointsFinder = new CalibrationModule.ShapesGridCPFinder();
+            _calibPointsFinder = new CalibrationModule.PointsExtraction.ShapesGridCPFinder();
             _calibLinesExtractor = _calibPointsFinder.LinesExtractor;
             _calibPointsFinder.InitParameters();
             _calibPointsFinder.UpdateParameters();
-            _calibPointsFinder.PrimaryShapeChecker = new CalibrationModule.RedNeighbourhoodChecker();
         }
 
         private void InitCalibPointsExtractorFromXml(XmlNode extractorNode)
@@ -189,7 +185,7 @@ namespace CamMain.ProcessingChain
             // Get type of extractor
             string extractorType = extractorNode.Attributes["type"].Value;
             if(extractorType == "CalibShape") { }
-            _calibPointsFinder = new CalibrationModule.ShapesGridCPFinder();
+            _calibPointsFinder = new CalibrationModule.PointsExtraction.ShapesGridCPFinder();
             _calibLinesExtractor = _calibPointsFinder.LinesExtractor;
             _calibPointsFinder.InitParameters();
 

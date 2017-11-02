@@ -3,8 +3,9 @@ using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MathNet.Numerics.LinearAlgebra;
 using CamCore;
+using CamAlgorithms;
 
-namespace UnitTestProject1
+namespace CamUnitTest
 {
     [TestClass]
     public class PolynomialTests

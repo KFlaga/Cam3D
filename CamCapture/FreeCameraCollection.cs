@@ -60,7 +60,7 @@ namespace CamCapture
                 }
                 this.Remove(e.Camera);
             }
-            catch(Exception ex)
+            catch(Exception)
             {
                 
             }

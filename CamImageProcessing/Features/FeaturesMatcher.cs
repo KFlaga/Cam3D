@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using CamCore;
 using System.Diagnostics;
 
-namespace CamImageProcessing
+namespace CamAlgorithms
 {
     [DebuggerDisplay("L:{LeftPoint}, R:{RightPoint}, c:{CostString}, t:{ConfidenceString}")]
     public class MatchedPair

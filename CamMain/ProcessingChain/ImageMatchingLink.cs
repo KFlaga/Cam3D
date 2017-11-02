@@ -1,6 +1,6 @@
 ﻿using CamCore;
-using CamImageProcessing;
-using CamImageProcessing.ImageMatching;
+using CamAlgorithms;
+using CamAlgorithms.ImageMatching;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -16,11 +16,11 @@ namespace CamMain.ProcessingChain
         public Dictionary<int, DisparityMap> MapsLeft { get; set; }
         public Dictionary<int, DisparityMap> MapsRight { get; set; }
 
-        public DisparityMap GetMap(int id, CameraIndex idx)
+        public DisparityMap GetMap(int id, SideIndex idx)
         {
             DisparityMap map;
             bool res;
-            if(idx == CameraIndex.Left)
+            if(idx == SideIndex.Left)
                 res = MapsLeft.TryGetValue(id, out map);
             else
                 res = MapsRight.TryGetValue(id, out map);
@@ -65,7 +65,7 @@ namespace CamMain.ProcessingChain
         private MatchedImagesLinkData _matchedImages;
         private ImageMatchingLinkData _linkData;
 
-        ImageMatchingAlgorithm _matcher;
+        GenericImageMatchingAlgorithm _matcher;
 
         public ImageMatchingLink(GlobalData gData)
         {
@@ -108,7 +108,7 @@ namespace CamMain.ProcessingChain
 
         void LoadMatcherParameters()
         {
-            _matcher = new ImageMatchingAlgorithm();
+            _matcher = new GenericImageMatchingAlgorithm();
 
             XmlNode sgmMatcherNode = _config.RootNode.FirstChildWithName("ImageMatcher");
             if(sgmMatcherNode != null)
@@ -143,7 +143,7 @@ namespace CamMain.ProcessingChain
 
         void SetDefaultMatcherParameters()
         {
-            _matcher = new ImageMatchingAlgorithm();
+            _matcher = new GenericImageMatchingAlgorithm();
 
             SGMAggregator sgmAgg = new SGMAggregator();
             sgmAgg.InitParameters();

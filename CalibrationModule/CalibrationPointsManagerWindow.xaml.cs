@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using CamAlgorithms;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;

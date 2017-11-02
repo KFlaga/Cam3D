@@ -1,4 +1,5 @@
-﻿using CamCore;
+﻿using CamAlgorithms;
+using CamCore;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,8 +12,8 @@ namespace CamMain.ProcessingChain
 {
     public class CalibrationLinkData
     {
-        public CamCore.CalibrationData Calibration { get; set; }
-        public List<CalibrationModule.RealGridData> Grids { get; set; }
+        public CalibrationData Calibration { get; set; }
+        public List<RealGridData> Grids { get; set; }
     }
 
     public class CalibrationLink : ILink
@@ -45,7 +46,7 @@ namespace CamMain.ProcessingChain
         private UndistortPointsLinkData _points;
         private CalibrationLinkData _linkData;
 
-        private CalibrationModule.CamCalibrator _calibrator;
+        private CalibrationAlgorithm _calibrator;
 
         public CalibrationLink(GlobalData gData)
         {
@@ -68,7 +69,7 @@ namespace CamMain.ProcessingChain
             {
                 _points = _globalData.Get<UndistortPointsLinkData>();
 
-                _calibrator = new CalibrationModule.CamCalibrator();
+                _calibrator = new CalibrationAlgorithm();
                 LoadCalibrationParameters();
             }
         }
@@ -100,7 +101,7 @@ namespace CamMain.ProcessingChain
             string gridsPath = _config.WorkingDirectory + gridsNode.Attributes["path"].Value;
             using(Stream gridsFile = new FileStream(gridsPath, FileMode.Open))
             {
-                _linkData.Grids = CamCore.XmlSerialisation.CreateFromFile<List<CalibrationModule.RealGridData>>(gridsFile);
+                _linkData.Grids = CamCore.XmlSerialisation.CreateFromFile<List<RealGridData>>(gridsFile);
             }
         }
 
@@ -152,11 +153,11 @@ namespace CamMain.ProcessingChain
 
         private void SetRealCalibrationPoints()
         {
-            SetRealCalibrationPoints(CameraIndex.Left);
-            SetRealCalibrationPoints(CameraIndex.Right);
+            SetRealCalibrationPoints(SideIndex.Left);
+            SetRealCalibrationPoints(SideIndex.Right);
         }
 
-        private void SetRealCalibrationPoints(CameraIndex idx)
+        private void SetRealCalibrationPoints(SideIndex idx)
         {
             var calibPoints = _points.GetCalibrationPoints(idx);
             var grids = _linkData.Grids;
@@ -165,12 +166,11 @@ namespace CamMain.ProcessingChain
             {
                 if(cp.GridNum >= grids.Count)
                 {
-                    // TODO: ERROR
                     continue;
                 }
                 // First compute real point for every calib point
                 var grid = grids[cp.GridNum];
-                cp.RealGridPos = cp.RealGridPos + (idx == CameraIndex.Left ? grid.OffsetLeft : grid.OffsetRight);
+                cp.RealGridPos = cp.RealGridPos + (idx == SideIndex.Left ? grid.OffsetLeft : grid.OffsetRight);
                 cp.Real = grid.GetRealFromCell(cp.RealRow, cp.RealCol);
             }
         }
@@ -178,11 +178,11 @@ namespace CamMain.ProcessingChain
         private void CalibrateCameras()
         {
             _linkData.Calibration = new CalibrationData();
-            CalibrateCamera(CameraIndex.Left);
-            CalibrateCamera(CameraIndex.Right);
+            CalibrateCamera(SideIndex.Left);
+            CalibrateCamera(SideIndex.Right);
         }
 
-        private void CalibrateCamera(CameraIndex idx)
+        private void CalibrateCamera(SideIndex idx)
         {
             _calibrator.Points = _points.GetCalibrationPoints(idx);
             _calibrator.Grids = _linkData.Grids;

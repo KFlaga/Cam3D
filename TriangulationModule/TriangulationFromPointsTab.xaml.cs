@@ -6,7 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using CamControls;
 using CamCore;
-using CamImageProcessing;
+using CamAlgorithms;
 using MathNet.Numerics.LinearAlgebra.Double;
 using System.Text;
 

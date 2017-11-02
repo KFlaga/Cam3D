@@ -109,6 +109,12 @@ namespace CamCore
             ValuesMap = new Dictionary<string, object>();
         }
 
+        public DictionaryParameter(string name, string sname, object defVal) :
+            base(name, sname, "Dictionary", defVal, null, null)
+        {
+            ValuesMap = new Dictionary<string, object>();
+        }
+
         public override void ReadFromXml(XmlNode node)
         {
             //  <Parameter id="aaa" value="3"/>

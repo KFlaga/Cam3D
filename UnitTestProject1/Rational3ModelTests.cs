@@ -4,8 +4,9 @@ using CamCore;
 using CalibrationModule;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
+using CamAlgorithms;
 
-namespace UnitTestProject1
+namespace CamUnitTest
 {
     [TestClass]
     public class Rational3ModelTests

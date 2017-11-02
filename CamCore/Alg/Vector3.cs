@@ -161,6 +161,16 @@ namespace CamCore
             }
         }
 
+        public Vector3 Normalised()
+        {
+            double len = Length();
+            if(len > 0.0f)
+            {
+                return new Vector3(X / len, Y / len, Z / len);
+            }
+            return new Vector3();
+        }
+
         public double DistanceToSquared(Vector3 v)
         {
             return (X - v.X) * (X - v.X) + (Y - v.Y) * (Y - v.Y) + (Z - v.Z) * (Z - v.Z);

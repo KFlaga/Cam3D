@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CamCore;
+using System;
 using System.Windows.Controls;
 
 namespace CalibrationModule
@@ -12,8 +13,8 @@ namespace CalibrationModule
         {
             InitializeComponent();
 
-            _tabCam1.CameraIndex = CamCore.CameraIndex.Left;
-            _tabCam2.CameraIndex = CamCore.CameraIndex.Right;
+            _tabCam1.CameraIndex = SideIndex.Left;
+            _tabCam2.CameraIndex = SideIndex.Right;
         }
 
         public void Dispose()

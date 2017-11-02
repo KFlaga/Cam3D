@@ -1,8 +1,6 @@
-﻿using CamImageProcessing;
+﻿using CamAlgorithms;
 using System;
 using System.Collections.Generic;
-using CameraIndex = CamCore.CameraIndex;
-using CalibrationPoint = CalibrationModule.CalibrationPoint;
 using CamCore;
 using System.Xml;
 using System.Windows.Media.Imaging;
@@ -15,9 +13,9 @@ namespace CamMain.ProcessingChain
         public RadialDistortionModel DistortionLeft { get; set; }
         public RadialDistortionModel DistortionRight { get; set; }
 
-        public RadialDistortionModel GetModel(CameraIndex idx)
+        public RadialDistortionModel GetModel(SideIndex idx)
         {
-            return idx == CameraIndex.Left ? DistortionLeft : DistortionRight;
+            return idx == SideIndex.Left ? DistortionLeft : DistortionRight;
         }
     }
 
@@ -187,7 +185,7 @@ namespace CamMain.ProcessingChain
             {
                 XmlDocument modelDoc = new XmlDocument();
                 modelDoc.Load(modelFile);
-                model = XmlExtensions.DistortionModelFromNode(
+                model = CamAlgorithms.XmlExtensions.DistortionModelFromNode(
                     modelDoc.GetElementsByTagName("DistortionModel")[0]);
             }
             return model;
@@ -198,7 +196,7 @@ namespace CamMain.ProcessingChain
             using(Stream modelFile = new FileStream(path, FileMode.Create))
             {
                 XmlDocument modelDoc = new XmlDocument();
-                modelDoc.AppendChild(XmlExtensions.CreateDistortionModelNode(modelDoc, model));
+                modelDoc.AppendChild(CamAlgorithms.XmlExtensions.CreateDistortionModelNode(modelDoc, model));
                 modelDoc.Save(modelFile);
             }
         }

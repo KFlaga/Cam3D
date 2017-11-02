@@ -1,6 +1,6 @@
 ﻿//using CalibrationModule;
 using CamCore;
-using CamImageProcessing;
+using CamAlgorithms;
 using MathNet.Numerics.LinearAlgebra;
 using System;
 using System.Collections.Generic;
@@ -8,9 +8,8 @@ using System.IO;
 using System.Windows.Media.Imaging;
 using System.Xml;
 using CalibrationModule;
-using CameraIndex = CamCore.CameraIndex;
 using MathNet.Numerics.LinearAlgebra.Double;
-using CamImageProcessing.ImageMatching;
+using CamAlgorithms.ImageMatching;
 using CamMain.ProcessingChain;
 
 namespace CamMain
@@ -66,7 +65,7 @@ namespace CamMain
                     link.Save();
                 }
             }
-            catch(Exception e)
+            catch(Exception)
             {
 
             }

@@ -1,5 +1,5 @@
 ﻿using CamCore;
-using CamImageProcessing;
+using CamAlgorithms;
 using MathNet.Numerics.LinearAlgebra.Double;
 using System;
 using System.IO;

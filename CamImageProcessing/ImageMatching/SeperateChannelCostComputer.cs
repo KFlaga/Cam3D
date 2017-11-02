@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CamCore;
+﻿using CamCore;
 
-namespace CamImageProcessing.ImageMatching
+namespace CamAlgorithms.ImageMatching
 {
     // Performs matching cost computation on each color channel separately
     // and sums cost or averages ( or performs other action with them )
