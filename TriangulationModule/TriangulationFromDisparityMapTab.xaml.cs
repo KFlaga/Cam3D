@@ -1,4 +1,5 @@
-﻿using CamAlgorithms;
+﻿using CamAlgorithms.Calibration;
+using CamAlgorithms.Triangulation;
 using CamCore;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
@@ -6,7 +7,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using System.Xml;
 
 namespace TriangulationModule
 {
@@ -42,8 +42,8 @@ namespace TriangulationModule
 
         private void TriangulateBase(int increment)
         {
-            if(CalibrationData.Data.IsCamLeftCalibrated == false ||
-                CalibrationData.Data.IsCamRightCalibrated == false)
+            if(CameraPair.Data.IsCamLeftCalibrated == false ||
+                CameraPair.Data.IsCamRightCalibrated == false)
             {
                 MessageBox.Show("Error: Cameras are not calibrated!");
                 return;
@@ -75,7 +75,7 @@ namespace TriangulationModule
                 }
             }
 
-            _triangulation.CalibData = CalibrationData.Data;
+            _triangulation.Cameras = CameraPair.Data;
             _triangulation.UseLinearEstimationOnly = true;
             _triangulation.PointsLeft = _left;
             _triangulation.PointsRight = _right;

@@ -9,6 +9,7 @@ using System;
 using System.Windows.Media.Imaging;
 using System.IO;
 using System.Xml;
+using CamAlgorithms.Calibration;
 
 namespace RectificationModule
 {
@@ -120,7 +121,7 @@ namespace RectificationModule
             });
             rectifier.ImageHeight = _camImageFirst.ImageSource.PixelHeight;
             rectifier.ImageWidth = _camImageFirst.ImageSource.PixelWidth;
-            rectifier.CalibData = CalibrationData.Data;
+            rectifier.CalibData = CameraPair.Data;
             rectifier.MatchedPairs = new List<Vector2Pair>();
             foreach(var m in _matches)
             {

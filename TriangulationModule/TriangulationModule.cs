@@ -1,9 +1,4 @@
-﻿using CamAlgorithms;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CamAlgorithms.Calibration;
 using System.Windows.Controls;
 
 namespace TriangulationModule
@@ -30,8 +25,8 @@ namespace TriangulationModule
 
         public override bool StartModule()
         {
-            if(!CalibrationData.Data.IsCamLeftCalibrated ||
-                !CalibrationData.Data.IsCamRightCalibrated)
+            if(!CameraPair.Data.IsCamLeftCalibrated ||
+                !CameraPair.Data.IsCamRightCalibrated)
             {
                 FailText = "Both cameras need to be calibrated";
                 return true;

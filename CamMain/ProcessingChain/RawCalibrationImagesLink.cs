@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using CamCore;
 using System.Xml;
+using CamAlgorithms.Calibration;
+using CamAlgorithms.PointsExtraction;
 
 namespace CamMain.ProcessingChain
 {
@@ -73,8 +75,8 @@ namespace CamMain.ProcessingChain
         private RawCalibrationImagesLinkData _linkData;
         private ConfigurationLinkData _config;
 
-        private CalibrationModule.PointsExtraction.CalibrationPointsFinder _calibPointsFinder;
-        private CalibrationModule.PointsExtraction.ICalibrationLinesExtractor _calibLinesExtractor;
+        private CalibrationPointsFinder _calibPointsFinder;
+        private ICalibrationLinesExtractor _calibLinesExtractor;
 
         public RawCalibrationImagesLink(GlobalData gData)
         {
@@ -174,7 +176,7 @@ namespace CamMain.ProcessingChain
         private void InitDefaultCalibPointsExtractor()
         {
 
-            _calibPointsFinder = new CalibrationModule.PointsExtraction.ShapesGridCPFinder();
+            _calibPointsFinder = new ShapesGridCPFinder();
             _calibLinesExtractor = _calibPointsFinder.LinesExtractor;
             _calibPointsFinder.InitParameters();
             _calibPointsFinder.UpdateParameters();
@@ -185,7 +187,7 @@ namespace CamMain.ProcessingChain
             // Get type of extractor
             string extractorType = extractorNode.Attributes["type"].Value;
             if(extractorType == "CalibShape") { }
-            _calibPointsFinder = new CalibrationModule.PointsExtraction.ShapesGridCPFinder();
+            _calibPointsFinder = new ShapesGridCPFinder();
             _calibLinesExtractor = _calibPointsFinder.LinesExtractor;
             _calibPointsFinder.InitParameters();
 

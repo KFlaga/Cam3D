@@ -1,9 +1,8 @@
 ﻿using CamCore;
 using System.Collections;
 using System.Collections.Generic;
-using System;
 
-namespace CalibrationModule.PointsExtraction
+namespace CamAlgorithms.PointsExtraction
 {
     public class CalibrationGrid : IEnumerable<CalibrationShape>
     {
@@ -70,9 +69,9 @@ namespace CalibrationModule.PointsExtraction
         }
 
         // Adds new shape to grid ( position may exceed Row/Cols count )
-        public void Add(Point2D<int> p, CalibrationShape shape)
+        public void Add(IntVector2 p, CalibrationShape shape)
         {
-            Add(p.X, p.Y, shape);
+            Add(p.Y, p.X, shape);
         }
 
         // Set new shape to grid ( position must not exceed Row/Cols count )
@@ -88,9 +87,9 @@ namespace CalibrationModule.PointsExtraction
         }
 
         // Set new shape to grid ( position must not exceed Row/Cols count )
-        public void Set(Point2D<int> p, CalibrationShape shape)
+        public void Set(IntVector2 p, CalibrationShape shape)
         {
-            Set(p.X, p.Y, shape);
+            Set(p.Y, p.X, shape);
         }
 
         void EnsureCapacity(int rows, int cols)

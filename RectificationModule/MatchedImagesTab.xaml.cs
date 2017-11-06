@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using CamAlgorithms.ImageMatching;
 using System;
 using System.Windows.Media.Imaging;
+using CamAlgorithms.Calibration;
 
 namespace RectificationModule
 {
@@ -64,8 +65,8 @@ namespace RectificationModule
                 MessageBox.Show("Images must have same size");
                 return;
             }
-            if(CalibrationData.Data.IsCamLeftCalibrated == false ||
-                CalibrationData.Data.IsCamRightCalibrated == false)
+            if(CameraPair.Data.IsCamLeftCalibrated == false ||
+                CameraPair.Data.IsCamRightCalibrated == false)
             {
                 MessageBox.Show("Cameras must be calibrated");
                 return;
@@ -75,7 +76,7 @@ namespace RectificationModule
             //ImageRectification_FusielloCalibrated rectifier = new ImageRectification_FusielloCalibrated();
             rectifier.ImageHeight = _camImageFirst.ImageSource.PixelHeight;
             rectifier.ImageWidth = _camImageFirst.ImageSource.PixelWidth;
-            rectifier.CalibData = CalibrationData.Data;
+            rectifier.CalibData = CameraPair.Data;
             rectifier.ComputeRectificationMatrices();
 
             ImageTransformer transformer = new ImageTransformer();

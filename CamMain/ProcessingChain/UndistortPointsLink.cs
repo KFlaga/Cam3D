@@ -2,6 +2,7 @@
 using CamCore;
 using System.Xml;
 using CamAlgorithms;
+using CamAlgorithms.Calibration;
 
 namespace CamMain.ProcessingChain
 {

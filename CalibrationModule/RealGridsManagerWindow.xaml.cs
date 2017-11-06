@@ -1,4 +1,5 @@
 ﻿using CamAlgorithms;
+using CamAlgorithms.Calibration;
 using CamCore;
 using System.Collections.Generic;
 using System.ComponentModel;

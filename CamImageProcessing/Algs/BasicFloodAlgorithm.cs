@@ -1,7 +1,4 @@
-﻿using MathNet.Numerics.LinearAlgebra;
-using System;
-using System.Collections.Generic;
-namespace CamAlgorithms
+﻿namespace CamAlgorithms
 {
     public class BasicFloodAlgorithm : IFloodAlgorithm
     {

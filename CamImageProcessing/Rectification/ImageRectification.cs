@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Serialization;
 using System.Xml.Schema;
-using MatrixXmlSerializer = CamCore.XmlExtensions.MatrixXmlSerializer;
+using CamAlgorithms.Calibration;
 
 namespace CamAlgorithms
 {
@@ -15,7 +15,7 @@ namespace CamAlgorithms
         public int ImageWidth { get; set; }
         public int ImageHeight { get; set; }
 
-        public CalibrationData CalibData { get; set; }
+        public CameraPair CalibData { get; set; }
         public List<Vector2Pair> MatchedPairs { get; set; }
         public abstract void ComputeRectificationMatrices();
 
@@ -50,7 +50,7 @@ namespace CamAlgorithms
         public int ImageWidth { get; set; }
         public int ImageHeight { get; set; }
         [XmlIgnore]
-        public CalibrationData CalibData { get; set; }
+        public CameraPair CalibData { get; set; }
 
         // Rectification matrix H for left camera, such that rectified point p_rect = H * p_img
         public Matrix<double> RectificationLeft { get; set; }
@@ -217,56 +217,31 @@ namespace CamAlgorithms
 
         public virtual void ReadXml(XmlReader reader)
         {
-            reader.MoveToContent();
-
-            reader.ReadStartElement();
-            while(reader.NodeType != System.Xml.XmlNodeType.EndElement)
-            {
-                string nodeName = reader.Name;
-
-                var propertyInfo = this.GetType().GetProperty(nodeName);
-                if(propertyInfo != null)
-                {
-                    if(propertyInfo.PropertyType == typeof(Matrix<double>))
-                    {
-                        MatrixXmlSerializer matrixSerializer = new MatrixXmlSerializer();
-                        matrixSerializer.ReadXml(reader);
-                        propertyInfo.SetValue(this, matrixSerializer.Mat);
-                    }
-                    else
-                    {
-                        object val = reader.ReadElementContentAs(propertyInfo.PropertyType, null);
-                        propertyInfo.SetValue(this, val);
-                    }
-                }
-                else
-                    reader.Read();
-
-                //reader.ReadEndElement();
-            }
+            XmlSerialisation.ReadXmlAllProperties(reader, this);
         }
 
         public virtual void WriteXml(XmlWriter writer)
         {
-            writer.WriteElementString("ImageHeight", ImageHeight.ToString());
-            writer.WriteElementString("ImageWidth", ImageWidth.ToString());
-            writer.WriteElementString("Quality", Quality.ToString());
+            XmlSerialisation.WriteXmlNonIgnoredProperties(writer, this);
+            //writer.WriteElementString("ImageHeight", ImageHeight.ToString());
+            //writer.WriteElementString("ImageWidth", ImageWidth.ToString());
+            //writer.WriteElementString("Quality", Quality.ToString());
 
-            writer.WriteStartElement("RectificationLeft");
-            new MatrixXmlSerializer(RectificationLeft).WriteXml(writer);
-            writer.WriteEndElement();
+            //writer.WriteStartElement("RectificationLeft");
+            //new MatrixXmlSerializer(RectificationLeft).WriteXml(writer);
+            //writer.WriteEndElement();
 
-            writer.WriteStartElement("RectificationLeft_Inverse");
-            new MatrixXmlSerializer(RectificationLeft_Inverse).WriteXml(writer);
-            writer.WriteEndElement();
+            //writer.WriteStartElement("RectificationLeft_Inverse");
+            //new MatrixXmlSerializer(RectificationLeft_Inverse).WriteXml(writer);
+            //writer.WriteEndElement();
 
-            writer.WriteStartElement("RectificationRight");
-            new MatrixXmlSerializer(RectificationRight).WriteXml(writer);
-            writer.WriteEndElement();
+            //writer.WriteStartElement("RectificationRight");
+            //new MatrixXmlSerializer(RectificationRight).WriteXml(writer);
+            //writer.WriteEndElement();
 
-            writer.WriteStartElement("RectificationRight_Inverse");
-            new MatrixXmlSerializer(RectificationRight_Inverse).WriteXml(writer);
-            writer.WriteEndElement();
+            //writer.WriteStartElement("RectificationRight_Inverse");
+            //new MatrixXmlSerializer(RectificationRight_Inverse).WriteXml(writer);
+            //writer.WriteEndElement();
         }
     }
 }

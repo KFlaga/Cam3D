@@ -7,8 +7,8 @@
     <ProjectGuid>{3077792D-E973-4D3F-83C6-8553287A6604}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CamImageProcessing</RootNamespace>
-    <AssemblyName>CamImageProcessing</AssemblyName>
+    <RootNamespace>CamAlgorithms</RootNamespace>
+    <AssemblyName>CamAlgorithms</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -84,9 +84,10 @@
     <Compile Include="Algs\IFloodAlgorithm.cs" />
     <Compile Include="Algs\IterativeBasicFloodAlgorithm.cs" />
     <Compile Include="Algs\ScanLineFloodAlgorithm.cs" />
-    <Compile Include="Calibration\CalibrationData.cs" />
+    <Compile Include="Calibration\CameraPair.cs" />
     <Compile Include="Calibration\CalibrationPoint.cs" />
     <Compile Include="Calibration\CalibrationAlgorithm.cs" />
+    <Compile Include="Calibration\Camera.cs" />
     <Compile Include="Calibration\CrossCalibrationRefiner.cs" />
     <Compile Include="Calibration\EpiLine.cs" />
     <Compile Include="Calibration\LMCameraMatrixGridMinimalisation.cs" />
@@ -95,8 +96,8 @@
     <Compile Include="Calibration\LMCameraMatrixZeroSkewMini.cs" />
     <Compile Include="Calibration\LMDistortionDirectionalLineFitMinimalisation.cs" />
     <Compile Include="Calibration\LMRadialDistortionLineFitMinimalisation.cs" />
-    <Compile Include="Calibration\RadialDistortionCorrector.cs" />
     <Compile Include="Calibration\RadialDistortionModel.cs" />
+    <Compile Include="Calibration\RadialDistrotionCorrectionAlgorithm.cs" />
     <Compile Include="Calibration\Rational3RDModel.cs" />
     <Compile Include="Calibration\RealGridData.cs" />
     <Compile Include="Calibration\Taylor4Model.cs" />
@@ -146,6 +147,14 @@
     <Compile Include="Math\PolynomialRootFinder.cs" />
     <Compile Include="Math\Quadric.cs" />
     <Compile Include="Math\SvdSolver.cs" />
+    <Compile Include="PointsExtraction\CalibrationGrid.cs" />
+    <Compile Include="PointsExtraction\CalibrationLinesExtractor.cs" />
+    <Compile Include="PointsExtraction\CalibrationPointsFinder.cs" />
+    <Compile Include="PointsExtraction\CalibrationShape.cs" />
+    <Compile Include="PointsExtraction\CalibrationShapeGridFinder.cs" />
+    <Compile Include="PointsExtraction\CalibrationShapesExtractor.cs" />
+    <Compile Include="PointsExtraction\ReferenceShapeChecker.cs" />
+    <Compile Include="PointsExtraction\ShapesGridCPFinder.cs" />
     <Compile Include="Rectification\ImageRectification.cs" />
     <Compile Include="Rectification\ImageRectification_FusielloCalibrated.cs" />
     <Compile Include="Rectification\ImageRectification_FussieloUncalibrated.cs" />
@@ -171,6 +180,7 @@
     <Compile Include="ImageMatching\SeperateChannelCostComputer.cs" />
     <Compile Include="ImageProcessing\WatershedSegmentation.cs" />
     <Compile Include="Triangulation\TriangulatedPoint.cs" />
+    <Compile Include="Triangulation\TriangulationAlgorithm.cs" />
     <Compile Include="Triangulation\TwoPointsTriangulation.cs" />
   </ItemGroup>
   <ItemGroup>

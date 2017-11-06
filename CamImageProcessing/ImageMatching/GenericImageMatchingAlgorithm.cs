@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using CamCore;
 using MathNet.Numerics.LinearAlgebra.Double;
+using CamAlgorithms.Calibration;
 
 namespace CamAlgorithms.ImageMatching
 {
@@ -20,7 +21,7 @@ namespace CamAlgorithms.ImageMatching
             }
             else
             {
-                Aggregator.Fundamental = CalibrationData.Data.Fundamental;
+                Aggregator.Fundamental = CameraPair.Data.Fundamental;
             }
             
             MapLeft = MatchImages(true);

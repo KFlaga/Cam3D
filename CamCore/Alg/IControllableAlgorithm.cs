@@ -8,7 +8,6 @@ namespace CamCore
         Idle,
         Running,
         Terminated,
-        Suspended,
         Finished,
         Error
     }
@@ -22,11 +21,6 @@ namespace CamCore
 
     public interface IControllableAlgorithm : INamed
     {
-        bool SupportsFinalResults { get; }
-        bool SupportsPartialResults { get; }
-
-        bool SupportsProgress { get; }
-        bool SupportsSuspension { get; }
         bool SupportsTermination { get; }
 
         bool SupportsParameters { get; }
@@ -36,11 +30,8 @@ namespace CamCore
         void Process();
 
         // If not supported, empty function should be set
-        string GetFinalResults();
-        string GetPartialResults();
+        string GetResults();
         string GetProgress();
-        void Suspend();
-        void Resume();
         void Terminate();
 
         void ShowParametersWindow();

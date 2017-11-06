@@ -17,7 +17,7 @@
         </Border>
         <Border BorderThickness="1" BorderBrush="Black" DockPanel.Dock="Left">
             <ScrollViewer Margin="5" HorizontalAlignment="Center">
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                     <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
                         <Label>Left Image</Label>
                         <TextBox x:Name="_textPointsImgLeft" IsReadOnly="True" TextAlignment="Center"

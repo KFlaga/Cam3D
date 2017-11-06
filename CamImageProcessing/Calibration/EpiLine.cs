@@ -2,9 +2,8 @@
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
 using System;
-using System.Collections.Generic;
 
-namespace CamAlgorithms
+namespace CamAlgorithms.Calibration
 {
     public struct EpiLine
     {

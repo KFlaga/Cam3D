@@ -1,10 +1,8 @@
-﻿using CamAlgorithms;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using CamCore;
 using System.Xml;
-using System.Windows.Media.Imaging;
 using System.IO;
+using CamAlgorithms.Calibration;
 
 namespace CamMain.ProcessingChain
 {
@@ -103,7 +101,7 @@ namespace CamMain.ProcessingChain
             // --- based on it compute distortion radius and set initial parameters as to reduce it to zero (for this point) 
             // - compute model parameters and its error
             // - if error is high or solution did not converge ask for user input
-            CalibrationModule.RadialDistortionCorrector distCorrector = new CalibrationModule.RadialDistortionCorrector();
+            RadialDistrotionCorrectionAlgorithm distCorrector = new RadialDistrotionCorrectionAlgorithm();
 
             distCorrector.ImageHeight = _imgSize.ImageHeight;
             distCorrector.ImageWidth = _imgSize.ImageWidth;
@@ -114,7 +112,7 @@ namespace CamMain.ProcessingChain
                 new Vector2(_imgSize.ImageWidth * 0.5, _imgSize.ImageHeight * 0.5);
             distCorrector.DistortionModel.InitParameters();
 
-            distCorrector.ComputeCorrectionParameters();
+            distCorrector.FindModelParameters();
 
             return distCorrector.DistortionModel;
         }
@@ -185,7 +183,7 @@ namespace CamMain.ProcessingChain
             {
                 XmlDocument modelDoc = new XmlDocument();
                 modelDoc.Load(modelFile);
-                model = CamAlgorithms.XmlExtensions.DistortionModelFromNode(
+                model = RadialDistortionModel.DistortionModelFromNode(
                     modelDoc.GetElementsByTagName("DistortionModel")[0]);
             }
             return model;
@@ -196,7 +194,7 @@ namespace CamMain.ProcessingChain
             using(Stream modelFile = new FileStream(path, FileMode.Create))
             {
                 XmlDocument modelDoc = new XmlDocument();
-                modelDoc.AppendChild(CamAlgorithms.XmlExtensions.CreateDistortionModelNode(modelDoc, model));
+                modelDoc.AppendChild(RadialDistortionModel.CreateDistortionModelNode(modelDoc, model));
                 modelDoc.Save(modelFile);
             }
         }

@@ -1,4 +1,5 @@
 ﻿using CamAlgorithms;
+using CamAlgorithms.Calibration;
 using CamCore;
 using Microsoft.Win32;
 using System;
@@ -116,12 +117,12 @@ namespace CamMain
 
         private void LoadCalibrationData(object sender, RoutedEventArgs e)
         {
-            FileOperations.LoadFromFile(CalibrationData.Data.LoadFromFile, "Xml File|*.xml");
+            FileOperations.LoadFromFile(CameraPair.Data.LoadFromFile, "Xml File|*.xml");
         }
 
         private void SaveCalibrationData(object sender, RoutedEventArgs e)
         {
-            FileOperations.SaveToFile(CalibrationData.Data.SaveToFile, "Xml File|*.xml");
+            FileOperations.SaveToFile(CameraPair.Data.SaveToFile, "Xml File|*.xml");
         }
 
         private void StartChainProcess(object sender, RoutedEventArgs e)

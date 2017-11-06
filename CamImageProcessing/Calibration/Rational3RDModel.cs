@@ -4,7 +4,7 @@ using MathNet.Numerics.LinearAlgebra.Double;
 using System.Collections.Generic;
 using CamCore;
 
-namespace CamAlgorithms
+namespace CamAlgorithms.Calibration
 {
     // Rational model of distortion function :
     //                        1 + k1*ru
@@ -426,30 +426,19 @@ namespace CamAlgorithms
         void IParameterizable.InitParameters()
         {
             _procParams = new List<AlgorithmParameter>();
-
-            AlgorithmParameter initalCx = new DoubleParameter(
-                "Inital Cx", "ICX", 320.0, 0.0, 99999.0);
-            _procParams.Add(initalCx);
-
-            AlgorithmParameter initalCy = new DoubleParameter(
-                "Inital Cy", "ICY", 240.0, 0.0, 99999.0);
-            _procParams.Add(initalCy);
-
-            AlgorithmParameter initalSx = new DoubleParameter(
-                "Inital Sx", "ISX", 1.0, 0.01, 100.0);
-            _procParams.Add(initalSx);
-
-            AlgorithmParameter initalK1 = new DoubleParameter(
-                "Inital K1", "IK1", 0.0, -100.0, 100.0);
-            _procParams.Add(initalK1);
-
-            AlgorithmParameter initalK2 = new DoubleParameter(
-                "Inital K2", "IK2", 0.0, -100.0, 100.0);
-            _procParams.Add(initalK2);
-
-            AlgorithmParameter initalK3 = new DoubleParameter(
-                "Inital K3", "IK3", 0.0, -100.0, 100.0);
-            _procParams.Add(initalK3);
+            
+            _procParams.Add(new DoubleParameter(
+                "Inital Cx", "ICX", 320.0, 0.0, 99999.0));
+            _procParams.Add(new DoubleParameter(
+                "Inital Cy", "ICY", 240.0, 0.0, 99999.0));
+            _procParams.Add(new DoubleParameter(
+                "Inital Sx", "ISX", 1.0, 0.01, 100.0));
+            _procParams.Add(new DoubleParameter(
+                "Inital K1", "IK1", 0.0, -100.0, 100.0));
+            _procParams.Add(new DoubleParameter(
+                "Inital K2", "IK2", 0.0, -100.0, 100.0));
+            _procParams.Add(new DoubleParameter(
+                "Inital K3", "IK3", 0.0, -100.0, 100.0));
         }
 
         void IParameterizable.UpdateParameters()

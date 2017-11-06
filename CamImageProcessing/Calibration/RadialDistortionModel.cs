@@ -1,12 +1,11 @@
-﻿using CamAlgorithms;
-using CamCore;
+﻿using CamCore;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
 using System;
 using System.Collections.Generic;
 using System.Xml;
 
-namespace CamAlgorithms
+namespace CamAlgorithms.Calibration
 {
     public enum DistortionDirection : int
     {
@@ -261,10 +260,7 @@ namespace CamAlgorithms
 
         public abstract void SetInitialParametersFromQuadrics(List<Quadric> quadrics,
             List<List<Vector2>> linePoints, List<int> fitPoints);
-    }
 
-    public static partial class XmlExtensions
-    {
         public static RadialDistortionModel DistortionModelFromNode(XmlNode modelNode)
         {
             // <DistortionModel name="Rational3">

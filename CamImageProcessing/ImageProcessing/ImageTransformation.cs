@@ -1,6 +1,6 @@
-﻿using CamCore;
+﻿using CamAlgorithms.Calibration;
+using CamCore;
 using MathNet.Numerics.LinearAlgebra;
-using MathNet.Numerics.LinearAlgebra.Double;
 
 namespace CamAlgorithms
 {

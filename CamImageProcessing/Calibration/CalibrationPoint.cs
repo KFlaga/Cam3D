@@ -2,7 +2,7 @@
 using System.Xml.Serialization;
 using CamCore;
 
-namespace CamAlgorithms
+namespace CamAlgorithms.Calibration
 {
     [XmlRoot("Point")]
     public class CalibrationPoint

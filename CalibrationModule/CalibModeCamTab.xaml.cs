@@ -11,7 +11,8 @@ using MathNet.Numerics.LinearAlgebra.Double;
 using System.Text;
 using System.Xml;
 using System.IO;
-using CalibrationModule.PointsExtraction;
+using CamAlgorithms.PointsExtraction;
+using CamAlgorithms.Calibration;
 
 namespace CalibrationModule
 {
@@ -24,14 +25,14 @@ namespace CalibrationModule
 
         public List<CalibrationPoint> CalibrationPoints { get; set; } = new List<CalibrationPoint>();
         public List<RealGridData> RealGrids { get; set; } = new List<RealGridData>();
-        public Matrix<double> CameraMatrix { get { return _calibrator.Algorithm.CameraMatrix; } }
+        public Matrix<double> CameraMatrix { get { return _calibrator.Algorithm.Camera.Matrix; } }
         public RadialDistortionModel DistortionModel { get { return _distortionCorrector.DistortionModel; } }
 
         private Point _curPoint = new Point();
         private List<List<Vector2>> _calibLines = new List<List<Vector2>>();
 
         private CameraCalibrationAlgorithmUi _calibrator = new CameraCalibrationAlgorithmUi();
-        RadialDistortionCorrector _distortionCorrector = new RadialDistortionCorrector();
+        RadialDistrotionCorrectionAlgorithmUi _distortionCorrector = new RadialDistrotionCorrectionAlgorithmUi();
 
         private CamCore.InterModularDataReceiver _cameraSnaphotReceiver;
         private BitmapSource _cameraCaptureImage;
@@ -318,12 +319,12 @@ namespace CalibrationModule
 
         private void AcceptDistortionModel(object sender, RoutedEventArgs e)
         {
-            CalibrationData.Data.SetDistortionModel(CameraIndex, _distortionCorrector.DistortionModel);
+            CameraPair.Data.SetDistortionModel(CameraIndex, _distortionCorrector.DistortionModel);
         }
 
         private void AcceptCalibration(object sender, RoutedEventArgs e)
         {
-            CalibrationData.Data.SetCameraMatrix(CameraIndex, _calibrator.CameraMatrix);
+            CameraPair.Data.SetCameraMatrix(CameraIndex, _calibrator.Camera.Matrix);
         }
 
         private void TestCalibration(object sender, RoutedEventArgs e)
@@ -342,7 +343,7 @@ namespace CalibrationModule
                 Vector<double> ip = new DenseVector(new double[] { cp.ImgX, cp.ImgY, 1.0 });
                 Vector<double> rp = new DenseVector(new double[] { cp.RealX, cp.RealY, cp.RealZ, 1.0 });
 
-                Vector<double> eip = _calibrator.CameraMatrix * rp;
+                Vector<double> eip = _calibrator.Camera.Matrix * rp;
                 eip.DivideThis(eip[2]);
 
                 var d = (ip - eip);
@@ -379,7 +380,7 @@ namespace CalibrationModule
             if(DistortionModel != null)
             {
                 XmlDocument xmlDoc = new XmlDocument();
-                xmlDoc.AppendChild(CamAlgorithms.XmlExtensions.CreateDistortionModelNode(xmlDoc, DistortionModel));
+                xmlDoc.AppendChild(RadialDistortionModel.CreateDistortionModelNode(xmlDoc, DistortionModel));
                 xmlDoc.Save(file);
             }
         }
@@ -399,7 +400,7 @@ namespace CalibrationModule
             {
                 XmlNode modelNode = models[0];
                 _distortionCorrector.DistortionModel =
-                    CamAlgorithms.XmlExtensions.DistortionModelFromNode(modelNode);
+                    RadialDistortionModel.DistortionModelFromNode(modelNode);
             }
         }
 
@@ -440,7 +441,7 @@ namespace CalibrationModule
             if(cameras.Count == 1)
             {
                 XmlNode camNode = cameras[0];
-                _calibrator.CameraMatrix = CamCore.XmlExtensions.MatrixFromNode(camNode.FirstChildWithName("Matrix"));
+                _calibrator.Camera.Matrix = CamCore.XmlExtensions.MatrixFromNode(camNode.FirstChildWithName("Matrix"));
             }
         }
     }

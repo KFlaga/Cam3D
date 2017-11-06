@@ -1,9 +1,8 @@
 ﻿using System;
-using CamCore;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
 
-namespace CamAlgorithms
+namespace CamAlgorithms.Calibration
 {
     // Parameter vector have form : [p11,p12,...,p34,eX1,eY1,eZ1,...,eXn,eZn,eYn]
     // where prc is eP[r,c] and eP is estimated camera matrix and (eXi,eYi,eZi) is estimated real point

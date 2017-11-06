@@ -1,9 +1,8 @@
 ﻿using CamCore;
-using CamAlgorithms;
 using System.Collections.Generic;
-using System.Windows.Media.Imaging;
+using CamAlgorithms.Calibration;
 
-namespace CalibrationModule.PointsExtraction
+namespace CamAlgorithms.PointsExtraction
 {
     public abstract class CalibrationPointsFinder : IParameterizable
     {

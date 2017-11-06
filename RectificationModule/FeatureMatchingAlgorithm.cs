@@ -21,14 +21,8 @@ namespace RectificationModule
         public List<MatchedPair> Matches { get; protected set; }
 
         public string Name { get; } = "Features Matching";
-
-        public bool SupportsFinalResults { get; } = true;
-        public bool SupportsPartialResults { get; } = true;
-
-        public bool SupportsProgress { get; } = true;
-        public bool SupportsSuspension { get; } = false;
+        
         public bool SupportsTermination { get; } = true;
-
         public bool SupportsParameters { get; } = true;
         public event EventHandler<EventArgs> ParamtersAccepted;
 
@@ -97,12 +91,7 @@ namespace RectificationModule
             _matcher.UpdateParameters();
         }
 
-        public string GetFinalResults()
-        {
-            return PrepareResults();
-        }
-
-        public string GetPartialResults()
+        public string GetResults()
         {
             return PrepareResults();
         }
@@ -114,10 +103,6 @@ namespace RectificationModule
             //    ") of [" + ImageLeft.ColumnCount + ", " + ImageLeft.RowCount + "].";
             return "";
         }
-
-        public void Suspend() { }
-
-        public void Resume() { }
 
         public void Terminate() { }
 

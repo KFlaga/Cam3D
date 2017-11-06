@@ -2,7 +2,7 @@
 using System.Xml;
 using System.Xml.Serialization;
 
-namespace CamAlgorithms
+namespace CamAlgorithms.Calibration
 {
     public class RealGridData
     {

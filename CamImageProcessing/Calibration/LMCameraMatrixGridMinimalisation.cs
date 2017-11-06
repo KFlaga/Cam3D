@@ -4,7 +4,7 @@ using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
 using System.Collections.Generic;
 
-namespace CamAlgorithms
+namespace CamAlgorithms.Calibration
 {
     // Parameter vector have form : [p11,p12,...,p34]
     // Result vector have form : [p11,p12,...,p34,eTL1x,eTL1y,eTL1z,...,eTLn,eTRn,eBLn,eBRn]

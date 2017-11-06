@@ -1,4 +1,5 @@
 ﻿using CamAlgorithms;
+using CamAlgorithms.Triangulation;
 using CamCore;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
@@ -75,7 +76,7 @@ namespace CamMain.ProcessingChain
                 _disparity = _globalData.Get<DisparityRefinementLinkData>();
 
                 _trinagulation = new TwoPointsTriangulation();
-                _trinagulation.CalibData = _calibration.Calibration;
+                _trinagulation.Cameras = _calibration.Calibration;
             }
 
         }

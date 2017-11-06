@@ -5,13 +5,16 @@ using System.Xml;
 using MathNet.Numerics.LinearAlgebra.Double;
 using System.ComponentModel;
 using CamCore;
+using System.Xml.Serialization;
+using System.Xml.Schema;
 
-namespace CamAlgorithms
+namespace CamAlgorithms.Calibration
 {
-    public class CalibrationData : INotifyPropertyChanged
+    // Change to CameraPair
+    public class CameraPair : INotifyPropertyChanged, IXmlSerializable
     {
-        private static CalibrationData _data = new CalibrationData();
-        public static CalibrationData Data { get { return _data; } }
+        private static CameraPair _data = new CameraPair();
+        public static CameraPair Data { get { return _data; } }
         
         private Matrix<double> _camLeft = null;
         private Matrix<double> _camRight = null;
@@ -80,40 +83,10 @@ namespace CamAlgorithms
 
         void UpdateCameraMatrix(Matrix<double> camera, SideIndex index)
         {
-            var RQ = camera.SubMatrix(0, 3, 0, 3).QR();
-
-            var calib = RQ.R;
-            if(Math.Abs(calib[2, 2] - 1) > 1e-6)
-            {
-                double scale = calib[2, 2];
-                camera.MultiplyThis(scale);
-                // NotifyPropertyChanged("CameraLeft");
-                RQ = camera.SubMatrix(0, 3, 0, 3).QR();
-            }
-            calib = RQ.R;
-            var rot = RQ.Q;
-
-            // If fx < 0 then set fx = -fx and [r11,r12,r13] = -[r11,r12,r13]
-            // As first row of rotation matrix is multiplied only with fx, then changing sign of both
-            // fx and this row won't change matrix M = K*R, and so camera matrix (same with fy, but we need to change skew also)
-            if(calib[0, 0] < 0)
-            {
-                calib[0, 0] = -calib[0, 0];
-                rot[0, 0] = -rot[0, 0];
-                rot[0, 1] = -rot[0, 1];
-                rot[0, 2] = -rot[0, 2];
-            }
-            if(calib[1, 1] < 0)
-            {
-                calib[1, 1] = -calib[1, 1];
-                calib[0, 1] = -calib[0, 1];
-                rot[1, 0] = -rot[1, 0];
-                rot[1, 1] = -rot[1, 1];
-                rot[1, 2] = -rot[1, 2];
-            }
-
-            var trans = -camera.SubMatrix(0, 3, 0, 3).Inverse().Multiply(camera.Column(3));
-
+            Matrix<double> calib, rot;
+            Vector<double> trans;
+            camera = Camera.Decomposed(camera, out calib, out rot, out trans);
+            
             SetCalibrationMatrix(index, calib);
             SetRotationMatrix(index, rot);
             SetTranslationVector(index, trans);
@@ -480,6 +453,20 @@ namespace CamAlgorithms
 
         #endregion
 
+        #region IXmlSerializable
+        public XmlSchema GetSchema() { return null; }
+
+        public virtual void ReadXml(XmlReader reader)
+        {
+            XmlSerialisation.ReadXmlAllProperties(reader, this);
+        }
+
+        public virtual void WriteXml(XmlWriter writer)
+        {
+            XmlSerialisation.WriteXmlNonIgnoredProperties(writer, this);
+        }
+        #endregion
+
         #region Save/Load
 
         public void LoadFromFile(Stream file, string path)
@@ -503,7 +490,7 @@ namespace CamAlgorithms
 
                     XmlNode modelNode = cam1.FirstChildWithName("DistortionModel");
                     if(modelNode != null)
-                        DistortionModelLeft = XmlExtensions.DistortionModelFromNode(modelNode);
+                        DistortionModelLeft = RadialDistortionModel.DistortionModelFromNode(modelNode);
                 }
             }
 
@@ -522,7 +509,7 @@ namespace CamAlgorithms
 
                     XmlNode modelNode = cam2.FirstChildWithName("DistortionModel");
                     if(modelNode != null)
-                        DistortionModelRight = XmlExtensions.DistortionModelFromNode(modelNode);
+                        DistortionModelRight = RadialDistortionModel.DistortionModelFromNode(modelNode);
                 }
             }
         }
@@ -542,10 +529,10 @@ namespace CamAlgorithms
 
             if(IsCamLeftCalibrated)
             {
-                cam1Node.AppendChild(CamCore.XmlExtensions.CreateMatrixNode(xmlDoc, _camLeft));
+                cam1Node.AppendChild(XmlExtensions.CreateMatrixNode(xmlDoc, _camLeft));
                 if(_distortionModelLeft != null)
                 {
-                    cam1Node.AppendChild(XmlExtensions.CreateDistortionModelNode(xmlDoc, _distortionModelLeft));
+                    cam1Node.AppendChild(RadialDistortionModel.CreateDistortionModelNode(xmlDoc, _distortionModelLeft));
                 }
 
             }
@@ -561,10 +548,10 @@ namespace CamAlgorithms
 
             if(IsCamRightCalibrated)
             {
-                cam2Node.AppendChild(CamCore.XmlExtensions.CreateMatrixNode(xmlDoc, _camRight));
+                cam2Node.AppendChild(XmlExtensions.CreateMatrixNode(xmlDoc, _camRight));
                 if(_distortionModelRight != null)
                 {
-                    cam2Node.AppendChild(XmlExtensions.CreateDistortionModelNode(xmlDoc, _distortionModelRight));
+                    cam2Node.AppendChild(RadialDistortionModel.CreateDistortionModelNode(xmlDoc, _distortionModelRight));
                 }
             }
             camerasNode.AppendChild(cam2Node);

@@ -179,6 +179,13 @@ namespace CamCore
             }
         }
 
+        public Vector2 Normalised()
+        {
+            var v = new Vector2(this);
+            v.Normalise();
+            return v;
+        }
+
         public double DistanceToSquared(Vector2 v)
         {
             return (X - v.X) * (X - v.X) + (Y - v.Y) * (Y - v.Y);
@@ -226,7 +233,12 @@ namespace CamCore
 
         public override string ToString()
         {
-            return "X: " + X + ", Y: " + Y;
+            return "X: " + X + ",Y: " + Y;
+        }
+
+        public string ToString(string format)
+        {
+            return "X: " + X.ToString(format) + ",Y: " + Y.ToString(format);
         }
     }
 

@@ -1,7 +1,7 @@
 ﻿using CamCore;
 using System.Xml.Serialization;
 
-namespace CamAlgorithms
+namespace CamAlgorithms.Triangulation
 {
     public class TriangulatedPoint
     {

@@ -4,7 +4,7 @@ using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
 using System;
 
-namespace CamAlgorithms
+namespace CamAlgorithms.Calibration
 {
     // Minimalising di'^2 = (Axi + Byi + C)^2 is equivalent to di, so e = sum(di'^2) will be used
     // As LM minimises e = ||f(P) - X||, target cost function can be set as:

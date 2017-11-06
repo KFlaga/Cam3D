@@ -3,21 +3,14 @@ using System.Collections.Generic;
 using CamCore;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
+using CamAlgorithms.Calibration;
 
-namespace CamAlgorithms
+namespace CamAlgorithms.Triangulation
 {
     // Computes best fit 3D point based on 2 matching points on images
     // made by 2 calibrated cameras (their P, P', F is needed)
-    public class TwoPointsTriangulation
+    public class TwoPointsTriangulation : TriangulationComputer
     {
-        public CalibrationData CalibData { get; set; }
-        public bool Rectified { get; set; }
-
-        public List<Vector<double>> PointsLeft { get; set; }
-        public List<Vector<double>> PointsRight { get; set; }
-
-        public List<Vector<double>> Points3D { get; protected set; }
-
         public Vector<double> _pL;
         public Vector<double> _pR;
         public Vector<double> _p3D;
@@ -40,15 +33,15 @@ namespace CamAlgorithms
 
         // Computes 3d points from left/right points
         // Result points are scaled so that w = 1
-        public void Estimate3DPoints()
+        public override void Estimate3DPoints()
         {
             Points3D = new List<Vector<double>>(PointsLeft.Count);
-            for(int p = 0; p < PointsLeft.Count; ++p)
+            for(CurrentPoint = 0; CurrentPoint < PointsLeft.Count && !Terminate; ++CurrentPoint)
             {
-                _pL = PointsLeft[p];
+                _pL = PointsLeft[CurrentPoint];
                 _pL = _pL / _pL[2]; // Ensure w = 1
 
-                _pR = PointsRight[p];
+                _pR = PointsRight[CurrentPoint];
                 _pR = _pR / _pR[2];
 
                 if(Rectified)
@@ -67,7 +60,7 @@ namespace CamAlgorithms
             }
         }
 
-        void Estimate3DPoint()
+        protected void Estimate3DPoint()
         {
             ComputeTransformToOriginMatrices();
             ComputeTransformedFundamental();
@@ -84,7 +77,7 @@ namespace CamAlgorithms
             ComputeBackprojected3DPoint();
         }
 
-        void ComputeTransformToOriginMatrices()
+        protected void ComputeTransformToOriginMatrices()
         {
             // 1) Define transform matrices, which take points to origin
             //     |1    -x|      |1    -x'|
@@ -101,21 +94,21 @@ namespace CamAlgorithms
             _Tinv_R[1, 2] = _pR[1];
         }
 
-        void ComputeTransformedFundamental()
+        protected void ComputeTransformedFundamental()
         {
             // 2) Fundamental matrix resulting from appying this transforms
             // over 2 images is equalt to:
             // F_new = T'^-T * F * T^-1
-            _F_T = _Tinv_R.Transpose() * CalibData.Fundamental * _Tinv_L;
+            _F_T = _Tinv_R.Transpose() * Cameras.Fundamental * _Tinv_L;
         }
 
-        void ComputeNormalisedTransformedEpipoles()
+        protected void ComputeNormalisedTransformedEpipoles()
         {
             // 3) Compute new e and e' such that e'^T*F = 0 and F*e = 0
             // Normalise them so that || e || == || e' || == 1
             // Of course e_new = T*e_old
-            _e_T_L = _T_L * CalibData.EpipoleLeft;
-            _e_T_R = _T_R * CalibData.EpipoleRight;
+            _e_T_L = _T_L * Cameras.EpipoleLeft;
+            _e_T_R = _T_R * Cameras.EpipoleRight;
 
             double scale = 1.0 / Math.Sqrt(_e_T_L[0] * _e_T_L[0] + _e_T_L[1] * _e_T_L[1]);
             _e_T_L.MultiplyThis(scale);
@@ -124,7 +117,7 @@ namespace CamAlgorithms
             _e_T_R.MultiplyThis(scale);
         }
 
-        void ComputeRotationMatrices()
+        protected void ComputeRotationMatrices()
         {
             // 4) Compute rotation matrices R,R' which will take epipoles to points (rotation is around origin, so points are not moved)
             // e_rot = (1,0,e.w), e_rot' = (1,0,e'.w)
@@ -152,13 +145,13 @@ namespace CamAlgorithms
             _Rinv_R[1, 1] = _e_T_R[0];
         }
 
-        void ComputeRotatedFundamental()
+        protected void ComputeRotatedFundamental()
         {
             // 5) Replace F by R'*F*R^T
             _F_TR = _R_R * _F_T * _Rinv_L;
         }
 
-        void FindMinimalErrorPoints()
+        protected void FindMinimalErrorPoints()
         {
             // 10) Having t, we can find closest points to origin on this lines
             // For line l = (a,b,c), closes point is p = (-ac, -bc, a^2 + b^2)
@@ -188,7 +181,7 @@ namespace CamAlgorithms
             _pR[2] = 1.0;
         }
 
-        void FindMinimalErrorEpipolarLines()
+        protected void FindMinimalErrorEpipolarLines()
         {
             // 7) Now find 2 corresponding epilines, which are best fit for our 2 points
             // Our epipoles are at e=(1,0,f)^T and e'=(1,0,f')^T
@@ -259,7 +252,7 @@ namespace CamAlgorithms
             }
         }
 
-        double ComputeEpilineFitCost(double t)
+        protected double ComputeEpilineFitCost(double t)
         {
             // Distance to origin (and so our transformed point):
             // d(x,l(t))^2 = t^2 / (1+(tf)^2)
@@ -272,7 +265,7 @@ namespace CamAlgorithms
                 (ctd2 / (atb * atb + _e_T_R[2] * _e_T_R[2] * ctd2));
         }
 
-        double ComputeEpilineFitCost_Inf()
+        protected double ComputeEpilineFitCost_Inf()
         {
             // d(x,l(t))^2 = t^2 / (1+(tf)^2) -> for t = inf : d = 1/f^2
             // d(x',l'(t))^2 = (ct + d)^2 / (at+b)^2 + f'^2(ct+d)^2 -> for t = inf : 1 / ( (a/c)^2  + f'^2 )
@@ -280,7 +273,7 @@ namespace CamAlgorithms
                 1.0 / ((_F_TR[1, 1]* _F_TR[1, 1]) / (_F_TR[2, 2]* _F_TR[2, 2]) + _e_T_R[2] * _e_T_R[2]);
         }
 
-        double ComputeEpilineFitCostDerivative(double t)
+        protected double ComputeEpilineFitCostDerivative(double t)
         {
             // s' = 0 <=> g = 0
             // g(t) = t((at+b)^2 + f'^2(ct+d)^2) - (ad-bc)(1+(ft)^2)^2(at+b)(ct+d)
@@ -292,7 +285,7 @@ namespace CamAlgorithms
                 * ft2 * ft2 * atb * ctd;
         }
 
-        Polynomial FindCostPolynomial()
+        protected Polynomial FindCostPolynomial()
         {
             Polynomial poly = new Polynomial();
             poly.Rank = 6;
@@ -348,7 +341,7 @@ namespace CamAlgorithms
             return poly;
         }
 
-        void TransformEstimatedImagePointsBack()
+        protected void TransformEstimatedImagePointsBack()
         {
             // 11) Transfer computed p and p' back to original coordinates
             // p_org = T^-1 * R^T * p, p_org' = T'^-1 * R'^T * p'
@@ -356,7 +349,7 @@ namespace CamAlgorithms
             _pR = _Tinv_R * _Rinv_R * _pR;
         }
 
-        void ComputeBackprojected3DPoint()
+        protected void ComputeBackprojected3DPoint()
         {
             // 12) Rays from estimated points should intersect in 3D now, so
             // find this 3D point (vai linear method) :
@@ -375,25 +368,25 @@ namespace CamAlgorithms
             // p2 = [P21 P22 P23 P24]
             // p3 = [P31 P32 P33 P34]
             Matrix<double> A = new DenseMatrix(4, 4);
-            A[0, 0] = _pL[0] * CalibData.CameraLeft[2, 0] - CalibData.CameraLeft[0, 0];
-            A[0, 1] = _pL[0] * CalibData.CameraLeft[2, 1] - CalibData.CameraLeft[0, 1];
-            A[0, 2] = _pL[0] * CalibData.CameraLeft[2, 2] - CalibData.CameraLeft[0, 2];
-            A[0, 3] = _pL[0] * CalibData.CameraLeft[2, 3] - CalibData.CameraLeft[0, 3];
+            A[0, 0] = _pL[0] * Cameras.CameraLeft[2, 0] - Cameras.CameraLeft[0, 0];
+            A[0, 1] = _pL[0] * Cameras.CameraLeft[2, 1] - Cameras.CameraLeft[0, 1];
+            A[0, 2] = _pL[0] * Cameras.CameraLeft[2, 2] - Cameras.CameraLeft[0, 2];
+            A[0, 3] = _pL[0] * Cameras.CameraLeft[2, 3] - Cameras.CameraLeft[0, 3];
 
-            A[1, 0] = _pL[1] * CalibData.CameraLeft[2, 0] - CalibData.CameraLeft[1, 0];
-            A[1, 1] = _pL[1] * CalibData.CameraLeft[2, 1] - CalibData.CameraLeft[1, 1];
-            A[1, 2] = _pL[1] * CalibData.CameraLeft[2, 2] - CalibData.CameraLeft[1, 2];
-            A[1, 3] = _pL[1] * CalibData.CameraLeft[2, 3] - CalibData.CameraLeft[1, 3];
+            A[1, 0] = _pL[1] * Cameras.CameraLeft[2, 0] - Cameras.CameraLeft[1, 0];
+            A[1, 1] = _pL[1] * Cameras.CameraLeft[2, 1] - Cameras.CameraLeft[1, 1];
+            A[1, 2] = _pL[1] * Cameras.CameraLeft[2, 2] - Cameras.CameraLeft[1, 2];
+            A[1, 3] = _pL[1] * Cameras.CameraLeft[2, 3] - Cameras.CameraLeft[1, 3];
 
-            A[2, 0] = _pR[0] * CalibData.CameraRight[2, 0] - CalibData.CameraRight[0, 0];
-            A[2, 1] = _pR[0] * CalibData.CameraRight[2, 1] - CalibData.CameraRight[0, 1];
-            A[2, 2] = _pR[0] * CalibData.CameraRight[2, 2] - CalibData.CameraRight[0, 2];
-            A[2, 3] = _pR[0] * CalibData.CameraRight[2, 3] - CalibData.CameraRight[0, 3];
+            A[2, 0] = _pR[0] * Cameras.CameraRight[2, 0] - Cameras.CameraRight[0, 0];
+            A[2, 1] = _pR[0] * Cameras.CameraRight[2, 1] - Cameras.CameraRight[0, 1];
+            A[2, 2] = _pR[0] * Cameras.CameraRight[2, 2] - Cameras.CameraRight[0, 2];
+            A[2, 3] = _pR[0] * Cameras.CameraRight[2, 3] - Cameras.CameraRight[0, 3];
 
-            A[3, 0] = _pR[1] * CalibData.CameraRight[2, 0] - CalibData.CameraRight[1, 0];
-            A[3, 1] = _pR[1] * CalibData.CameraRight[2, 1] - CalibData.CameraRight[1, 1];
-            A[3, 2] = _pR[1] * CalibData.CameraRight[2, 2] - CalibData.CameraRight[1, 2];
-            A[3, 3] = _pR[1] * CalibData.CameraRight[2, 3] - CalibData.CameraRight[1, 3];
+            A[3, 0] = _pR[1] * Cameras.CameraRight[2, 0] - Cameras.CameraRight[1, 0];
+            A[3, 1] = _pR[1] * Cameras.CameraRight[2, 1] - Cameras.CameraRight[1, 1];
+            A[3, 2] = _pR[1] * Cameras.CameraRight[2, 2] - Cameras.CameraRight[1, 2];
+            A[3, 3] = _pR[1] * Cameras.CameraRight[2, 3] - Cameras.CameraRight[1, 3];
 
             _p3D = SvdZeroFullrankSolver.Solve(A);
             _p3D.DivideThis(_p3D[3]);
@@ -401,7 +394,7 @@ namespace CamAlgorithms
 
         void Estimate3DPoint_Rect()
         {
-
+            throw new NotImplementedException();
         }
     }
 }

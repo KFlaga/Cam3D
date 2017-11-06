@@ -6,6 +6,7 @@ using MathNet.Numerics.LinearAlgebra.Double;
 using System.Collections.Generic;
 using MathNet.Numerics.LinearAlgebra;
 using CamAlgorithms;
+using CamAlgorithms.Calibration;
 
 namespace CamUnitTest
 {

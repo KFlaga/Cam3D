@@ -5,6 +5,7 @@ using MathNet.Numerics.LinearAlgebra.Double;
 using System.Diagnostics;
 using System.Collections;
 using MathNet.Numerics;
+using System.Text;
 
 namespace CamCore
 {
@@ -345,7 +346,46 @@ namespace CamCore
                 }
             }
         }
+        
+        public static void CopyFromVector(this Matrix<double> m, Vector<double> v, bool rowWise = true)
+        {
+            if(rowWise)
+            {
+                for(int c = 0; c < m.ColumnCount; ++c)
+                {
+                    for(int r = 0; r < m.RowCount; ++r)
+                    {
+                        m.At(r, c, v.At(r * m.ColumnCount + c));
+                    }
+                }
+            }
+            else
+            {
+                for(int c = 0; c < m.ColumnCount; ++c)
+                {
+                    for(int r = 0; r < m.RowCount; ++r)
+                    {
+                        m.At(r, c, v.At(c * m.RowCount + r));
+                    }
+                }
+            }
+        }
 
+        public static string CustomToString(this Matrix<double> m, string format="F3")
+        {
+            StringBuilder result = new StringBuilder();
+            for(int r = 0; r < m.RowCount; ++r)
+            {
+                result.Append("|" + m[r, 0].ToString(format));
+                for(int c = 1; c < m.ColumnCount; ++c)
+                {
+                    result.Append("; " + m[r, c].ToString(format));
+                }
+                result.AppendLine("|");
+            }
+            return result.ToString();
+        }
+        
         public class DoubleMatrixVisualiser
         {
             Matrix<double> _matrix;

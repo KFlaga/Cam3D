@@ -1,28 +1,24 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
-using System.Threading.Tasks;
 using CamCore;
-using CamAlgorithms;
-using MathNet.Numerics.LinearAlgebra;
-using CamAlgorithms.ImageMatching;
+using CamAlgorithms.Calibration;
+using CamAlgorithms.Triangulation;
 using CamControls;
 
-namespace ImageMatchingModule
+namespace TriangulationModule
 {
-    public class ImageMatchingAlgorithmController : IControllableAlgorithm
+    public class TriangulationAlgorithmUi : IControllableAlgorithm
     {
-        //private ImageMatchingAlgorithm _matcher = new GenericImageMatchingAlgorithm();
-        private ImageMatchingAlgorithm _matcher = new CppSgmMatchingAlgorithm();
+        public TriangulationAlgorithm Algorithm { get; set; } = new TriangulationAlgorithm();
 
-        public IImage ImageLeft { get; set; }
-        public IImage ImageRight { get; set; }
+        public List<TriangulatedPoint> Points { get { return Algorithm.Points; } set { Algorithm.Points = value; } }
+        public CameraPair Cameras { get { return Algorithm.Cameras; } set { Algorithm.Cameras = value; } }
+        public bool Recitifed { get { return Algorithm.Recitifed; } set { Algorithm.Recitifed = value; } }
 
-        public DisparityMap MapLeft { get { return _matcher.MapLeft; } }
-        public DisparityMap MapRight { get { return _matcher.MapRight; } }
-
-        public string Name { get; } = "Dense Image Matching";
+        public string Name { get { return Algorithm.Name; } }
         
-        public bool SupportsTermination { get; } = false;
+        public bool SupportsTermination { get; } = true;
         public bool SupportsParameters { get; } = true;
         public event EventHandler<EventArgs> ParamtersAccepted;
 
@@ -34,18 +30,17 @@ namespace ImageMatchingModule
             {
                 AlgorithmStatus old = _status;
                 _status = value;
-                StatusChanged?.Invoke(this, new CamCore.AlgorithmEventArgs()
+                StatusChanged?.Invoke(this, new AlgorithmEventArgs()
                 { CurrentStatus = _status, OldStatus = old });
             }
         }
-        public event EventHandler<CamCore.AlgorithmEventArgs> StatusChanged;
+        public event EventHandler<AlgorithmEventArgs> StatusChanged;
         
         public void Process()
         {
             Status = AlgorithmStatus.Running;
-            _matcher.ImageLeft = ImageLeft;
-            _matcher.ImageRight = ImageRight;
-            _matcher.MatchImages();
+            if(Cameras == null) { Cameras = CameraPair.Data; }
+            Algorithm.Find3DPoints();
             Status = AlgorithmStatus.Finished;
         }
 
@@ -56,18 +51,23 @@ namespace ImageMatchingModule
 
         public string GetProgress()
         {
-            return _matcher.GetProgress();
+            return "Point " + Algorithm.CurrentPoint.ToString() +
+                " of " + Algorithm.Points.Count.ToString();
         }
-        
-        public void Terminate() { }
+
+        public void Terminate()
+        {
+            Algorithm.Terminate();
+        }
 
         public void ShowParametersWindow()
         {
-            var algChooserWindow = new ParametersSelectionWindow();
-            algChooserWindow.Processor = _matcher;
-            algChooserWindow.Width = 380;
-            algChooserWindow.ShowDialog();
-            if(algChooserWindow.Accepted)
+            var window = new ParametersSelectionWindow()
+            {
+                Processor = Algorithm
+            };
+            window.ShowDialog();
+            if(window.Accepted)
             {
                 ParamtersAccepted?.Invoke(this, new EventArgs());
             }
@@ -86,9 +86,6 @@ namespace ImageMatchingModule
                 result.Append("Error");
 
             result.AppendLine();
-
-            result.AppendLine("Current results:");
-            result.Append(_matcher.GetStatus());
 
             return result.ToString();
         }

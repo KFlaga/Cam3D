@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using CamAlgorithms.ImageMatching;
 using System;
 using System.Windows.Media.Imaging;
+using CamAlgorithms.Calibration;
 
 namespace CalibrationModule
 {
@@ -103,8 +104,8 @@ namespace CalibrationModule
 
         private void EpiLinePointTest(Vector2 pointPosition, bool onLeftImage, bool reset)
         {
-            if(CalibrationData.Data.IsCamLeftCalibrated == false ||
-                CalibrationData.Data.IsCamRightCalibrated == false)
+            if(CameraPair.Data.IsCamLeftCalibrated == false ||
+                CameraPair.Data.IsCamRightCalibrated == false)
             {
                 return;
             }
@@ -121,9 +122,9 @@ namespace CalibrationModule
 
             EpiLine epiLine;
             if(onLeftImage)
-                epiLine = EpiLine.FindCorrespondingEpiline_LineOnRightImage(pointPosition, CalibrationData.Data.Fundamental);
+                epiLine = EpiLine.FindCorrespondingEpiline_LineOnRightImage(pointPosition, CameraPair.Data.Fundamental);
             else
-                epiLine = EpiLine.FindCorrespondingEpiline_LineOnLeftImage(pointPosition, CalibrationData.Data.Fundamental);
+                epiLine = EpiLine.FindCorrespondingEpiline_LineOnLeftImage(pointPosition, CameraPair.Data.Fundamental);
 
             PointImage image;
             if(onLeftImage && _camImageSec.ImageSource != null)

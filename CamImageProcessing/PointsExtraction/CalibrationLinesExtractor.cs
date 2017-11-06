@@ -1,7 +1,7 @@
 ﻿using CamCore;
 using System.Collections.Generic;
 
-namespace CalibrationModule.PointsExtraction
+namespace CamAlgorithms.PointsExtraction
 {
     public interface ICalibrationLinesExtractor
     {
@@ -30,7 +30,7 @@ namespace CalibrationModule.PointsExtraction
                     {
                         if(CalibGrid[r, c] != null && CalibGrid[r, c].IsInvalid == false)
                         {
-                            line.Add(CalibGrid[r, c].GravityCenter);
+                            line.Add(CalibGrid[r, c].Center);
                         }
                     }
                     if(line.Count >= 3)
@@ -47,7 +47,7 @@ namespace CalibrationModule.PointsExtraction
                     {
                         if(CalibGrid[r, c] != null && CalibGrid[r, c].IsInvalid == false)
                         {
-                            line.Add(CalibGrid[r, c].GravityCenter);
+                            line.Add(CalibGrid[r, c].Center);
                         }
                     }
                     if(line.Count >= 3)

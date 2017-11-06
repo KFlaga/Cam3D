@@ -3,7 +3,7 @@ using MathNet.Numerics.LinearAlgebra.Double;
 using System.Collections.Generic;
 using CamCore;
 
-namespace CamAlgorithms
+namespace CamAlgorithms.Calibration
 {
     // Rational model of distortion function is unknown here
     // Inverse (undistortion) function is approximated by Taylor series (for x0 = 0 as ru/rd are centered at 0) :

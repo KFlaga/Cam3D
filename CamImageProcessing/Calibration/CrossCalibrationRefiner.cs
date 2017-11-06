@@ -1,13 +1,13 @@
-﻿using CamCore;
+﻿using CamAlgorithms.Triangulation;
+using CamCore;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading;
 
-namespace CamAlgorithms
+namespace CamAlgorithms.Calibration
 {
     // Corrects camera matrices of cameras calibrated separately using
     // information on matching points : changes values
@@ -96,20 +96,20 @@ namespace CamAlgorithms
 
         Matrix<double> CameraLeft
         {
-            get { return CalibrationData.Data.CameraLeft; }
-            set { CalibrationData.Data.CameraLeft = value; }
+            get { return CameraPair.Data.CameraLeft; }
+            set { CameraPair.Data.CameraLeft = value; }
         }
 
         Matrix<double> CameraRight
         {
-            get { return CalibrationData.Data.CameraRight; }
-            set { CalibrationData.Data.CameraRight = value; }
+            get { return CameraPair.Data.CameraRight; }
+            set { CameraPair.Data.CameraRight = value; }
         }
 
         Matrix<double> Fundamental
         {
-            get { return CalibrationData.Data.Fundamental; }
-            set { CalibrationData.Data.Fundamental = value; }
+            get { return CameraPair.Data.Fundamental; }
+            set { CameraPair.Data.Fundamental = value; }
         }
 
         public override void Process()
@@ -133,37 +133,37 @@ namespace CamAlgorithms
             // Full: [fx, fy, s, px, py, eaX, eaY, eaZ, Cx, Cy, Cz]
             // Center fixed: [fx, fy, s, eaX, eaY, eaZ, Cx, Cy, Cz]
             ParametersVector = new DenseVector(_cameraParamsCount * 2);
-            if(_fxIdx >= 0) ParametersVector.At(_fxIdx, CalibrationData.Data.CalibrationLeft.At(0, 0));
-            if(_fyIdx >= 0) ParametersVector.At(_fyIdx, CalibrationData.Data.CalibrationLeft.At(1, 1));
-            if(_skIdx >= 0) ParametersVector.At(_skIdx, CalibrationData.Data.CalibrationLeft.At(0, 1));
-            if(_pxIdx >= 0) ParametersVector.At(_pxIdx, CalibrationData.Data.CalibrationLeft.At(0, 2));
-            if(_pyIdx >= 0) ParametersVector.At(_pyIdx, CalibrationData.Data.CalibrationLeft.At(1, 2));
+            if(_fxIdx >= 0) ParametersVector.At(_fxIdx, CameraPair.Data.CalibrationLeft.At(0, 0));
+            if(_fyIdx >= 0) ParametersVector.At(_fyIdx, CameraPair.Data.CalibrationLeft.At(1, 1));
+            if(_skIdx >= 0) ParametersVector.At(_skIdx, CameraPair.Data.CalibrationLeft.At(0, 1));
+            if(_pxIdx >= 0) ParametersVector.At(_pxIdx, CameraPair.Data.CalibrationLeft.At(0, 2));
+            if(_pyIdx >= 0) ParametersVector.At(_pyIdx, CameraPair.Data.CalibrationLeft.At(1, 2));
 
             Vector<double> euler = new DenseVector(3);
-            RotationConverter.MatrixToEuler(euler, CalibrationData.Data.RotationLeft);
+            RotationConverter.MatrixToEuler(euler, CameraPair.Data.RotationLeft);
             if(_euXIdx >= 0) ParametersVector.At(_euXIdx, euler.At(0));
             if(_euYIdx >= 0) ParametersVector.At(_euYIdx, euler.At(1));
             if(_euZIdx >= 0) ParametersVector.At(_euZIdx, euler.At(2));
 
-            if(_cXIdx >= 0) ParametersVector.At(_cXIdx, CalibrationData.Data.TranslationLeft.At(0));
-            if(_cYIdx >= 0) ParametersVector.At(_cYIdx, CalibrationData.Data.TranslationLeft.At(1));
-            if(_cZIdx >= 0) ParametersVector.At(_cZIdx, CalibrationData.Data.TranslationLeft.At(2));
+            if(_cXIdx >= 0) ParametersVector.At(_cXIdx, CameraPair.Data.TranslationLeft.At(0));
+            if(_cYIdx >= 0) ParametersVector.At(_cYIdx, CameraPair.Data.TranslationLeft.At(1));
+            if(_cZIdx >= 0) ParametersVector.At(_cZIdx, CameraPair.Data.TranslationLeft.At(2));
 
             int n0 = _cameraParamsCount;
-            if(_fxIdx >= 0) ParametersVector.At(_fxIdx + n0, CalibrationData.Data.CalibrationRight.At(0, 0));
-            if(_fyIdx >= 0) ParametersVector.At(_fyIdx + n0, CalibrationData.Data.CalibrationRight.At(1, 1));
-            if(_skIdx >= 0) ParametersVector.At(_skIdx + n0, CalibrationData.Data.CalibrationRight.At(0, 1));
-            if(_pxIdx >= 0) ParametersVector.At(_pxIdx + n0, CalibrationData.Data.CalibrationRight.At(0, 2));
-            if(_pyIdx >= 0) ParametersVector.At(_pyIdx + n0, CalibrationData.Data.CalibrationRight.At(1, 2));
+            if(_fxIdx >= 0) ParametersVector.At(_fxIdx + n0, CameraPair.Data.CalibrationRight.At(0, 0));
+            if(_fyIdx >= 0) ParametersVector.At(_fyIdx + n0, CameraPair.Data.CalibrationRight.At(1, 1));
+            if(_skIdx >= 0) ParametersVector.At(_skIdx + n0, CameraPair.Data.CalibrationRight.At(0, 1));
+            if(_pxIdx >= 0) ParametersVector.At(_pxIdx + n0, CameraPair.Data.CalibrationRight.At(0, 2));
+            if(_pyIdx >= 0) ParametersVector.At(_pyIdx + n0, CameraPair.Data.CalibrationRight.At(1, 2));
 
-            RotationConverter.MatrixToEuler(euler, CalibrationData.Data.RotationRight);
+            RotationConverter.MatrixToEuler(euler, CameraPair.Data.RotationRight);
             if(_euXIdx >= 0) ParametersVector.At(_euXIdx + n0, euler.At(0));
             if(_euYIdx >= 0) ParametersVector.At(_euYIdx + n0, euler.At(1));
             if(_euZIdx >= 0) ParametersVector.At(_euZIdx + n0, euler.At(2));
 
-            if(_cXIdx >= 0) ParametersVector.At(_cXIdx + n0, CalibrationData.Data.TranslationRight.At(0));
-            if(_cYIdx >= 0) ParametersVector.At(_cYIdx + n0, CalibrationData.Data.TranslationRight.At(1));
-            if(_cZIdx >= 0) ParametersVector.At(_cZIdx + n0, CalibrationData.Data.TranslationRight.At(2));
+            if(_cXIdx >= 0) ParametersVector.At(_cXIdx + n0, CameraPair.Data.TranslationRight.At(0));
+            if(_cYIdx >= 0) ParametersVector.At(_cYIdx + n0, CameraPair.Data.TranslationRight.At(1));
+            if(_cZIdx >= 0) ParametersVector.At(_cZIdx + n0, CameraPair.Data.TranslationRight.At(2));
 
             //_imgCenterLeft = new Vector2(CalibrationData.Data.CalibrationLeft.At(0, 2),
             //    CalibrationData.Data.CalibrationLeft.At(1, 2));
@@ -258,10 +258,10 @@ namespace CamAlgorithms
             UpdateRealPoints(CalibPointsLeft, _grids, _reals);
             UpdateImagePoints();
 
-            CalibrationData cdata = new CalibrationData();
+            CameraPair cdata = new CameraPair();
             cdata.CameraLeft = CameraLeft;
             cdata.CameraRight = CameraRight;
-            _triangulation.CalibData = cdata;
+            _triangulation.Cameras = cdata;
            // _triangulation.PointsLeft = new List<Vector<double>>(_imgsLeft);
            // _triangulation.PointsRight = new List<Vector<double>>(_imgsRight);
             _triangulation.Estimate3DPoints();
@@ -430,8 +430,8 @@ namespace CamAlgorithms
             var p2 = new Vector2(_imgsRight[index]);
 
             // -having point pair p1, p2, find l2 = epi(p1), l1 = epi(p2)
-            EpiLine epiLeft = EpiLine.FindCorrespondingEpiline_LineOnLeftImage(p2, CalibrationData.Data.Fundamental);
-            EpiLine epiRight = EpiLine.FindCorrespondingEpiline_LineOnRightImage(p1, CalibrationData.Data.Fundamental);
+            EpiLine epiLeft = EpiLine.FindCorrespondingEpiline_LineOnLeftImage(p2, CameraPair.Data.Fundamental);
+            EpiLine epiRight = EpiLine.FindCorrespondingEpiline_LineOnRightImage(p1, CameraPair.Data.Fundamental);
             //- for l = [a, b, c] normalized line ln = [a / D, b / D, c / D] where D = sqrt(A ^ 2 + B ^ 2)
             epiLeft.Normalize();
             epiRight.Normalize();
@@ -551,11 +551,7 @@ namespace CamAlgorithms
                 return "Cross-Calibrator";
             }
         }
-
-        public bool SupportsFinalResults { get { return true; } }
-        public bool SupportsPartialResults { get { return true; } }
-        public bool SupportsProgress { get { return true; } }
-        public bool SupportsSuspension { get { return false; } }
+        
         public bool SupportsTermination { get { return true; } }
         public bool SupportsParameters { get { return true; } }
 
@@ -575,12 +571,7 @@ namespace CamAlgorithms
         public event EventHandler<AlgorithmEventArgs> StatusChanged;
         public event EventHandler<EventArgs> ParamtersAccepted;
 
-        public string GetFinalResults()
-        {
-            return PrepareResults();
-        }
-
-        public string GetPartialResults()
+        public string GetResults()
         {
             return PrepareResults();
         }
@@ -590,10 +581,6 @@ namespace CamAlgorithms
             return "Iteration " + CurrentIteration.ToString() +
                      " of " + MaximumIterations.ToString();
         }
-
-        public void Suspend() { }
-
-        public void Resume() { }
 
         void IControllableAlgorithm.Terminate()
         {
@@ -679,7 +666,7 @@ namespace CamAlgorithms
 
         private void ResultReprojectionError(StringBuilder result, SideIndex camIdx)
         {
-            Matrix<double> camera = CalibrationData.Data.GetCameraMatrix(camIdx);
+            Matrix<double> camera = CameraPair.Data.GetCameraMatrix(camIdx);
             var imgs = camIdx == SideIndex.Left ? _imgsLeft : _imgsRight;
             var reals = _reals; //camIdx == CameraIndex.Left ? _realsLeft : _realsRight;
             var cpoints = camIdx == SideIndex.Left ? CalibPointsLeft : CalibPointsRight;
@@ -729,11 +716,11 @@ namespace CamAlgorithms
             {
                 result.AppendLine("Camera Matrix Right: ");
             }
-            Matrix<double> camera = CalibrationData.Data.GetCameraMatrix(camIdx);
-            Matrix<double> calib = CalibrationData.Data.GetCalibrationMatrix(camIdx);
-            Matrix<double> rotation = CalibrationData.Data.GetRotationMatrix(camIdx);
-            Vector<double> center = CalibrationData.Data.GetTranslationVector(camIdx);
-            Vector<double> epiPole = CalibrationData.Data.GetEpipole(camIdx);
+            Matrix<double> camera = CameraPair.Data.GetCameraMatrix(camIdx);
+            Matrix<double> calib = CameraPair.Data.GetCalibrationMatrix(camIdx);
+            Matrix<double> rotation = CameraPair.Data.GetRotationMatrix(camIdx);
+            Vector<double> center = CameraPair.Data.GetTranslationVector(camIdx);
+            Vector<double> epiPole = CameraPair.Data.GetEpipole(camIdx);
 
             result.Append("|" + camera[0, 0].ToString("F3"));
             result.Append("; " + camera[0, 1].ToString("F3"));

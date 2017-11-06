@@ -70,7 +70,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="TriangulationAlgorithm.cs" />
+    <Compile Include="TriangulationAlgorithmUi.cs" />
     <Compile Include="TraingulationModeTabs.xaml.cs">
       <DependentUpon>TraingulationModeTabs.xaml</DependentUpon>
     </Compile>

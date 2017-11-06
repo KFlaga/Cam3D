@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
-using CamCore;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
 using System;
 
-namespace CamAlgorithms
+namespace CamAlgorithms.Calibration
 {
     // Uses distortion direction to determine better line fit ( closer to real, undistorted one )
     // 1) Finds distortion direction

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
 using CamAlgorithms;
+using CamAlgorithms.Calibration;
 
 namespace CamUnitTest
 {
@@ -13,7 +14,25 @@ namespace CamUnitTest
     {
         Matrix<double> _CM;
         Matrix<double> _eCM;
-        CalibrationAlgorithm _calib;
+
+        class TestCalibrationAlgorithm : CalibrationAlgorithm
+        {
+            public new void HomoPoints()
+            {
+                base.ConvertPointsToHomonogeus();
+            }
+
+            public new void NormalizePoints()
+            {
+                base.NormalizePoints();
+            }
+
+            public new Matrix<double> FindLinearEstimationOfCameraMatrix()
+            {
+                return base.FindLinearEstimationOfCameraMatrix();
+            }
+        }
+        TestCalibrationAlgorithm _calib;
 
         public void PrepareCameraMatrix()
         {
@@ -40,7 +59,7 @@ namespace CamUnitTest
 
         public void PrepareCalibrator(List<CalibrationPoint> points)
         {
-            _calib = new CalibrationAlgorithm();
+            _calib = new TestCalibrationAlgorithm();
             _calib.Points = points;
 
             _calib.ImageMeasurementVariance_X = _varianceImage;
@@ -61,13 +80,13 @@ namespace CamUnitTest
             _calib.HomoPoints();
             _calib.NormalizePoints();
 
-            _calib.CameraMatrix = _calib.FindLinearEstimationOfCameraMatrix(_calib.ImagePoints, _calib.RealPoints);
+            _calib.Camera.Matrix = _calib.FindLinearEstimationOfCameraMatrix();
 
-            _calib.DenormaliseCameraMatrix();
-            _calib.DecomposeCameraMatrix();
-            _eCM = _calib.CameraMatrix;
+            _calib.Camera.Denormalize(_calib.NormImage, _calib.NormReal);
+            _calib.Camera.Decompose();
+            _eCM = _calib.Camera.Matrix;
 
-            double scaleK = -1.0 / _calib.CameraInternalMatrix[2, 2];
+            double scaleK = -1.0 / _calib.Camera.InternalMatrix[2, 2];
             _eCM.MultiplyThis(scaleK);
 
             Assert.IsTrue((_eCM - _CM).FrobeniusNorm() < 1e-6);
@@ -98,17 +117,17 @@ namespace CamUnitTest
             _calib.HomoPoints();
             _calib.NormalizePoints();
 
-            _calib.CameraMatrix = _calib.FindLinearEstimationOfCameraMatrix(_calib.ImagePoints, _calib.RealPoints);
+            _calib.Camera.Matrix = _calib.FindLinearEstimationOfCameraMatrix();
 
-            _calib.DenormaliseCameraMatrix();
-            _calib.DecomposeCameraMatrix();
-            _eCM = _calib.CameraMatrix;
+            _calib.Camera.Denormalize(_calib.NormImage, _calib.NormReal);
+            _calib.Camera.Decompose();
+            _eCM = _calib.Camera.Matrix;
 
-            double scaleK = 1.0 / _calib.CameraInternalMatrix[2, 2];
+            double scaleK = 1.0 / _calib.Camera.InternalMatrix[2, 2];
             _eCM.MultiplyThis(-scaleK);
 
-            var eK = _calib.CameraInternalMatrix.Multiply(scaleK);
-            var eR = -_calib.CameraRotationMatrix;
+            var eK = _calib.Camera.InternalMatrix.Multiply(scaleK);
+            var eR = -_calib.Camera.RotationMatrix;
             var eC = -(_eCM.SubMatrix(0, 3, 0, 3).Inverse() * _eCM.Column(3));
 
             Matrix<double> eExt = new DenseMatrix(3, 4);

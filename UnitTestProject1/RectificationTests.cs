@@ -5,6 +5,7 @@ using CamAlgorithms;
 using System.Collections.Generic;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
+using CamAlgorithms.Calibration;
 
 namespace CamUnitTest
 {
@@ -12,7 +13,7 @@ namespace CamUnitTest
     public class RectificationTests
     {
         private Matrix<double> Fi;
-        CalibrationData cData = new CalibrationData();
+        CameraPair cData = new CameraPair();
 
         List<Vector2Pair> matchedPairs;
 

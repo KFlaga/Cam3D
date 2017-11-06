@@ -1,6 +1,7 @@
 ﻿using CamAlgorithms;
 using System.Collections.Generic;
 using CamCore;
+using CamAlgorithms.Calibration;
 
 namespace CamMain.ProcessingChain
 {

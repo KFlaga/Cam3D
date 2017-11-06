@@ -23,14 +23,8 @@ namespace RectificationModule
         public List<IntVector2> FeatureListRight { get; protected set; }
 
         public string Name { get; } = "Features Dectection";
-
-        public bool SupportsFinalResults { get; } = true;
-        public bool SupportsPartialResults { get; } = true;
-
-        public bool SupportsProgress { get; } = true;
-        public bool SupportsSuspension { get; } = false;
+        
         public bool SupportsTermination { get; } = true;
-
         public bool SupportsParameters { get; } = true;
         public event EventHandler<EventArgs> ParamtersAccepted;
 
@@ -111,12 +105,7 @@ namespace RectificationModule
             _detector.UpdateParameters();
         }
 
-        public string GetFinalResults()
-        {
-            return PrepareResults();
-        }
-
-        public string GetPartialResults()
+        public string GetResults()
         {
             return PrepareResults();
         }
@@ -127,11 +116,6 @@ namespace RectificationModule
                 _detector.CurrentPixel.X + ", " + _detector.CurrentPixel.Y +
                 ") of [" + ImageLeft.ColumnCount + ", " + ImageLeft.RowCount + "].";
         }
-
-        public void Suspend() { }
-
-        public void Resume() { }
-
         public void Terminate()
         {
             _detector.Terminate = true;

@@ -1,7 +1,7 @@
 ﻿using CamCore;
 using System.Collections.Generic;
 
-namespace CalibrationModule.PointsExtraction
+namespace CamAlgorithms.PointsExtraction
 {
     public class CalibrationShape
     {
@@ -11,7 +11,7 @@ namespace CalibrationModule.PointsExtraction
         public bool IsInvalid { get { return Index == -1; } }
         
         private Vector2 _gravityCenter = new Vector2(-1, -1);
-        public Vector2 GravityCenter
+        public Vector2 Center
         {
             get { return _gravityCenter; }
             set { _gravityCenter = value; }

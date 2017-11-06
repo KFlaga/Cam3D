@@ -1,18 +1,16 @@
 ﻿using CamAlgorithms;
+using CamAlgorithms.Calibration;
 using CamCore;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 
 namespace CamMain.ProcessingChain
 {
     public class CalibrationLinkData
     {
-        public CalibrationData Calibration { get; set; }
+        public CameraPair Calibration { get; set; }
         public List<RealGridData> Grids { get; set; }
     }
 
@@ -135,7 +133,7 @@ namespace CamMain.ProcessingChain
             _calibrator.LinearOnly = false;
             _calibrator.NormalizeLinear = true;
             _calibrator.NormalizeIterative = false;
-            _calibrator.MinimaliseSkew = true;
+            _calibrator.MinimalizeSkew = true;
 
             _calibrator.UseCovarianceMatrix = true;
             _calibrator.ImageMeasurementVariance_X = 0.25;
@@ -177,7 +175,7 @@ namespace CamMain.ProcessingChain
 
         private void CalibrateCameras()
         {
-            _linkData.Calibration = new CalibrationData();
+            _linkData.Calibration = new CameraPair();
             CalibrateCamera(SideIndex.Left);
             CalibrateCamera(SideIndex.Right);
         }
@@ -188,7 +186,7 @@ namespace CamMain.ProcessingChain
             _calibrator.Grids = _linkData.Grids;
 
             _calibrator.Calibrate();
-            _linkData.Calibration.SetCameraMatrix(idx, _calibrator.CameraMatrix);
+            _linkData.Calibration.SetCameraMatrix(idx, _calibrator.Camera.Matrix);
         }
 
         private void SaveCalibration()
@@ -227,7 +225,7 @@ namespace CamMain.ProcessingChain
             XmlNode calibDataNode = _config.RootNode.FirstChildWithName("CalibrationData");
             string filePath = _config.WorkingDirectory + calibDataNode.Attributes["path"].Value;
 
-            _linkData.Calibration = new CalibrationData();
+            _linkData.Calibration = new CameraPair();
             using(Stream file = new FileStream(filePath, FileMode.Open))
             {
                 _linkData.Calibration.LoadFromFile(file, filePath);

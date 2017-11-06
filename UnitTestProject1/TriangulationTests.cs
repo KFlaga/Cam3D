@@ -7,13 +7,15 @@ using System.Collections.Generic;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
 using CalibrationModule;
+using CamAlgorithms.Calibration;
+using CamAlgorithms.Triangulation;
 
 namespace CamUnitTest
 {
     [TestClass]
     public class TriangulationTests
     {
-        CalibrationData cData = new CalibrationData();
+        CameraPair cData = new CameraPair();
         List<Vector<double>> _imagePointsLeft;
         List<Vector<double>> _imagePointsRight;
         List<Vector<double>> _realPoints;
@@ -31,7 +33,7 @@ namespace CamUnitTest
             //NormalisePoints();
             // 4) Using pairs of corresponding points find their 3D back-projection with Triangulation
             TwoPointsTriangulation trangulation = new TwoPointsTriangulation();
-            trangulation.CalibData = cData;
+            trangulation.Cameras = cData;
 
             trangulation.PointsLeft = _imagePointsLeft;
             trangulation.PointsRight = _imagePointsRight;
@@ -53,7 +55,7 @@ namespace CamUnitTest
             NormalisePoints();
             // 4) Using pairs of corresponding points find their 3D back-projection with Triangulation
             TwoPointsTriangulation trangulation = new TwoPointsTriangulation();
-            trangulation.CalibData = cData;
+            trangulation.Cameras = cData;
 
             trangulation.PointsLeft = _imgPointsNormLeft;
             trangulation.PointsRight = _imgPointsNormRight;
@@ -74,7 +76,7 @@ namespace CamUnitTest
             GeneratePoints_Random(_seed);
             // 4) Using pairs of corresponding points find their 3D back-projection with Triangulation
             TwoPointsTriangulation trangulation = new TwoPointsTriangulation();
-            trangulation.CalibData = cData;
+            trangulation.Cameras = cData;
             trangulation.PointsLeft = _imagePointsLeft;
             trangulation.PointsRight = _imagePointsRight;
 
@@ -371,7 +373,7 @@ namespace CamUnitTest
             cData.CameraRight = AddNoise(cData.CameraRight);
 
             TwoPointsTriangulation trangulation = new TwoPointsTriangulation();
-            trangulation.CalibData = cData;
+            trangulation.Cameras = cData;
 
             trangulation.PointsLeft = noisedLeft;
             trangulation.PointsRight = noisedRight;
@@ -401,7 +403,7 @@ namespace CamUnitTest
             var noisedRight = AddNoise(_imgPointsNormRight, 1e-12);
 
             TwoPointsTriangulation trangulation = new TwoPointsTriangulation();
-            trangulation.CalibData = cData;
+            trangulation.Cameras = cData;
 
             trangulation.PointsLeft = noisedLeft;
             trangulation.PointsRight = noisedRight;
@@ -429,7 +431,7 @@ namespace CamUnitTest
             NormalisePoints();
 
             TwoPointsTriangulation trangulation = new TwoPointsTriangulation();
-            trangulation.CalibData = cData;
+            trangulation.Cameras = cData;
 
             //  trangulation.ComputeEpilineFitCost(10.0);
         }

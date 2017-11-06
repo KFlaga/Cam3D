@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using CamCore;
-using CamAlgorithms;
-using System.Windows;
 
-namespace CalibrationModule.PointsExtraction
+namespace CamAlgorithms.PointsExtraction
 {
     public class CalibrationShapesExtractor
     {
@@ -34,10 +32,10 @@ namespace CalibrationModule.PointsExtraction
         {
             CalibShapes = new List<CalibrationShape>();
             
-            _pixelCodes = new CellCode[_image.RowCount, _image.ColumnCount];
             _whiteBorder = new List<Point2D<int>>();
             _image = image;
             _tBrightness = brightnessTreshold;
+            _pixelCodes = new CellCode[_image.RowCount, _image.ColumnCount];
 
             // Fill whole background first
             FillBackgroundAroundTheEdgesAndFindWhiteFieldBorder();
@@ -168,6 +166,7 @@ namespace CalibrationModule.PointsExtraction
             flood.FloodFill(y, x);
 
             _currentShape.FindCenter();
+            CalibShapes.Add(_currentShape);
         }
         
         bool IfUnvisitedAndDarkAddToCurrentShape(int y, int x)

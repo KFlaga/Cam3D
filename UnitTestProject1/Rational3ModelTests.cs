@@ -5,6 +5,7 @@ using CalibrationModule;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
 using CamAlgorithms;
+using CamAlgorithms.Calibration;
 
 namespace CamUnitTest
 {

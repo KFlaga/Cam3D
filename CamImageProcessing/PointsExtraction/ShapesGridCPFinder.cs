@@ -1,10 +1,11 @@
 ﻿using CamCore;
-using CamAlgorithms;
 using System;
 using System.Collections.Generic;
+using CamAlgorithms.Calibration;
 
-namespace CalibrationModule.PointsExtraction
+namespace CamAlgorithms.PointsExtraction
 {
+    // 3 reference points determine local axes (should be neighbouring shapes)
     public class ReferncePoint
     {
         public CalibrationShape Shape { get; set; } = null;
@@ -23,10 +24,9 @@ namespace CalibrationModule.PointsExtraction
         {
             return new List<ReferncePoint>()
             {
-                new ReferncePoint(new IntVector2(0, 0), new ColorShapeChecker(new Vector3(1, 0, 0))),
-                new ReferncePoint(new IntVector2(0, 0), new ColorShapeChecker(new Vector3(1, 0, 0))),
-                new ReferncePoint(new IntVector2(0, 0), new ColorShapeChecker(new Vector3(1, 0, 0))),
-                new ReferncePoint(new IntVector2(0, 0), new ColorShapeChecker(new Vector3(1, 0, 0)))
+                new ReferncePoint(new IntVector2(x: 4, y: 4), new ColorShapeChecker(new Vector3(0, 0.3, 0))),
+                new ReferncePoint(new IntVector2(x: 5, y: 4), new ColorShapeChecker(new Vector3(0.3, 0, 0))),
+                new ReferncePoint(new IntVector2(x: 4, y: 5), new ColorShapeChecker(new Vector3(0, 0, 0.3)))
             };
         }
     }
@@ -62,7 +62,7 @@ namespace CalibrationModule.PointsExtraction
                 {
                     Points.Add(new CalibrationPoint()
                     {
-                        Img = shape.GravityCenter,
+                        Img = shape.Center,
                         RealGridPos = new IntVector2(x: shape.GridPos.X, y: shape.GridPos.Y)
                     });
                 }
@@ -75,10 +75,7 @@ namespace CalibrationModule.PointsExtraction
         {
             RemoveTooSmallShapes();
             FindReferencePoints();
-            if(ReferncePoints.Count == 0)
-            {
-                throw new Exception("No refernce calibration shape detected on calibration image");
-            }
+            ValidateReferncePoints();
             RemoveAllShapesNotOnWhiteFieldsWithRefernceShape();
             RemoveShapesTooSmallComparedToClosestReferenceShape();
         }
@@ -93,6 +90,7 @@ namespace CalibrationModule.PointsExtraction
             foreach(var refPoint in ReferncePoints)
             {
                 refPoint.CheckIsReferncePoint.Image = Image;
+                refPoint.Shape = null;
                 for(int i = 0; i < CalibShapes.Count; ++i)
                 {
                     var shape = CalibShapes[i];
@@ -104,15 +102,31 @@ namespace CalibrationModule.PointsExtraction
                     }
                 }
             }
-            ReferncePoints.RemoveIf((refPoint) => { return refPoint.Shape == null; });
+        }
+
+        void ValidateReferncePoints()
+        {
+            if(ReferncePoints.Count != 3)
+            {
+                throw new Exception("Need 3 refernce points which define local axes");
+            }
 
             foreach(var p1 in ReferncePoints)
             {
+                if(p1.Shape == null)
+                {
+                    throw new Exception("Some refernce point not found");
+                }
+
                 foreach(var p2 in ReferncePoints)
                 {
                     if(p1 != p2 && p1.Shape == p2.Shape)
                     {
                         throw new Exception("More than one ReferncePoint have same Shape");
+                    }
+                    if(p1.Shape.Index != p2.Shape.Index)
+                    {
+                        throw new Exception("Refernce points on different white fields");
                     }
                 }
             }
@@ -124,9 +138,9 @@ namespace CalibrationModule.PointsExtraction
             {
                 foreach(var refPoint in ReferncePoints)
                 {
-                    if(refPoint.Shape.Index == shape.Index) { return true; }
+                    if(refPoint.Shape.Index == shape.Index) { return false; }
                 }
-                return false;
+                return true;
             });
         }
 
@@ -146,7 +160,7 @@ namespace CalibrationModule.PointsExtraction
             double closestDist = 1e12;
             foreach(var refPoint in ReferncePoints)
             {
-                double d = refPoint.Shape.GravityCenter.DistanceToSquared(shape.GravityCenter);
+                double d = refPoint.Shape.Center.DistanceToSquared(shape.Center);
                 if(closestPoint == null || d < closestDist)
                 {
                     closestPoint = refPoint;

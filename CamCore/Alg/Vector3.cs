@@ -218,7 +218,12 @@ namespace CamCore
 
         public override string ToString()
         {
-            return "X: " + X + ", Y: " + Y + ",Z: " + Z;
+            return "X: " + X + ",Y: " + Y + ",Z: " + Z;
+        }
+
+        public string ToString(string format)
+        {
+            return "X: " + X.ToString(format) + ",Y: " + Y.ToString(format) + ",Z: " + Z.ToString(format);
         }
 
         public XmlNode CreateXmlNode(XmlDocument xmlDoc, string nodeName = "Vector3")

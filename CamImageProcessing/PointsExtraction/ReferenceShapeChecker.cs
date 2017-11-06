@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using CamCore;
-using CamAlgorithms;
 
-namespace CalibrationModule.PointsExtraction
+namespace CamAlgorithms.PointsExtraction
 {
     public abstract class RefernceShapeChecker : IParameterizable
     {
@@ -64,8 +63,8 @@ namespace CalibrationModule.PointsExtraction
         public override bool CheckShape(CalibrationShape shape)
         {
             SetParams();
-            int cx = shape.GravityCenter.X.Round();
-            int cy = shape.GravityCenter.Y.Round();
+            int cx = shape.Center.X.Round();
+            int cy = shape.Center.Y.Round();
             int matches = 0;
             
             for(int dx = -_r; dx <= _r; ++dx)
@@ -76,7 +75,7 @@ namespace CalibrationModule.PointsExtraction
                 }
             }
 
-            return matches > _winSize * 0.75;
+            return matches > (_winSize * _winSize) * 0.75;
         }
 
         bool CheckColorOfPixel(int y, int x)

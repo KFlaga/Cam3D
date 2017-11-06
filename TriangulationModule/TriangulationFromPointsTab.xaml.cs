@@ -1,14 +1,13 @@
 ﻿using MathNet.Numerics.LinearAlgebra;
-using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media.Imaging;
-using CamControls;
 using CamCore;
-using CamAlgorithms;
 using MathNet.Numerics.LinearAlgebra.Double;
 using System.Text;
+using CamAlgorithms.Calibration;
+using CamAlgorithms.Triangulation;
+using CamControls;
 
 namespace TriangulationModule
 {
@@ -16,11 +15,9 @@ namespace TriangulationModule
     {
         List<Vector2> _imgLeftPoints = new List<Vector2>();
         List<Vector2> _imgRightPoints = new List<Vector2>();
-
-        TwoPointsTriangulation _triangulation = new TwoPointsTriangulation();
-        List<Vector<double>> _left;
-        List<Vector<double>> _right;
-        List<Vector<double>> _points3D;
+        
+        public TriangulationAlgorithmUi Algorithm { get; private set; } = new TriangulationAlgorithmUi();
+        public List<TriangulatedPoint> Points;
 
         public TriangulationFromPointsTab()
         {
@@ -51,8 +48,8 @@ namespace TriangulationModule
 
         private void Triangulate(object sender, RoutedEventArgs e)
         {
-            if(CalibrationData.Data.IsCamLeftCalibrated == false ||
-                CalibrationData.Data.IsCamRightCalibrated == false)
+            if(CameraPair.Data.IsCamLeftCalibrated == false ||
+                CameraPair.Data.IsCamRightCalibrated == false)
             {
                 MessageBox.Show("Error: Cameras are not calibrated!");
                 return;
@@ -64,59 +61,42 @@ namespace TriangulationModule
                 return;
             }
 
-            _left = new List<Vector<double>>();
-            _right = new List<Vector<double>>();
+            Points = new List<TriangulatedPoint>();
             for(int i = 0; i < _imgLeftPoints.Count; ++i)
             {
-                var leftPoint = _imgLeftPoints[i];
-                var rightPoint = _imgRightPoints[i];
-                _left.Add(new DenseVector(new double[]
+                Points.Add(new TriangulatedPoint()
                 {
-                    leftPoint.X, leftPoint.Y, 1.0
-                }));
-                _right.Add(new DenseVector(new double[]
-                {
-                    rightPoint.X, rightPoint.Y, 1.0
-                }));
+                    ImageLeft = _imgLeftPoints[i],
+                    ImageRight = _imgRightPoints[i],
+                    Real = new Vector3()
+                });
             }
 
-       //     Matrix<double> normLeft = PointNormalization.Normalize2D(_left);
-        //    Matrix<double> normRight = PointNormalization.Normalize2D(_right);
+            Algorithm.Cameras = CameraPair.Data;
+            Algorithm.Points = Points;
+            Algorithm.Recitifed = false;
+            Algorithm.StatusChanged += Algorithm_StatusChanged;
+            AlgorithmWindow window = new AlgorithmWindow(Algorithm);
+            window.Show();
+        }
 
-//            for(int i = 0; i < _imgLeftPoints.Count; ++i)
- //           {
-  //              _left[i] = normLeft * _left[i];
-   //             _right[i] = normRight * _right[i];
-   //         }
+        private void Algorithm_StatusChanged(object sender, AlgorithmEventArgs e)
+        {
+            Dispatcher.Invoke(() => {
+                StringBuilder leftText = new StringBuilder();
+                StringBuilder rightText = new StringBuilder();
+                StringBuilder realText = new StringBuilder();
+                for(int i = 0; i < Points.Count; ++i)
+                {
+                    leftText.AppendLine(Points[i].ImageLeft.ToString("F1"));
+                    rightText.AppendLine(Points[i].ImageRight.ToString("F1"));
+                    realText.AppendLine(Points[i].Real.ToString("F2"));
+                }
 
-    //        var oldCamLeft = CalibrationData.Data.CameraLeft.Clone();
-     //       var oldCamRight = CalibrationData.Data.CameraRight.Clone();
-
-      //      CalibrationData.Data.CameraLeft = normLeft * oldCamLeft;
-       //     CalibrationData.Data.CameraRight = normRight * oldCamRight;
-
-            _triangulation.CalibData = CalibrationData.Data;
-            _triangulation.UseLinearEstimationOnly = true;
-            _triangulation.PointsLeft = _left;
-            _triangulation.PointsRight = _right;
-
-            _triangulation.Estimate3DPoints();
-
-            _points3D = _triangulation.Points3D;
-
-            StringBuilder leftText = new StringBuilder();
-            StringBuilder rightText = new StringBuilder();
-            StringBuilder realText = new StringBuilder();
-            for(int i = 0; i < _points3D.Count; ++i)
-            {
-                leftText.AppendLine("x: " + _left[i][0].ToString("F2") + ", y: " + _left[i][1].ToString("F2"));
-                rightText.AppendLine("x: " + _right[i][0].ToString("F2") + ", y: " + _right[i][1].ToString("F2"));
-                realText.AppendLine("X: " + _points3D[i][0].ToString("F2") + ", Y: " + _points3D[i][1].ToString("F2") + ", Z: " + _points3D[i][2].ToString("F2"));
-            }
-
-            _textPointsImgLeft.Text = leftText.ToString();
-            _textPointsImgRight.Text = rightText.ToString();
-            _textPointsReal.Text = realText.ToString();
+                _textPointsImgLeft.Text = leftText.ToString();
+                _textPointsImgRight.Text = rightText.ToString();
+                _textPointsReal.Text = realText.ToString();
+            });
         }
     }
 }

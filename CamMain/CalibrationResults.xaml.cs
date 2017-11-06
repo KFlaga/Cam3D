@@ -1,4 +1,5 @@
 ﻿using CamAlgorithms;
+using CamAlgorithms.Calibration;
 using System;
 using System.Windows;
 using System.Windows.Controls;
@@ -10,7 +11,7 @@ namespace CamMain
         public CalibrationResults()
         {
             InitializeComponent();
-            this.DataContext = CalibrationData.Data;
+            this.DataContext = CameraPair.Data;
         }
 
         public void Show()
