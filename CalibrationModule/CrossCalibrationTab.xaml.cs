@@ -1,14 +1,8 @@
-﻿using MathNet.Numerics.LinearAlgebra;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media.Imaging;
 using CamControls;
 using CamCore;
-using CamAlgorithms;
-using MathNet.Numerics.LinearAlgebra.Double;
-using System.Text;
 using System.Xml;
 using System.IO;
 using CamAlgorithms.Calibration;
@@ -107,8 +101,7 @@ namespace CalibrationModule
 
         private void Calibrate(object sender, RoutedEventArgs e)
         {
-            if(CameraPair.Data.IsCamLeftCalibrated == false ||
-                CameraPair.Data.IsCamRightCalibrated == false)
+            if(CameraPair.Data.AreCalibrated)
             {
                 MessageBox.Show("Cameras need to be initialy calibrated");
                 return;

@@ -1,4 +1,5 @@
 ﻿using CamAlgorithms;
+using CamAlgorithms.Calibration;
 using System.Windows.Controls;
 
 namespace Image3DModule
@@ -25,8 +26,7 @@ namespace Image3DModule
 
         public override bool StartModule()
         {
-            if (!CalibrationData.Data.IsCamLeftCalibrated ||
-                !CalibrationData.Data.IsCamRightCalibrated)
+            if (CameraPair.Data.AreCalibrated)
             {
                 FailText = "Both cameras need to be calibrated";
                 return true;

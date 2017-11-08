@@ -137,7 +137,7 @@ namespace CamCore
 
         public override void ReadFromXml(XmlNode node)
         {
-            //  <Parameter id="aaa" value="3">
+            //  <Parameter id="aaa" value="parametrizable_name">
             //      <Parameters> <!-- of parametrizable -->
             //      </Parameters>
             //  </Parameter>
@@ -147,6 +147,55 @@ namespace CamCore
             AlgorithmParameter.ReadParametersFromXml(alg.Parameters, algNode);
 
             Value = alg;
+        }
+    }
+    
+    public class Vector2Parameter : AlgorithmParameter<Vector2>
+    {
+        public Vector2Parameter(string name, string sname) :
+            base(name, sname, typeof(Vector2).Name)
+        {
+            Value = new Vector2();
+        }
+
+        public Vector2Parameter(string name, string sname,
+            Vector2 defVal, Vector2 minVal, Vector2 maxVal) :
+            base(name, sname, typeof(Vector2).Name, defVal, minVal, maxVal)
+        {
+            Value = new Vector2(defVal);
+        }
+
+        public override void ReadFromXml(XmlNode node)
+        {
+            //  <Parameter id="aaa" x="3" y="3"/>
+            Value = new Vector2(
+                double.Parse(node.Attributes["x"].Value), 
+                double.Parse(node.Attributes["y"].Value));
+        }
+    }
+
+    public class Vector3Parameter : AlgorithmParameter<Vector3>
+    {
+        public Vector3Parameter(string name, string sname) :
+            base(name, sname, typeof(Vector3).Name)
+        {
+            Value = new Vector3();
+        }
+
+        public Vector3Parameter(string name, string sname,
+            Vector3 defVal, Vector3 minVal, Vector3 maxVal) :
+            base(name, sname, typeof(Vector3).Name, defVal, minVal, maxVal)
+        {
+            Value = new Vector3(defVal);
+        }
+
+        public override void ReadFromXml(XmlNode node)
+        {
+            //  <Parameter id="aaa" x="3" y="3" z="3"/>
+            Value = new Vector3(
+                double.Parse(node.Attributes["x"].Value),
+                double.Parse(node.Attributes["y"].Value),
+                double.Parse(node.Attributes["z"].Value));
         }
     }
 }

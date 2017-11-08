@@ -65,8 +65,7 @@ namespace RectificationModule
                 MessageBox.Show("Images must have same size");
                 return;
             }
-            if(CameraPair.Data.IsCamLeftCalibrated == false ||
-                CameraPair.Data.IsCamRightCalibrated == false)
+            if(CameraPair.Data.AreCalibrated)
             {
                 MessageBox.Show("Cameras must be calibrated");
                 return;
@@ -76,7 +75,7 @@ namespace RectificationModule
             //ImageRectification_FusielloCalibrated rectifier = new ImageRectification_FusielloCalibrated();
             rectifier.ImageHeight = _camImageFirst.ImageSource.PixelHeight;
             rectifier.ImageWidth = _camImageFirst.ImageSource.PixelWidth;
-            rectifier.CalibData = CameraPair.Data;
+            rectifier.Cameras = CameraPair.Data;
             rectifier.ComputeRectificationMatrices();
 
             ImageTransformer transformer = new ImageTransformer();

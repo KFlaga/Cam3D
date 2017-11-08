@@ -5,15 +5,11 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:CamControls"
              mc:Ignorable="d" 
-             Height="73" Width="120" Background="AliceBlue">
+             Height="54" Width="120" Background="AliceBlue">
     <StackPanel Orientation="Vertical">
         <StackPanel Orientation="Horizontal">
             <Label DockPanel.Dock="Top" Padding="1" FontSize="11">DX:</Label>
             <TextBox x:Name="_textDX" Margin="12,0,1,0" Width="90" IsReadOnly="True"/>
-        </StackPanel>
-        <StackPanel Orientation="Horizontal">
-            <Label DockPanel.Dock="Top" Padding="1" FontSize="11">DY:</Label>
-            <TextBox x:Name="_textDY" Margin="13,0,1,0" Width="90" IsReadOnly="True"/>
         </StackPanel>
         <StackPanel Orientation="Horizontal">
             <Label DockPanel.Dock="Top" Padding="1" FontSize="11">Cost:</Label>

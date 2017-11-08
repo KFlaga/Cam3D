@@ -15,29 +15,24 @@ namespace CamControls
 {
     public partial class AlgorithmWindow : Window
     {
-        IControllableAlgorithm _alg;
-
         AlgorithmTask _runAlgTask;
 
         DispatcherTimer _progressGuiUpdater = new DispatcherTimer();
         Stopwatch _executionTimeCounter = new Stopwatch();
 
-        public IControllableAlgorithm Algorithm
-        {
-            get { return _alg; }
-        }
+        public IControllableAlgorithm Algorithm { get; private set; }
 
         public AlgorithmWindow(IControllableAlgorithm algorithm)
         {
             if(algorithm == null)
                 throw new ArgumentNullException();
 
-            _alg = algorithm;
+            Algorithm = algorithm;
 
             InitializeComponent();
 
-            _buttonParams.IsEnabled = _alg.SupportsParameters;
-            _buttonRun.IsEnabled = !_alg.SupportsParameters;
+            _buttonParams.IsEnabled = Algorithm.SupportsParameters;
+            _buttonRun.IsEnabled = !Algorithm.SupportsParameters;
 
             this.Closed += (s, e) => { AbortTask(); };
 
@@ -45,13 +40,12 @@ namespace CamControls
             _progressGuiUpdater.Tick += _runningTimer_Tick;
             _labelAlgorithmTime.Content = "0";
 
-            _alg.ParamtersAccepted += AlgorithmParamtersAccepted;
-            _alg.StatusChanged += AlgorithmStatusChanged;
+            Algorithm.ParamtersAccepted += AlgorithmParamtersAccepted;
+            Algorithm.StatusChanged += AlgorithmStatusChanged;
 
-            if(_alg.SupportsProgress) { _labelAlgorithmProgress.Content = "Not Run"; } 
-            else { _labelAlgorithmProgress.Content = "Not Supported"; }
+            _labelAlgorithmProgress.Content = "Not Run";
             
-            _labelAlgorithmName.Content = _alg.Name;
+            _labelAlgorithmName.Content = Algorithm.Name;
             _labelAlgorithmStatus.Content = "Waiting";
         }
 
@@ -65,19 +59,9 @@ namespace CamControls
             AbortTask();
         }
 
-        private void _buttonSuspend_Click(object sender, RoutedEventArgs e)
-        {
-            _alg.Suspend();
-        }
-
-        private void _buttonResume_Click(object sender, RoutedEventArgs e)
-        {
-            _alg.Resume();
-        }
-
         private void _buttonRefresh_Click(object sender, RoutedEventArgs e)
         {
-            _textResults.Text = _alg.GetPartialResults();
+            _textResults.Text = Algorithm.GetResults();
         }
 
         private void _buttonExit_Click(object sender, RoutedEventArgs e)
@@ -88,7 +72,7 @@ namespace CamControls
 
         private void _buttonParams_Click(object sender, RoutedEventArgs e)
         {
-            _alg.ShowParametersWindow();
+            Algorithm.ShowParametersWindow();
         }
 
         private void AlgorithmStatusChanged(object sender, CamCore.AlgorithmEventArgs e)
@@ -99,10 +83,6 @@ namespace CamControls
                 {
                     AlgorithmStarted();
                 }
-                else if(e.CurrentStatus == AlgorithmStatus.Suspended)
-                {
-                    AlgorithmSuspended();
-                }
                 else
                 {
                     AlgorithmFinished();
@@ -112,9 +92,7 @@ namespace CamControls
 
         void AbortTask()
         {
-            if(_runAlgTask != null &&
-                (_alg.Status == AlgorithmStatus.Running ||
-                 _alg.Status == AlgorithmStatus.Suspended))
+            if(_runAlgTask != null && Algorithm.Status == AlgorithmStatus.Running)
             {
                 _runAlgTask.Abort();
             }
@@ -123,23 +101,18 @@ namespace CamControls
         void RunAlgorithm()
         {
             _executionTimeCounter.Reset();
-            if(_alg.SupportsProgress)
-            {
-                _labelAlgorithmProgress.Content = "0";
-                _labelAlgorithmTime.Content = "0";
-            }
+            _labelAlgorithmProgress.Content = "0";
+            _labelAlgorithmTime.Content = "0";
 
-            _runAlgTask = new AlgorithmTask() { Algorithm = _alg };
+            _runAlgTask = new AlgorithmTask() { Algorithm = Algorithm };
             _runAlgTask.Start();
         }
 
         void AlgorithmStarted()
         {
-            _buttonSuspend.IsEnabled = Algorithm.SupportsSuspension;
             _buttonAbort.IsEnabled = Algorithm.SupportsTermination;
             _buttonRun.IsEnabled = false;
-            _buttonResume.IsEnabled = false;
-            _buttonRefresh.IsEnabled = _alg.SupportsPartialResults;
+            _buttonRefresh.IsEnabled = true;
             _buttonParams.IsEnabled = false;
 
             _executionTimeCounter.Start();
@@ -147,67 +120,40 @@ namespace CamControls
             _labelAlgorithmStatus.Content = "Running";
         }
 
-        void AlgorithmSuspended()
-        {
-            _buttonSuspend.IsEnabled = false;
-            _buttonAbort.IsEnabled = Algorithm.SupportsTermination;
-            _buttonRun.IsEnabled = false;
-            _buttonResume.IsEnabled = true;
-            _buttonRefresh.IsEnabled = _alg.SupportsPartialResults;
-            _buttonParams.IsEnabled = false;
-
-            _executionTimeCounter.Stop();
-            _progressGuiUpdater.Stop();
-            _labelAlgorithmStatus.Content = "Suspended";
-        }
-
         private void AlgorithmFinished()
         {
             _progressGuiUpdater.Stop();
             _executionTimeCounter.Stop();
             _labelAlgorithmTime.Content = _executionTimeCounter.ElapsedMilliseconds.ToString() + "ms";
-            if(_alg.SupportsProgress)
-            {
-                _labelAlgorithmProgress.Content = _alg.GetProgress();
-            }
+            _labelAlgorithmProgress.Content = Algorithm.GetProgress();
+            
             if(_runAlgTask != null)
             {
                 if(_runAlgTask.WasAborted)
                 {
-                    if(_alg.SupportsPartialResults)
-                    {
-                        _textResults.Text = _alg.GetPartialResults();
-                    }
+                    _textResults.Text = Algorithm.GetResults();
                     _labelAlgorithmStatus.Content = "Aborted";
                 }
                 else if(_runAlgTask.WasError)
                 {
                     string text = "Algorithm failed. Error message: " + _runAlgTask.Error.Message;
                     text += "\r\nStack:\r\n" + _runAlgTask.Error.StackTrace + "\r\n";
-                    if(_alg.SupportsPartialResults)
-                    {
-                        text += "\r\nLast results:\r\n";
-                        text += _alg.GetPartialResults();
-                    }
+                    text += "\r\nLast results:\r\n";
+                    text += Algorithm.GetResults();
                     _textResults.Text = text;
                     _labelAlgorithmStatus.Content = "Error";
                 }
                 else
                 {
-                    if(_alg.SupportsFinalResults)
-                    {
-                        _textResults.Text = _alg.GetFinalResults();
-                    }
+                    _textResults.Text = Algorithm.GetResults();
                     _labelAlgorithmStatus.Content = "Finished";
                 }
             }
-
-            _buttonSuspend.IsEnabled = false;
+            
             _buttonAbort.IsEnabled = false;
             _buttonRun.IsEnabled = true;
-            _buttonResume.IsEnabled = false;
             _buttonRefresh.IsEnabled = false;
-            _buttonParams.IsEnabled = _alg.SupportsParameters;
+            _buttonParams.IsEnabled = Algorithm.SupportsParameters;
         }
 
         private void AlgorithmParamtersAccepted(object sender, EventArgs e)
@@ -217,14 +163,11 @@ namespace CamControls
 
         private void _runningTimer_Tick(object sender, EventArgs e)
         {
-            Dispatcher.Invoke(() =>
+            Dispatcher.Invoke((Action)(() =>
             {
-                if(_alg.SupportsProgress)
-                {
-                    _labelAlgorithmProgress.Content = _alg.GetProgress();
-                }
+                _labelAlgorithmProgress.Content = this.Algorithm.GetProgress();
                 _labelAlgorithmTime.Content = _executionTimeCounter.ElapsedMilliseconds.ToString() + "ms";
-            });
+            }));
         }
 
         class AlgorithmTask

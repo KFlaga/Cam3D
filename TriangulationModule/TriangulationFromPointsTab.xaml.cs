@@ -1,9 +1,7 @@
-﻿using MathNet.Numerics.LinearAlgebra;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using CamCore;
-using MathNet.Numerics.LinearAlgebra.Double;
 using System.Text;
 using CamAlgorithms.Calibration;
 using CamAlgorithms.Triangulation;
@@ -17,7 +15,7 @@ namespace TriangulationModule
         List<Vector2> _imgRightPoints = new List<Vector2>();
         
         public TriangulationAlgorithmUi Algorithm { get; private set; } = new TriangulationAlgorithmUi();
-        public List<TriangulatedPoint> Points;
+        public List<TriangulatedPoint> Points { get; set; }
 
         public TriangulationFromPointsTab()
         {
@@ -48,8 +46,7 @@ namespace TriangulationModule
 
         private void Triangulate(object sender, RoutedEventArgs e)
         {
-            if(CameraPair.Data.IsCamLeftCalibrated == false ||
-                CameraPair.Data.IsCamRightCalibrated == false)
+            if(CameraPair.Data.AreCalibrated)
             {
                 MessageBox.Show("Error: Cameras are not calibrated!");
                 return;
@@ -82,21 +79,25 @@ namespace TriangulationModule
 
         private void Algorithm_StatusChanged(object sender, AlgorithmEventArgs e)
         {
-            Dispatcher.Invoke(() => {
-                StringBuilder leftText = new StringBuilder();
-                StringBuilder rightText = new StringBuilder();
-                StringBuilder realText = new StringBuilder();
-                for(int i = 0; i < Points.Count; ++i)
+            if(e.CurrentStatus == AlgorithmStatus.Finished || e.CurrentStatus == AlgorithmStatus.Terminated)
+            {
+                Dispatcher.Invoke(() =>
                 {
-                    leftText.AppendLine(Points[i].ImageLeft.ToString("F1"));
-                    rightText.AppendLine(Points[i].ImageRight.ToString("F1"));
-                    realText.AppendLine(Points[i].Real.ToString("F2"));
-                }
+                    StringBuilder leftText = new StringBuilder();
+                    StringBuilder rightText = new StringBuilder();
+                    StringBuilder realText = new StringBuilder();
+                    for(int i = 0; i < Points.Count; ++i)
+                    {
+                        leftText.AppendLine(Points[i].ImageLeft.ToString("F1"));
+                        rightText.AppendLine(Points[i].ImageRight.ToString("F1"));
+                        realText.AppendLine(Points[i].Real.ToString("F2"));
+                    }
 
-                _textPointsImgLeft.Text = leftText.ToString();
-                _textPointsImgRight.Text = rightText.ToString();
-                _textPointsReal.Text = realText.ToString();
-            });
+                    _textPointsImgLeft.Text = leftText.ToString();
+                    _textPointsImgRight.Text = rightText.ToString();
+                    _textPointsReal.Text = realText.ToString();
+                });
+            }
         }
     }
 }

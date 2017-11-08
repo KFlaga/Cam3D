@@ -121,7 +121,7 @@ namespace RectificationModule
             });
             rectifier.ImageHeight = _camImageFirst.ImageSource.PixelHeight;
             rectifier.ImageWidth = _camImageFirst.ImageSource.PixelWidth;
-            rectifier.CalibData = CameraPair.Data;
+            rectifier.Cameras = CameraPair.Data;
             rectifier.MatchedPairs = new List<Vector2Pair>();
             foreach(var m in _matches)
             {

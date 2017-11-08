@@ -261,7 +261,7 @@ namespace CamControls
             });
         }
     }
-    
+
     public class StringParameterInput : ParameterInput<string>
     {
         private TextBox _inputTextBox = new TextBox();
@@ -313,7 +313,7 @@ namespace CamControls
             });
         }
     }
-    
+
     public class ComboParameterInput : ParameterInput<object>
     {
         private ComboBox _inputComboBox = new ComboBox();
@@ -371,7 +371,7 @@ namespace CamControls
             });
         }
     }
-    
+
     public class ParametrizableParameterInput : ParameterInput<IParameterizable>
     {
         private ComboBox _inputComboBox = new ComboBox();
@@ -434,6 +434,191 @@ namespace CamControls
         private void _inputComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             _parametersPanel.SetParameters(Value.Parameters);
+            InputValueChanged?.Invoke(this, new ParameterValueChangedEventArgs()
+            {
+                NewValue = Value
+            });
+        }
+    }
+
+    public class Vector2ParameterInput : ParameterInput<Vector2>
+    {
+        private DoubleTextBox _xTb = new DoubleTextBox();
+        private DoubleTextBox _yTb = new DoubleTextBox();
+        private DockPanel _panel = new DockPanel();
+        public override UIElement UIInput
+        {
+            get
+            {
+                return _panel;
+            }
+        }
+
+        public override Vector2 Value
+        {
+            get
+            {
+                return new Vector2(_xTb.CurrentValue, _yTb.CurrentValue);
+            }
+        }
+
+        public override event EventHandler<ParameterValueChangedEventArgs> InputValueChanged;
+
+        public Vector2ParameterInput(AlgorithmParameter<Vector2> parameter) : base(parameter)
+        {
+            SetLimits(parameter);
+
+            _xTb.CurrentValue = parameter.Value.X;
+            _yTb.CurrentValue = parameter.Value.Y;
+            _xTb.ValueChanged += OnValueChanged;
+            _yTb.ValueChanged += OnValueChanged;
+
+            _panel.Height = 25.0;
+
+            StackPanel stackPanel = new StackPanel();
+            stackPanel.Orientation = Orientation.Horizontal;
+            DockPanel.SetDock(stackPanel, Dock.Right);
+            AddTextBox(_xTb, "x:", stackPanel);
+            AddTextBox(_yTb, "y:", stackPanel);
+
+            Label parameterLabel = new Label();
+            parameterLabel.Content = parameter.Name;
+            DockPanel.SetDock(parameterLabel, Dock.Left);
+
+            _panel.Children.Add(parameterLabel);
+            _panel.Children.Add(stackPanel);
+        }
+
+        private void AddTextBox(DoubleTextBox tb, string label, StackPanel stackPanel)
+        {
+            tb.MinWidth = 100.0;
+            tb.HorizontalAlignment = HorizontalAlignment.Center;
+            tb.HorizontalContentAlignment = HorizontalAlignment.Center;
+            tb.VerticalAlignment = VerticalAlignment.Center;
+            Label xLabel = new Label();
+            xLabel.Content = label;
+            stackPanel.Children.Add(xLabel);
+            stackPanel.Children.Add(tb);
+        }
+
+        private void SetLimits(AlgorithmParameter<Vector2> parameter)
+        {
+            if(parameter.MaxValue.X == parameter.MinValue.X &&
+                            parameter.MaxValue.Y == parameter.MinValue.Y)
+            {
+                _xTb.LimitValue = false;
+                _yTb.LimitValue = false;
+            }
+            else
+            {
+                _xTb.LimitValue = true;
+                _xTb.MinValue = parameter.MinValue.X;
+                _xTb.MaxValue = parameter.MaxValue.X;
+                _yTb.LimitValue = true;
+                _yTb.MinValue = parameter.MinValue.Y;
+                _yTb.MaxValue = parameter.MaxValue.Y;
+            }
+        }
+
+        private void OnValueChanged(object sender, NumberTextBoxValueChangedEventArgs<double> e)
+        {
+            InputValueChanged?.Invoke(this, new ParameterValueChangedEventArgs()
+            {
+                NewValue = Value
+            });
+        }
+    }
+
+    public class Vector3ParameterInput : ParameterInput<Vector3>
+    {
+        private DoubleTextBox _xTb = new DoubleTextBox();
+        private DoubleTextBox _yTb = new DoubleTextBox();
+        private DoubleTextBox _zTb = new DoubleTextBox();
+        private DockPanel _panel = new DockPanel();
+        public override UIElement UIInput
+        {
+            get
+            {
+                return _panel;
+            }
+        }
+
+        public override Vector3 Value
+        {
+            get
+            {
+                return new Vector3(_xTb.CurrentValue, _yTb.CurrentValue, _zTb.CurrentValue);
+            }
+        }
+
+        public override event EventHandler<ParameterValueChangedEventArgs> InputValueChanged;
+
+        public Vector3ParameterInput(AlgorithmParameter<Vector3> parameter) : base(parameter)
+        {
+            SetLimits(parameter);
+
+            _xTb.CurrentValue = parameter.Value.X;
+            _yTb.CurrentValue = parameter.Value.Y;
+            _zTb.CurrentValue = parameter.Value.Z;
+            _xTb.ValueChanged += OnValueChanged;
+            _yTb.ValueChanged += OnValueChanged;
+            _zTb.ValueChanged += OnValueChanged;
+
+            _panel.Height = 25.0;
+
+            StackPanel stackPanel = new StackPanel();
+            stackPanel.Orientation = Orientation.Horizontal;
+            DockPanel.SetDock(stackPanel, Dock.Right);
+            AddTextBox(_xTb, "x:", stackPanel);
+            AddTextBox(_yTb, "y:", stackPanel);
+            AddTextBox(_zTb, "z:", stackPanel);
+
+            Label parameterLabel = new Label();
+            parameterLabel.Content = parameter.Name;
+            DockPanel.SetDock(parameterLabel, Dock.Left);
+
+            _panel.Children.Add(parameterLabel);
+            _panel.Children.Add(stackPanel);
+        }
+
+        private void AddTextBox(DoubleTextBox tb, string label, StackPanel stackPanel)
+        {
+            tb.MinWidth = 80.0;
+            tb.HorizontalAlignment = HorizontalAlignment.Center;
+            tb.HorizontalContentAlignment = HorizontalAlignment.Center;
+            tb.VerticalAlignment = VerticalAlignment.Center;
+            Label xLabel = new Label();
+            xLabel.Content = label;
+            stackPanel.Children.Add(xLabel);
+            stackPanel.Children.Add(tb);
+        }
+
+        private void SetLimits(AlgorithmParameter<Vector3> parameter)
+        {
+            if(parameter.MaxValue.X == parameter.MinValue.X &&
+                            parameter.MaxValue.Y == parameter.MinValue.Y &&
+                            parameter.MaxValue.Z == parameter.MinValue.Z)
+            {
+                _xTb.LimitValue = false;
+                _yTb.LimitValue = false;
+                _zTb.LimitValue = false;
+            }
+            else
+            {
+                _xTb.LimitValue = true;
+                _xTb.MinValue = parameter.MinValue.X;
+                _xTb.MaxValue = parameter.MaxValue.X;
+                _yTb.LimitValue = true;
+                _yTb.MinValue = parameter.MinValue.Y;
+                _yTb.MaxValue = parameter.MaxValue.Y;
+                _zTb.LimitValue = true;
+                _zTb.MinValue = parameter.MinValue.Z;
+                _zTb.MaxValue = parameter.MaxValue.Z;
+            }
+        }
+
+        private void OnValueChanged(object sender, NumberTextBoxValueChangedEventArgs<double> e)
+        {
             InputValueChanged?.Invoke(this, new ParameterValueChangedEventArgs()
             {
                 NewValue = Value

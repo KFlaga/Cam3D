@@ -1,11 +1,9 @@
 ﻿using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
@@ -63,6 +61,11 @@ namespace CamCore
             return tp.GetInterfaces().Any((t) => { return t == typeof(IXmlSerializable); });
         }
 
+        private static bool Inherits<T>(Type tp) where T : class
+        {
+            return tp.IsSubclassOf(typeof(T)) || typeof(T) == tp;
+        }
+
         // Reads all properties (including Matrix/Vector)
         public static void ReadXmlAllProperties(XmlReader reader, object obj)
         {
@@ -106,6 +109,8 @@ namespace CamCore
 
         public static void WriteXmlProperty(XmlWriter writer, object obj, System.Reflection.PropertyInfo propertyInfo)
         {
+            if(propertyInfo.GetValue(obj) == null) { return; }
+
             if(propertyInfo.PropertyType == typeof(Matrix<double>))
             {
                 writer.WriteStartElement(propertyInfo.Name);
@@ -244,7 +249,7 @@ namespace CamCore
             int size = int.Parse(reader.GetAttribute("size"));
 
             Vec = new DenseVector(size);
-            reader.ReadStartElement(); // Moves to first <Row>
+            reader.ReadStartElement(); // Moves to <Value>
 
             string content = reader.ReadElementContentAsString(); // Reads from <Row> and moves to next one
 
@@ -264,7 +269,7 @@ namespace CamCore
             // write size attributes first
             writer.WriteAttributeString("size", Vec.Count.ToString());
 
-            // For each row write 'Row' element with row contents
+            // For each row write 'Value' element with row contents
             StringBuilder nums = new StringBuilder();
             for(int n = 0; n < Vec.Count; ++n)
             {

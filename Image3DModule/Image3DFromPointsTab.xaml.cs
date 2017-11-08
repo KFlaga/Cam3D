@@ -4,6 +4,7 @@ using CamCore;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
+using CamAlgorithms.Triangulation;
 
 namespace Image3DModule
 {

@@ -1,12 +1,8 @@
 ﻿using CamControls;
-using CamAlgorithms;
 using CamCore;
-using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using CamAlgorithms.ImageMatching;
 using System;
-using System.Windows.Media.Imaging;
 using CamAlgorithms.Calibration;
 
 namespace CalibrationModule
@@ -104,8 +100,7 @@ namespace CalibrationModule
 
         private void EpiLinePointTest(Vector2 pointPosition, bool onLeftImage, bool reset)
         {
-            if(CameraPair.Data.IsCamLeftCalibrated == false ||
-                CameraPair.Data.IsCamRightCalibrated == false)
+            if(CameraPair.Data.AreCalibrated == false)
             {
                 return;
             }

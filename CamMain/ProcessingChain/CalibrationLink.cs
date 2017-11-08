@@ -10,7 +10,7 @@ namespace CamMain.ProcessingChain
 {
     public class CalibrationLinkData
     {
-        public CameraPair Calibration { get; set; }
+        public CameraPair Cameras { get; set; }
         public List<RealGridData> Grids { get; set; }
     }
 
@@ -175,7 +175,7 @@ namespace CamMain.ProcessingChain
 
         private void CalibrateCameras()
         {
-            _linkData.Calibration = new CameraPair();
+            _linkData.Cameras = new CameraPair();
             CalibrateCamera(SideIndex.Left);
             CalibrateCamera(SideIndex.Right);
         }
@@ -186,7 +186,7 @@ namespace CamMain.ProcessingChain
             _calibrator.Grids = _linkData.Grids;
 
             _calibrator.Calibrate();
-            _linkData.Calibration.SetCameraMatrix(idx, _calibrator.Camera.Matrix);
+            _linkData.Cameras.SetCameraMatrix(idx, _calibrator.Camera.Matrix);
         }
 
         private void SaveCalibration()
@@ -214,7 +214,7 @@ namespace CamMain.ProcessingChain
 
             using(Stream outFile = new FileStream(outPath, FileMode.Create))
             {
-                _linkData.Calibration.SaveToFile(outFile, outPath);
+                XmlSerialisation.SaveToFile(_linkData.Cameras, outFile);
             }
         }
 
@@ -224,11 +224,10 @@ namespace CamMain.ProcessingChain
 
             XmlNode calibDataNode = _config.RootNode.FirstChildWithName("CalibrationData");
             string filePath = _config.WorkingDirectory + calibDataNode.Attributes["path"].Value;
-
-            _linkData.Calibration = new CameraPair();
+            
             using(Stream file = new FileStream(filePath, FileMode.Open))
             {
-                _linkData.Calibration.LoadFromFile(file, filePath);
+                _linkData.Cameras = XmlSerialisation.CreateFromFile<CameraPair>(file);
             }
         }
 

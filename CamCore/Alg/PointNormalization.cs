@@ -129,7 +129,7 @@ namespace CamCore
         // Assusmes that weight of each point is 1
         public static Matrix<double> FindNormalizationMatrix3d(List<Vector<double>> points)
         {
-            Matrix<double> norm = new DenseMatrix(3, 3);
+            Matrix<double> norm = new DenseMatrix(4, 4);
             int n = points.Count;
             // Compute center of image points
             double xc = 0, yc = 0, zc = 0;
@@ -191,6 +191,16 @@ namespace CamCore
                 }
             }
             return points;
+        }
+
+        public static List<Vector<double>> NormalizePoints(List<Vector<double>> points, Matrix<double> normalisationMatrix)
+        {
+            var pointsNormalized = new List<Vector<double>>();
+            for(int p = 0; p < points.Count; p++)
+            {
+                pointsNormalized.Add(normalisationMatrix * points[p]);
+            }
+            return pointsNormalized;
         }
 
         // Returns normalisation matrix : xn = Mx

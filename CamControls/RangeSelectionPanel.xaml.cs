@@ -7,31 +7,17 @@ namespace CamControls
     /// </summary>
     public partial class RangeSelectionPanel : Window
     {
-        DisparityRange _rangeX;
-        public DisparityRange RangeX
+        DisparityRange _range;
+        public DisparityRange Range
         {
-            get { return _rangeX; }
+            get { return _range; }
             set
             {
-                _rangeX = value;
-                _maxXActualText.Text = _rangeX.Max.ToString();
-                _minXActualText.Text = _rangeX.Min.ToString();
-                _maxXSetText.CurrentValue = _rangeX.TempMax;
-                _minXSetText.CurrentValue = _rangeX.TempMin;
-            }
-        }
-
-        DisparityRange _rangeY;
-        public DisparityRange RangeY
-        {
-            get { return _rangeY; }
-            set
-            {
-                _rangeY = value;
-                _maxYActualText.Text = _rangeY.Max.ToString();
-                _minYActualText.Text = _rangeY.Min.ToString();
-                _maxYSetText.CurrentValue = _rangeY.TempMax;
-                _minYSetText.CurrentValue = _rangeY.TempMin;
+                _range = value;
+                _maxXActualText.Text = _range.Max.ToString();
+                _minXActualText.Text = _range.Min.ToString();
+                _maxXSetText.CurrentValue = _range.TempMax;
+                _minXSetText.CurrentValue = _range.TempMin;
             }
         }
 
@@ -44,10 +30,8 @@ namespace CamControls
 
         private void _butAccept_Click(object sender, RoutedEventArgs e)
         {
-            _rangeX.TempMax = _maxXSetText.CurrentValue;
-            _rangeX.TempMin = _minXSetText.CurrentValue;
-            _rangeY.TempMax = _maxYSetText.CurrentValue;
-            _rangeY.TempMin = _minYSetText.CurrentValue;
+            _range.TempMax = _maxXSetText.CurrentValue;
+            _range.TempMin = _minXSetText.CurrentValue;
 
             Accepted = true;
             Close();

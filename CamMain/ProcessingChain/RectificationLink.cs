@@ -138,7 +138,7 @@ namespace CamMain.ProcessingChain
         {
             rectAlg.ImageHeight = _imgSize.ImageHeight;
             rectAlg.ImageWidth = _imgSize.ImageWidth;
-            rectAlg.CalibData = _calibration.Calibration;
+            rectAlg.Cameras = _calibration.Cameras;
             rectAlg.MatchedPairs = _matchedPoints;
 
             rectAlg.ComputeRectificationMatrices();

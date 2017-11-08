@@ -66,6 +66,8 @@ namespace TriangulationModule
             {
                 Processor = Algorithm
             };
+            window.Width = 500;
+            window.Height = 250;
             window.ShowDialog();
             if(window.Accepted)
             {

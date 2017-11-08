@@ -13,8 +13,7 @@ namespace CamControls
 {
     public partial class DisparityImage : UserControl
     {
-        DisparityRange _rangeX = new DisparityRange();
-        DisparityRange _rangeY = new DisparityRange();
+        DisparityRange _range = new DisparityRange();
         DisparityMap _map;
         ColorImage _image = new ColorImage();
         DisparityBox _dbox = new DisparityBox();
@@ -30,52 +29,24 @@ namespace CamControls
                 // Find min/max
                 if(false == RangeFrozen)
                 {
-                    RangeX.Min = RangeX.Max = _map[0, 0].DX;
-                    RangeY.Min = RangeY.Max = _map[0, 0].DY;
+                    Range.Min = Range.Max = _map[0, 0].DX;
                     for(int r = 0; r < _map.RowCount; ++r)
                     {
                         for(int c = 0; c < _map.ColumnCount; ++c)
                         {
                             if(_map[r, c].IsValid())
                             {
-                                RangeX.Min = Math.Min(RangeX.Min, _map[r, c].DX);
-                                RangeX.Max = Math.Max(RangeX.Max, _map[r, c].DX);
-                                RangeY.Min = Math.Min(RangeY.Min, _map[r, c].DY);
-                                RangeY.Max = Math.Max(RangeY.Max, _map[r, c].DY);
+                                Range.Min = Math.Min(Range.Min, _map[r, c].DX);
+                                Range.Max = Math.Max(Range.Max, _map[r, c].DX);
                             }
                         }
                     }
-                    RangeX.TempMax = RangeX.Max;
-                    RangeX.TempMin = RangeX.Min;
-                    RangeY.TempMax = RangeY.Min;
-                    RangeY.TempMin = RangeY.Max;
+                    Range.TempMax = Range.Max;
+                    Range.TempMin = Range.Min;
 
-                    if(_showDX)
-                        _legend.Range = _rangeX;
-                    else
-                        _legend.Range = _rangeY;
+                    _legend.Range = _range;
                 }
                 UpdateImage();
-            }
-        }
-
-        bool _showDX = true;
-        public bool IsShownDX
-        {
-            get { return _showDX; }
-            set
-            {
-                if(value != _showDX)
-                {
-                    _showDX = value;
-
-                    if(_showDX)
-                        _legend.Range = _rangeX;
-                    else
-                        _legend.Range = _rangeY;
-
-                    UpdateImage();
-                }
             }
         }
 
@@ -84,14 +55,9 @@ namespace CamControls
             get { return _image; }
         }
 
-        public DisparityRange RangeX
+        public DisparityRange Range
         {
-            get { return _rangeX; }
-        }
-
-        public DisparityRange RangeY
-        {
-            get { return _rangeY; }
+            get { return _range; }
         }
 
         public DisparityLegend Legend
@@ -160,16 +126,6 @@ namespace CamControls
             _dispImage.MouseDown += MousePressed;
         }
 
-        private void _dispDirectionShowCheckBox_Checked(object sender, RoutedEventArgs e)
-        {
-            IsShownDX = false;
-        }
-
-        private void _dispDirectionShowCheckBox_Unchecked(object sender, RoutedEventArgs e)
-        {
-            IsShownDX = true;
-        }
-
         public void UpdateImage()
         {
             if(_map != null)
@@ -179,68 +135,36 @@ namespace CamControls
                 _image[RGBChannel.Red] = new DenseMatrix(rows, cols);
                 _image[RGBChannel.Green] = new DenseMatrix(rows, cols);
                 _image[RGBChannel.Blue] = new DenseMatrix(rows, cols);
-
-                if(_showDX)
+                
+                for(int r = 0; r < rows; ++r)
                 {
-                    for(int r = 0; r < rows; ++r)
+                    for(int c = 0; c < cols; ++c)
                     {
-                        for(int c = 0; c < cols; ++c)
+                        int idx1 = _range.GetDisparityIndex((int)_map[r, c].SubDX);
+                        int idx2 = _range.GetDisparityIndex((int)_map[r, c].SubDX + 1);
+                        double ratio = Math.Abs(_map[r, c].SubDX - (double)((int)_map[r, c].SubDX));
+                        if((_map[r, c].Flags & (int)DisparityFlags.Valid) != 0 &&
+                            !(idx1 < 0 || idx2 >= _range.GetTempDisparityRange()))
                         {
-                            int idx1 = _rangeX.GetDisparityIndex((int)_map[r, c].SubDX);
-                            int idx2 = _rangeX.GetDisparityIndex((int)_map[r, c].SubDX + 1);
-                            double ratio = Math.Abs(_map[r, c].SubDX - (double)((int)_map[r, c].SubDX));
-                            if((_map[r, c].Flags & (int)DisparityFlags.Valid) != 0 &&
-                                !(idx1 < 0 || idx2 >= _rangeX.GetTempDisparityRange()))
-                            {
-                                _image[RGBChannel.Red][r, c] = _rangeX.Colors[idx2][0] * (1 - ratio) + _rangeX.Colors[idx1][0] * ratio;
-                                _image[RGBChannel.Green][r, c] = _rangeX.Colors[idx2][1] * (1 - ratio) + _rangeX.Colors[idx1][1] * ratio;
-                                _image[RGBChannel.Blue][r, c] = _rangeX.Colors[idx2][2] * (1 - ratio) + _rangeX.Colors[idx1][2] * ratio;
-                            }
-                            else if(idx1 < 0 || idx2 >= _rangeX.GetTempDisparityRange())
-                            {
-                                _image[RGBChannel.Red][r, c] = 0.5;
-                                _image[RGBChannel.Green][r, c] = 0.5;
-                                _image[RGBChannel.Blue][r, c] = 0.5;
-                            }
-                            else //if((_map[r, c].Flags & (int)DisparityFlags.Invalid) != 0)
-                            {
-                                _image[RGBChannel.Red][r, c] = 0.0;
-                                _image[RGBChannel.Green][r, c] = 0.0;
-                                _image[RGBChannel.Blue][r, c] = 0.0;
-                            }
+                            _image[RGBChannel.Red][r, c] = _range.Colors[idx2][0] * (1 - ratio) + _range.Colors[idx1][0] * ratio;
+                            _image[RGBChannel.Green][r, c] = _range.Colors[idx2][1] * (1 - ratio) + _range.Colors[idx1][1] * ratio;
+                            _image[RGBChannel.Blue][r, c] = _range.Colors[idx2][2] * (1 - ratio) + _range.Colors[idx1][2] * ratio;
+                        }
+                        else if(idx1 < 0 || idx2 >= _range.GetTempDisparityRange())
+                        {
+                            _image[RGBChannel.Red][r, c] = 0.5;
+                            _image[RGBChannel.Green][r, c] = 0.5;
+                            _image[RGBChannel.Blue][r, c] = 0.5;
+                        }
+                        else //if((_map[r, c].Flags & (int)DisparityFlags.Invalid) != 0)
+                        {
+                            _image[RGBChannel.Red][r, c] = 0.0;
+                            _image[RGBChannel.Green][r, c] = 0.0;
+                            _image[RGBChannel.Blue][r, c] = 0.0;
                         }
                     }
                 }
-                else
-                {
-                    for(int r = 0; r < rows; ++r)
-                    {
-                        for(int c = 0; c < cols; ++c)
-                        {
-                            int idx = _rangeY.GetDisparityIndex(_map[r, c].DY);
-                            if((_map[r, c].Flags & (int)DisparityFlags.Valid) != 0 &&
-                                !(idx < 0 || idx >= _rangeY.GetTempDisparityRange()))
-                            {
-                                _image[RGBChannel.Red][r, c] = _rangeY.Colors[idx][0];
-                                _image[RGBChannel.Green][r, c] = _rangeY.Colors[idx][1];
-                                _image[RGBChannel.Blue][r, c] = _rangeY.Colors[idx][2];
-                            }
-                            else if(idx < 0 || idx >= _rangeY.GetTempDisparityRange())
-                            {
-                                _image[RGBChannel.Red][r, c] = 0.5;
-                                _image[RGBChannel.Green][r, c] = 0.5;
-                                _image[RGBChannel.Blue][r, c] = 0.5;
-                            }
-                            else //if((_map[r, c].Flags & (int)DisparityFlags.Invalid) != 0)
-                            {
-                                _image[RGBChannel.Red][r, c] = 0.0;
-                                _image[RGBChannel.Green][r, c] = 0.0;
-                                _image[RGBChannel.Blue][r, c] = 0.0;
-                            }
-                        }
-                    }
-                }
-
+                
                 _dispImage.Source = _image.ToBitmapSource();
             }
 
@@ -316,15 +240,11 @@ namespace CamControls
         private void SelectRange(object sender, RoutedEventArgs e)
         {
             RangeSelectionPanel rangeSelect = new RangeSelectionPanel();
-            rangeSelect.RangeX = _rangeX;
-            rangeSelect.RangeY = _rangeY;
+            rangeSelect.Range = _range;
             rangeSelect.ShowDialog();
             if(rangeSelect.Accepted)
             {
-                if(_showDX)
-                    _legend.Range = _rangeX;
-                else
-                    _legend.Range = _rangeY;
+                _legend.Range = _range;
                 UpdateImage();
             }
         }

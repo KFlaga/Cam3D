@@ -27,22 +27,9 @@ namespace ImageMatchingModule
             set { _dispControlSec.Map = value; }
         }
 
-        private bool _showDX = true;
-        public bool IsShownDX
-        {
-            get { return _showDX; }
-            set
-            {
-                _dispControlFirst.IsShownDX = value;
-                _dispControlSec.IsShownDX = value;
-                _showDX = value;
-            }
-        }
-
         public DisparityMapTab()
         {
             InitializeComponent();      
         }
     }
 }
-

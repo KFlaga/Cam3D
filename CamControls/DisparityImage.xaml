@@ -21,9 +21,6 @@
             <StackPanel Orientation="Horizontal" Height="35">
                 <Button x:Name="_butSave" Margin="10,4,3,4" Click="SaveMap">Save Map</Button>
                 <Button x:Name="_butLoad" Margin="3,4,3,4" Click="LoadMap">Load Map</Button>
-                <CheckBox x:Name="_dispDirectionShowCheckBox" Checked="_dispDirectionShowCheckBox_Checked" 
-                          Unchecked="_dispDirectionShowCheckBox_Unchecked" VerticalContentAlignment="Center">
-                    Show Y-Disparity</CheckBox>
                 <Label/>
             </StackPanel>
         </Border>

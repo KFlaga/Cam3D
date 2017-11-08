@@ -182,7 +182,7 @@ namespace CamCore
             }
         }
 
-        public static string CustomToString(this Vector<double> m, string format = "F3")
+        public static string ToColumnVectorString(this Vector<double> m, string format = "F3")
         {
             StringBuilder result = new StringBuilder();
             for(int r = 0; r < m.Count; ++r)
@@ -190,6 +190,19 @@ namespace CamCore
                 result.Append("|" + m[r].ToString(format));
                 result.AppendLine("|");
             }
+            return result.ToString();
+        }
+
+        public static string ToRowVectorString(this Vector<double> m, string format = "F3")
+        {
+            StringBuilder result = new StringBuilder();
+            result.Append("|");
+            for(int r = 0; r < m.Count; ++r)
+            {
+                result.Append(m[r].ToString(format) + ", ");
+            }
+            result.Remove(result.Length - 2, 2);
+            result.Append("|");
             return result.ToString();
         }
 

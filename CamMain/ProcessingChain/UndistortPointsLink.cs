@@ -104,13 +104,13 @@ namespace CamMain.ProcessingChain
 
         private void UndistortPoints(SideIndex idx)
         {
-            RadialDistortionModel model = _distortionData.GetModel(idx);
+            RadialDistortion distortion = _distortionData.GetDistortion(idx);
             foreach(var rawPoint in _rawCalibData.GetCalibrationPoints(idx))
             {
-                model.P = rawPoint.Img * model.ImageScale;
-                model.Undistort();
+                distortion.Model.P = rawPoint.Img * distortion.Model.ImageScale;
+                distortion.Model.Undistort();
                 CalibrationPoint undistortedPoint = rawPoint.Clone();
-                undistortedPoint.Img = model.Pf / model.ImageScale;
+                undistortedPoint.Img = distortion.Model.Pf / distortion.Model.ImageScale;
                 _linkData.AddCalibrationPoint(idx, undistortedPoint);
             }
         }

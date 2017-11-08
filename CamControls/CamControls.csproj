@@ -97,7 +97,6 @@
     <Compile Include="RangeSelectionPanel.xaml.cs">
       <DependentUpon>RangeSelectionPanel.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SGMDown.cs" />
     <Compile Include="FinalParametersInput.cs" />
     <Compile Include="FormatTextBox\DoubleTextBox.cs" />
     <Compile Include="FormatTextBox\IntegerTextBox.cs" />

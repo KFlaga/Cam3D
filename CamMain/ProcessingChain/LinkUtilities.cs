@@ -98,10 +98,10 @@ namespace CamMain.ProcessingChain
         }
 
         private static IImage UndistortImage(IImage imgRaw,
-            RadialDistortionModel distortion, ImageTransformer undistort)
+            RadialDistortion distortion, ImageTransformer undistort)
         {
             undistort.Transformation =
-                new RadialDistortionTransformation(distortion);
+                new RadialDistortionTransformation(distortion.Model);
 
             MaskedImage img = new MaskedImage(imgRaw);
             MaskedImage imgFinal = undistort.TransfromImageBackwards(img, true);

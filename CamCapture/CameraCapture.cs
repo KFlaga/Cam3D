@@ -261,7 +261,11 @@ namespace CamCapture
             _vmr9Capture.NewFrameAvailable = null;
             State = CaptureStates.Terminated;
             await Task.Run((Func<int>)_mediaControl.Stop);
-            _graphBuilder.RemoveFilter(_camFilter);
+            //try
+            //{
+            //    _graphBuilder.RemoveFilter(_camFilter);
+            //}
+            //catch(Exception) { }
             _vmr9Capture.Terminate();
         }
 

@@ -176,7 +176,7 @@ namespace CamMain.ProcessingChain
         private void InitDefaultCalibPointsExtractor()
         {
 
-            _calibPointsFinder = new ShapesGridCPFinder();
+            _calibPointsFinder = new ShapesGridCalibrationPointsFinder();
             _calibLinesExtractor = _calibPointsFinder.LinesExtractor;
             _calibPointsFinder.InitParameters();
             _calibPointsFinder.UpdateParameters();
@@ -187,7 +187,7 @@ namespace CamMain.ProcessingChain
             // Get type of extractor
             string extractorType = extractorNode.Attributes["type"].Value;
             if(extractorType == "CalibShape") { }
-            _calibPointsFinder = new ShapesGridCPFinder();
+            _calibPointsFinder = new ShapesGridCalibrationPointsFinder();
             _calibLinesExtractor = _calibPointsFinder.LinesExtractor;
             _calibPointsFinder.InitParameters();
 

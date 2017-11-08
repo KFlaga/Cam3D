@@ -110,6 +110,7 @@
     <Compile Include="MatchedPointsManagerWindow.xaml.cs">
       <DependentUpon>MatchedPointsManagerWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="PointsExtractionAlgorithmUi.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RadialDistrotionCorrectionAlgorithmUi.cs" />
     <Compile Include="RealGridsManagerWindow.xaml.cs">

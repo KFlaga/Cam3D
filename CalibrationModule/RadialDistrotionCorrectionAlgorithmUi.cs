@@ -9,8 +9,7 @@ namespace CalibrationModule
     class RadialDistrotionCorrectionAlgorithmUi : IControllableAlgorithm
     {
         public RadialDistrotionCorrectionAlgorithm Algorithm { get; } = new RadialDistrotionCorrectionAlgorithm();
-
-        public RadialDistortionModel DistortionModel { get { return Algorithm.DistortionModel; } set { Algorithm.DistortionModel = value; } }
+        public RadialDistortion Distortion { get { return Algorithm.Distortion; } set { Algorithm.Distortion = value; } }
 
         public int ImageWidth { get { return Algorithm.ImageWidth; } set { Algorithm.ImageWidth = value; } }
         public int ImageHeight { get { return Algorithm.ImageHeight; } set { Algorithm.ImageHeight = value; } }
@@ -91,20 +90,20 @@ namespace CalibrationModule
             result.AppendLine();
             result.AppendLine();
 
-            result.AppendLine("Radial Distrotion Model: " + DistortionModel.ToString());
+            result.AppendLine("Radial Distrotion Model: " + Distortion.ToString());
             result.AppendLine("Estmated Paramters:");
 
-            int paramsCount = DistortionModel.ParametersCount - 2; // Center
-            paramsCount = DistortionModel.ComputesAspect ? paramsCount - 1 : paramsCount; // Aspect
+            int paramsCount = Distortion.Model.ParametersCount - 2; // Center
+            paramsCount = Distortion.Model.ComputesAspect ? paramsCount - 1 : paramsCount; // Aspect
             for(int k = 0; k < paramsCount; ++k)
             {
-                result.AppendLine("K" + k + ": " + DistortionModel.Parameters[k]);
+                result.AppendLine("K" + k + ": " + Distortion.Model.Coeffs[k]);
             }
-            result.AppendLine("Cx: " + DistortionModel.Parameters[paramsCount] / Algorithm.Scale);
-            result.AppendLine("Cy: " + DistortionModel.Parameters[paramsCount + 1] / Algorithm.Scale);
-            if(DistortionModel.ComputesAspect)
+            result.AppendLine("Cx: " + Distortion.Model.Coeffs[paramsCount] / Algorithm.Scale);
+            result.AppendLine("Cy: " + Distortion.Model.Coeffs[paramsCount + 1] / Algorithm.Scale);
+            if(Distortion.Model.ComputesAspect)
             {
-                result.AppendLine("Sx: " + DistortionModel.Parameters[paramsCount + 2]);
+                result.AppendLine("Sx: " + Distortion.Model.Coeffs[paramsCount + 2]);
             }
 
             result.AppendLine();

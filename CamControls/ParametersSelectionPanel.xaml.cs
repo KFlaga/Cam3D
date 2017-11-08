@@ -16,54 +16,21 @@ using System.Windows.Shapes;
 
 namespace CamControls
 {
-    public partial class ParametersSelectionPanel : UserControl
+    public partial class ParametersSelectionPanel : StackPanel
     {
         public delegate IParameterInput InputCreator(AlgorithmParameter parameter);
         public static Dictionary<string, InputCreator> InputCreators = new Dictionary<string, InputCreator>()
         {
-             { typeof(int).Name, CreateInput_Int},
-             { typeof(float).Name, CreateInput_Float},
-             { typeof(double).Name, CreateInput_Double},
-             { typeof(bool).Name, CreateInput_Boolean},
-             { typeof(string).Name, CreateInput_String},
-             { "Dictionary", CreateInput_Combo},
-             { "IParameterizable", CreateInput_Parametrizable}
+             { typeof(int).Name, (p) => { return new IntParameterInput(p as AlgorithmParameter<int>); } },
+             { typeof(float).Name, (p) => { return new FloatParameterInput(p as AlgorithmParameter<float>); } },
+             { typeof(double).Name, (p) => { return new DoubleParameterInput(p as AlgorithmParameter<double>); }},
+             { typeof(bool).Name, (p) => { return new BooleanParameterInput(p as AlgorithmParameter<bool>); }},
+             { typeof(string).Name, (p) => { return new StringParameterInput(p as AlgorithmParameter<string>); }},
+             { typeof(Vector2).Name, (p) => { return new Vector2ParameterInput(p as AlgorithmParameter<Vector2>); }},
+             { typeof(Vector3).Name, (p) => { return new Vector3ParameterInput(p as AlgorithmParameter<Vector3>); }},
+             { "Dictionary", (p) => { return new ComboParameterInput(p as DictionaryParameter); }},
+             { "IParameterizable",  (p) => { return new ParametrizableParameterInput(p as ParametrizedObjectParameter); }}
         };
-
-        public static IParameterInput CreateInput_Int(AlgorithmParameter parameter)
-        {
-            return new IntParameterInput(parameter as AlgorithmParameter<int>);
-        }
-
-        public static IParameterInput CreateInput_Float(AlgorithmParameter parameter)
-        {
-            return new FloatParameterInput(parameter as AlgorithmParameter<float>);
-        }
-
-        public static IParameterInput CreateInput_Double(AlgorithmParameter parameter)
-        {
-            return new DoubleParameterInput(parameter as AlgorithmParameter<double>);
-        }
-
-        public static IParameterInput CreateInput_Boolean(AlgorithmParameter parameter)
-        {
-            return new BooleanParameterInput(parameter as AlgorithmParameter<bool>);
-        }
-
-        public static IParameterInput CreateInput_String(AlgorithmParameter parameter)
-        {
-            return new StringParameterInput(parameter as AlgorithmParameter<string>);
-        }
-
-        public static IParameterInput CreateInput_Combo(AlgorithmParameter parameter)
-        {
-            return new ComboParameterInput(parameter as DictionaryParameter);
-        }
-
-        public static IParameterInput CreateInput_Parametrizable(AlgorithmParameter parameter)
-        {
-            return new ParametrizableParameterInput(parameter as ParametrizedObjectParameter);
-        }
 
         public ParametersSelectionPanel()
         {
@@ -72,12 +39,12 @@ namespace CamControls
 
         public void SetParameters(List<AlgorithmParameter> paramters)
         {
-            _mainPanel.Children.Clear();
+            this.Children.Clear();
             foreach(var parameter in paramters)
             {
                 var input = InputCreators[parameter.TypeName](parameter);
                 parameter.Input = input;
-                _mainPanel.Children.Add(input.UIInput);
+                this.Children.Add(input.UIInput);
             }
         }
     }

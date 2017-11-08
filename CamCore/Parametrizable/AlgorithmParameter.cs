@@ -64,6 +64,7 @@ namespace CamCore
         }
 
         public abstract void ReadFromXml(XmlNode node);
+        // public abstract void WriteToXml(XmlDocument xmlDoc, XmlNode node);
 
         // Expects 'node' to constain childs with parameters with attributes 'id' and 'value'
         public static void ReadParametersFromXml(List<AlgorithmParameter> parameters, XmlNode node)
@@ -74,8 +75,7 @@ namespace CamCore
             
             foreach(XmlNode paramNode in node.ChildNodes)
             {
-                if(paramNode.Attributes != null && 
-                    paramNode.Attributes.GetNamedItem("id") != null)
+                if(paramNode.Attributes != null && paramNode.Attributes.GetNamedItem("id") != null)
                 {
                     string id = paramNode.Attributes["id"].Value;
                     AlgorithmParameter param = parameters.Find((p) => { return p.ShortName == id; });
@@ -86,6 +86,28 @@ namespace CamCore
 #endif
                 }
             }
+        }
+
+        public static XmlNode WriteParametersToXml(XmlDocument xmlDoc, List<AlgorithmParameter> parameters)
+        {
+            //<Parameters>
+            //  <Parameter id="aaa" value="3"/>
+            //</Parameters>
+
+            XmlNode parametersNode = xmlDoc.CreateElement("Parameters");
+            foreach(var parameter in parameters)
+            {
+                XmlNode paramNode = xmlDoc.CreateElement("Parameter");
+                XmlAttribute idAtt = xmlDoc.CreateAttribute("id");
+                idAtt.Value = parameter.ShortName;
+                paramNode.Attributes.Append(idAtt);
+
+                // parameter.WriteToXml(xmlDoc, paramNode);
+                throw new NotImplementedException();
+
+                parametersNode.AppendChild(paramNode);
+            }
+            return parametersNode;
         }
     }
 

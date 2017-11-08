@@ -25,8 +25,7 @@ namespace TriangulationModule
 
         public override bool StartModule()
         {
-            if(!CameraPair.Data.IsCamLeftCalibrated ||
-                !CameraPair.Data.IsCamRightCalibrated)
+            if(!CameraPair.Data.AreCalibrated)
             {
                 FailText = "Both cameras need to be calibrated";
                 return true;

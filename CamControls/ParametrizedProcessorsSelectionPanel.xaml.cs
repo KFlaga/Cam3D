@@ -16,7 +16,7 @@ using System.Windows.Shapes;
 
 namespace CamControls
 {
-    public partial class ParametrizedProcessorsSelectionPanel : UserControl
+    public partial class ParametrizedProcessorsSelectionPanel : DockPanel
     {
         internal class ProcessorFamily
         {
@@ -72,7 +72,7 @@ namespace CamControls
 
         public void AddProcessorFamily(string familyName)
         {
-            var family = new ProcessorFamily(_mainPanel, _processorFamilies.Count, familyName);
+            var family = new ProcessorFamily(this, _processorFamilies.Count, familyName);
             _processorFamilies.Add(familyName, family);
         }
 

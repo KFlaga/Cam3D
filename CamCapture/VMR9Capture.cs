@@ -71,7 +71,14 @@ namespace CamCapture
         
         public void Terminate()
         {
-            _surfAllocatorNotify.ChangeD3DDevice(IntPtr.Zero, IntPtr.Zero);
+            try
+            {
+                _surfAllocatorNotify.ChangeD3DDevice(IntPtr.Zero, IntPtr.Zero);
+            }
+            catch(Exception)
+            {
+
+            }
         }
 
         #region IVMRSurfaceAllocator9 Implementation

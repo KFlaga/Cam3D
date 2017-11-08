@@ -65,7 +65,7 @@ namespace CamMain
                     link.Save();
                 }
             }
-            catch(Exception)
+            catch(Exception e)
             {
 
             }

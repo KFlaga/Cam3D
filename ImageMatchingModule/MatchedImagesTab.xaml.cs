@@ -19,7 +19,7 @@ namespace ImageMatchingModule
     public partial class MatchedImagesTab : UserControl
     {
         private AlgorithmWindow _matcherWindow;
-        private ImageMatchingAlgorithmController _alg = new ImageMatchingAlgorithmController();
+        private ImageMatchingAlgorithmUi _alg = new ImageMatchingAlgorithmUi();
         
         DisparityMap _mapLeft;
         public DisparityMap MapLeft
@@ -81,8 +81,7 @@ namespace ImageMatchingModule
                 MessageBox.Show("Images must have same size");
                 return;
             }
-            if(CameraPair.Data.IsCamLeftCalibrated == false ||
-                CameraPair.Data.IsCamRightCalibrated == false)
+            if(CameraPair.Data.AreCalibrated)
             {
                 MessageBox.Show("Cameras must be calibrated");
                 return;
@@ -91,7 +90,7 @@ namespace ImageMatchingModule
             ImageRectification rectifier = new ImageRectification(new ImageRectification_ZhangLoop());
             rectifier.ImageHeight = _camImageFirst.ImageSource.PixelHeight;
             rectifier.ImageWidth = _camImageFirst.ImageSource.PixelWidth;
-            rectifier.CalibData = CameraPair.Data;
+            rectifier.Cameras = CameraPair.Data;
             rectifier.ComputeRectificationMatrices();
 
             ImageTransformer transformer = new ImageTransformer();
@@ -128,8 +127,7 @@ namespace ImageMatchingModule
                 MessageBox.Show("Images must have same size");
                 return;
             }
-            if(CameraPair.Data.IsCamLeftCalibrated == false ||
-                CameraPair.Data.IsCamRightCalibrated == false)
+            if(CameraPair.Data.AreCalibrated)
             {
                 MessageBox.Show("Cameras must be calibrated");
                 return;

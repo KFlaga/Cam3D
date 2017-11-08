@@ -31,8 +31,6 @@
             <StackPanel Orientation="Vertical" Width="100">
                 <Button x:Name="_buttonRun" IsEnabled="False" Click="_buttonRun_Click" >RUN</Button>
                 <Button x:Name="_buttonAbort" IsEnabled="False" Click="_buttonAbort_Click" >ABORT</Button>
-                <Button x:Name="_buttonSuspend" IsEnabled="False" Click="_buttonSuspend_Click">SUSPEND</Button>
-                <Button x:Name="_buttonResume" IsEnabled="False" Click="_buttonResume_Click">RESUME</Button>
                 <Button x:Name="_buttonRefresh" IsEnabled="False" Height="44" Click="_buttonRefresh_Click">
                     <TextBlock TextAlignment="Center">REFRESH<LineBreak/>RESULTS</TextBlock>
                 </Button>
@@ -49,7 +47,7 @@
         <Border BorderThickness="1" BorderBrush="Black" DockPanel.Dock="Left">
             <StackPanel Orientation="Vertical">
                 <Label HorizontalContentAlignment="Center">RESULTS:</Label>
-                <ScrollViewer Margin="5" Height="280">
+                <ScrollViewer Margin="5" Height="280" ScrollViewer.PanningMode="Both" ScrollViewer.HorizontalScrollBarVisibility="Visible" ScrollViewer.VerticalScrollBarVisibility="Visible">
                     <TextBox x:Name="_textResults" IsReadOnly="True" 
                              Background="AntiqueWhite" MinLines="15"/>
                 </ScrollViewer>

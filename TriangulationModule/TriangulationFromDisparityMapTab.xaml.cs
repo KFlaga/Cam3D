@@ -1,10 +1,12 @@
 ﻿using CamAlgorithms.Calibration;
 using CamAlgorithms.Triangulation;
+using CamControls;
 using CamCore;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -14,11 +16,8 @@ namespace TriangulationModule
     {
         DisparityMap _dispMap;
 
-        TwoPointsTriangulation _triangulation = new TwoPointsTriangulation();
-        List<Vector<double>> _left;
-        List<Vector<double>> _right;
-        List<Vector<double>> _points3D;
-        List<TriangulatedPoint> _triangulatedPoints;
+        public TriangulationAlgorithmUi Algorithm { get; private set; } = new TriangulationAlgorithmUi();
+        public List<TriangulatedPoint> Points { get; set; }
 
         public TriangulationFromDisparityMapTab()
         {
@@ -32,18 +31,17 @@ namespace TriangulationModule
 
         private void Triangulate(object sender, RoutedEventArgs e)
         {
-            TriangulateBase(1);
+            PerformTriangulation(1);
         }
 
         private void TriangulateSparse(object sender, RoutedEventArgs e)
         {
-            TriangulateBase(2);
+            PerformTriangulation(2);
         }
 
-        private void TriangulateBase(int increment)
+        private void PerformTriangulation(int increment)
         {
-            if(CameraPair.Data.IsCamLeftCalibrated == false ||
-                CameraPair.Data.IsCamRightCalibrated == false)
+            if(CameraPair.Data.AreCalibrated)
             {
                 MessageBox.Show("Error: Cameras are not calibrated!");
                 return;
@@ -55,52 +53,38 @@ namespace TriangulationModule
                 return;
             }
 
-            _left = new List<Vector<double>>();
-            _right = new List<Vector<double>>();
+            Points = new List<TriangulatedPoint>();
             for(int r = 0; r < _dispMap.RowCount; r += increment)
             {
                 for(int c = 0; c < _dispMap.ColumnCount; c += increment)
                 {
                     if(_dispMap[r, c].IsValid())
                     {
-                        _left.Add(new DenseVector(new double[]
+                        Points.Add(new TriangulatedPoint()
                         {
-                            c, r, 1.0
-                        }));
-                        _right.Add(new DenseVector(new double[]
-                        {
-                            c + _dispMap[r, c].SubDX, r + _dispMap[r, c].SubDY, 1.0
-                        }));
+                            ImageLeft = new Vector2(y: r, x: c),
+                            ImageRight = new Vector2(y: r, x: c + _dispMap[r, c].SubDX),
+                            Real = new Vector3()
+                        });
                     }
                 }
             }
 
-            _triangulation.Cameras = CameraPair.Data;
-            _triangulation.UseLinearEstimationOnly = true;
-            _triangulation.PointsLeft = _left;
-            _triangulation.PointsRight = _right;
-
-            _triangulation.Estimate3DPoints();
-
-            _points3D = _triangulation.Points3D;
-            StoreTraingulatedPoints(_left, _right, _points3D);
-
-            MessageBox.Show("Triangulation finished");
+            Algorithm.Cameras = CameraPair.Data;
+            Algorithm.Points = Points;
+            Algorithm.Recitifed = false;
+            Algorithm.StatusChanged += Algorithm_StatusChanged;
+            AlgorithmWindow window = new AlgorithmWindow(Algorithm);
+            window.Show();
         }
 
-        private void StoreTraingulatedPoints(
-            List<Vector<double>> pointsLeft,
-            List<Vector<double>> pointsRight,
-            List<Vector<double>> points3d)
+        private void Algorithm_StatusChanged(object sender, AlgorithmEventArgs e)
         {
-            _triangulatedPoints = new List<TriangulatedPoint>();
-            for(int i = 0; i < points3d.Count; ++i)
+            if(e.CurrentStatus == AlgorithmStatus.Finished || e.CurrentStatus == AlgorithmStatus.Terminated)
             {
-                _triangulatedPoints.Add(new TriangulatedPoint()
+                Dispatcher.Invoke(() =>
                 {
-                    ImageLeft = new Vector2(pointsLeft[i]),
-                    ImageRight = new Vector2(pointsRight[i]),
-                    Real = new Vector3(points3d[i])
+
                 });
             }
         }
@@ -112,7 +96,7 @@ namespace TriangulationModule
 
         private void Save3DPoints(Stream file, string path)
         {
-            CamCore.XmlSerialisation.SaveToFile(_triangulatedPoints, file);
+            CamCore.XmlSerialisation.SaveToFile(Points, file);
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using CamAlgorithms;
-using CamAlgorithms.Calibration;
+﻿using CamAlgorithms.Calibration;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -7,8 +6,6 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Xml;
-using System.Xml.Serialization;
 
 namespace CalibrationModule
 {

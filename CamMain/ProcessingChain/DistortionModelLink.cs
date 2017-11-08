@@ -8,10 +8,10 @@ namespace CamMain.ProcessingChain
 {
     public class DistortionModelLinkData
     {
-        public RadialDistortionModel DistortionLeft { get; set; }
-        public RadialDistortionModel DistortionRight { get; set; }
+        public RadialDistortion DistortionLeft { get; set; }
+        public RadialDistortion DistortionRight { get; set; }
 
-        public RadialDistortionModel GetModel(SideIndex idx)
+        public RadialDistortion GetDistortion(SideIndex idx)
         {
             return idx == SideIndex.Left ? DistortionLeft : DistortionRight;
         }
@@ -93,7 +93,7 @@ namespace CamMain.ProcessingChain
             _linkData.DistortionRight = ComputeDistortionModel(_rawCalibData.LinesRight);
         }
 
-        private RadialDistortionModel ComputeDistortionModel(List<List<Vector2>> calibLines)
+        private RadialDistortion ComputeDistortionModel(List<List<Vector2>> calibLines)
         {
             // - from extracted points distortion model is computed
             // - first distortion direction is extracted from images and somehow its scale is estimated :
@@ -107,14 +107,14 @@ namespace CamMain.ProcessingChain
             distCorrector.ImageWidth = _imgSize.ImageWidth;
             distCorrector.CorrectionLines = calibLines;
 
-            distCorrector.DistortionModel = new Rational3RDModel();
-            distCorrector.DistortionModel.InitialCenterEstimation = 
+            distCorrector.Distortion.Model = new Rational3RDModel();
+            distCorrector.Distortion.Model.InitialCenterEstimation = 
                 new Vector2(_imgSize.ImageWidth * 0.5, _imgSize.ImageHeight * 0.5);
-            distCorrector.DistortionModel.InitParameters();
+            distCorrector.Distortion.Model.InitParameters();
 
             distCorrector.FindModelParameters();
 
-            return distCorrector.DistortionModel;
+            return distCorrector.Distortion;
         }
 
         private void SaveDistortionModel()
@@ -176,26 +176,21 @@ namespace CamMain.ProcessingChain
             _linkData.DistortionRight = LoadModelFromFile(rightFilePath);
         }
 
-        RadialDistortionModel LoadModelFromFile(string path)
+        RadialDistortion LoadModelFromFile(string path)
         {
-            RadialDistortionModel model;
-            using(Stream modelFile = new FileStream(path, FileMode.Open))
+            RadialDistortion distortion;
+            using(Stream file = new FileStream(path, FileMode.Open))
             {
-                XmlDocument modelDoc = new XmlDocument();
-                modelDoc.Load(modelFile);
-                model = RadialDistortionModel.DistortionModelFromNode(
-                    modelDoc.GetElementsByTagName("DistortionModel")[0]);
+                distortion = XmlSerialisation.CreateFromFile<RadialDistortion>(file);
             }
-            return model;
+            return distortion;
         }
 
-        void SaveModelToFile(string path, RadialDistortionModel model)
+        void SaveModelToFile(string path, RadialDistortion distortion)
         {
-            using(Stream modelFile = new FileStream(path, FileMode.Create))
+            using(Stream file = new FileStream(path, FileMode.Create))
             {
-                XmlDocument modelDoc = new XmlDocument();
-                modelDoc.AppendChild(RadialDistortionModel.CreateDistortionModelNode(modelDoc, model));
-                modelDoc.Save(modelFile);
+                XmlSerialisation.SaveToFile(distortion, file);
             }
         }
     }

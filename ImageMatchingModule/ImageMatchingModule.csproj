@@ -80,7 +80,7 @@
     <Compile Include="DisparityMapTab.xaml.cs">
       <DependentUpon>DisparityMapTab.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ImageMatchingAlgorithm.cs" />
+    <Compile Include="ImageMatchingAlgorithmUi.cs" />
     <Compile Include="MatchedImagesTab.xaml.cs">
       <DependentUpon>MatchedImagesTab.xaml</DependentUpon>
     </Compile>

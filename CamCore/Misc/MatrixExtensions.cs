@@ -347,6 +347,28 @@ namespace CamCore
             }
         }
         
+        // Transforms (r,c) -> (R-r,C), R/C is Row/ColumnCount
+        public static Matrix<double> FlipUpsideDown(this Matrix<double> A)
+        {
+            Matrix<double> flipped = new DenseMatrix(A.RowCount, A.ColumnCount);
+            for(int r = 0; r < flipped.RowCount; ++r)
+            {
+                flipped.SetRow(r, A.Row(A.RowCount - r - 1));
+            }
+            return flipped;
+        }
+
+        // Transforms (r,c) -> (R-r,C), R/C is Row/ColumnCount
+        public static Matrix<double> FlipLeftRight(this Matrix<double> A)
+        {
+            Matrix<double> flipped = new DenseMatrix(A.RowCount, A.ColumnCount);
+            for(int c = 0; c < flipped.ColumnCount; ++c)
+            {
+                flipped.SetColumn(c, A.Column(A.ColumnCount - c - 1));
+            }
+            return flipped;
+        }
+
         public static void CopyFromVector(this Matrix<double> m, Vector<double> v, bool rowWise = true)
         {
             if(rowWise)

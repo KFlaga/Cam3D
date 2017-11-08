@@ -76,7 +76,7 @@ namespace CamMain.ProcessingChain
                 _disparity = _globalData.Get<DisparityRefinementLinkData>();
 
                 _trinagulation = new TwoPointsTriangulation();
-                _trinagulation.Cameras = _calibration.Calibration;
+                _trinagulation.Cameras = _calibration.Cameras;
             }
 
         }
@@ -135,7 +135,7 @@ namespace CamMain.ProcessingChain
                     {
                         pointsLeft.Add(DerectifyPoint(x, y,
                             _rectification.Rectification.RectificationLeft_Inverse));
-                        pointsRight.Add(DerectifyPoint(x + disp.SubDX, y + disp.SubDY,
+                        pointsRight.Add(DerectifyPoint(x + disp.SubDX, y,
                             _rectification.Rectification.RectificationRight_Inverse));
                     }
                 }

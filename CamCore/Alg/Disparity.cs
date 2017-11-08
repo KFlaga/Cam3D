@@ -17,9 +17,7 @@ namespace CamCore
     public class Disparity : ICloneable
     {
         public int DX;
-        public int DY;
         public double SubDX;
-        public double SubDY;
         public double Cost;
         public double Confidence;
         public int Flags;
@@ -32,9 +30,7 @@ namespace CamCore
         public Disparity(IntVector2 pixelBase, IntVector2 pixelMacthed, double cost = 0.0, double confidence = 0.0, int flags = (int)DisparityFlags.Invalid)
         {
             DX = pixelMacthed.X - pixelBase.X;
-            DY = pixelMacthed.Y - pixelBase.Y;
             SubDX = DX;
-            SubDY = DY;
             Cost = cost;
             Confidence = confidence;
             Flags = flags;
@@ -42,24 +38,24 @@ namespace CamCore
 
         public IntVector2 GetMatchedPixel(IntVector2 pixelBase)
         {
-            return new IntVector2(pixelBase.X + DX, pixelBase.Y + DY);
+            return new IntVector2(pixelBase.X + DX, pixelBase.Y);
         }
 
         public void GetMatchedPixel(IntVector2 pixelBase, IntVector2 pixelMatched)
         {
             pixelMatched.X = pixelBase.X + DX;
-            pixelMatched.Y = pixelBase.Y + DY;
+            pixelMatched.Y = pixelBase.Y;
         }
 
         public IntVector2 GetBasePixel(IntVector2 pixelMatched)
         {
-            return new IntVector2(pixelMatched.X - DX, pixelMatched.Y - DY);
+            return new IntVector2(pixelMatched.X - DX, pixelMatched.Y);
         }
 
         public void GetBasePixel(IntVector2 pixelMatched, IntVector2 pixelBase)
         {
             pixelBase.X = pixelMatched.X - DX;
-            pixelBase.Y = pixelMatched.Y - DY;
+            pixelBase.Y = pixelMatched.Y;
         }
 
         public bool IsValid()
@@ -77,18 +73,16 @@ namespace CamCore
             return new Disparity()
             {
                 DX = DX,
-                DY = DY,
                 Cost = Cost,
                 Confidence = Confidence,
                 Flags = Flags,
-                SubDX = SubDX,
-                SubDY = SubDY
+                SubDX = SubDX
             };
         }
 
         public override string ToString()
         {
-            return "X = " + DX + ", Y = " + DY + ", c = " + Cost + ", t = " + Confidence;
+            return "X = " + DX + " c = " + Cost + ", t = " + Confidence;
         }
 
         public XmlNode CreateDisparityNode(XmlDocument xmlDoc)
@@ -97,12 +91,8 @@ namespace CamCore
 
             XmlAttribute dxAtt = xmlDoc.CreateAttribute("dx");
             dxAtt.Value = DX.ToString();
-            XmlAttribute dyAtt = xmlDoc.CreateAttribute("dy");
-            dyAtt.Value = DY.ToString();
             XmlAttribute sdxAtt = xmlDoc.CreateAttribute("subdx");
             sdxAtt.Value = SubDX.ToString();
-            XmlAttribute sdyAtt = xmlDoc.CreateAttribute("subdy");
-            sdyAtt.Value = SubDY.ToString();
             XmlAttribute costAtt = xmlDoc.CreateAttribute("cost");
             costAtt.Value = Cost.ToString();
             XmlAttribute confAtt = xmlDoc.CreateAttribute("confidence");
@@ -111,9 +101,7 @@ namespace CamCore
             flagsAtt.Value = DisparityFlagsToString(Flags);
 
             node.Attributes.Append(dxAtt);
-            node.Attributes.Append(dyAtt);
             node.Attributes.Append(sdxAtt);
-            node.Attributes.Append(sdyAtt);
             node.Attributes.Append(costAtt);
             node.Attributes.Append(confAtt);
             node.Attributes.Append(flagsAtt);
@@ -124,9 +112,7 @@ namespace CamCore
         public void ReadFromNode(XmlNode node)
         {
             DX = int.Parse(node.Attributes["dx"].Value);
-            DY = int.Parse(node.Attributes["dy"].Value);
             SubDX = int.Parse(node.Attributes["subdx"].Value);
-            SubDY = int.Parse(node.Attributes["subdy"].Value);
             Cost = double.Parse(node.Attributes["cost"].Value);
             Confidence = double.Parse(node.Attributes["confidence"].Value);
             Flags = ParseDisparityFlags(node.Attributes["flags"].Value);
@@ -137,9 +123,7 @@ namespace CamCore
             Disparity disp = new Disparity()
             {
                 DX = int.Parse(node.Attributes["dx"].Value),
-                DY = int.Parse(node.Attributes["dy"].Value),
                 SubDX = double.Parse(node.Attributes["subdx"].Value),
-                SubDY = double.Parse(node.Attributes["subdy"].Value),
                 Cost = double.Parse(node.Attributes["cost"].Value),
                 Confidence = double.Parse(node.Attributes["confidence"].Value),
                 Flags = ParseDisparityFlags(node.Attributes["flags"].Value)
