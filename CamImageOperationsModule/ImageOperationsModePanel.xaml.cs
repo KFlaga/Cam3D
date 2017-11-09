@@ -13,11 +13,12 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using CamControls;
-using CamImageProcessing;
+using CamAlgorithms;
 using MathNet.Numerics.LinearAlgebra.Double;
 using MathNet.Numerics.LinearAlgebra;
+using CamCore;
 
-namespace CamImageOperationsModule
+namespace ImageOperationsModule
 {
     public partial class ImageOperationsModePanel : UserControl
     {

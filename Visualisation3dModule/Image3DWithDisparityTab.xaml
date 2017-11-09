@@ -1,0 +1,27 @@
+﻿<UserControl xmlns:CamControls="clr-namespace:CamControls;assembly=CamControls"  x:Class="Visualisation3dModule.Image3DWithDisparityTab"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="10*"/>
+            <RowDefinition Height="40"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="50*"/>
+            <ColumnDefinition Width="5"/>
+            <ColumnDefinition Width="50*"/>
+        </Grid.ColumnDefinitions>
+        <CamControls:PointImage x:Name="_imageControl" Grid.Column="0" Grid.Row="0"/>
+        <CamControls:DisparityImage x:Name="_dispImage"  Grid.Column="2" Grid.Row="0"/>
+        <Border Grid.Row="1" Grid.ColumnSpan="3" BorderBrush="Black" BorderThickness="1">
+            <StackPanel Orientation="Horizontal">
+                <Button Content="Load 3D Points" Click="ManagePoints" Margin="5,3,5,3"/>
+                <Button Content="Build 3D Image" Click="Build3DImage" Margin="5,3,5,3"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>

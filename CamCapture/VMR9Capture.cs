@@ -1,10 +1,7 @@
-﻿using CamAlgorithms;
-using DirectShowLib;
+﻿using DirectShowLib;
 using SharpDX.Direct3D9;
 using System;
 using System.Runtime.InteropServices;
-using System.Windows;
-using System.Windows.Interop;
 using System.Windows.Media.Imaging;
 
 namespace CamCapture

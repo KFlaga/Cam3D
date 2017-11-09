@@ -1,5 +1,4 @@
-﻿using CamAlgorithms;
-using CamAlgorithms.Calibration;
+﻿using CamAlgorithms.Calibration;
 using System;
 using System.Windows;
 using System.Windows.Controls;

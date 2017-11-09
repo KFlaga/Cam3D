@@ -40,6 +40,8 @@ namespace CamAlgorithms.Calibration
         public Matrix<double> RotationMatrix = new DenseMatrix(3, 3);
         public Vector<double> Translation = new DenseVector(3);
 
+        public RadialDistortion Distortion { get; set; }
+
         public bool IsCalibrated { get { return System.Math.Abs(Matrix[0, 0]) > 1e-12; } }
 
         public static Matrix<double> Normalized(Matrix<double> cameraMatrix, Matrix<double> normImage, Matrix<double> normReal)

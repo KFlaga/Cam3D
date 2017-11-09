@@ -99,6 +99,10 @@
       <Project>{d820c525-b2e9-4b55-b7a3-d76938da5239}</Project>
       <Name>CalibrationModule</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CamAutomatization\CamAutomatization.csproj">
+      <Project>{70424b17-eda2-4d63-aa2c-1344ace10e11}</Project>
+      <Name>CamAutomatization</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CamControls\CamControls.csproj">
       <Project>{8fa0ea0f-de8b-49a7-829b-9672cc61b11d}</Project>
       <Name>CamControls</Name>
@@ -107,7 +111,7 @@
       <Project>{30ab90ed-775c-49e5-96a8-b419d08d2204}</Project>
       <Name>CamCore</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CamImageProcessing\CamAlgorithms.csproj">
+    <ProjectReference Include="..\CamAlgorithms\CamAlgorithms.csproj">
       <Project>{3077792d-e973-4d3f-83c6-8553287a6604}</Project>
       <Name>CamAlgorithms</Name>
     </ProjectReference>

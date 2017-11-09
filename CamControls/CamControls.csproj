@@ -187,7 +187,7 @@
       <Project>{30ab90ed-775c-49e5-96a8-b419d08d2204}</Project>
       <Name>CamCore</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CamImageProcessing\CamAlgorithms.csproj">
+    <ProjectReference Include="..\CamAlgorithms\CamAlgorithms.csproj">
       <Project>{3077792d-e973-4d3f-83c6-8553287a6604}</Project>
       <Name>CamAlgorithms</Name>
     </ProjectReference>

@@ -1,16 +1,13 @@
-﻿using System;
+﻿using CamCore;
 using MathNet.Numerics.LinearAlgebra;
-using System.IO;
-using System.Xml;
 using MathNet.Numerics.LinearAlgebra.Double;
-using System.ComponentModel;
-using CamCore;
-using System.Xml.Serialization;
+using System;
+using System.Xml;
 using System.Xml.Schema;
+using System.Xml.Serialization;
 
 namespace CamAlgorithms.Calibration
 {
-    // Change to CameraPair
     public class CameraPair : IXmlSerializable
     {
         private static CameraPair _data = new CameraPair();
@@ -88,6 +85,14 @@ namespace CamAlgorithms.Calibration
         public bool EpiLeftInInfinity { get; protected set; }
         [XmlIgnore]
         public bool EpiRightInInfinity { get; protected set; }
+
+
+        public Matrix<double> RectificationLeft { get; set; }
+        public Matrix<double> RectificationRight { get; set; }
+        [XmlIgnore]
+        public Matrix<double> RectificationLeftInverse { get; set; }
+        [XmlIgnore]
+        public Matrix<double> RectificationRightInverse { get; set; }
 
         public void Update()
         {
@@ -174,39 +179,14 @@ namespace CamAlgorithms.Calibration
             Essential = Right.InternalMatrix.Transpose() * Fundamental * Left.InternalMatrix;
         }
         
-        public RadialDistortion DistortionLeft { get; set; }
-        public RadialDistortion DistortionRight { get; set; }
-
-        public RadialDistortion GetDistortion(SideIndex idx)
-        {
-            return idx == SideIndex.Left ? DistortionLeft : DistortionRight;
-        }
-
-        public void SetDistortionModel(SideIndex idx, RadialDistortion model)
-        {
-            if(idx == SideIndex.Left)
-                DistortionLeft = model;
-            else
-                DistortionRight = model;
-        }
-        
-        public Matrix<double> RectificationLeft { get; set; }
-        public Matrix<double> RectificationRight { get; set; }
-        [XmlIgnore]
-        public Matrix<double> RectificationInverseLeft { get; set; }
-        [XmlIgnore]
-        public Matrix<double> RectificationInverseRight { get; set; }
-        
         #region IXmlSerializable
         public XmlSchema GetSchema() { return null; }
 
         public virtual void ReadXml(XmlReader reader)
         {
             XmlSerialisation.ReadXmlAllProperties(reader, this);
-
-            if(RectificationLeft != null) { RectificationInverseLeft = RectificationLeft.Inverse(); }
-            if(RectificationRight != null) { RectificationInverseRight = RectificationRight.Inverse(); }
-
+            if(RectificationLeft != null) { RectificationLeftInverse = RectificationLeft.Inverse(); }
+            if(RectificationRight != null) { RectificationRightInverse = RectificationRight.Inverse(); }
             if(AreCalibrated) { Update(); }
         }
 

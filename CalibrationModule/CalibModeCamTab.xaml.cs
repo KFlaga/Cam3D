@@ -311,7 +311,7 @@ namespace CalibrationModule
 
         private void AcceptDistortionModel(object sender, RoutedEventArgs e)
         {
-            CameraPair.Data.SetDistortionModel(CameraIndex, _distortionCorrector.Distortion);
+            CameraPair.Data.GetCamera(CameraIndex).Distortion = _distortionCorrector.Distortion;
         }
 
         private void AcceptCalibration(object sender, RoutedEventArgs e)

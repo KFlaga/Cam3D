@@ -1,13 +1,9 @@
-﻿using CamAlgorithms;
-using CamAlgorithms.Calibration;
+﻿using CamAlgorithms.Calibration;
 using CamCore;
-using Microsoft.Win32;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Media.Animation;
 
 namespace CamMain
@@ -35,13 +31,13 @@ namespace CamMain
 
             _modules = new Dictionary<object, Module>()
             {
-                 { _headerCalibration, new CalibrationModule.CalibModule() },
-                 { _headerRectification, new RectificationModule.RectModule() },
-                 { _headerMatching, new ImageMatchingModule.MatchingModule() },
-                 { _headerTriangulation, new TriangulationModule.TriModule() },
-                 { _headerImage3D, new Image3DModule.Image3DConstructionModule() },
-                 { _headerCapture, new CaptureModule.CamCaptureModule() },
-                 { _headerOperations, new CamImageOperationsModule.ImageOperationsModule() },
+                 { _headerCalibration, new CalibrationModule.Module() },
+                 { _headerRectification, new RectificationModule.Module() },
+                 { _headerMatching, new ImageMatchingModule.Module() },
+                 { _headerTriangulation, new TriangulationModule.Module() },
+                 { _headerImage3D, new Visualisation3dModule.Module() },
+                 { _headerCapture, new CamCapture.Module() },
+                 { _headerOperations, new ImageOperationsModule.Module() },
             };
 
             InitCalibrationResultsAnimation();

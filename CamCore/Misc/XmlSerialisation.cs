@@ -56,17 +56,31 @@ namespace CamCore
             writer.Close();
         }
 
-        private static bool Implements<T>(Type tp) where T : class
+        public static XmlNode FirstChildWithName(this XmlNode node, string childName, bool caseSensitive = true)
         {
-            return tp.GetInterfaces().Any((t) => { return t == typeof(IXmlSerializable); });
+            if(node.HasChildNodes)
+            {
+                var childNodes = node.ChildNodes;
+                foreach(XmlNode childNode in childNodes)
+                {
+                    if(childNode.Name.Equals(childName, caseSensitive ?
+                        StringComparison.Ordinal :
+                        StringComparison.OrdinalIgnoreCase))
+                        return childNode;
+                }
+            }
+            return null;
         }
 
-        private static bool Inherits<T>(Type tp) where T : class
+        private static bool Is<T>(this Type tp) where T : class
         {
+            if(typeof(T).IsInterface)
+            {
+                return tp.GetInterfaces().Any((t) => { return t == typeof(IXmlSerializable); });
+            }
             return tp.IsSubclassOf(typeof(T)) || typeof(T) == tp;
         }
 
-        // Reads all properties (including Matrix/Vector)
         public static void ReadXmlAllProperties(XmlReader reader, object obj)
         {
             reader.MoveToContent();
@@ -79,19 +93,19 @@ namespace CamCore
                 var propertyInfo = obj.GetType().GetProperty(nodeName);
                 if(propertyInfo != null)
                 {
-                    if(propertyInfo.PropertyType == typeof(Matrix<double>))
+                    if(propertyInfo.PropertyType.Is<Matrix<double>>())
                     {
                         MatrixXmlSerializer serializer = new MatrixXmlSerializer();
                         serializer.ReadXml(reader);
                         propertyInfo.SetValue(obj, serializer.Mat);
                     }
-                    else if(propertyInfo.PropertyType == typeof(Vector<double>))
+                    else if(propertyInfo.PropertyType.Is<Vector<double>>())
                     {
                         VectorXmlSerializer serializer = new VectorXmlSerializer();
                         serializer.ReadXml(reader);
                         propertyInfo.SetValue(obj, serializer.Vec);
                     }
-                    else if(Implements<IXmlSerializable>(propertyInfo.PropertyType))
+                    else if(propertyInfo.PropertyType.Is<IXmlSerializable>())
                     {
                         IXmlSerializable serializer = propertyInfo.GetValue(obj) as IXmlSerializable;
                         serializer.ReadXml(reader);
@@ -111,19 +125,19 @@ namespace CamCore
         {
             if(propertyInfo.GetValue(obj) == null) { return; }
 
-            if(propertyInfo.PropertyType == typeof(Matrix<double>))
+            if(propertyInfo.PropertyType.Is<Matrix<double>>())
             {
                 writer.WriteStartElement(propertyInfo.Name);
                 new MatrixXmlSerializer(propertyInfo.GetValue(obj) as Matrix<double>).WriteXml(writer);
                 writer.WriteEndElement();
             }
-            else if(propertyInfo.PropertyType == typeof(Vector<double>))
+            else if(propertyInfo.PropertyType.Is<Vector<double>>())
             {
                 writer.WriteStartElement(propertyInfo.Name);
                 new VectorXmlSerializer(propertyInfo.GetValue(obj) as Vector<double>).WriteXml(writer);
                 writer.WriteEndElement();
             }
-            else if(Implements<IXmlSerializable>(propertyInfo.PropertyType))
+            else if(propertyInfo.PropertyType.Is<IXmlSerializable>())
             {
                 writer.WriteStartElement(propertyInfo.Name);
                 IXmlSerializable serializable = propertyInfo.GetValue(obj) as IXmlSerializable;

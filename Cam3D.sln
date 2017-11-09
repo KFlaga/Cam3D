@@ -20,11 +20,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CamMain", "CamMain\CamMain.
 		{4A7A81A4-29AD-4B02-A40A-A425BF3D133E} = {4A7A81A4-29AD-4B02-A40A-A425BF3D133E}
 		{085818D3-B666-4FBA-BF9E-4A32452624DB} = {085818D3-B666-4FBA-BF9E-4A32452624DB}
 		{0F590AE5-D00F-4C9C-BBC0-6112B19F2EA5} = {0F590AE5-D00F-4C9C-BBC0-6112B19F2EA5}
-		{D7EB4FEC-FFC9-4B78-A6B8-33D6AF071C7E} = {D7EB4FEC-FFC9-4B78-A6B8-33D6AF071C7E}
 		{F64005ED-2C17-4678-928F-5CD1B3BBE6BC} = {F64005ED-2C17-4678-928F-5CD1B3BBE6BC}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Image3DModule", "Image3DModule\Image3DModule.csproj", "{95811205-3C27-4E3A-89B6-0C8598779496}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Visualisation3dModule", "Visualisation3dModule\Visualisation3dModule.csproj", "{95811205-3C27-4E3A-89B6-0C8598779496}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CamDX", "CamDX\CamDX.csproj", "{0F590AE5-D00F-4C9C-BBC0-6112B19F2EA5}"
 EndProject
@@ -34,9 +33,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CamAlgorithms", "CamAlgorit
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CamCapture", "CamCapture\CamCapture.csproj", "{4A7A81A4-29AD-4B02-A40A-A425BF3D133E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CaptureModule", "CaptureTestModule\CaptureModule.csproj", "{D7EB4FEC-FFC9-4B78-A6B8-33D6AF071C7E}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CamImageOperationsModule", "CamImageOperationsModule\CamImageOperationsModule.csproj", "{3D588C4A-259A-4E7D-A155-C2A96DF504C7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageOperationsModule", "CamImageOperationsModule\ImageOperationsModule.csproj", "{3D588C4A-259A-4E7D-A155-C2A96DF504C7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{DFA5842E-EF98-497A-A922-5BAE02E83821}"
 EndProject
@@ -46,10 +43,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TriangulationModule", "Tria
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RectificationModule", "RectificationModule\RectificationModule.csproj", "{5337CA5A-2612-42B0-B1B5-8FF22B123961}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CamAutomatization", "CamAutomatization\CamAutomatization.csproj", "{70424B17-EDA2-4D63-AA2C-1344ACE10E11}"
+EndProject
 Global
-	GlobalSection(Performance) = preSolution
-		HasPerformanceSessions = true
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|x64 = Debug|x64
@@ -167,18 +163,6 @@ Global
 		{4A7A81A4-29AD-4B02-A40A-A425BF3D133E}.Release|x64.Build.0 = Release|x64
 		{4A7A81A4-29AD-4B02-A40A-A425BF3D133E}.Release|x86.ActiveCfg = Release|Any CPU
 		{4A7A81A4-29AD-4B02-A40A-A425BF3D133E}.Release|x86.Build.0 = Release|Any CPU
-		{D7EB4FEC-FFC9-4B78-A6B8-33D6AF071C7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D7EB4FEC-FFC9-4B78-A6B8-33D6AF071C7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D7EB4FEC-FFC9-4B78-A6B8-33D6AF071C7E}.Debug|x64.ActiveCfg = Debug|x64
-		{D7EB4FEC-FFC9-4B78-A6B8-33D6AF071C7E}.Debug|x64.Build.0 = Debug|x64
-		{D7EB4FEC-FFC9-4B78-A6B8-33D6AF071C7E}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{D7EB4FEC-FFC9-4B78-A6B8-33D6AF071C7E}.Debug|x86.Build.0 = Debug|Any CPU
-		{D7EB4FEC-FFC9-4B78-A6B8-33D6AF071C7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D7EB4FEC-FFC9-4B78-A6B8-33D6AF071C7E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D7EB4FEC-FFC9-4B78-A6B8-33D6AF071C7E}.Release|x64.ActiveCfg = Release|x64
-		{D7EB4FEC-FFC9-4B78-A6B8-33D6AF071C7E}.Release|x64.Build.0 = Release|x64
-		{D7EB4FEC-FFC9-4B78-A6B8-33D6AF071C7E}.Release|x86.ActiveCfg = Release|Any CPU
-		{D7EB4FEC-FFC9-4B78-A6B8-33D6AF071C7E}.Release|x86.Build.0 = Release|Any CPU
 		{3D588C4A-259A-4E7D-A155-C2A96DF504C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3D588C4A-259A-4E7D-A155-C2A96DF504C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3D588C4A-259A-4E7D-A155-C2A96DF504C7}.Debug|x64.ActiveCfg = Debug|x64
@@ -239,6 +223,18 @@ Global
 		{5337CA5A-2612-42B0-B1B5-8FF22B123961}.Release|x64.Build.0 = Release|Any CPU
 		{5337CA5A-2612-42B0-B1B5-8FF22B123961}.Release|x86.ActiveCfg = Release|Any CPU
 		{5337CA5A-2612-42B0-B1B5-8FF22B123961}.Release|x86.Build.0 = Release|Any CPU
+		{70424B17-EDA2-4D63-AA2C-1344ACE10E11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70424B17-EDA2-4D63-AA2C-1344ACE10E11}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70424B17-EDA2-4D63-AA2C-1344ACE10E11}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{70424B17-EDA2-4D63-AA2C-1344ACE10E11}.Debug|x64.Build.0 = Debug|Any CPU
+		{70424B17-EDA2-4D63-AA2C-1344ACE10E11}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{70424B17-EDA2-4D63-AA2C-1344ACE10E11}.Debug|x86.Build.0 = Debug|Any CPU
+		{70424B17-EDA2-4D63-AA2C-1344ACE10E11}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70424B17-EDA2-4D63-AA2C-1344ACE10E11}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70424B17-EDA2-4D63-AA2C-1344ACE10E11}.Release|x64.ActiveCfg = Release|Any CPU
+		{70424B17-EDA2-4D63-AA2C-1344ACE10E11}.Release|x64.Build.0 = Release|Any CPU
+		{70424B17-EDA2-4D63-AA2C-1344ACE10E11}.Release|x86.ActiveCfg = Release|Any CPU
+		{70424B17-EDA2-4D63-AA2C-1344ACE10E11}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

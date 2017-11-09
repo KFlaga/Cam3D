@@ -102,22 +102,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ProcessingChain\CalibrationLink.cs" />
-    <Compile Include="ProcessingChain\ConfigurationLink.cs" />
-    <Compile Include="ProcessingChain\DisparityRefinementLink.cs" />
-    <Compile Include="ProcessingChain\DistortionModelLink.cs" />
-    <Compile Include="ProcessingChain\GlobalData.cs" />
-    <Compile Include="ProcessingChain\ImageMatchingLink.cs" />
-    <Compile Include="ProcessingChain\ILink.cs" />
-    <Compile Include="ProcessingChain\LinkUtilities.cs" />
-    <Compile Include="ProcessingChain\MatchedImagesLink.cs" />
-    <Compile Include="ProcessingChain\ProcessingChain.cs" />
-    <Compile Include="ProcessingChain\RawCalibrationImagesLink.cs" />
-    <Compile Include="ProcessingChain\RectificationLink.cs" />
-    <Compile Include="ProcessingChain\RectifyCalibrationImagesLink.cs" />
-    <Compile Include="ProcessingChain\TriangulationLink.cs" />
-    <Compile Include="ProcessingChain\UndistortImagesLink.cs" />
-    <Compile Include="ProcessingChain\UndistortPointsLink.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -150,6 +134,10 @@
       <Project>{d820c525-b2e9-4b55-b7a3-d76938da5239}</Project>
       <Name>CalibrationModule</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CamAutomatization\CamAutomatization.csproj">
+      <Project>{70424b17-eda2-4d63-aa2c-1344ace10e11}</Project>
+      <Name>CamAutomatization</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CamCapture\CamCapture.csproj">
       <Project>{4a7a81a4-29ad-4b02-a40a-a425bf3d133e}</Project>
       <Name>CamCapture</Name>
@@ -170,25 +158,17 @@
       <Project>{0f590ae5-d00f-4c9c-bbc0-6112b19f2ea5}</Project>
       <Name>CamDX</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CamImageOperationsModule\CamImageOperationsModule.csproj">
+    <ProjectReference Include="..\CamImageOperationsModule\ImageOperationsModule.csproj">
       <Project>{3d588c4a-259a-4e7d-a155-c2a96df504c7}</Project>
-      <Name>CamImageOperationsModule</Name>
+      <Name>ImageOperationsModule</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CamImageProcessing\CamAlgorithms.csproj">
+    <ProjectReference Include="..\CamAlgorithms\CamAlgorithms.csproj">
       <Project>{3077792d-e973-4d3f-83c6-8553287a6604}</Project>
       <Name>CamAlgorithms</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CaptureTestModule\CaptureModule.csproj">
-      <Project>{d7eb4fec-ffc9-4b78-a6b8-33d6af071c7e}</Project>
-      <Name>CaptureModule</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DXTestModule\DXTestModule.csproj">
-      <Project>{076da207-2ce2-42d8-ac13-5e77804559da}</Project>
-      <Name>DXTestModule</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Image3DModule\Image3DModule.csproj">
+    <ProjectReference Include="..\Image3DModule\Visualisation3dModule.csproj">
       <Project>{95811205-3c27-4e3a-89b6-0c8598779496}</Project>
-      <Name>Image3DModule</Name>
+      <Name>Visualisation3dModule</Name>
     </ProjectReference>
     <ProjectReference Include="..\ImageMatchingModule\ImageMatchingModule.csproj">
       <Project>{092f0409-76d1-4858-b4d4-a78737bebb6a}</Project>

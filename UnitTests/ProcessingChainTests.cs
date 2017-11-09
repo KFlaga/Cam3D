@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using CamMain;
-using CamMain.ProcessingChain;
+using CamAutomatization;
 using System.Xml;
 using System.IO;
 
