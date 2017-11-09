@@ -12,10 +12,6 @@
 			<File>"ColorShader.vs</File>
 			<Entry>"Main"</Entry>
 		</VertexShader>
-		<InputLayout padding="0">
-			<ElementType type="Position4" slot="0"/>
-			<ElementType type="Color4" slot="0"/>
-		</InputLayout>
 	</VertexShaders>
 	<PixelShaders>
 		<PixelShader>
@@ -23,5 +19,11 @@
 			<Entry>"Main"</Entry>
 		</PixelShader>
 	</PixelShaders>
+	<InputLayouts>
+		<InputLayout>
+			<ElementType type="Position4" slot="0"/>
+			<ElementType type="Color4" slot="0"/>
+		</InputLayout>
+	</InputLayouts>
 </Shader>
 

@@ -165,7 +165,8 @@
       <Parameter desc="Smooth Disparity Map?" id="SMOOTH" value="false" />
       <Parameter desc="Kernel Coeff" id="KER_COEFF" value="0.5" />
       <Parameter desc="Step Coeff" id="STEP_COEFF" value="0.5" />
-      <Parameter desc="Spatial Kernel Type" id="KER_TYPE" value="Gaussian" /> <!-- Gaussian, Rational or Constant -->
+      <Parameter desc="Spatial Kernel Type" id="KER_TYPE" value="Gaussian" />
+      <!-- Gaussian, Rational or Constant -->
       <Parameter desc="Use 8 Gradient Directions" id="EIGHT" value="false" />
     </Refiner>
   </DisparityRefinement>
