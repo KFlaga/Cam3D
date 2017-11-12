@@ -200,24 +200,24 @@ namespace CamAlgorithms
         {
             base.InitParameters();
 
-            AlgorithmParameter windowRadiusParam = new IntParameter(
+            IAlgorithmParameter windowRadiusParam = new IntParameter(
                 "Gauss Window Radius", "WRAD", 3, 1, 10);
             Parameters.Add(windowRadiusParam);
 
-            AlgorithmParameter traceCoeffParam = new DoubleParameter(
+            IAlgorithmParameter traceCoeffParam = new DoubleParameter(
                 "Trace Coeff", "TRCOEFF", 0.04, 0.0, 0.25);
             Parameters.Add(traceCoeffParam);
 
-            AlgorithmParameter treshCornerParam = new DoubleParameter(
+            IAlgorithmParameter treshCornerParam = new DoubleParameter(
                 "Corner Threshold", "CORT", 0.1, 0.001, 2.0);
             Parameters.Add(treshCornerParam);
         }
 
         public override void UpdateParameters()
         {
-            WindowRadius = AlgorithmParameter.FindValue<int>("WRAD", Parameters);
-            TraceCoeff = AlgorithmParameter.FindValue<double>("TRCOEFF", Parameters);
-            TreshCorner = AlgorithmParameter.FindValue<double>("CORT", Parameters);
+            WindowRadius = IAlgorithmParameter.FindValue<int>("WRAD", Parameters);
+            TraceCoeff = IAlgorithmParameter.FindValue<double>("TRCOEFF", Parameters);
+            TreshCorner = IAlgorithmParameter.FindValue<double>("CORT", Parameters);
 
             Variance = WindowRadius * WindowRadius * 0.25; // r = 2 * sgm => sgm^2 = r^2 / 4
         }

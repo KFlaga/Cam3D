@@ -55,10 +55,10 @@ namespace CamAlgorithms.ImageMatching
         {
             base.UpdateParameters();
 
-            MaxLeftDisparity = AlgorithmParameter.FindValue<int>("MaxLeftDisparity", Parameters);
-            MinLeftDisparity = AlgorithmParameter.FindValue<int>("MinLeftDisparity", Parameters);
-            MaxRightDisparity = AlgorithmParameter.FindValue<int>("MaxRightDisparity", Parameters);
-            MinRightDisparity = AlgorithmParameter.FindValue<int>("MinRightDisparity", Parameters);
+            MaxLeftDisparity = IAlgorithmParameter.FindValue<int>("MaxLeftDisparity", Parameters);
+            MinLeftDisparity = IAlgorithmParameter.FindValue<int>("MinLeftDisparity", Parameters);
+            MaxRightDisparity = IAlgorithmParameter.FindValue<int>("MaxRightDisparity", Parameters);
+            MinRightDisparity = IAlgorithmParameter.FindValue<int>("MinRightDisparity", Parameters);
         }
 
         public override string Name

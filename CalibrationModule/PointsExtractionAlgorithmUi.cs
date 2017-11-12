@@ -24,8 +24,8 @@ namespace CalibrationModule
         public List<CalibrationPoint> Points { get; protected set; }
         public List<List<Vector2>> CalibrationLines { get { return Algorithm?.LinesExtractor.CalibrationLines; } }
 
-        public bool SupportsTermination { get; } = false;
-        public bool SupportsParameters { get; } = true;
+        public bool IsTerminable { get; } = false;
+        public bool IsParametrizable { get; } = true;
         public event EventHandler<EventArgs> ParamtersAccepted;
 
         private AlgorithmStatus _status = AlgorithmStatus.Idle;
@@ -69,13 +69,12 @@ namespace CalibrationModule
 
         public void ShowParametersWindow()
         {
-            var window = new ParametrizedProcessorsSelectionWindow();
-            window.AddProcessorFamily("Points Extraction Algorithm");
-            window.AddToFamily("Points Extraction Algorithm", new ShapesGridCalibrationPointsFinder());
+            var window = new ParametrizableSelectionWindow();
+            window.AddParametrizable(new ShapesGridCalibrationPointsFinder());
             window.ShowDialog();
             if(window.Accepted)
             {
-                Algorithm = (CalibrationPointsFinder)window.GetSelectedProcessor("Points Extraction Algorithm");
+                Algorithm = (CalibrationPointsFinder)window.Selected;
                 ParamtersAccepted?.Invoke(this, new EventArgs());
             }
         }

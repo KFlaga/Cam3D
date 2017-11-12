@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using CamCore;
 using System.Windows.Controls;
@@ -23,7 +19,7 @@ namespace CamControls
             }
         }
 
-        public override int Value
+        public override int ActualValue
         {
             get
             {
@@ -47,7 +43,7 @@ namespace CamControls
                 _inputTextBox.MaxValue = parameter.MaxValue;
             }
 
-            _inputTextBox.CurrentValue = parameter.Value;
+            _inputTextBox.CurrentValue = parameter.ActualValue;
             _inputTextBox.ValueChanged += _inputTextBox_ValueChanged;
 
             _panel.Height = 25.0;
@@ -87,7 +83,7 @@ namespace CamControls
             }
         }
 
-        public override float Value
+        public override float ActualValue
         {
             get
             {
@@ -111,7 +107,7 @@ namespace CamControls
                 _inputTextBox.MaxValue = parameter.MaxValue;
             }
 
-            _inputTextBox.CurrentValue = parameter.Value;
+            _inputTextBox.CurrentValue = parameter.ActualValue;
             _inputTextBox.ValueChanged += _inputTextBox_ValueChanged;
 
             _panel.Height = 25.0;
@@ -151,7 +147,7 @@ namespace CamControls
             }
         }
 
-        public override double Value
+        public override double ActualValue
         {
             get
             {
@@ -175,7 +171,7 @@ namespace CamControls
                 _inputTextBox.MaxValue = parameter.MaxValue;
             }
 
-            _inputTextBox.CurrentValue = parameter.Value;
+            _inputTextBox.CurrentValue = parameter.ActualValue;
             _inputTextBox.ValueChanged += _inputTextBox_ValueChanged;
 
             _panel.Height = 25.0;
@@ -215,7 +211,7 @@ namespace CamControls
             }
         }
 
-        public override bool Value
+        public override bool ActualValue
         {
             get
             {
@@ -227,7 +223,7 @@ namespace CamControls
 
         public BooleanParameterInput(AlgorithmParameter<bool> parameter) : base(parameter)
         {
-            _inputCheckBox.IsChecked = parameter.Value;
+            _inputCheckBox.IsChecked = parameter.ActualValue;
             _inputCheckBox.Checked += _inputCheckBox_Checked;
             _inputCheckBox.Unchecked += _inputCheckBox_Unchecked;
 
@@ -275,7 +271,7 @@ namespace CamControls
             }
         }
 
-        public override string Value
+        public override string ActualValue
         {
             get
             {
@@ -287,7 +283,7 @@ namespace CamControls
 
         public StringParameterInput(AlgorithmParameter<string> parameter) : base(parameter)
         {
-            _inputTextBox.Text = parameter.Value;
+            _inputTextBox.Text = parameter.ActualValue;
             _inputTextBox.TextChanged += _inputTextBox_TextChanged;
 
             _panel.Height = 25.0;
@@ -327,7 +323,7 @@ namespace CamControls
             }
         }
 
-        public override object Value
+        public override object ActualValue
         {
             get
             {
@@ -345,7 +341,7 @@ namespace CamControls
                 _inputComboBox.Items.Add(item.Key);
             }
             _inputComboBox.SelectedIndex = 0;
-            parameter.Value = Value;
+            parameter.ActualValue = ActualValue;
             _inputComboBox.SelectionChanged += _inputComboBox_SelectionChanged;
 
             _panel.Height = 55.0;
@@ -367,7 +363,7 @@ namespace CamControls
         {
             InputValueChanged?.Invoke(this, new ParameterValueChangedEventArgs()
             {
-                NewValue = Value
+                NewValue = ActualValue
             });
         }
     }
@@ -386,7 +382,7 @@ namespace CamControls
             }
         }
 
-        public override IParameterizable Value
+        public override IParameterizable ActualValue
         {
             get
             {
@@ -425,18 +421,18 @@ namespace CamControls
             _panel.Children.Add(_parametersPanel);
 
             _inputComboBox.SelectedIndex = 0;
-            _parametersPanel.SetParameters(Value.Parameters);
-            _parameter.Value = Value;
+            _parametersPanel.SetParameters(ActualValue.Parameters);
+            _parameter.ActualValue = ActualValue;
 
             _inputComboBox.SelectionChanged += _inputComboBox_SelectionChanged;
         }
 
         private void _inputComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            _parametersPanel.SetParameters(Value.Parameters);
+            _parametersPanel.SetParameters(ActualValue.Parameters);
             InputValueChanged?.Invoke(this, new ParameterValueChangedEventArgs()
             {
-                NewValue = Value
+                NewValue = ActualValue
             });
         }
     }
@@ -454,7 +450,7 @@ namespace CamControls
             }
         }
 
-        public override Vector2 Value
+        public override Vector2 ActualValue
         {
             get
             {
@@ -468,8 +464,8 @@ namespace CamControls
         {
             SetLimits(parameter);
 
-            _xTb.CurrentValue = parameter.Value.X;
-            _yTb.CurrentValue = parameter.Value.Y;
+            _xTb.CurrentValue = parameter.ActualValue.X;
+            _yTb.CurrentValue = parameter.ActualValue.Y;
             _xTb.ValueChanged += OnValueChanged;
             _yTb.ValueChanged += OnValueChanged;
 
@@ -524,7 +520,7 @@ namespace CamControls
         {
             InputValueChanged?.Invoke(this, new ParameterValueChangedEventArgs()
             {
-                NewValue = Value
+                NewValue = ActualValue
             });
         }
     }
@@ -543,7 +539,7 @@ namespace CamControls
             }
         }
 
-        public override Vector3 Value
+        public override Vector3 ActualValue
         {
             get
             {
@@ -557,9 +553,9 @@ namespace CamControls
         {
             SetLimits(parameter);
 
-            _xTb.CurrentValue = parameter.Value.X;
-            _yTb.CurrentValue = parameter.Value.Y;
-            _zTb.CurrentValue = parameter.Value.Z;
+            _xTb.CurrentValue = parameter.ActualValue.X;
+            _yTb.CurrentValue = parameter.ActualValue.Y;
+            _zTb.CurrentValue = parameter.ActualValue.Z;
             _xTb.ValueChanged += OnValueChanged;
             _yTb.ValueChanged += OnValueChanged;
             _zTb.ValueChanged += OnValueChanged;
@@ -621,7 +617,7 @@ namespace CamControls
         {
             InputValueChanged?.Invoke(this, new ParameterValueChangedEventArgs()
             {
-                NewValue = Value
+                NewValue = ActualValue
             });
         }
     }

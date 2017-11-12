@@ -455,8 +455,8 @@ namespace CamAlgorithms.Calibration
         //}
 
         #region IParameterizable
-        private List<AlgorithmParameter> _parameters;
-        public List<AlgorithmParameter> Parameters
+        private List<IAlgorithmParameter> _parameters;
+        public List<IAlgorithmParameter> Parameters
         {
             get { return _parameters; }
             protected set { _parameters = value; }
@@ -464,7 +464,7 @@ namespace CamAlgorithms.Calibration
 
         public void InitParameters()
         {
-            Parameters = new List<AlgorithmParameter>();
+            Parameters = new List<IAlgorithmParameter>();
 
             Parameters.Add(new BooleanParameter(
                 "Perform only linear estimation", "LinearOnly", false));
@@ -498,20 +498,20 @@ namespace CamAlgorithms.Calibration
 
         public void UpdateParameters()
         {
-            ImageMeasurementVariance_X = AlgorithmParameter.FindValue<double>("ImageMeasurementVariance_X", Parameters);
-            ImageMeasurementVariance_Y = AlgorithmParameter.FindValue<double>("ImageMeasurementVariance_Y", Parameters);
-            RealMeasurementVariance_X = AlgorithmParameter.FindValue<double>("RealMeasurementVariance_X", Parameters);
-            RealMeasurementVariance_Y = AlgorithmParameter.FindValue<double>("RealMeasurementVariance_Y", Parameters);
-            RealMeasurementVariance_Z = AlgorithmParameter.FindValue<double>("RealMeasurementVariance_Z", Parameters);
-            MaxIterations = AlgorithmParameter.FindValue<int>("MaximumIterations", Parameters);
-            LinearOnly = AlgorithmParameter.FindValue<bool>("LinearOnly", Parameters);
-            NormalizeLinear = AlgorithmParameter.FindValue<bool>("NormalizeLinear", Parameters);
-            NormalizeIterative = AlgorithmParameter.FindValue<bool>("NormalizeIterative", Parameters);
-            UseCovarianceMatrix = AlgorithmParameter.FindValue<bool>("UseCovarianceMatrix", Parameters);
-            MinimalizeSkew = AlgorithmParameter.FindValue<bool>("MinimalizeSkew", Parameters);
-            EliminateOuliers = AlgorithmParameter.FindValue<bool>("EliminateOuliers", Parameters);
-            OutliersCoeff = AlgorithmParameter.FindValue<double>("OutliersCoeff", Parameters);
-            OverwriteGridsWithEstimated = AlgorithmParameter.FindValue<bool>("OverwriteGridsWithEstimated", Parameters);
+            ImageMeasurementVariance_X = IAlgorithmParameter.FindValue<double>("ImageMeasurementVariance_X", Parameters);
+            ImageMeasurementVariance_Y = IAlgorithmParameter.FindValue<double>("ImageMeasurementVariance_Y", Parameters);
+            RealMeasurementVariance_X = IAlgorithmParameter.FindValue<double>("RealMeasurementVariance_X", Parameters);
+            RealMeasurementVariance_Y = IAlgorithmParameter.FindValue<double>("RealMeasurementVariance_Y", Parameters);
+            RealMeasurementVariance_Z = IAlgorithmParameter.FindValue<double>("RealMeasurementVariance_Z", Parameters);
+            MaxIterations = IAlgorithmParameter.FindValue<int>("MaximumIterations", Parameters);
+            LinearOnly = IAlgorithmParameter.FindValue<bool>("LinearOnly", Parameters);
+            NormalizeLinear = IAlgorithmParameter.FindValue<bool>("NormalizeLinear", Parameters);
+            NormalizeIterative = IAlgorithmParameter.FindValue<bool>("NormalizeIterative", Parameters);
+            UseCovarianceMatrix = IAlgorithmParameter.FindValue<bool>("UseCovarianceMatrix", Parameters);
+            MinimalizeSkew = IAlgorithmParameter.FindValue<bool>("MinimalizeSkew", Parameters);
+            EliminateOuliers = IAlgorithmParameter.FindValue<bool>("EliminateOuliers", Parameters);
+            OutliersCoeff = IAlgorithmParameter.FindValue<double>("OutliersCoeff", Parameters);
+            OverwriteGridsWithEstimated = IAlgorithmParameter.FindValue<bool>("OverwriteGridsWithEstimated", Parameters);
         }
 
         public string Name

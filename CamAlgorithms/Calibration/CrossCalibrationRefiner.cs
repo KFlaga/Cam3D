@@ -213,17 +213,16 @@ namespace CamAlgorithms.Calibration
 
             UseCovarianceMatrix = false;
             DumpingMethodUsed = DumpingMethod.Multiplicative;
-            UpdateAll();
+            UpdateAfterParametersChanged();
             _lam = 1e-3f;
 
             _lastResidiual = _currentResidiual;
-            Solver = new SvdSolver();
         }
 
-        public override void UpdateAll()
+        public override void UpdateAfterParametersChanged()
         {
             while(_refreshMutex.WaitOne() == false) { };
-            base.UpdateAll();
+            base.UpdateAfterParametersChanged();
 
             // Update camera matrices / fundamental
             //Matrix<double> camLeft = new DenseMatrix(3, 4);
@@ -459,11 +458,11 @@ namespace CamAlgorithms.Calibration
                 double k_p = Math.Abs(oldK) > float.Epsilon ? oldK * (1 + NumericalDerivativeStep) : NumericalDerivativeStep * 0.01;
 
                 ResultsVector[k] = k_n;
-                UpdateAll();
+                UpdateAfterParametersChanged();
                 ComputeErrorVector(error_n);
 
                 ResultsVector[k] = k_p;
-                UpdateAll();
+                UpdateAfterParametersChanged();
                 ComputeErrorVector(error_p);
 
                 Vector<double> diff_e = 1.0 / (k_p - k_n) * (error_p - error_n);
@@ -479,12 +478,12 @@ namespace CamAlgorithms.Calibration
                 }
             }
 
-            UpdateAll();
+            UpdateAfterParametersChanged();
         }
 
         #region IParametrizable
-        List<AlgorithmParameter> _params = new List<AlgorithmParameter>();
-        public List<AlgorithmParameter> Parameters
+        List<IAlgorithmParameter> _params = new List<IAlgorithmParameter>();
+        public List<IAlgorithmParameter> Parameters
         {
             get
             {
@@ -494,7 +493,7 @@ namespace CamAlgorithms.Calibration
 
         public void InitParameters()
         {
-            _params = new List<AlgorithmParameter>();
+            _params = new List<IAlgorithmParameter>();
             DoubleParameter matchCoeffParam = new DoubleParameter(
                 "c_m: Matching Error Coeff (e_m = d^2 * c_m / 2Nm)", "CMATCH", 0.01, 0.0, 100000.0);
             _params.Add(matchCoeffParam);
@@ -518,11 +517,11 @@ namespace CamAlgorithms.Calibration
 
         public void UpdateParameters()
         {
-            MaximumIterations = AlgorithmParameter.FindValue<int>("ITERS", _params);
-            MatchErrorCoeff = AlgorithmParameter.FindValue<double>("CMATCH", _params);
-            ImagesErrorCoeff = AlgorithmParameter.FindValue<double>("CIMAGE", _params);
-            GridsErrorCoeff = AlgorithmParameter.FindValue<double>("CGRIDS", _params);
-            TriangulationErrorCoeff = AlgorithmParameter.FindValue<double>("CTRI", _params);
+            MaximumIterations = IAlgorithmParameter.FindValue<int>("ITERS", _params);
+            MatchErrorCoeff = IAlgorithmParameter.FindValue<double>("CMATCH", _params);
+            ImagesErrorCoeff = IAlgorithmParameter.FindValue<double>("CIMAGE", _params);
+            GridsErrorCoeff = IAlgorithmParameter.FindValue<double>("CGRIDS", _params);
+            TriangulationErrorCoeff = IAlgorithmParameter.FindValue<double>("CTRI", _params);
         }
 
         #endregion
@@ -537,8 +536,8 @@ namespace CamAlgorithms.Calibration
             }
         }
         
-        public bool SupportsTermination { get { return true; } }
-        public bool SupportsParameters { get { return true; } }
+        public bool IsTerminable { get { return true; } }
+        public bool IsParametrizable { get { return true; } }
 
         private AlgorithmStatus _status = AlgorithmStatus.Idle;
         public AlgorithmStatus Status

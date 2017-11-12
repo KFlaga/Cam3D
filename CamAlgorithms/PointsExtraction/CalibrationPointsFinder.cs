@@ -6,15 +6,15 @@ namespace CamAlgorithms.PointsExtraction
 {
     public abstract class CalibrationPointsFinder : IParameterizable
     {
-        private List<AlgorithmParameter> _parameters;
-        public List<AlgorithmParameter> Parameters
+        private List<IAlgorithmParameter> _parameters;
+        public List<IAlgorithmParameter> Parameters
         {
             get { return _parameters; }
         }
 
         public virtual void InitParameters()
         {
-            _parameters = new List<AlgorithmParameter>();
+            _parameters = new List<IAlgorithmParameter>();
         }
 
         public virtual void UpdateParameters()

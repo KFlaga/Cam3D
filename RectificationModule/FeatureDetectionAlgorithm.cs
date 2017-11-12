@@ -1,12 +1,9 @@
 ﻿using CamControls;
 using CamCore;
 using CamAlgorithms;
-using CamAlgorithms.ImageMatching;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace RectificationModule
 {
@@ -24,8 +21,8 @@ namespace RectificationModule
 
         public string Name { get; } = "Features Dectection";
         
-        public bool SupportsTermination { get; } = true;
-        public bool SupportsParameters { get; } = true;
+        public bool IsTerminable { get; } = true;
+        public bool IsParametrizable { get; } = true;
         public event EventHandler<EventArgs> ParamtersAccepted;
 
         private AlgorithmStatus _status = AlgorithmStatus.Idle;
@@ -69,15 +66,15 @@ namespace RectificationModule
             Status = AlgorithmStatus.Finished;
         }
         
-        protected List<AlgorithmParameter> _parameters;
-        public List<AlgorithmParameter> Parameters
+        protected List<IAlgorithmParameter> _parameters;
+        public List<IAlgorithmParameter> Parameters
         {
             get { return _parameters; }
         }
 
         public void InitParameters()
         {
-            _parameters = new List<AlgorithmParameter>();
+            _parameters = new List<IAlgorithmParameter>();
 
             ParametrizedObjectParameter detectorParam = new ParametrizedObjectParameter(
                "Feature Detector", "DETECTOR");
@@ -101,7 +98,7 @@ namespace RectificationModule
 
         public void UpdateParameters()
         {
-            _detector = AlgorithmParameter.FindValue<FeaturesDetector>("DETECTOR", _parameters);
+            _detector = IAlgorithmParameter.FindValue<FeaturesDetector>("DETECTOR", _parameters);
             _detector.UpdateParameters();
         }
 

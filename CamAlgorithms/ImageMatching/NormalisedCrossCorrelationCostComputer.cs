@@ -167,19 +167,19 @@ namespace CamAlgorithms.ImageMatching
         public override void InitParameters()
         {
             base.InitParameters();
-            AlgorithmParameter maskW = new IntParameter(
+            IAlgorithmParameter maskW = new IntParameter(
                 "Mask Width Radius", "MWR", 3, 1, 6);
             _parameters.Add(maskW);
 
-            AlgorithmParameter maskH = new IntParameter(
+            IAlgorithmParameter maskH = new IntParameter(
                 "Mask Height Radius", "MHR", 3, 1, 6);
             _parameters.Add(maskH);
 
-            AlgorithmParameter useSmooth = new BooleanParameter(
+            IAlgorithmParameter useSmooth = new BooleanParameter(
                 "Use gaussian smoothing", "UGS", false);
             _parameters.Add(useSmooth);
 
-            AlgorithmParameter smootSgm = new DoubleParameter(
+            IAlgorithmParameter smootSgm = new DoubleParameter(
                 "Smoothing Deviation", "SD", 1.2, 0.01, 10.0);
             _parameters.Add(smootSgm);
         }
@@ -187,10 +187,10 @@ namespace CamAlgorithms.ImageMatching
         public override void UpdateParameters()
         {
             base.UpdateParameters();
-            MaskWidth = AlgorithmParameter.FindValue<int>("MWR", Parameters);
-            MaskHeight = AlgorithmParameter.FindValue<int>("MHR", Parameters);
-            UseSmoothing = AlgorithmParameter.FindValue<bool>("UGS", Parameters);
-            SmoothingSgm = AlgorithmParameter.FindValue<double>("SD", Parameters);
+            MaskWidth = IAlgorithmParameter.FindValue<int>("MWR", Parameters);
+            MaskHeight = IAlgorithmParameter.FindValue<int>("MHR", Parameters);
+            UseSmoothing = IAlgorithmParameter.FindValue<bool>("UGS", Parameters);
+            SmoothingSgm = IAlgorithmParameter.FindValue<double>("SD", Parameters);
         }
     }
 }

@@ -24,8 +24,8 @@ namespace CalibrationModule
             }
         }
         
-        public bool SupportsTermination { get; } = true;
-        public bool SupportsParameters { get; } = true;
+        public bool IsTerminable { get; } = true;
+        public bool IsParametrizable { get; } = true;
         public event EventHandler<EventArgs> ParamtersAccepted;
 
         private AlgorithmStatus _status = AlgorithmStatus.Idle;

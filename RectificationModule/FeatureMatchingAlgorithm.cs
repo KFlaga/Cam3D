@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using CamCore;
 using CamAlgorithms;
 using CamControls;
@@ -22,8 +20,8 @@ namespace RectificationModule
 
         public string Name { get; } = "Features Matching";
         
-        public bool SupportsTermination { get; } = true;
-        public bool SupportsParameters { get; } = true;
+        public bool IsTerminable { get; } = true;
+        public bool IsParametrizable { get; } = true;
         public event EventHandler<EventArgs> ParamtersAccepted;
 
         private AlgorithmStatus _status = AlgorithmStatus.Idle;
@@ -55,15 +53,15 @@ namespace RectificationModule
             Status = AlgorithmStatus.Finished;
         }
 
-        protected List<AlgorithmParameter> _parameters;
-        public List<AlgorithmParameter> Parameters
+        protected List<IAlgorithmParameter> _parameters;
+        public List<IAlgorithmParameter> Parameters
         {
             get { return _parameters; }
         }
 
         public void InitParameters()
         {
-            _parameters = new List<AlgorithmParameter>();
+            _parameters = new List<IAlgorithmParameter>();
 
             ParametrizedObjectParameter matcherParam = new ParametrizedObjectParameter(
                "Feature Matcher", "MATCHER");
@@ -87,7 +85,7 @@ namespace RectificationModule
 
         public void UpdateParameters()
         {
-            _matcher = AlgorithmParameter.FindValue<FeaturesMatcher>("MATCHER", _parameters);
+            _matcher = IAlgorithmParameter.FindValue<FeaturesMatcher>("MATCHER", _parameters);
             _matcher.UpdateParameters();
         }
 

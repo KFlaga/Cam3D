@@ -120,14 +120,14 @@ namespace CamAutomatization
                 rectifier.Transformation = new RectificationTransformation()
                 {
                     RectificationMatrix = rectification.Rectification.RectificationLeft,
-                    RectificationMatrixInverse = rectification.Rectification.RectificationLeft_Inverse
+                    RectificationMatrixInverse = rectification.Rectification.RectificationLeftInverse
                 };
                 rectified.Left = rectifier.TransfromImageBackwards(undistorted.Left, true);
 
                 rectifier.Transformation = new RectificationTransformation()
                 {
                     RectificationMatrix = rectification.Rectification.RectificationRight,
-                    RectificationMatrixInverse = rectification.Rectification.RectificationRight_Inverse
+                    RectificationMatrixInverse = rectification.Rectification.RectificationRightInverse
                 };
                 rectified.Right = rectifier.TransfromImageBackwards(undistorted.Right, true);
 

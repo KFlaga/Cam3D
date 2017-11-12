@@ -226,21 +226,21 @@ namespace CamAlgorithms.PointsExtraction
         {
             base.UpdateParameters();
 
-            PointSizeTresholdLow = AlgorithmParameter.FindValue<double>("PointSizeTresholdLow", Parameters);
-            PointSizeTresholdHigh = AlgorithmParameter.FindValue<double>("PointSizeTresholdHigh", Parameters);
-            BrightnessThreshold = AlgorithmParameter.FindValue<double>("BrightnessThreshold", Parameters);
-            MinShapeSize = AlgorithmParameter.FindValue<int>("MinShapeSize", Parameters);
+            PointSizeTresholdLow = IAlgorithmParameter.FindValue<double>("PointSizeTresholdLow", Parameters);
+            PointSizeTresholdHigh = IAlgorithmParameter.FindValue<double>("PointSizeTresholdHigh", Parameters);
+            BrightnessThreshold = IAlgorithmParameter.FindValue<double>("BrightnessThreshold", Parameters);
+            MinShapeSize = IAlgorithmParameter.FindValue<int>("MinShapeSize", Parameters);
 
             ReferncePoints = new List<ReferncePoint>();
             ReferncePoints.Add(new ReferncePoint(
-                new IntVector2(AlgorithmParameter.FindValue<Vector2>("RefPos0", Parameters)),
-                new ColorShapeChecker(AlgorithmParameter.FindValue<Vector3>("RefColor0", Parameters))));
+                new IntVector2(IAlgorithmParameter.FindValue<Vector2>("RefPos0", Parameters)),
+                new ColorShapeChecker(IAlgorithmParameter.FindValue<Vector3>("RefColor0", Parameters))));
             ReferncePoints.Add(new ReferncePoint(
-                new IntVector2(AlgorithmParameter.FindValue<Vector2>("RefPosX", Parameters)),
-                new ColorShapeChecker(AlgorithmParameter.FindValue<Vector3>("RefColorX", Parameters))));
+                new IntVector2(IAlgorithmParameter.FindValue<Vector2>("RefPosX", Parameters)),
+                new ColorShapeChecker(IAlgorithmParameter.FindValue<Vector3>("RefColorX", Parameters))));
             ReferncePoints.Add(new ReferncePoint(
-                new IntVector2(AlgorithmParameter.FindValue<Vector2>("RefPosY", Parameters)),
-                new ColorShapeChecker(AlgorithmParameter.FindValue<Vector3>("RefColorY", Parameters))));
+                new IntVector2(IAlgorithmParameter.FindValue<Vector2>("RefPosY", Parameters)),
+                new ColorShapeChecker(IAlgorithmParameter.FindValue<Vector3>("RefColorY", Parameters))));
         }
 
         public override string ToString()

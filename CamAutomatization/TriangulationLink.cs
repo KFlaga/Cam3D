@@ -127,9 +127,9 @@ namespace CamAutomatization
                     if(disp.IsValid())
                     {
                         pointsLeft.Add(DerectifyPoint(x, y,
-                            _rectification.Rectification.RectificationLeft_Inverse));
+                            _rectification.Rectification.RectificationLeftInverse));
                         pointsRight.Add(DerectifyPoint(x + disp.SubDX, y,
-                            _rectification.Rectification.RectificationRight_Inverse));
+                            _rectification.Rectification.RectificationRightInverse));
                     }
                 }
             }

@@ -1,74 +1,45 @@
 ﻿using CamCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using static CamControls.ParametrizedProcessorsSelectionPanel;
 
 namespace CamControls
 {
-    public partial class ParametrizedProcessorsSelectionWindow : Window
+    public partial class ParametrizableSelectionWindow : Window
     {
         public bool Accepted { get; set; }
+        public IParameterizable Selected { get { return _panel.Selected; } }
         private bool _firstTimeShown = true;
 
-        public ParametrizedProcessorsSelectionWindow()
+        public ParametrizableSelectionWindow(string name = "")
         {
             InitializeComponent();
+            _panel.NameOfParametrizable = name;
 
             this.IsVisibleChanged += (s, e) =>
             {
                 if((bool)e.NewValue == true && _firstTimeShown)
                 {
                     _firstTimeShown = false;
-                    foreach(var family in _panel._processorFamilies)
-                    {
-                        family.Value.ComboProcessors.SelectedIndex = 0;
-                    }
+                    _panel.ParametrizablesCombo.SelectedIndex = 0;
                 }
             };
         }
-        
-        public void AddProcessorFamily(string familyName)
-        {
-            _panel.AddProcessorFamily(familyName);
-        }
 
-        public void AddToFamily(string familyName, IParameterizable processor)
+        public void AddParametrizable(IParameterizable processor)
         {
-            _panel.AddToFamily(familyName, processor);
-        }
-
-        public IParameterizable GetSelectedProcessor(string family)
-        {
-            return _panel.GetSelectedProcessor(family);
+            _panel.AddParametrizable(processor);
         }
 
         public void Accept(object sender, RoutedEventArgs e)
         {
             Accepted = true;
-            foreach(var family in _panel._processorFamilies)
+            if(_panel.Selected != null)
             {
-                if(family.Value.SelectedProcessor != null)
-                {
-                    family.Value.SelectedProcessor.UpdateParameters();
-                }
-                else
-                {
-                    MessageBox.Show("Processor from family " + family.Value.Name + " not selected - aborting.");
-                    Accepted = false;
-                    break;
-                }
+                _panel.Selected.UpdateParameters();
+            }
+            else
+            {
+                MessageBox.Show("Parametrizable not selected - aborting.");
+                Accepted = false;
             }
             Hide();
         }

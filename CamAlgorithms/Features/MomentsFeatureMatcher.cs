@@ -298,19 +298,19 @@ namespace CamAlgorithms
         {
             base.InitParameters();
 
-            AlgorithmParameter windowRadiusParam = new IntParameter(
+            IAlgorithmParameter windowRadiusParam = new IntParameter(
                 "Patch Radius", "WRAD", 4, 1, 20);
             Parameters.Add(windowRadiusParam);
 
-            AlgorithmParameter mahalParam = new BooleanParameter(
+            IAlgorithmParameter mahalParam = new BooleanParameter(
                 "Use Mahalanobis Distance", "MAHAL", true);
             Parameters.Add(mahalParam);
 
-            AlgorithmParameter centerParam = new BooleanParameter(
+            IAlgorithmParameter centerParam = new BooleanParameter(
                 "Use Centered Moments", "CENTER", false);
             Parameters.Add(centerParam);
 
-            AlgorithmParameter scaleParam = new BooleanParameter(
+            IAlgorithmParameter scaleParam = new BooleanParameter(
                 "Use Scaled Moments", "SCALE", true);
             Parameters.Add(scaleParam);
         }
@@ -318,10 +318,10 @@ namespace CamAlgorithms
         public override void UpdateParameters()
         {
             base.UpdateParameters();
-            WindowRadius = AlgorithmParameter.FindValue<int>("WRAD", Parameters);
-            UseMahalanobis = AlgorithmParameter.FindValue<bool>("MAHAL", Parameters);
-            UseCenteredMoments = AlgorithmParameter.FindValue<bool>("CENTER", Parameters);
-            UseScaledMoments = AlgorithmParameter.FindValue<bool>("SCALE", Parameters);
+            WindowRadius = IAlgorithmParameter.FindValue<int>("WRAD", Parameters);
+            UseMahalanobis = IAlgorithmParameter.FindValue<bool>("MAHAL", Parameters);
+            UseCenteredMoments = IAlgorithmParameter.FindValue<bool>("CENTER", Parameters);
+            UseScaledMoments = IAlgorithmParameter.FindValue<bool>("SCALE", Parameters);
         }
     }
 }

@@ -57,8 +57,8 @@ namespace CamAlgorithms
         // Rectification matrix H for right camera, such that rectified point p_rect = H * p_img
         public Matrix<double> RectificationRight { get; set; }
 
-        public Matrix<double> RectificationLeft_Inverse { get; set; }
-        public Matrix<double> RectificationRight_Inverse { get; set; }
+        public Matrix<double> RectificationLeftInverse { get; set; }
+        public Matrix<double> RectificationRightInverse { get; set; }
 
         // Pairs of matched points - needed for uncalibrated methods
         [XmlIgnore]
@@ -91,8 +91,8 @@ namespace CamAlgorithms
             _rightCorners = new RectifiedImageCorners(RectificationRight, ImageWidth, ImageHeight);
             EnsureCorrectHorizontalOrder();
 
-            RectificationLeft_Inverse = RectificationLeft.Inverse();
-            RectificationRight_Inverse = RectificationRight.Inverse();
+            RectificationLeftInverse = RectificationLeft.Inverse();
+            RectificationRightInverse = RectificationRight.Inverse();
 
             Quality = ComputeRectificationQuality();
         }

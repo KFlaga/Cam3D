@@ -114,13 +114,9 @@ namespace CamAlgorithms.Calibration
             // If k1 = k2 = 0 we have no distortion
             // If both ends are closer, we have cushion dostortion, of both further - barrel
             // If one is closer, one further its undetermined
-            if(k1 == 0.0 && k2 == 0.0)
-                return DistortionDirection.None;
-            if(k1 >= 0.0 && k2 >= 0.0)
-                return DistortionDirection.Cushion;
-            if(k1 <= 0.0 && k2 <= 0.0)
-                return DistortionDirection.Barrel;
-
+            if(k1 == 0.0 && k2 == 0.0) { return DistortionDirection.None; } 
+            if(k1 >= 0.0 && k2 >= 0.0) { return DistortionDirection.Cushion; }      
+            if(k1 <= 0.0 && k2 <= 0.0) { return DistortionDirection.Barrel; }
             return DistortionDirection.Unknown;
         }
 

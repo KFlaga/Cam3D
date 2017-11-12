@@ -475,13 +475,13 @@ namespace CamAlgorithms.ImageMatching
         {
             base.UpdateParameters();
             // PathsLength = AlgorithmParameter.FindValue<int>("PATH", Parameters);
-            LowPenaltyCoeff = AlgorithmParameter.FindValue<double>("P1", Parameters);
-            HighPenaltyCoeff = AlgorithmParameter.FindValue<double>("P2", Parameters);
-            GradientCoeff = AlgorithmParameter.FindValue<double>("GRAD", Parameters);
-            MaxDisparity = AlgorithmParameter.FindValue<int>("MAXD", Parameters);
-            MinDisparity = AlgorithmParameter.FindValue<int>("MIND", Parameters);
+            LowPenaltyCoeff = IAlgorithmParameter.FindValue<double>("P1", Parameters);
+            HighPenaltyCoeff = IAlgorithmParameter.FindValue<double>("P2", Parameters);
+            GradientCoeff = IAlgorithmParameter.FindValue<double>("GRAD", Parameters);
+            MaxDisparity = IAlgorithmParameter.FindValue<int>("MAXD", Parameters);
+            MinDisparity = IAlgorithmParameter.FindValue<int>("MIND", Parameters);
 
-            DispComp = AlgorithmParameter.FindValue<DisparityComputer>("DISP_COMP", Parameters);
+            DispComp = IAlgorithmParameter.FindValue<DisparityComputer>("DISP_COMP", Parameters);
             DispComp.UpdateParameters();
         }
 

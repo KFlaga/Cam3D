@@ -18,7 +18,7 @@ namespace CamAlgorithms
         public override void ComputeRectificationMatrices()
         {
             _minimalisation = new Minimalisation();
-            _minimalisation.MinimumResidiual = 1e-12;
+            _minimalisation.MaximumResidiual = 1e-12;
             _minimalisation.MaximumIterations = 1000;
             _minimalisation.DoComputeJacobianNumerically = true;
             _minimalisation.DumpingMethodUsed = LevenbergMarquardtBaseAlgorithm.DumpingMethod.Multiplicative;
@@ -97,7 +97,7 @@ namespace CamAlgorithms
 
             //_minimalisation.Init();
             _minimalisation.BestResultVector.CopyTo(_minimalisation.ResultsVector);
-            _minimalisation.UpdateAll();
+            _minimalisation.UpdateAfterParametersChanged();
 
             Matrix<double> halfRevolve = new DenseMatrix(3, 3);
             RotationConverter.EulerToMatrix(new double[] { 0.0, 0.0, Math.PI }, halfRevolve);
@@ -262,7 +262,7 @@ namespace CamAlgorithms
                 base.Init();
             }
 
-            public override void UpdateAll()
+            public override void UpdateAfterParametersChanged()
             {
                 // Limit angles to +-(pi+e)
                 double lim = Math.PI * 1.01;

@@ -16,8 +16,8 @@ namespace CalibrationModule
         public double Scale { get { return Algorithm.Scale; } set { Algorithm.Scale = value; } }
         public List<List<Vector2>> CorrectionLines { get { return Algorithm.CorrectionLines; } set { Algorithm.CorrectionLines = value; } }
 
-        public bool SupportsTermination { get; } = true;
-        public bool SupportsParameters { get; } = true;
+        public bool IsTerminable { get; } = true;
+        public bool IsParametrizable { get; } = true;
         public event EventHandler<EventArgs> ParamtersAccepted;
         
         private AlgorithmStatus _status = AlgorithmStatus.Idle;

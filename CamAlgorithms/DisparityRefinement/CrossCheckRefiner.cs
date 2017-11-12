@@ -74,7 +74,7 @@ namespace CamAlgorithms.ImageMatching
         public override void UpdateParameters()
         {
             base.UpdateParameters();
-            MaxDisparityDiff = AlgorithmParameter.FindValue<double>("MaxDisparityDiff", Parameters);
+            MaxDisparityDiff = IAlgorithmParameter.FindValue<double>("MaxDisparityDiff", Parameters);
         }
 
         public override string Name

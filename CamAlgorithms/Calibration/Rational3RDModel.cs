@@ -416,10 +416,10 @@ namespace CamAlgorithms.Calibration
             return k1;
         }
 
-        public List<AlgorithmParameter> Parameters { get; protected set; }
+        public List<IAlgorithmParameter> Parameters { get; protected set; }
         void IParameterizable.InitParameters()
         {
-            Parameters = new List<AlgorithmParameter>();
+            Parameters = new List<IAlgorithmParameter>();
             
             Parameters.Add(new DoubleParameter(
                 "Inital Cx", "CX", 320.0, 0.0, 99999.0));
@@ -437,16 +437,16 @@ namespace CamAlgorithms.Calibration
 
         void IParameterizable.UpdateParameters()
         {
-            InitialAspectEstimation = AlgorithmParameter.FindValue<double>("SX", Parameters);
+            InitialAspectEstimation = IAlgorithmParameter.FindValue<double>("SX", Parameters);
             InitialCenterEstimation = new Vector2();
-            InitialCenterEstimation.X = AlgorithmParameter.FindValue<double>("CX", Parameters);
-            InitialCenterEstimation.Y = AlgorithmParameter.FindValue<double>("CY", Parameters);
+            InitialCenterEstimation.X = IAlgorithmParameter.FindValue<double>("CX", Parameters);
+            InitialCenterEstimation.Y = IAlgorithmParameter.FindValue<double>("CY", Parameters);
 
             InitParameters();
 
-            Coeffs[_k1Idx] = AlgorithmParameter.FindValue<double>("K1", Parameters);
-            Coeffs[_k2Idx] = AlgorithmParameter.FindValue<double>("K2", Parameters);
-            Coeffs[_k3Idx] = AlgorithmParameter.FindValue<double>("K3", Parameters);
+            Coeffs[_k1Idx] = IAlgorithmParameter.FindValue<double>("K1", Parameters);
+            Coeffs[_k2Idx] = IAlgorithmParameter.FindValue<double>("K2", Parameters);
+            Coeffs[_k3Idx] = IAlgorithmParameter.FindValue<double>("K3", Parameters);
         }
     }
 }

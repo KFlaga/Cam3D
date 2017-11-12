@@ -192,7 +192,7 @@ namespace CamAutomatization
             XmlNode paramsNode = extractorNode.FirstChildWithName("Parameters");
             if(paramsNode != null)
             {
-                AlgorithmParameter.ReadParametersFromXml(_calibPointsFinder.Parameters, paramsNode);
+                IAlgorithmParameter.ReadParametersFromXml(_calibPointsFinder.Parameters, paramsNode);
             }
 
             _calibPointsFinder.UpdateParameters();

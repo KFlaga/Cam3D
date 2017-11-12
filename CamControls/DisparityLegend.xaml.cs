@@ -1,5 +1,4 @@
-﻿using CamAlgorithms;
-using CamCore;
+﻿using CamCore;
 using MathNet.Numerics.LinearAlgebra.Double;
 using System;
 using System.Windows.Controls;

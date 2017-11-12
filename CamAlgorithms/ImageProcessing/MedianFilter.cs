@@ -103,13 +103,13 @@ namespace CamAlgorithms
 
         public override void InitParameters()
         {
-            Parameters = new List<AlgorithmParameter>();
-            AlgorithmParameter winRadius = new IntParameter(
+            Parameters = new List<IAlgorithmParameter>();
+            IAlgorithmParameter winRadius = new IntParameter(
                 "Filter Window Size", "FWS", 3, 1, 99);
 
             Parameters.Add(winRadius);
 
-            AlgorithmParameter filterBorder = new BooleanParameter(
+            IAlgorithmParameter filterBorder = new BooleanParameter(
                "Filter Border", "FB", true);
 
             Parameters.Add(filterBorder);
@@ -117,8 +117,8 @@ namespace CamAlgorithms
 
         public override void UpdateParameters()
         {
-            WindowRadius = (int)AlgorithmParameter.FindValue("FWS", Parameters);
-            FilterBorder = (bool)AlgorithmParameter.FindValue("FB", Parameters);
+            WindowRadius = (int)IAlgorithmParameter.FindValue("FWS", Parameters);
+            FilterBorder = (bool)IAlgorithmParameter.FindValue("FB", Parameters);
         }
     }
 }

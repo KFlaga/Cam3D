@@ -13,8 +13,8 @@ namespace CamCore
     public interface IParameterInput
     {
         UIElement UIInput { get; }
-        object ActualValue { get; }
-        AlgorithmParameter Parameter { get; }
+        object Value { get; }
+        IAlgorithmParameter Parameter { get; }
 
         event EventHandler<ParameterValueChangedEventArgs> InputValueChanged;
     }
@@ -22,11 +22,11 @@ namespace CamCore
     public abstract class ParameterInput<T> : IParameterInput
     {
         public abstract UIElement UIInput { get; }
-        public object ActualValue { get { return Value; } }
-        public abstract T Value { get; }
+        public object Value { get { return ActualValue; } }
+        public abstract T ActualValue { get; }
 
         protected AlgorithmParameter<T> _parameter;
-        public AlgorithmParameter Parameter { get { return _parameter; } }
+        public IAlgorithmParameter Parameter { get { return _parameter; } }
 
         public abstract event EventHandler<ParameterValueChangedEventArgs> InputValueChanged;
 

@@ -21,9 +21,9 @@ namespace CamCore
 
     public interface IControllableAlgorithm : INamed
     {
-        bool SupportsTermination { get; }
+        bool IsTerminable { get; }
+        bool IsParametrizable { get; }
 
-        bool SupportsParameters { get; }
         AlgorithmStatus Status { get; set; }
         event EventHandler<AlgorithmEventArgs> StatusChanged;
 

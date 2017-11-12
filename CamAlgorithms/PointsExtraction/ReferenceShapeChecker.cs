@@ -10,15 +10,15 @@ namespace CamAlgorithms.PointsExtraction
 
         public abstract bool CheckShape(CalibrationShape shape);
 
-        private List<AlgorithmParameter> _parameters;
-        public List<AlgorithmParameter> Parameters
+        private List<IAlgorithmParameter> _parameters;
+        public List<IAlgorithmParameter> Parameters
         {
             get { return _parameters; }
         }
 
         public virtual void InitParameters()
         {
-            _parameters = new List<AlgorithmParameter>();
+            _parameters = new List<IAlgorithmParameter>();
         }
 
         public virtual void UpdateParameters()
@@ -116,16 +116,16 @@ namespace CamAlgorithms.PointsExtraction
         public override void UpdateParameters()
         {
             base.UpdateParameters();
-            NeighbourhoodRadius = AlgorithmParameter.FindValue<int>("NeighbourhoodRadius", Parameters);
-            BrightnessThreshold = AlgorithmParameter.FindValue<double>("BrightnessThreshold", Parameters);
-            ColorValueThreshold = AlgorithmParameter.FindValue<double>("ColorValueThreshold", Parameters);
-            ColorRatioThreshold = AlgorithmParameter.FindValue<double>("ColorRatioThreshold", Parameters);
+            NeighbourhoodRadius = IAlgorithmParameter.FindValue<int>("NeighbourhoodRadius", Parameters);
+            BrightnessThreshold = IAlgorithmParameter.FindValue<double>("BrightnessThreshold", Parameters);
+            ColorValueThreshold = IAlgorithmParameter.FindValue<double>("ColorValueThreshold", Parameters);
+            ColorRatioThreshold = IAlgorithmParameter.FindValue<double>("ColorRatioThreshold", Parameters);
 
             TargetColor = new Vector3()
             {
-                X = AlgorithmParameter.FindValue<double>("TargetRed", Parameters),
-                Y = AlgorithmParameter.FindValue<double>("TargetGreen", Parameters),
-                Z = AlgorithmParameter.FindValue<double>("TargetBlue", Parameters)
+                X = IAlgorithmParameter.FindValue<double>("TargetRed", Parameters),
+                Y = IAlgorithmParameter.FindValue<double>("TargetGreen", Parameters),
+                Z = IAlgorithmParameter.FindValue<double>("TargetBlue", Parameters)
             };
         }
 

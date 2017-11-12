@@ -12,38 +12,32 @@ namespace CamAlgorithms
         public Vector<double> ParametersVector { get; set; } // May change after processing
         public Vector<double> ResultsVector { get; protected set; }
         public Vector<double> BestResultVector { get; protected set; }
-        public ILinearEquationsSolver Solver { get; set; }
-        protected Vector<double> _currentErrorVector;
-
         public bool UseCovarianceMatrix { get; set; } = false;
         public Vector<double> InverseVariancesVector { get; set; }
-
         public bool DoComputeJacobianNumerically { get; set; } = false;
         public double NumericalDerivativeStep { get; set; } = 1e-6;
-
         public int MaximumIterations { get; set; } = 100; // End iteration condition : max interations are reached
-        public int CurrentIteration { get { return _currentIteration; } }
-        protected int _currentIteration;
-
+        public int CurrentIteration { get; protected set; }
         public double MaximumResidiual { get; set; } = 0.0; // End iteration condition : residiual ||f(P)-X||^2 is smaller that this
-        protected double _currentResidiual;
-        protected double _lastResidiual;
-
-        public double MinimumResidiual { get; set; }
-        public double BaseResidiual { get; set; }
-
+        public double MinimumResidiual { get; protected set; }
+        public double BaseResidiual { get; protected set; }
         public bool Terminate { get; set; } = false; // Set to true to break after next iteration
 
-        // Executes whole algorithm -> MeasurementsVector, ParametersVector and Solver 
+        protected Vector<double> _currentErrorVector;
+        protected ILinearEquationsSolver _linearSolver = new SvdSolver();
+        protected double _currentResidiual;
+        protected double _lastResidiual;
+        
+        // Executes whole algorithm -> MeasurementsVector nac ParametersVector
         // must be set before calling this
         public virtual void Process()
         {
-            _currentIteration = 0;
+            CurrentIteration = 0;
 
             Init();
 
             // Find base residual
-            UpdateAll();
+            UpdateAfterParametersChanged();
             ComputeErrorVector(_currentErrorVector);
             _currentResidiual = ComputeResidiual();
             _lastResidiual = _currentResidiual;
@@ -52,7 +46,7 @@ namespace CamAlgorithms
 
             while(CheckIterationEndConditions() == false)
             {
-                _currentIteration += 1;
+                CurrentIteration += 1;
 
                 Iterate();
             }
@@ -66,7 +60,7 @@ namespace CamAlgorithms
 
         // Updates algorithm (like recomputing estimated corrected measurments) i.e. after 
         // ResultVector has been changed
-        public virtual void UpdateAll()
+        public virtual void UpdateAfterParametersChanged()
         {
 
         }
@@ -112,7 +106,7 @@ namespace CamAlgorithms
         public virtual bool CheckIterationEndConditions()
         {
             return Terminate == true ||
-                _currentIteration > MaximumIterations ||
+                CurrentIteration > MaximumIterations ||
                 _currentResidiual < MaximumResidiual;
         }
 

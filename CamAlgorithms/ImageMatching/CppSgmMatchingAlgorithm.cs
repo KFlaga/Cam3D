@@ -179,13 +179,13 @@ namespace CamAlgorithms.ImageMatching
         {
             base.UpdateParameters();
 
-            CensusMaskRadius = AlgorithmParameter.FindValue<int>("CensusMaskRadius", Parameters);
-            LowPenaltyCoeff = AlgorithmParameter.FindValue<double>("LowPenaltyCoeff", Parameters);
-            HighPenaltyCoeff = AlgorithmParameter.FindValue<double>("HighPenaltyCoeff", Parameters);
-            GradientCoeff = AlgorithmParameter.FindValue<double>("GradientCoeff", Parameters);
-            MeanMethod = AlgorithmParameter.FindValue<DisparityMeanMethod>("MeanMethod", Parameters);
-            CostMethod = AlgorithmParameter.FindValue<DisparityCostMethod>("CostMethod", Parameters);
-            DiparityPathLengthThreshold = AlgorithmParameter.FindValue<double>("DiparityPathLengthThreshold", Parameters);
+            CensusMaskRadius = IAlgorithmParameter.FindValue<int>("CensusMaskRadius", Parameters);
+            LowPenaltyCoeff = IAlgorithmParameter.FindValue<double>("LowPenaltyCoeff", Parameters);
+            HighPenaltyCoeff = IAlgorithmParameter.FindValue<double>("HighPenaltyCoeff", Parameters);
+            GradientCoeff = IAlgorithmParameter.FindValue<double>("GradientCoeff", Parameters);
+            MeanMethod = IAlgorithmParameter.FindValue<DisparityMeanMethod>("MeanMethod", Parameters);
+            CostMethod = IAlgorithmParameter.FindValue<DisparityCostMethod>("CostMethod", Parameters);
+            DiparityPathLengthThreshold = IAlgorithmParameter.FindValue<double>("DiparityPathLengthThreshold", Parameters);
         }
     }
 }

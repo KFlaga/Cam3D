@@ -199,14 +199,13 @@ namespace ImageOperationsModule
                 ColorImage img = new ColorImage();
                 img.FromBitmapSource(_imageControl.ImageSource);
 
-                var window = new ParametrizedProcessorsSelectionWindow();
-                window.AddProcessorFamily("Segmentation");
-                window.AddToFamily("Segmentation", new MeanShiftSegmentation());
+                var window = new ParametrizableSelectionWindow();
+                window.AddParametrizable(new MeanShiftSegmentation());
 
                 window.ShowDialog();
                 if(window.Accepted)
                 {
-                    ImageSegmentation segmentation = (ImageSegmentation)window.GetSelectedProcessor("Segmentation");
+                    ImageSegmentation segmentation = (ImageSegmentation)window.Selected;
 
                     GrayScaleImage imgGray = new GrayScaleImage();
                     imgGray.FromColorImage(img);

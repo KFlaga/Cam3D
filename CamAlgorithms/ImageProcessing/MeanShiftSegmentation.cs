@@ -443,14 +443,14 @@ namespace CamAlgorithms
         public override void UpdateParameters()
         {
             base.UpdateParameters();
-            Radius = AlgorithmParameter.FindValue<int>("RADIUS", Parameters);
-            ValueBandwidth = AlgorithmParameter.FindValue<double>("BAND_COL", Parameters);
-            SpatialBandwidth = AlgorithmParameter.FindValue<double>("BAND_SPT", Parameters);
-            ConvergenceThreshold = AlgorithmParameter.FindValue<double>("CONV", Parameters);
-            MaxSegmentDeviation = AlgorithmParameter.FindValue<double>("DEV", Parameters);
+            Radius = IAlgorithmParameter.FindValue<int>("RADIUS", Parameters);
+            ValueBandwidth = IAlgorithmParameter.FindValue<double>("BAND_COL", Parameters);
+            SpatialBandwidth = IAlgorithmParameter.FindValue<double>("BAND_SPT", Parameters);
+            ConvergenceThreshold = IAlgorithmParameter.FindValue<double>("CONV", Parameters);
+            MaxSegmentDeviation = IAlgorithmParameter.FindValue<double>("DEV", Parameters);
 
-            UsedColorKernel = AlgorithmParameter.FindValue<KernelType>("KER_COL", Parameters);
-            UsedSpatialKernel = AlgorithmParameter.FindValue<KernelType>("KER_SPT", Parameters);
+            UsedColorKernel = IAlgorithmParameter.FindValue<KernelType>("KER_COL", Parameters);
+            UsedSpatialKernel = IAlgorithmParameter.FindValue<KernelType>("KER_SPT", Parameters);
         }
 
         public override string Name

@@ -208,7 +208,7 @@ namespace CamAlgorithms.ImageMatching
         public override void UpdateParameters()
         {
             base.UpdateParameters();
-            DispComp = AlgorithmParameter.FindValue<DisparityComputer>("DISP_COMP", Parameters);
+            DispComp = IAlgorithmParameter.FindValue<DisparityComputer>("DISP_COMP", Parameters);
             DispComp.UpdateParameters();
         }
     }

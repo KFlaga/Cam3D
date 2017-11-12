@@ -38,7 +38,7 @@ namespace CamAlgorithms.Calibration
             _Ly = new DenseVector(measuredPointsCount);
             _M = new DenseVector(measuredPointsCount);
 
-            UpdateAll();
+            UpdateAfterParametersChanged();
 
             //if(DumpingMethodUsed == DumpingMethod.Additive)
             //{
@@ -57,12 +57,11 @@ namespace CamAlgorithms.Calibration
                 _lam = 0.0;
 
             _lastResidiual = _currentResidiual;
-            Solver = new SvdSolver();
         }
         
-        public override void UpdateAll()
+        public override void UpdateAfterParametersChanged()
         {
-            base.UpdateAll();
+            base.UpdateAfterParametersChanged();
             // Compute Lx,Ly,M
             // exi = (p1Xi+p2Yi+p3Zi+p4)/(p9Xi+p10Yi+p11Zi+p12) = Lxi/Mi
             // eyi = (p5Xi+p6Yi+p7Zi+p8)/(p9Xi+p10Yi+p11Zi+p12) = Lyi/Mi

@@ -21,7 +21,7 @@ namespace CamCore
         public override void ReadFromXml(XmlNode node)
         {
             //  <Parameter id="aaa" value="3"/>
-            Value = int.Parse(node.Attributes["value"].Value);
+            ActualValue = int.Parse(node.Attributes["value"].Value);
         }
     }
 
@@ -40,7 +40,7 @@ namespace CamCore
         public override void ReadFromXml(XmlNode node)
         {
             //  <Parameter id="aaa" value="3"/>
-            Value = float.Parse(node.Attributes["value"].Value);
+            ActualValue = float.Parse(node.Attributes["value"].Value);
         }
     }
 
@@ -59,7 +59,7 @@ namespace CamCore
         public override void ReadFromXml(XmlNode node)
         {
             //  <Parameter id="aaa" value="3"/>
-            Value = double.Parse(node.Attributes["value"].Value);
+            ActualValue = double.Parse(node.Attributes["value"].Value);
         }
     }
 
@@ -76,7 +76,7 @@ namespace CamCore
         public override void ReadFromXml(XmlNode node)
         {
             //  <Parameter id="aaa" value="3"/>
-            Value = bool.Parse(node.Attributes["value"].Value);
+            ActualValue = bool.Parse(node.Attributes["value"].Value);
         }
     }
 
@@ -93,7 +93,7 @@ namespace CamCore
         public override void ReadFromXml(XmlNode node)
         {
             //  <Parameter id="aaa" value="3"/>
-            Value = node.Attributes["value"].Value;
+            ActualValue = node.Attributes["value"].Value;
         }
     }
 
@@ -119,7 +119,7 @@ namespace CamCore
         {
             //  <Parameter id="aaa" value="3"/>
             string objName = node.Attributes["value"].Value;
-            Value = ValuesMap[objName];
+            ActualValue = ValuesMap[objName];
         }
     }
 
@@ -144,9 +144,9 @@ namespace CamCore
             string objName = node.Attributes["value"].Value;
             IParameterizable alg = Parameterizables.Find((p) => { return p.Name == objName; });
             XmlNode algNode = node.FirstChildWithName("Parameters");
-            AlgorithmParameter.ReadParametersFromXml(alg.Parameters, algNode);
+            IAlgorithmParameter.ReadParametersFromXml(alg.Parameters, algNode);
 
-            Value = alg;
+            ActualValue = alg;
         }
     }
     
@@ -155,20 +155,20 @@ namespace CamCore
         public Vector2Parameter(string name, string sname) :
             base(name, sname, typeof(Vector2).Name)
         {
-            Value = new Vector2();
+            ActualValue = new Vector2();
         }
 
         public Vector2Parameter(string name, string sname,
             Vector2 defVal, Vector2 minVal, Vector2 maxVal) :
             base(name, sname, typeof(Vector2).Name, defVal, minVal, maxVal)
         {
-            Value = new Vector2(defVal);
+            ActualValue = new Vector2(defVal);
         }
 
         public override void ReadFromXml(XmlNode node)
         {
             //  <Parameter id="aaa" x="3" y="3"/>
-            Value = new Vector2(
+            ActualValue = new Vector2(
                 double.Parse(node.Attributes["x"].Value), 
                 double.Parse(node.Attributes["y"].Value));
         }
@@ -179,20 +179,20 @@ namespace CamCore
         public Vector3Parameter(string name, string sname) :
             base(name, sname, typeof(Vector3).Name)
         {
-            Value = new Vector3();
+            ActualValue = new Vector3();
         }
 
         public Vector3Parameter(string name, string sname,
             Vector3 defVal, Vector3 minVal, Vector3 maxVal) :
             base(name, sname, typeof(Vector3).Name, defVal, minVal, maxVal)
         {
-            Value = new Vector3(defVal);
+            ActualValue = new Vector3(defVal);
         }
 
         public override void ReadFromXml(XmlNode node)
         {
             //  <Parameter id="aaa" x="3" y="3" z="3"/>
-            Value = new Vector3(
+            ActualValue = new Vector3(
                 double.Parse(node.Attributes["x"].Value),
                 double.Parse(node.Attributes["y"].Value),
                 double.Parse(node.Attributes["z"].Value));

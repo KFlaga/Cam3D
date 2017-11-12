@@ -11,16 +11,7 @@ namespace RectificationModule
         public RectificationModeTabs()
         {
             InitializeComponent();
-
-            _tabRect.FeturesDetected += (s, e) =>
-            {
-                _tabFeatures.FeatureImageLeft = e.FeatureImageLeft;
-                _tabFeatures.FeatureImageRight = e.FeatureImageRight;
-                _tabFeatures.FeatureListLeft = e.FeatureListLeft;
-                _tabFeatures.FeatureListRight = e.FeatureListRight;
-                _tabFeatures.ImageLeft = e.ImageLeft;
-                _tabFeatures.ImageRight = e.ImageRight;
-            };
+            
         }
 
         public void Dispose()

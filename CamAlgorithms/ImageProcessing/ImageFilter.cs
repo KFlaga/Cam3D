@@ -10,14 +10,14 @@ namespace CamAlgorithms
     // given filter mask
     public abstract class ImageFilter : IParameterizable
     {
-        private List<AlgorithmParameter> _parameters;
-        public List<AlgorithmParameter> Parameters
+        private List<IAlgorithmParameter> _parameters;
+        public List<IAlgorithmParameter> Parameters
         {
             get { return _parameters; }
             protected set { _parameters = value; }
         }
 
-        public virtual void InitParameters() { _parameters = new List<AlgorithmParameter>(); }
+        public virtual void InitParameters() { _parameters = new List<IAlgorithmParameter>(); }
         public virtual void UpdateParameters() { }
 
         public abstract string Name { get; }

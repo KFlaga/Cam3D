@@ -50,7 +50,7 @@ namespace CamAlgorithms.ImageMatching
         {
             base.UpdateParameters();
 
-            ConfidenceTreshold = AlgorithmParameter.FindValue<double>("CONF_TRESH", Parameters);
+            ConfidenceTreshold = IAlgorithmParameter.FindValue<double>("CONF_TRESH", Parameters);
         }
 
         public override string Name

@@ -14,14 +14,14 @@ namespace CamAlgorithms.ImageMatching
         public virtual void Init() { }
         public abstract void RefineMaps();
 
-        public List<AlgorithmParameter> Parameters
+        public List<IAlgorithmParameter> Parameters
         {
             get; protected set;
         }
 
         public virtual void InitParameters()
         {
-            Parameters = new List<AlgorithmParameter>();
+            Parameters = new List<IAlgorithmParameter>();
         }
 
         public virtual void UpdateParameters()

@@ -87,7 +87,7 @@ namespace CamAlgorithms
         {
             base.InitParameters();
 
-            AlgorithmParameter windowRadiusParam = new IntParameter(
+            IAlgorithmParameter windowRadiusParam = new IntParameter(
                 "Window Radius", "WRAD", 4, 1, 20);
             Parameters.Add(windowRadiusParam);
         }
@@ -95,7 +95,7 @@ namespace CamAlgorithms
         public override void UpdateParameters()
         {
             base.UpdateParameters();
-            WindowRadius = AlgorithmParameter.FindValue<int>("WRAD", Parameters);
+            WindowRadius = IAlgorithmParameter.FindValue<int>("WRAD", Parameters);
         }
     }
 }

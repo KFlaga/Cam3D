@@ -166,7 +166,7 @@
       <Project>{3077792d-e973-4d3f-83c6-8553287a6604}</Project>
       <Name>CamAlgorithms</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Image3DModule\Visualisation3dModule.csproj">
+    <ProjectReference Include="..\Visualisation3dModule\Visualisation3dModule.csproj">
       <Project>{95811205-3c27-4e3a-89b6-0c8598779496}</Project>
       <Name>Visualisation3dModule</Name>
     </ProjectReference>

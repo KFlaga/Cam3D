@@ -2,18 +2,21 @@
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
 using System;
+using System.Diagnostics;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 
 namespace CamAlgorithms.Calibration
 {
+    [DebuggerDisplay("L = {Left.Matrix}, R = {Right.Matrix}")]
     public class CameraPair : IXmlSerializable
     {
         private static CameraPair _data = new CameraPair();
         public static CameraPair Data { get { return _data; } }
         
-        public bool AreCalibrated { get { return Left.IsCalibrated && Right.IsCalibrated; } }
+        public bool HaveImagesSet { get { return Left.ImageHeight > 0 && Left.ImageWidth > 0 && Right.ImageHeight > 0 && Right.ImageWidth > 0; } }
+        public bool AreCalibrated { get { return Left.IsCalibrated && Right.IsCalibrated && HaveImagesSet; } }
         
         private Camera _camLeft = new Camera();
         public Camera Left
@@ -102,6 +105,11 @@ namespace CamAlgorithms.Calibration
             if(AreCalibrated == false)
             {
                 return;
+            }
+
+            if(Left.ImageHeight != Right.ImageHeight || Left.ImageWidth != Right.ImageWidth)
+            {
+                throw new Exception("Image sizes for both cameras must match");
             }
             
             // Find e_R = P_R*C_L, e_L = P_L*C_R

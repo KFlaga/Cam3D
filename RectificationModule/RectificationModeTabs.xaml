@@ -10,7 +10,7 @@
     <TabControl>
         <TabControl.Items>
             <TabItem Header="Calib Rectification / Feature Detection">
-                <local:MatchedImagesTab x:Name="_tabRect"/>
+                <local:CalibratedRectificationTab x:Name="_tabRect"/>
             </TabItem>
             <TabItem Header="Uncalibrated Rectification">
                 <local:FeatureImagesTab x:Name="_tabFeatures"/>

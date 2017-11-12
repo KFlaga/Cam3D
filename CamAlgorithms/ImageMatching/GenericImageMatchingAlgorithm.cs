@@ -92,10 +92,10 @@ namespace CamAlgorithms.ImageMatching
         {
             base.UpdateParameters();
 
-            Aggregator = AlgorithmParameter.FindValue<CostAggregator>("COST_AGGREGATOR", Parameters);
+            Aggregator = IAlgorithmParameter.FindValue<CostAggregator>("COST_AGGREGATOR", Parameters);
             Aggregator.UpdateParameters();
 
-            Rectified = AlgorithmParameter.FindValue<bool>("IS_RECTIFIED", Parameters);
+            Rectified = IAlgorithmParameter.FindValue<bool>("IS_RECTIFIED", Parameters);
         }
     }
 }

@@ -325,12 +325,12 @@ namespace CamAlgorithms.ImageMatching
         public override void UpdateParameters()
         {
             base.UpdateParameters();
-            MaxIterations = AlgorithmParameter.FindValue<int>("MaxIterations", Parameters);
-            SmoothDisparityMap = AlgorithmParameter.FindValue<bool>("SmoothDisparityMap", Parameters);
-            KernelCoeff = AlgorithmParameter.FindValue<double>("KernelCoeff", Parameters);
-            StepCoeff = AlgorithmParameter.FindValue<double>("StepCoeff", Parameters);
-            KernelType = AlgorithmParameter.FindValue<CoeffKernelType>("KernelType", Parameters);
-            UseEightDirections = AlgorithmParameter.FindValue<bool>("UseEightDirections", Parameters);
+            MaxIterations = IAlgorithmParameter.FindValue<int>("MaxIterations", Parameters);
+            SmoothDisparityMap = IAlgorithmParameter.FindValue<bool>("SmoothDisparityMap", Parameters);
+            KernelCoeff = IAlgorithmParameter.FindValue<double>("KernelCoeff", Parameters);
+            StepCoeff = IAlgorithmParameter.FindValue<double>("StepCoeff", Parameters);
+            KernelType = IAlgorithmParameter.FindValue<CoeffKernelType>("KernelType", Parameters);
+            UseEightDirections = IAlgorithmParameter.FindValue<bool>("UseEightDirections", Parameters);
         }
 
         public override string ToString()

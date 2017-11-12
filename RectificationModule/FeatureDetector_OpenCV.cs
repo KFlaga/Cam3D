@@ -1,7 +1,4 @@
-﻿using System;
-using CamAlgorithms;
-using System.Runtime.InteropServices;
-using Emgu.CV.CvEnum;
+﻿using CamAlgorithms;
 using Emgu.CV;
 using CamCore;
 
@@ -90,12 +87,12 @@ namespace RectificationModule
         {
             base.UpdateParameters();
 
-            NumberOfFeatures = AlgorithmParameter.FindValue<int>("NFET", Parameters);
-            FastTreshold = AlgorithmParameter.FindValue<int>("FAST_TR", Parameters);
-            EdgeTreshold = (AlgorithmParameter.FindValue<int>("EDGE_TR", Parameters) * 2) + 1;
-            PatchSize = AlgorithmParameter.FindValue<int>("PATCH", Parameters) * 2 + 1;
-            ImagePyramidScaleFactor = AlgorithmParameter.FindValue<float>("IP_SCALE", Parameters);
-            ImagePyramidLevels = AlgorithmParameter.FindValue<int>("IP_LEVEL", Parameters);
+            NumberOfFeatures = IAlgorithmParameter.FindValue<int>("NFET", Parameters);
+            FastTreshold = IAlgorithmParameter.FindValue<int>("FAST_TR", Parameters);
+            EdgeTreshold = (IAlgorithmParameter.FindValue<int>("EDGE_TR", Parameters) * 2) + 1;
+            PatchSize = IAlgorithmParameter.FindValue<int>("PATCH", Parameters) * 2 + 1;
+            ImagePyramidScaleFactor = IAlgorithmParameter.FindValue<float>("IP_SCALE", Parameters);
+            ImagePyramidLevels = IAlgorithmParameter.FindValue<int>("IP_LEVEL", Parameters);
         }
     }
 

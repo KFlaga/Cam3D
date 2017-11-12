@@ -68,7 +68,7 @@ namespace CamAlgorithms.Calibration
             }
 
             base.Init();
-            UpdateAll();
+            UpdateAfterParametersChanged();
 
             for(int line = 0; line < LinePoints.Count; ++line)
             {

@@ -118,7 +118,7 @@ namespace CamUnitTest
             _miniAlg.ParametersVector = _model.Coeffs;
 
             _miniAlg.Init();
-            _miniAlg.UpdateAll();
+            _miniAlg.UpdateAfterParametersChanged();
         }
 
         [TestMethod]
@@ -148,7 +148,7 @@ namespace CamUnitTest
 
                 _model.Coeffs[k] = k_n;
                 _model.Coeffs.CopyTo(_miniAlg.ResultsVector);
-                _miniAlg.UpdateAll();
+                _miniAlg.UpdateAfterParametersChanged();
 
                 double a_n = _miniAlg.Get_a(1);
                 double b_n = _miniAlg.Get_b(1);
@@ -159,7 +159,7 @@ namespace CamUnitTest
 
                 _model.Coeffs[k] = k_p;
                 _model.Coeffs.CopyTo(_miniAlg.ResultsVector);
-                _miniAlg.UpdateAll();
+                _miniAlg.UpdateAfterParametersChanged();
 
                 double a_p = _miniAlg.Get_a(1);
                 double b_p = _miniAlg.Get_b(1);
@@ -404,7 +404,7 @@ namespace CamUnitTest
             miniAlg.ParametersVector = new DenseVector(_model.ParametersCount);
 
             miniAlg.Init();
-            miniAlg.UpdateAll();
+            miniAlg.UpdateAfterParametersChanged();
 
             var coeffs = miniAlg.LineCoeffs;
             double distanceToABC = 20 * 0.0025 + 10 * 0.005;
@@ -451,7 +451,7 @@ namespace CamUnitTest
             _miniAlg.ParametersVector = _model.Coeffs;
 
             _miniAlg.Init();
-            _miniAlg.UpdateAll();
+            _miniAlg.UpdateAfterParametersChanged();
 
             int size = 10 * _model.ParametersCount;
             _miniAlg.DoComputeJacobianNumerically = false;
@@ -663,7 +663,7 @@ namespace CamUnitTest
             miniAlg.ParametersVector = new DenseVector(1);
 
             miniAlg.Init();
-            miniAlg.UpdateAll();
+            miniAlg.UpdateAfterParametersChanged();
 
             // For each line find direction -> all should be cushion ?
 
@@ -685,7 +685,7 @@ namespace CamUnitTest
             _model.Coeffs[2] = 0.0;
             _miniAlg.LinePoints = _distLines;
             miniAlg.Init();
-            miniAlg.UpdateAll();
+            miniAlg.UpdateAfterParametersChanged();
 
             // For each line find direction -> all should be barrel ?
 

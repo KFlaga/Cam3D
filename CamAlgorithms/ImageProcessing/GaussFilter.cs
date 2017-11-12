@@ -20,13 +20,13 @@ namespace CamAlgorithms
 
         public override void InitParameters()
         {
-            Parameters = new List<AlgorithmParameter>();
-            AlgorithmParameter winRadius = new IntParameter(
+            Parameters = new List<IAlgorithmParameter>();
+            IAlgorithmParameter winRadius = new IntParameter(
                 "Filter Window Size", "FWS", 4, 1, 101);
 
             Parameters.Add(winRadius);
 
-            AlgorithmParameter deviation = new DoubleParameter(
+            IAlgorithmParameter deviation = new DoubleParameter(
                "Filter Deviation", "FD", 1.6f, 0.01f, 50.0f);
 
             Parameters.Add(deviation);
@@ -34,8 +34,8 @@ namespace CamAlgorithms
 
         public override void UpdateParameters()
         {
-            WindowRadius = (int)AlgorithmParameter.FindValue("FES", Parameters);
-            Deviation = (double)AlgorithmParameter.FindValue("FD", Parameters);
+            WindowRadius = (int)IAlgorithmParameter.FindValue("FES", Parameters);
+            Deviation = (double)IAlgorithmParameter.FindValue("FD", Parameters);
 
             Filter = ImageFilter.GetFilter_Gauss(2 * WindowRadius + 1, Deviation);
         }

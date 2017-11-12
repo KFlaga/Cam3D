@@ -116,7 +116,7 @@ namespace CamAlgorithms.Calibration
             return new DistortionPoint(DistortionModel.ParametersCount);
         }
 
-        public override void UpdateAll()
+        public override void UpdateAfterParametersChanged()
         {
             for(int line = 0; line < LinePoints.Count; ++line)
             {
@@ -558,11 +558,11 @@ namespace CamAlgorithms.Calibration
                 double k_p = Math.Abs(oldK) > float.Epsilon ? oldK * (1 + NumericalDerivativeStep) : NumericalDerivativeStep * 0.01;
 
                 DistortionModel.Coeffs[k] = k_n;
-                UpdateAll();
+                UpdateAfterParametersChanged();
                 ComputeErrorVector(error_n);
 
                 DistortionModel.Coeffs[k] = k_p;
-                UpdateAll();
+                UpdateAfterParametersChanged();
                 ComputeErrorVector(error_p);
 
                 Vector<double> diff_e = 1.0 / (k_p - k_n) * (error_p - error_n);
@@ -578,7 +578,7 @@ namespace CamAlgorithms.Calibration
                 }
             }
 
-            UpdateAll();
+            UpdateAfterParametersChanged();
         }
 
         public override void ComputeJacobian(Matrix<double> J)
@@ -617,7 +617,7 @@ namespace CamAlgorithms.Calibration
 
             try
             {
-                UpdateAll();
+                UpdateAfterParametersChanged();
 
                 _lastResidiual = _currentResidiual;
                 // Compute new residiual

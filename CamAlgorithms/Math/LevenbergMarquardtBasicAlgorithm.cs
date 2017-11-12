@@ -39,24 +39,8 @@ namespace CamAlgorithms
             BestResultVector = new DenseVector(ParametersVector.Count);
             ParametersVector.CopyTo(ResultsVector);
             ParametersVector.CopyTo(BestResultVector);
-
-            //if(DumpingMethodUsed == DumpingMethod.Additive)
-            //{
-            //    // Compute initial lambda lam = 10^-3*diag(J'J)/size(J'J)
-            //    ComputeJacobian(_J);
-            //    _J.TransposeToOther(_Jt);
-            //    _Jt.MultiplyToOther(_J, _JtJ);
-            //    _lam = 1e-3f * _JtJ.Trace() / (double)_JtJ.ColumnCount;
-            //}
-            //else 
-            if(DumpingMethodUsed == DumpingMethod.Multiplicative)
-            {
-                _lam = 1e-3f;
-            }
-            else
-                _lam = 0.0;
-
-            Solver = new SvdSolver();
+            
+            _lam = DumpingMethodUsed == DumpingMethod.Multiplicative ? 1e-3 : 0.0;
         }
 
         public override void ComputeDelta(Vector<double> delta)
@@ -66,99 +50,112 @@ namespace CamAlgorithms
 
             // 1) Get jacobian and J', J'e, J'J
             ComputeJacobian(_J);
-            if(_J.AbsoulteMaximum().Item3 < float.Epsilon)
-            {
-                delta.MultiplyThis(0.0);
-                _currentIteration = MaximumIterations + 1;
-                return;
-            }
+            if(EndIterationIfJacobianIsZero(delta)) { return; }
 
             _J.TransposeToOther(_Jt);
-
-            if(UseCovarianceMatrix)
-            {
-                for(int r = 0; r < _Jt.RowCount; ++r)
-                {
-                    for(int c = 0; c < _Jt.ColumnCount; ++c)
-                    {
-                        _Jt.At(r, c, _Jt.At(r, c) * InverseVariancesVector.At(c));
-                    }
-                }
-            }
+            MultiplyJacobianByConvarianceMatrix(_Jt);
 
             _Jt.MultiplyToOther(_J, _JtJ);
             _Jt.MultiplyToOther(_currentErrorVector, _Jte);
 
-            //if(DumpingMethodUsed == DumpingMethod.Additive)
-            //{
-            //    for(int i = 0; i < _JtJ.ColumnCount; ++i)
-            //    {
-            //        _JtJ.At(i, i, _JtJ.At(i, i) + _lam);
-            //    }
-            //}
-            //else 
-            if(DumpingMethodUsed == DumpingMethod.Multiplicative)
+            for(int i = 0; i < _JtJ.ColumnCount; ++i)
             {
-                for(int i = 0; i < _JtJ.ColumnCount; ++i)
-                {
-                    _JtJ.At(i, i, _JtJ.At(i, i) * (_lam + 1));
-                }
+                _JtJ.At(i, i, _JtJ.At(i, i) * (_lam + 1.0));
             }
 
             // 2) Solve for delta
             // 2.1) Remove zero colums/rows
-            Matrix<double> jtj = _JtJ;
+            List<int> zeroColumns;
+            Vector<double> jte;
+            Matrix<double> jtj = RemoveZeroRowsAndColumnsFromJacobian(out zeroColumns, out jte);
 
-            List<int> zeroColumns = _JtJ.FindZeroColumns();
+            // 2.2) Use svd to solve equations ( handles rank-deficient as well )
+            _linearSolver.EquationsMatrix = jtj;
+            _linearSolver.RightSideVector = jte.Negate();
+            _linearSolver.Solve();
+
+            // 2.3) Copy results to delta, varaibles corresponding to zeroed colums set to 0
+            if(zeroColumns.Count > 0)
+            {
+                ZeroDeltaForCorrespondingZeroedJacobianColumn(delta, zeroColumns);
+            }
+            else
+            {
+                _linearSolver.ResultVector.CopyTo(delta);
+            }
+        }
+        
+        private void MultiplyJacobianByConvarianceMatrix(Matrix<double> jt)
+        {
+            if(UseCovarianceMatrix)
+            {
+                for(int r = 0; r < jt.RowCount; ++r)
+                {
+                    for(int c = 0; c < jt.ColumnCount; ++c)
+                    {
+                        jt.At(r, c, jt.At(r, c) * InverseVariancesVector.At(c));
+                    }
+                }
+            }
+        }
+
+        private bool EndIterationIfJacobianIsZero(Vector<double> delta)
+        {
+            if(_J.AbsoulteMaximum().Item3 < float.Epsilon)
+            {
+                delta.MultiplyThis(0.0);
+                CurrentIteration = MaximumIterations + 1;
+                return true;
+            }
+            return false;
+        }
+
+        private Matrix<double> RemoveZeroRowsAndColumnsFromJacobian(out List<int> zeroColumns, out Vector<double> jte)
+        {
+            Matrix<double> jtj = _JtJ;
+            zeroColumns = jtj.FindZeroColumns();
             if(zeroColumns.Count > 0)
             {
                 jtj = jtj.RemoveColumns(zeroColumns);
             }
 
             List<int> zeroRows = jtj.FindZeroRows();
-            Vector<double> rightSideVec = _Jte;
+            jte = _Jte;
             if(zeroRows.Count > 0)
             {
                 jtj = jtj.RemoveRows(zeroRows);
-                rightSideVec = _Jte.RemoveElements(zeroRows);
+                jte = _Jte.RemoveElements(zeroRows);
             }
 
-            // 2.2) Use svd to solve equations ( handles rank-deficient as well )
-            Solver.EquationsMatrix = jtj;
-            Solver.RightSideVector = rightSideVec.Negate();
-            Solver.Solve();
+            return jtj;
+        }
 
-            // 2.3) Copy results to delta, varaibles corresponding to zeroed colums set to 0
-            if(zeroColumns.Count > 0)
+        private void ZeroDeltaForCorrespondingZeroedJacobianColumn(Vector<double> delta, List<int> zeroColumns)
+        {
+            int zeroIdx = 0;
+            int resultIdx = 0;
+            int deltaIdx = 0;
+            for(; deltaIdx < delta.Count; ++deltaIdx)
             {
-                int zeroIdx = 0;
-                int resultIdx = 0;
-                int deltaIdx = 0;
-                for(; deltaIdx < delta.Count; ++deltaIdx)
+                if(deltaIdx == zeroColumns[zeroIdx])
                 {
-                    if(deltaIdx == zeroColumns[zeroIdx])
-                    {
-                        delta[deltaIdx] = 0.0f;
-                        ++zeroIdx;
-                        if(zeroIdx == zeroColumns.Count)
-                            break;
-                    }
-                    else
-                    {
-                        delta[deltaIdx] = Solver.ResultVector[resultIdx];
-                        ++resultIdx;
-                    }
+                    delta[deltaIdx] = 0.0f;
+                    ++zeroIdx;
+                    if(zeroIdx == zeroColumns.Count) { break; }
                 }
-                ++deltaIdx;
-
-                for(; deltaIdx < delta.Count; ++deltaIdx)
+                else
                 {
-                    delta[deltaIdx] = Solver.ResultVector[resultIdx];
+                    delta[deltaIdx] = _linearSolver.ResultVector[resultIdx];
                     ++resultIdx;
                 }
             }
-            else
-                Solver.ResultVector.CopyTo(delta);
+            ++deltaIdx;
+
+            for(; deltaIdx < delta.Count; ++deltaIdx)
+            {
+                delta[deltaIdx] = _linearSolver.ResultVector[resultIdx];
+                ++resultIdx;
+            }
         }
 
         public override void Iterate()
@@ -169,7 +166,7 @@ namespace CamAlgorithms
             ComputeDelta(_delta);
             var oldRes = ResultsVector.Clone();
             ResultsVector += _delta;
-            UpdateAll();
+            UpdateAfterParametersChanged();
 
             _lastResidiual = _currentResidiual;
             // Compute new residiual
@@ -184,7 +181,12 @@ namespace CamAlgorithms
             {
                 oldRes.CopyTo(ResultsVector);
             }
-            
+
+            UpdateLambda();
+        }
+
+        protected virtual void UpdateLambda()
+        {
             if(_currentResidiual < MinimumResidiual)
             {
                 // Update lambda -> lower only if new residiual is good enough
@@ -220,11 +222,11 @@ namespace CamAlgorithms
                 double k_p = Math.Abs(oldK) > float.Epsilon ? oldK * (1 + NumericalDerivativeStep) : NumericalDerivativeStep * 0.01;
 
                 ResultsVector[k] = k_n;
-                UpdateAll();
+                UpdateAfterParametersChanged();
                 ComputeErrorVector(error_n);
 
                 ResultsVector[k] = k_p;
-                UpdateAll();
+                UpdateAfterParametersChanged();
                 ComputeErrorVector(error_p);
 
                 Vector<double> diff_e = 1.0 / (k_p - k_n) * (error_p - error_n);
@@ -240,7 +242,7 @@ namespace CamAlgorithms
                 }
             }
 
-            UpdateAll();
+            UpdateAfterParametersChanged();
         }
     }
 }

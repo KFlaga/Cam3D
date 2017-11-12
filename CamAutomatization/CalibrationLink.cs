@@ -117,7 +117,7 @@ namespace CamAutomatization
         private void LoadCalibrationParameters(XmlNode calibConfigNode)
         {
             _calibrator.InitParameters();
-            AlgorithmParameter.ReadParametersFromXml(_calibrator.Parameters,
+            IAlgorithmParameter.ReadParametersFromXml(_calibrator.Parameters,
                 calibConfigNode.FirstChildWithName("Parameters"));
             _calibrator.OverwriteGridsWithEstimated = false;
             _calibrator.UpdateParameters();

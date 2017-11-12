@@ -41,7 +41,7 @@ namespace ImageMatchingModule
                         refiner.InitParameters();
                         for(int i = 0; i < refiner.Parameters.Count; ++i)
                         {
-                            refiner.Parameters[i].ActualValue = value.Parameters[i].ActualValue;
+                            refiner.Parameters[i].Value = value.Parameters[i].Value;
                         }
                         refiner.UpdateParameters();
 

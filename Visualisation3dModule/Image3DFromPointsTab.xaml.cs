@@ -14,7 +14,7 @@ namespace Visualisation3dModule
 
         Image3DWindow _3dwindow;
 
-        private ParametrizedProcessorsSelectionWindow _featuresMatchOpts;
+        private ParametrizableSelectionWindow _featuresMatchOpts;
 
         public Image3DFromPointsTab()
         {

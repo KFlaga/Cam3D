@@ -48,12 +48,12 @@ namespace CamAlgorithms
         public override void InitParameters()
         {
             base.InitParameters();
-            AlgorithmParameter tresh = new DoubleParameter(
+            IAlgorithmParameter tresh = new DoubleParameter(
                 "Treshold", "TH", 0.5, 0.0, 1.0);
 
             Parameters.Add(tresh);
 
-            AlgorithmParameter inversed = new BooleanParameter(
+            IAlgorithmParameter inversed = new BooleanParameter(
                "Inverse Brightness", "IB", false);
 
             Parameters.Add(inversed);
@@ -62,8 +62,8 @@ namespace CamAlgorithms
         public override void UpdateParameters()
         {
             base.UpdateParameters();
-            Threshold = AlgorithmParameter.FindValue<int>("TH", Parameters);
-            Inverse = AlgorithmParameter.FindValue<bool>("IB", Parameters);
+            Threshold = IAlgorithmParameter.FindValue<int>("TH", Parameters);
+            Inverse = IAlgorithmParameter.FindValue<bool>("IB", Parameters);
         }
     }
 }

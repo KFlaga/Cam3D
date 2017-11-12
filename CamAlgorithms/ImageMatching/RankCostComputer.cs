@@ -145,19 +145,19 @@ namespace CamAlgorithms.ImageMatching
         public override void InitParameters()
         {
             base.InitParameters();
-            AlgorithmParameter maskRW = new IntParameter(
+            IAlgorithmParameter maskRW = new IntParameter(
                 "Rank-Compute Mask Width Radius", "RMWR", 3, 1, 10);
             _parameters.Add(maskRW);
 
-            AlgorithmParameter maskRH = new IntParameter(
+            IAlgorithmParameter maskRH = new IntParameter(
                 "Rank-Compute Mask Height Radius", "RMHR", 3, 1, 10);
             _parameters.Add(maskRH);
 
-            AlgorithmParameter maskCW = new IntParameter(
+            IAlgorithmParameter maskCW = new IntParameter(
                 "Correlation Mask Width Radius", "CMWR", 3, 1, 10);
             _parameters.Add(maskCW);
 
-            AlgorithmParameter maskCH = new IntParameter(
+            IAlgorithmParameter maskCH = new IntParameter(
                 "Correlation Mask Height Radius", "CMHR", 3, 1, 10);
             _parameters.Add(maskCH);
         }
@@ -165,10 +165,10 @@ namespace CamAlgorithms.ImageMatching
         public override void UpdateParameters()
         {
             base.UpdateParameters();
-            RankMaskWidth = AlgorithmParameter.FindValue<int>("RMWR", Parameters);
-            RankMaskHeight = AlgorithmParameter.FindValue<int>("RMHR", Parameters);
-            CorrMaskWidth = AlgorithmParameter.FindValue<int>("CMWR", Parameters);
-            CorrMaskHeight = AlgorithmParameter.FindValue<int>("CMHR", Parameters);
+            RankMaskWidth = IAlgorithmParameter.FindValue<int>("RMWR", Parameters);
+            RankMaskHeight = IAlgorithmParameter.FindValue<int>("RMHR", Parameters);
+            CorrMaskWidth = IAlgorithmParameter.FindValue<int>("CMWR", Parameters);
+            CorrMaskHeight = IAlgorithmParameter.FindValue<int>("CMHR", Parameters);
         }
 
         public override string Name

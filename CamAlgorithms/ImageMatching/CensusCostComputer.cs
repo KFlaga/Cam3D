@@ -111,11 +111,11 @@ namespace CamAlgorithms.ImageMatching
         public override void InitParameters()
         {
             base.InitParameters();
-            AlgorithmParameter maskW = new IntParameter(
+            IAlgorithmParameter maskW = new IntParameter(
                 "Mask Width Radius", "MWR", 6, 1, 7);
             _parameters.Add(maskW);
 
-            AlgorithmParameter maskH = new IntParameter(
+            IAlgorithmParameter maskH = new IntParameter(
                 "Mask Height Radius", "MHR", 6, 1, 7);
             _parameters.Add(maskH);
         }
@@ -123,8 +123,8 @@ namespace CamAlgorithms.ImageMatching
         public override void UpdateParameters()
         {
             base.UpdateParameters();
-            MaskWidth = AlgorithmParameter.FindValue<int>("MWR", Parameters);
-            MaskHeight = AlgorithmParameter.FindValue<int>("MHR", Parameters);
+            MaskWidth = IAlgorithmParameter.FindValue<int>("MWR", Parameters);
+            MaskHeight = IAlgorithmParameter.FindValue<int>("MHR", Parameters);
         }
 
         public override string Name

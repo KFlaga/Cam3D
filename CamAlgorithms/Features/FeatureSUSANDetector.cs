@@ -196,17 +196,17 @@ namespace CamAlgorithms
         {
             base.InitParameters();
 
-            AlgorithmParameter intensityThreshold = new DoubleParameter(
+            IAlgorithmParameter intensityThreshold = new DoubleParameter(
                 "Intensity Difference Threshold", "TI", 0.05f, 0.0f, 1.0f);
 
             Parameters.Add(intensityThreshold);
 
-            AlgorithmParameter susanTreshold = new DoubleParameter(
+            IAlgorithmParameter susanTreshold = new DoubleParameter(
                 "SUSAN Factor Threshold (e:0.5,c:0.75)", "TS", 0.75f, 0.0f, 1.0f);
 
             Parameters.Add(susanTreshold);
 
-            AlgorithmParameter performNonmaxSupression = new BooleanParameter(
+            IAlgorithmParameter performNonmaxSupression = new BooleanParameter(
                "Perform NonMax Supression (Corners)", "PS", true);
 
             Parameters.Add(performNonmaxSupression);
@@ -224,11 +224,11 @@ namespace CamAlgorithms
 
         public override void UpdateParameters()
         {
-            _t_intensity = AlgorithmParameter.FindValue<double>("TI", Parameters);
-            _t_usan = AlgorithmParameter.FindValue<double>("TS", Parameters);
+            _t_intensity = IAlgorithmParameter.FindValue<double>("TI", Parameters);
+            _t_usan = IAlgorithmParameter.FindValue<double>("TS", Parameters);
             // _checkCenterDistance = (bool)(AlgorithmParameter.FindValue("CDist", Parameters));
             // _checkCenterDirection = (bool)(AlgorithmParameter.FindValue("CDir", Parameters));
-            _nonMaxSup = AlgorithmParameter.FindValue<bool>("PS", Parameters);
+            _nonMaxSup = IAlgorithmParameter.FindValue<bool>("PS", Parameters);
             _t_isFeature = _t_usan * _patchArea;
         }
     }

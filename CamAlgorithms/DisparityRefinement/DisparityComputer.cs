@@ -24,15 +24,15 @@ namespace CamAlgorithms.ImageMatching
         public abstract void FinalizeForPixel(IntVector2 pixelBase);
         public abstract void FinalizeMap();
 
-        protected List<AlgorithmParameter> _params;
-        public List<AlgorithmParameter> Parameters
+        protected List<IAlgorithmParameter> _params;
+        public List<IAlgorithmParameter> Parameters
         {
             get { return _params; }
         }
 
         public virtual void InitParameters()
         {
-            _params = new List<AlgorithmParameter>();
+            _params = new List<IAlgorithmParameter>();
             // Add all available confidence computing methods
             DictionaryParameter confParam =
                 new DictionaryParameter("Confidence Computing Method", "CONF");
@@ -49,7 +49,7 @@ namespace CamAlgorithms.ImageMatching
 
         public virtual void UpdateParameters()
         {
-            ConfidenceComp.UsedConfidenceMethod = AlgorithmParameter.FindValue<ConfidenceMethod>("CONF", _params);
+            ConfidenceComp.UsedConfidenceMethod = IAlgorithmParameter.FindValue<ConfidenceMethod>("CONF", _params);
         }
 
         public abstract string Name { get; }

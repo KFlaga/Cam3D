@@ -18,8 +18,8 @@ namespace ImageMatchingModule
 
         public string Name { get { return "Dense Image Matching"; } }
 
-        public bool SupportsTermination { get; } = true;
-        public bool SupportsParameters { get; } = true;
+        public bool IsTerminable { get; } = true;
+        public bool IsParametrizable { get; } = true;
         public event EventHandler<EventArgs> ParamtersAccepted;
 
         private AlgorithmStatus _status = AlgorithmStatus.Idle;
@@ -62,14 +62,13 @@ namespace ImageMatchingModule
 
         public void ShowParametersWindow()
         {
-            var window = new ParametrizedProcessorsSelectionWindow();
-            window.AddProcessorFamily("Image Matching Algorithm");
-            window.AddToFamily("Image Matching Algorithm", new CppSgmMatchingAlgorithm());
-            window.AddToFamily("Image Matching Algorithm", new GenericImageMatchingAlgorithm());
+            var window = new ParametrizableSelectionWindow();
+            window.AddParametrizable(new CppSgmMatchingAlgorithm());
+            window.AddParametrizable(new GenericImageMatchingAlgorithm());
             window.ShowDialog();
             if(window.Accepted)
             {
-                Algorithm = (ImageMatchingAlgorithm)window.GetSelectedProcessor("Image Matching Algorithm");
+                Algorithm = (ImageMatchingAlgorithm)window.Selected;
                 ParamtersAccepted?.Invoke(this, new EventArgs());
             }
         }

@@ -135,15 +135,15 @@ namespace CamAlgorithms
         {
             base.InitParameters();
 
-            AlgorithmParameter itersParam = new IntParameter(
+            IAlgorithmParameter itersParam = new IntParameter(
                 "Max Interations", "ITERS", 10, 1, 1000);
             Parameters.Add(itersParam);
 
-            AlgorithmParameter kerCoeffParam = new DoubleParameter(
+            IAlgorithmParameter kerCoeffParam = new DoubleParameter(
                 "Kernel Coeff", "KER_COEFF", 0.5, 0.001, 100.0);
             Parameters.Add(kerCoeffParam);
 
-            AlgorithmParameter stepCoeffParam = new DoubleParameter(
+            IAlgorithmParameter stepCoeffParam = new DoubleParameter(
                 "Step Coeff", "STEP_COEFF", 0.5, -10.0, 10.0);
             Parameters.Add(stepCoeffParam);
 
@@ -159,18 +159,18 @@ namespace CamAlgorithms
 
             Parameters.Add(kernelTypeParam);
 
-            AlgorithmParameter dirsParam = new BooleanParameter(
+            IAlgorithmParameter dirsParam = new BooleanParameter(
                 "Use 8 Gradient Directions", "EIGHT", false);
             Parameters.Add(dirsParam);
         }
 
         public override void UpdateParameters()
         {
-            MaxIterations = AlgorithmParameter.FindValue<int>("ITERS", Parameters);
-            KernelType = AlgorithmParameter.FindValue<CoeffKernelType>("KER_TYPE", Parameters);
-            KernelCoeff = AlgorithmParameter.FindValue<double>("KER_COEFF", Parameters);
-            StepCoeff = AlgorithmParameter.FindValue<double>("STEP_COEFF", Parameters);
-            UseEightDirections = AlgorithmParameter.FindValue<bool>("EIGHT", Parameters);
+            MaxIterations = IAlgorithmParameter.FindValue<int>("ITERS", Parameters);
+            KernelType = IAlgorithmParameter.FindValue<CoeffKernelType>("KER_TYPE", Parameters);
+            KernelCoeff = IAlgorithmParameter.FindValue<double>("KER_COEFF", Parameters);
+            StepCoeff = IAlgorithmParameter.FindValue<double>("STEP_COEFF", Parameters);
+            UseEightDirections = IAlgorithmParameter.FindValue<bool>("EIGHT", Parameters);
         }
     }
 }

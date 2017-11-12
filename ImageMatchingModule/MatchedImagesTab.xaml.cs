@@ -99,14 +99,14 @@ namespace ImageMatchingModule
             transformer.Transformation = new RectificationTransformation()
             {
                 RectificationMatrix = rectifier.RectificationLeft,
-                RectificationMatrixInverse = rectifier.RectificationLeft_Inverse,
+                RectificationMatrixInverse = rectifier.RectificationLeftInverse,
             }; ;
             MaskedImage rectLeft = transformer.TransfromImageBackwards(_imgLeft, true);
 
             transformer.Transformation = new RectificationTransformation()
             {
                 RectificationMatrix = rectifier.RectificationRight,
-                RectificationMatrixInverse = rectifier.RectificationRight_Inverse,
+                RectificationMatrixInverse = rectifier.RectificationRightInverse,
             }; ;
             MaskedImage rectRight = transformer.TransfromImageBackwards(_imgRight, true);
 

@@ -10,6 +10,7 @@
     <DockPanel>
         <Border BorderBrush="Black" BorderThickness="1" DockPanel.Dock="Right">
             <StackPanel>
+                <Button Content="Set Image Size" Click="SetImageSize" Margin="5,3,5,3"/>
                 <Button Content="Find Calib. Points" Click="FindCalibrationPoints" Margin="5,3,5,3"/>
                 <Button Content="Manage Real Grids" Click="ManageGrids" Margin="5,3,5,3"/>
                 <Button Content="Manage Calib. Points" Click="ManagePoints" Margin="5,3,5,3"/>

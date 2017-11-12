@@ -12,62 +12,56 @@ namespace CamCore
         Class used to pass info on necessary params outside processor (ie. for input)
         as well as to recieve values of them in universal way for every processor 
     */
-    public abstract class AlgorithmParameter
+    public abstract class IAlgorithmParameter
     {
-        public string Name { get; protected set; }
-        public string ShortName { get; protected set; }
-        public string TypeName { get; protected set; }
-        public abstract object ActualValue { get; set; }
+        public abstract string Name { get; set; }
+        public abstract string Id { get; set; }
+        public abstract string TypeName { get; set; }
+        public abstract object Value { get; set; }
         public abstract IParameterInput Input { get; set; }
 
-        protected AlgorithmParameter(string name, string sname, string typename)
-        {
-            Name = name;
-            ShortName = sname;
-            TypeName = typename;
-        }
+        public abstract void ReadFromXml(XmlNode parameterNode);
 
-        public static AlgorithmParameter FindParameter(string name, List<AlgorithmParameter> paramsList)
+        public static IAlgorithmParameter FindParameter(string name, List<IAlgorithmParameter> parameters)
         {
-            for(int i = 0; i < paramsList.Count; i++)
+            for(int i = 0; i < parameters.Count; i++)
             {
-                if(string.Compare(paramsList[i].ShortName, name) == 0)
+                if(string.Compare(parameters[i].Id, name) == 0)
                 {
-                    return paramsList[i];
+                    return parameters[i];
                 }
             }
             return null;
         }
 
-        public static object FindValue(string name, List<AlgorithmParameter> paramsList)
+        public static object FindValue(string name, List<IAlgorithmParameter> parameters)
         {
-            for(int i = 0; i < paramsList.Count; i++)
+            for(int i = 0; i < parameters.Count; i++)
             {
-                if(string.Compare(paramsList[i].ShortName, name) == 0)
+                if(string.Compare(parameters[i].Id, name) == 0)
                 {
-                    return paramsList[i].ActualValue;
+                    return parameters[i].Value;
                 }
             }
             return null;
         }
 
-        public static T FindValue<T>(string name, List<AlgorithmParameter> paramsList)
+        public static T FindValue<T>(string name, List<IAlgorithmParameter> paramsList)
         {
             for(int i = 0; i < paramsList.Count; i++)
             {
-                if(string.Compare(paramsList[i].ShortName, name) == 0)
+                if(string.Compare(paramsList[i].Id, name) == 0)
                 {
-                    return (T)paramsList[i].ActualValue;
+                    return (T)paramsList[i].Value;
                 }
             }
             return default(T);
         }
 
-        public abstract void ReadFromXml(XmlNode node);
         // public abstract void WriteToXml(XmlDocument xmlDoc, XmlNode node);
 
         // Expects 'node' to constain childs with parameters with attributes 'id' and 'value'
-        public static void ReadParametersFromXml(List<AlgorithmParameter> parameters, XmlNode node)
+        public static void ReadParametersFromXml(List<IAlgorithmParameter> parameters, XmlNode node)
         {
             //<Parameters>
             //  <Parameter id="aaa" value="3"/>
@@ -78,7 +72,7 @@ namespace CamCore
                 if(paramNode.Attributes != null && paramNode.Attributes.GetNamedItem("id") != null)
                 {
                     string id = paramNode.Attributes["id"].Value;
-                    AlgorithmParameter param = parameters.Find((p) => { return p.ShortName == id; });
+                    IAlgorithmParameter param = parameters.Find((p) => { return p.Id == id; });
 #if DEBUG
                     param.ReadFromXml(paramNode);
 #else
@@ -88,7 +82,7 @@ namespace CamCore
             }
         }
 
-        public static XmlNode WriteParametersToXml(XmlDocument xmlDoc, List<AlgorithmParameter> parameters)
+        public static XmlNode WriteParametersToXml(XmlDocument xmlDoc, List<IAlgorithmParameter> parameters)
         {
             //<Parameters>
             //  <Parameter id="aaa" value="3"/>
@@ -99,7 +93,7 @@ namespace CamCore
             {
                 XmlNode paramNode = xmlDoc.CreateElement("Parameter");
                 XmlAttribute idAtt = xmlDoc.CreateAttribute("id");
-                idAtt.Value = parameter.ShortName;
+                idAtt.Value = parameter.Id;
                 paramNode.Attributes.Append(idAtt);
 
                 // parameter.WriteToXml(xmlDoc, paramNode);
@@ -111,22 +105,27 @@ namespace CamCore
         }
     }
 
-    public abstract class AlgorithmParameter<T> : AlgorithmParameter
+    public abstract class AlgorithmParameter<T> : IAlgorithmParameter
     {
-        public override object ActualValue
+
+        public override string Name { get; set; }
+        public override string Id { get; set; }
+        public override string TypeName { get; set; }
+
+        public override object Value
         {
             get
             {
-                return Value;
+                return ActualValue;
             }
 
             set
             {
-                Value = (T)value;
+                ActualValue = (T)value;
             }
         }
 
-        public T Value { get; set; }
+        public T ActualValue { get; set; }
         public T MaxValue { get; set; }
         public T MinValue { get; set; }
         public T DefaultValue { get; set; }
@@ -145,28 +144,31 @@ namespace CamCore
             }
         }
 
-        protected AlgorithmParameter(string name, string sname, string typename) : 
-            base(name, sname, typename)
+        protected AlgorithmParameter(string name, string id, string typename)
         {
+            Name = name;
+            Id = id;
+            TypeName = typename;
             DefaultValue = default(T);
             MaxValue = default(T);
             MinValue = default(T);
-            Value = default(T);
+            ActualValue = default(T);
         }
 
-        protected AlgorithmParameter(string name, string sname, string typename, 
-            T defVal, T minVal, T maxVal) : 
-            base(name, sname, typename)
+        protected AlgorithmParameter(string name, string id, string typename, T defVal, T minVal, T maxVal)
         {
+            Name = name;
+            Id = id;
+            TypeName = typename;
             DefaultValue = defVal;
             MaxValue = maxVal;
             MinValue = minVal;
-            Value = defVal;
+            ActualValue = defVal;
         }
 
         protected void ParameterValueChanged(object sender, ParameterValueChangedEventArgs e)
         {
-            Value = (T)e.NewValue;
+            ActualValue = (T)e.NewValue;
         }
     }
 

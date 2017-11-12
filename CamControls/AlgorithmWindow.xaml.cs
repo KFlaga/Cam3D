@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using CamCore;
-using System.ComponentModel;
-using System.Threading;
 using System.Windows.Threading;
 using System.Diagnostics;
 using System.IO;
@@ -31,8 +26,8 @@ namespace CamControls
 
             InitializeComponent();
 
-            _buttonParams.IsEnabled = Algorithm.SupportsParameters;
-            _buttonRun.IsEnabled = !Algorithm.SupportsParameters;
+            _buttonParams.IsEnabled = Algorithm.IsParametrizable;
+            _buttonRun.IsEnabled = !Algorithm.IsParametrizable;
 
             this.Closed += (s, e) => { AbortTask(); };
 
@@ -110,7 +105,7 @@ namespace CamControls
 
         void AlgorithmStarted()
         {
-            _buttonAbort.IsEnabled = Algorithm.SupportsTermination;
+            _buttonAbort.IsEnabled = Algorithm.IsTerminable;
             _buttonRun.IsEnabled = false;
             _buttonRefresh.IsEnabled = true;
             _buttonParams.IsEnabled = false;
@@ -153,7 +148,7 @@ namespace CamControls
             _buttonAbort.IsEnabled = false;
             _buttonRun.IsEnabled = true;
             _buttonRefresh.IsEnabled = false;
-            _buttonParams.IsEnabled = Algorithm.SupportsParameters;
+            _buttonParams.IsEnabled = Algorithm.IsParametrizable;
         }
 
         private void AlgorithmParamtersAccepted(object sender, EventArgs e)
@@ -201,7 +196,7 @@ namespace CamControls
 
             public void Abort()
             {
-                if(Algorithm.SupportsTermination)
+                if(Algorithm.IsTerminable)
                 {
                     WasAborted = true;
                     Algorithm.Terminate();

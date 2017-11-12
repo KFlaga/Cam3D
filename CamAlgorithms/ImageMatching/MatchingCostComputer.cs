@@ -45,12 +45,12 @@ namespace CamAlgorithms.ImageMatching
             return GetCost_Border(new IntVector2(pixelBase), new IntVector2(pixelMatched));
         }
 
-        protected List<AlgorithmParameter> _parameters;
-        public List<AlgorithmParameter> Parameters { get { return _parameters; } }
+        protected List<IAlgorithmParameter> _parameters;
+        public List<IAlgorithmParameter> Parameters { get { return _parameters; } }
 
         public virtual void InitParameters()
         {
-            _parameters = new List<AlgorithmParameter>();
+            _parameters = new List<IAlgorithmParameter>();
         }
 
         public virtual void UpdateParameters()

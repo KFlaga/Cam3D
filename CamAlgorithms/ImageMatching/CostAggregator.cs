@@ -34,8 +34,8 @@ namespace CamAlgorithms.ImageMatching
         public abstract void ComputeMatchingCosts();
         public abstract void ComputeMatchingCosts_Rectified();
         
-        List<AlgorithmParameter> _params = new List<AlgorithmParameter>();
-        public List<AlgorithmParameter> Parameters
+        List<IAlgorithmParameter> _params = new List<IAlgorithmParameter>();
+        public List<IAlgorithmParameter> Parameters
         {
             get { return _params; }
         }
@@ -61,7 +61,7 @@ namespace CamAlgorithms.ImageMatching
 
         public virtual void UpdateParameters()
         {
-            CostComp = AlgorithmParameter.FindValue<MatchingCostComputer>("COST", _params);
+            CostComp = IAlgorithmParameter.FindValue<MatchingCostComputer>("COST", _params);
             CostComp.UpdateParameters();
         }
 

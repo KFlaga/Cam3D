@@ -117,6 +117,9 @@
       <SubType>Code</SubType>
       <DependentUpon>RealGridsManagerWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SetImageSizeWindow.xaml.cs">
+      <DependentUpon>SetImageSizeWindow.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CamControls\CamControls.csproj">
@@ -166,6 +169,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="RealGridsManagerWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SetImageSizeWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

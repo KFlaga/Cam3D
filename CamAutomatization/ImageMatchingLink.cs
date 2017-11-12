@@ -128,7 +128,7 @@ namespace CamAutomatization
             sgmAgg.InitParameters();
 
             XmlNode sgmParamsNode = sgmMatcherNode.FirstChildWithName("Parameters");
-            AlgorithmParameter.ReadParametersFromXml(sgmAgg.Parameters, sgmParamsNode);
+            IAlgorithmParameter.ReadParametersFromXml(sgmAgg.Parameters, sgmParamsNode);
 
             sgmAgg.UpdateParameters();
 

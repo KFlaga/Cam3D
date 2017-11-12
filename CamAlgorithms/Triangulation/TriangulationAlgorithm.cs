@@ -99,11 +99,11 @@ namespace CamAlgorithms.Triangulation
 
         public string Name { get { return "Triangulation Algorithm: " + Method.ToString(); } }
 
-        public List<AlgorithmParameter> Parameters { get; protected set; }
+        public List<IAlgorithmParameter> Parameters { get; protected set; }
 
         public void InitParameters()
         {
-            Parameters = new List<AlgorithmParameter>();
+            Parameters = new List<IAlgorithmParameter>();
 
             DictionaryParameter methodParam =
                 new DictionaryParameter("Triangulation Method", "Method", TriangulationMethod.TwoPointsEpilineFit);
@@ -119,7 +119,7 @@ namespace CamAlgorithms.Triangulation
 
         public void UpdateParameters()
         {
-            Method = AlgorithmParameter.FindValue<TriangulationMethod>("Method", Parameters);
+            Method = IAlgorithmParameter.FindValue<TriangulationMethod>("Method", Parameters);
         }
 
         public override string ToString()

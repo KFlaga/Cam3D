@@ -274,7 +274,7 @@ namespace CamAlgorithms.ImageMatching
 
         public override void InitParameters()
         {
-            _params = new List<AlgorithmParameter>();
+            _params = new List<IAlgorithmParameter>();
 
             DictionaryParameter meanParam =
                 new DictionaryParameter("Mean Computing Method", "MEAN");
@@ -302,8 +302,8 @@ namespace CamAlgorithms.ImageMatching
 
         public override void UpdateParameters()
         {
-            MeanMethod = AlgorithmParameter.FindValue<MeanMethods>("MEAN", Parameters);
-            CostMethod = AlgorithmParameter.FindValue<CostMethods>("COST", Parameters);
+            MeanMethod = IAlgorithmParameter.FindValue<MeanMethods>("MEAN", Parameters);
+            CostMethod = IAlgorithmParameter.FindValue<CostMethods>("COST", Parameters);
         }
 
 

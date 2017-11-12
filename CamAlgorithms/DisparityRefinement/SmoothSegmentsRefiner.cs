@@ -140,10 +140,10 @@ namespace CamAlgorithms.ImageMatching
         public override void UpdateParameters()
         {
             base.UpdateParameters();
-            MaxIterations = AlgorithmParameter.FindValue<int>("MaxIterations", Parameters);
-            MaxDisparityDiff = AlgorithmParameter.FindValue<double>("MaxDisparityDiff", Parameters);
-            StepCoeff = AlgorithmParameter.FindValue<double>("StepCoeff", Parameters);
-            UseEightDirections = AlgorithmParameter.FindValue<bool>("UseEightDirections", Parameters);
+            MaxIterations = IAlgorithmParameter.FindValue<int>("MaxIterations", Parameters);
+            MaxDisparityDiff = IAlgorithmParameter.FindValue<double>("MaxDisparityDiff", Parameters);
+            StepCoeff = IAlgorithmParameter.FindValue<double>("StepCoeff", Parameters);
+            UseEightDirections = IAlgorithmParameter.FindValue<bool>("UseEightDirections", Parameters);
         }
 
         public override string ToString()

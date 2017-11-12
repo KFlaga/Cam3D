@@ -237,8 +237,8 @@ namespace CamAlgorithms
 
     public class HistogramSaturator : IParameterizable
     {
-        private List<AlgorithmParameter> _parameters;
-        public List<AlgorithmParameter> Parameters
+        private List<IAlgorithmParameter> _parameters;
+        public List<IAlgorithmParameter> Parameters
         {
             get { return _parameters; }
             protected set { _parameters = value; }
@@ -246,23 +246,23 @@ namespace CamAlgorithms
 
         public void InitParameters()
         {
-            Parameters = new List<AlgorithmParameter>();
-            AlgorithmParameter tl = new DoubleParameter(
+            Parameters = new List<IAlgorithmParameter>();
+            IAlgorithmParameter tl = new DoubleParameter(
                 "Saturate Level Low", "SLL", 0.2, 0.0, 1.0);
 
             Parameters.Add(tl);
 
-            AlgorithmParameter th = new DoubleParameter(
+            IAlgorithmParameter th = new DoubleParameter(
                 "Saturate Level High", "SLH", 0.8, 0.0, 1.0);
 
             Parameters.Add(th);
 
-            AlgorithmParameter rl = new DoubleParameter(
+            IAlgorithmParameter rl = new DoubleParameter(
                 "Saturate Ratio Low", "SRL", 0.2, 0.0, 1.0);
 
             Parameters.Add(rl);
 
-            AlgorithmParameter rh = new DoubleParameter(
+            IAlgorithmParameter rh = new DoubleParameter(
                 "Saturate Ratio High", "SRH", 0.8, 0.0, 1.0);
 
             Parameters.Add(rh);
@@ -270,10 +270,10 @@ namespace CamAlgorithms
 
         public void UpdateParameters()
         {
-            SaturateLow = AlgorithmParameter.FindValue<double>("SLL", Parameters);
-            SaturateHigh = AlgorithmParameter.FindValue<double>("SLH", Parameters);
-            SaturateRatioLow = AlgorithmParameter.FindValue<double>("SRL", Parameters);
-            SaturateRatioHigh = AlgorithmParameter.FindValue<double>("SRH", Parameters);
+            SaturateLow = IAlgorithmParameter.FindValue<double>("SLL", Parameters);
+            SaturateHigh = IAlgorithmParameter.FindValue<double>("SLH", Parameters);
+            SaturateRatioLow = IAlgorithmParameter.FindValue<double>("SRL", Parameters);
+            SaturateRatioHigh = IAlgorithmParameter.FindValue<double>("SRH", Parameters);
         }
 
         public double SaturateLow { get; set; }

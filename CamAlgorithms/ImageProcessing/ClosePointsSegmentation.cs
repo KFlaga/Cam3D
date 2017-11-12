@@ -168,7 +168,7 @@ namespace CamAlgorithms
         {
             base.UpdateParameters();
 
-            MaxDiffSquared = AlgorithmParameter.FindValue<double>("MaxDiffSquared", Parameters);
+            MaxDiffSquared = IAlgorithmParameter.FindValue<double>("MaxDiffSquared", Parameters);
         }
 
         public override string Name

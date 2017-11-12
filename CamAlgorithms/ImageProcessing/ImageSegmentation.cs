@@ -39,8 +39,8 @@ namespace CamAlgorithms
         public abstract void SegmentColor(ColorImage image);
         public abstract void SegmentDisparity(DisparityMap dispMap);
 
-        protected List<AlgorithmParameter> _params;
-        public List<AlgorithmParameter> Parameters
+        protected List<IAlgorithmParameter> _params;
+        public List<IAlgorithmParameter> Parameters
         {
             get
             {
@@ -50,7 +50,7 @@ namespace CamAlgorithms
 
         public virtual void InitParameters()
         {
-            _params = new List<AlgorithmParameter>();
+            _params = new List<IAlgorithmParameter>();
         }
 
         public virtual void UpdateParameters()

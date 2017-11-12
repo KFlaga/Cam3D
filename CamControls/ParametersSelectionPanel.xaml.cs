@@ -1,24 +1,12 @@
 ﻿using CamCore;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace CamControls
 {
     public partial class ParametersSelectionPanel : StackPanel
     {
-        public delegate IParameterInput InputCreator(AlgorithmParameter parameter);
+        public delegate IParameterInput InputCreator(IAlgorithmParameter parameter);
         public static Dictionary<string, InputCreator> InputCreators = new Dictionary<string, InputCreator>()
         {
              { typeof(int).Name, (p) => { return new IntParameterInput(p as AlgorithmParameter<int>); } },
@@ -37,7 +25,7 @@ namespace CamControls
             InitializeComponent();
         }
 
-        public void SetParameters(List<AlgorithmParameter> paramters)
+        public void SetParameters(List<IAlgorithmParameter> paramters)
         {
             this.Children.Clear();
             foreach(var parameter in paramters)

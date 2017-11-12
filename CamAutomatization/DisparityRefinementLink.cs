@@ -110,7 +110,7 @@ namespace CamAutomatization
                     DisparityRefinement refiner = Activator.CreateInstance(refinerType) as DisparityRefinement;
 
                     refiner.InitParameters();
-                    AlgorithmParameter.ReadParametersFromXml(refiner.Parameters, refinerNode);
+                    IAlgorithmParameter.ReadParametersFromXml(refiner.Parameters, refinerNode);
                     refiner.UpdateParameters();
 
                     _refinementChain.Add(refiner);

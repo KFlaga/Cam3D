@@ -69,32 +69,22 @@ namespace CamAlgorithms.Calibration
             _M = new DenseVector(CalibrationPoints.Count);
             _reals = new Vector3[CalibrationPoints.Count];
 
-            UpdateAll();
-
-            //if(DumpingMethodUsed == DumpingMethod.Additive)
-            //{
-            //    // Compute initial lambda lam = 10^-3*diag(J'J)/size(J'J)
-            //    ComputeJacobian(_J);
-            //    _J.TransposeToOther(_Jt);
-            //    _Jt.MultiplyToOther(_J, _JtJ);
-            //    _lam = 1e-3f * _JtJ.Trace() / (double)_JtJ.ColumnCount;
-            //}
-            //else 
-            if(DumpingMethodUsed == DumpingMethod.Multiplicative)
-            {
-                _lam = 1e-3f;
-            }
-            else
-                _lam = 0.0;
-
+            UpdateAfterParametersChanged();
+     
+            _lam = DumpingMethodUsed == DumpingMethod.Multiplicative ? 1e-3 : 0.0;
             _lastResidiual = _currentResidiual;
-            Solver = new SvdSolver();
         }
 
-        public override void UpdateAll()
+        public override void UpdateAfterParametersChanged()
         {
-            base.UpdateAll();
-            // 1) Update grids
+            base.UpdateAfterParametersChanged();
+            UpdateGrids();
+            UpdateRealPoints();
+            UpdateLxLyM();
+        }
+        
+        private void UpdateGrids()
+        {
             for(int i = 0; i < CalibrationGrids.Count; ++i)
             {
                 int gridPos = 12 * i + 12;
@@ -111,16 +101,21 @@ namespace CamAlgorithms.Calibration
                 _grids[i].BotRight.Y = ResultsVector.At(gridPos + 10);
                 _grids[i].BotRight.Z = ResultsVector.At(gridPos + 11);
             }
-            
-            // 2) Update real points
+        }
+
+        private void UpdateRealPoints()
+        {
             for(int i = 0; i < CalibrationPoints.Count; ++i)
             {
                 var cp = CalibrationPoints[i];
                 var grid = _grids[cp.GridNum];
                 var real = grid.GetRealFromCell(cp.RealRow, cp.RealCol);
-                _reals[i] = grid.GetRealFromCell(cp.RealRow, cp.RealCol);
+                _reals[i] = real;
             }
+        }
 
+        private void UpdateLxLyM()
+        {
             // Compute Lx,Ly,M
             // exi = (p1Xi+p2Yi+p3Zi+p4)/(p9Xi+p10Yi+p11Zi+p12) = Lxi/Mi
             // eyi = (p5Xi+p6Yi+p7Zi+p8)/(p9Xi+p10Yi+p11Zi+p12) = Lyi/Mi

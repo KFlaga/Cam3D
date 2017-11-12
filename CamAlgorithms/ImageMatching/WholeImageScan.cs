@@ -117,12 +117,12 @@ namespace CamAlgorithms.ImageMatching
         public override void UpdateParameters()
         {
             base.UpdateParameters();
-            MaxDisp_PosX = AlgorithmParameter.FindValue<int>("DXPOS", Parameters);
-            MaxDisp_NegX = AlgorithmParameter.FindValue<int>("DXNEG", Parameters);
-            MaxDisp_PosY = AlgorithmParameter.FindValue<int>("DYPOS", Parameters);
-            MaxDisp_NegY = AlgorithmParameter.FindValue<int>("DYNEG", Parameters);
+            MaxDisp_PosX = IAlgorithmParameter.FindValue<int>("DXPOS", Parameters);
+            MaxDisp_NegX = IAlgorithmParameter.FindValue<int>("DXNEG", Parameters);
+            MaxDisp_PosY = IAlgorithmParameter.FindValue<int>("DYPOS", Parameters);
+            MaxDisp_NegY = IAlgorithmParameter.FindValue<int>("DYNEG", Parameters);
 
-            DispComp = AlgorithmParameter.FindValue<DisparityComputer>("DISP_COMP", Parameters);
+            DispComp = IAlgorithmParameter.FindValue<DisparityComputer>("DISP_COMP", Parameters);
             DispComp.UpdateParameters();
         }
 

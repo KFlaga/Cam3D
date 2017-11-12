@@ -18,8 +18,8 @@ namespace CamAlgorithms
 
     public abstract class FeaturesMatcher : IParameterizable
     {
-        private List<AlgorithmParameter> _parameters;
-        public List<AlgorithmParameter> Parameters
+        private List<IAlgorithmParameter> _parameters;
+        public List<IAlgorithmParameter> Parameters
         {
             get { return _parameters; }
             protected set { _parameters = value; }
@@ -27,7 +27,7 @@ namespace CamAlgorithms
 
         public virtual void InitParameters()
         {
-            _parameters = new List<AlgorithmParameter>();
+            _parameters = new List<IAlgorithmParameter>();
         }
 
         public virtual void UpdateParameters()

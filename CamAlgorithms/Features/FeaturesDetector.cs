@@ -5,15 +5,15 @@ namespace CamAlgorithms
 {
     public abstract class FeaturesDetector : IParameterizable
     {
-        protected List<AlgorithmParameter> _parameters;
-        public List<AlgorithmParameter> Parameters
+        protected List<IAlgorithmParameter> _parameters;
+        public List<IAlgorithmParameter> Parameters
         {
             get { return _parameters; }
         }
 
         public virtual void InitParameters()
         {
-            _parameters = new List<AlgorithmParameter>();
+            _parameters = new List<IAlgorithmParameter>();
         }
 
         public virtual void UpdateParameters() { }

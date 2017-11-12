@@ -2,6 +2,7 @@
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
 using System;
+using System.Diagnostics;
 using System.Text;
 using System.Xml;
 using System.Xml.Schema;
@@ -32,6 +33,7 @@ namespace CamAlgorithms.Calibration
     // To find T we use fact that 4th column of M is -KRT and first 3 columns as KR
     // Let C = -KRT and X = KR, then:
     // T = - X^-1 * C
+    [DebuggerDisplay("{Matrix}")]
     public class Camera : IXmlSerializable
     {
         public Matrix<double> Matrix = new DenseMatrix(3, 4);
@@ -43,6 +45,9 @@ namespace CamAlgorithms.Calibration
         public RadialDistortion Distortion { get; set; }
 
         public bool IsCalibrated { get { return System.Math.Abs(Matrix[0, 0]) > 1e-12; } }
+
+        public int ImageWidth { get; set; } = 0;
+        public int ImageHeight { get; set; } = 0;
 
         public static Matrix<double> Normalized(Matrix<double> cameraMatrix, Matrix<double> normImage, Matrix<double> normReal)
         {

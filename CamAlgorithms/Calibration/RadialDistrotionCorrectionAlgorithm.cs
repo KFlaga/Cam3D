@@ -160,8 +160,8 @@ namespace CamAlgorithms.Calibration
             }
         }
 
-        private List<AlgorithmParameter> _parameters;
-        public List<AlgorithmParameter> Parameters
+        private List<IAlgorithmParameter> _parameters;
+        public List<IAlgorithmParameter> Parameters
         {
             get { return _parameters; }
             protected set { _parameters = value; }
@@ -169,7 +169,7 @@ namespace CamAlgorithms.Calibration
 
         public void InitParameters()
         {
-            Parameters = new List<AlgorithmParameter>();
+            Parameters = new List<IAlgorithmParameter>();
 
             ParametrizedObjectParameter modelParam = new ParametrizedObjectParameter(
                 "Radial Distortion Model", "DistortionModel");
@@ -188,9 +188,9 @@ namespace CamAlgorithms.Calibration
 
         public void UpdateParameters()
         {
-            Distortion.Model = AlgorithmParameter.FindValue<RadialDistortionModel>("DistortionModel", Parameters);
-            MaxIterations = AlgorithmParameter.FindValue<int>("MaxIterations", Parameters);
-            FindInitialModelParameters = AlgorithmParameter.FindValue<bool>("FindInitialModelParameters", Parameters);
+            Distortion.Model = IAlgorithmParameter.FindValue<RadialDistortionModel>("DistortionModel", Parameters);
+            MaxIterations = IAlgorithmParameter.FindValue<int>("MaxIterations", Parameters);
+            FindInitialModelParameters = IAlgorithmParameter.FindValue<bool>("FindInitialModelParameters", Parameters);
         }
 
         public string Name { get; } = "RadialDistrotionCorrectionAlgorithm";

@@ -204,9 +204,9 @@ namespace CamAlgorithms.ImageMatching
         {
             base.UpdateParameters();
 
-            MaxDisparityDiff = AlgorithmParameter.FindValue<double>("MaxDisparityDiff", Parameters);
-            MinSegmentSize = AlgorithmParameter.FindValue<int>("MinSegmentSize", Parameters);
-            InterpolateInvalidated = AlgorithmParameter.FindValue<bool>("InterpolateInvalidated", Parameters);
+            MaxDisparityDiff = IAlgorithmParameter.FindValue<double>("MaxDisparityDiff", Parameters);
+            MinSegmentSize = IAlgorithmParameter.FindValue<int>("MinSegmentSize", Parameters);
+            InterpolateInvalidated = IAlgorithmParameter.FindValue<bool>("InterpolateInvalidated", Parameters);
         }
 
         public override string Name

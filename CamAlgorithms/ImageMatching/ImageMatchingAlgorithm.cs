@@ -13,8 +13,8 @@ namespace CamAlgorithms.ImageMatching
 
         public bool Rectified { get; set; } = true;
 
-        List<AlgorithmParameter> _params = new List<AlgorithmParameter>();
-        public List<AlgorithmParameter> Parameters
+        List<IAlgorithmParameter> _params = new List<IAlgorithmParameter>();
+        public List<IAlgorithmParameter> Parameters
         {
             get { return _params; }
         }
@@ -67,7 +67,7 @@ namespace CamAlgorithms.ImageMatching
 
         public virtual void InitParameters()
         {
-            _params = new List<AlgorithmParameter>();
+            _params = new List<IAlgorithmParameter>();
         }
 
         public virtual void UpdateParameters()

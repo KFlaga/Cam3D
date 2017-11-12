@@ -317,53 +317,53 @@ namespace CamAlgorithms.Calibration
             ComputePf();
         }
 
-        public List<AlgorithmParameter> Parameters { get; protected set; }
+        public List<IAlgorithmParameter> Parameters { get; protected set; }
         void IParameterizable.InitParameters()
         {
-            Parameters = new List<AlgorithmParameter>();
+            Parameters = new List<IAlgorithmParameter>();
 
-            AlgorithmParameter initalCx = new DoubleParameter(
+            IAlgorithmParameter initalCx = new DoubleParameter(
                 "Inital Cx", "ICX", 320.0, 0.0, 99999.0);
             Parameters.Add(initalCx);
 
-            AlgorithmParameter initalCy = new DoubleParameter(
+            IAlgorithmParameter initalCy = new DoubleParameter(
                 "Inital Cy", "ICY", 240.0, 0.0, 99999.0);
             Parameters.Add(initalCy);
 
-            AlgorithmParameter initalSx = new DoubleParameter(
+            IAlgorithmParameter initalSx = new DoubleParameter(
                 "Inital Sx", "ISX", 1.0, 0.01, 100.0);
             Parameters.Add(initalSx);
 
-            AlgorithmParameter initalK1 = new DoubleParameter(
+            IAlgorithmParameter initalK1 = new DoubleParameter(
                 "Inital K1", "IK1", 0.0, -100.0, 100.0);
             Parameters.Add(initalK1);
 
-            AlgorithmParameter initalK2 = new DoubleParameter(
+            IAlgorithmParameter initalK2 = new DoubleParameter(
                 "Inital K2", "IK2", 0.0, -100.0, 100.0);
             Parameters.Add(initalK2);
 
-            AlgorithmParameter initalK3 = new DoubleParameter(
+            IAlgorithmParameter initalK3 = new DoubleParameter(
                 "Inital K3", "IK3", 0.0, -100.0, 100.0);
             Parameters.Add(initalK3);
 
-            AlgorithmParameter initalK4 = new DoubleParameter(
+            IAlgorithmParameter initalK4 = new DoubleParameter(
                 "Inital K4", "IK4", 0.0, -100.0, 100.0);
             Parameters.Add(initalK4);
         }
 
         void IParameterizable.UpdateParameters()
         {
-            InitialAspectEstimation = AlgorithmParameter.FindValue<double>("ISX", Parameters);
+            InitialAspectEstimation = IAlgorithmParameter.FindValue<double>("ISX", Parameters);
             InitialCenterEstimation = new Vector2();
-            InitialCenterEstimation.X = AlgorithmParameter.FindValue<double>("ICX", Parameters);
-            InitialCenterEstimation.Y = AlgorithmParameter.FindValue<double>("ICY", Parameters);
+            InitialCenterEstimation.X = IAlgorithmParameter.FindValue<double>("ICX", Parameters);
+            InitialCenterEstimation.Y = IAlgorithmParameter.FindValue<double>("ICY", Parameters);
 
             InitParameters();
 
-            Coeffs[_k1Idx] = AlgorithmParameter.FindValue<double>("IK1", Parameters);
-            Coeffs[_k2Idx] = AlgorithmParameter.FindValue<double>("IK2", Parameters);
-            Coeffs[_k3Idx] = AlgorithmParameter.FindValue<double>("IK3", Parameters);
-            Coeffs[_k4Idx] = AlgorithmParameter.FindValue<double>("IK3", Parameters);
+            Coeffs[_k1Idx] = IAlgorithmParameter.FindValue<double>("IK1", Parameters);
+            Coeffs[_k2Idx] = IAlgorithmParameter.FindValue<double>("IK2", Parameters);
+            Coeffs[_k3Idx] = IAlgorithmParameter.FindValue<double>("IK3", Parameters);
+            Coeffs[_k4Idx] = IAlgorithmParameter.FindValue<double>("IK3", Parameters);
         }
 
         public override void SetInitialParametersFromQuadrics(List<Quadric> quadrics, List<List<Vector2>> linePoints, List<int> fitPoints)
