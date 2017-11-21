@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Controls;
 
 namespace CamCore
 {
-    public abstract class Module : IDisposable
+    public abstract class GuiModule : IDisposable
     {
         public virtual string Name { get { return "Invalid Module"; } } // Name which user sees
         public virtual string FailText { get; protected set; } // Reason for module failure (on start/end)

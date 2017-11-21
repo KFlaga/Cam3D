@@ -81,15 +81,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EmguCVUtils.cs" />
-    <Compile Include="FeatureDetectionAlgorithm.cs" />
-    <Compile Include="FeatureDetector_OpenCV.cs" />
-    <Compile Include="FeatureMatcher_OpenCV.cs" />
-    <Compile Include="FeatureMatchingAlgorithm.cs" />
     <Compile Include="Module.cs" />
-    <Compile Include="FeatureImagesTab.xaml.cs">
-      <DependentUpon>FeatureImagesTab.xaml</DependentUpon>
-    </Compile>
     <Compile Include="CalibratedRectificationTab.xaml.cs">
       <DependentUpon>CalibratedRectificationTab.xaml</DependentUpon>
     </Compile>
@@ -116,10 +108,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="FeatureImagesTab.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="CalibratedRectificationTab.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

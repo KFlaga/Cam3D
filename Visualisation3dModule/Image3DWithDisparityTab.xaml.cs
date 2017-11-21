@@ -72,27 +72,27 @@ namespace Visualisation3dModule
 
             var segments = segmentation.Segments;
             var segmentAssignments = segmentation.SegmentAssignments;
-            Point2D<int>[] segmentMin = new Point2D<int>[segments.Count];
-            Point2D<int>[] segmentMax = new Point2D<int>[segments.Count];
+            IntPoint2[] segmentMin = new IntPoint2[segments.Count];
+            IntPoint2[] segmentMax = new IntPoint2[segments.Count];
             var segSort = new List<ImageSegmentation.Segment>(segments);
             segSort.Sort((s1, s2) => { return s2.Pixels.Count.CompareTo(s1.Pixels.Count); });
 
             for(int i = 0; i < segments.Count; ++i)
             {
-                segmentMin[i] = new Point2D<int>(DispMap.ColumnCount + 1, DispMap.RowCount + 1);
-                segmentMax[i] = new Point2D<int>(-1, -1);
+                segmentMin[i] = new IntPoint2(DispMap.ColumnCount + 1, DispMap.RowCount + 1);
+                segmentMax[i] = new IntPoint2(-1, -1);
             }
 
             // 1) Find segments sizes
             foreach(var point3d in Points3D)
             {
-                Point2D<int> imgPoint = new Point2D<int>(y: (int)point3d.ImageLeft.Y, x: (int)point3d.ImageLeft.X);
+                IntPoint2 imgPoint = new IntPoint2(y: (int)point3d.ImageLeft.Y, x: (int)point3d.ImageLeft.X);
                 int idx = segmentAssignments[imgPoint.Y, imgPoint.X];
                 if(idx >= 0)
                 {
-                    segmentMin[idx] = new Point2D<int>(y: Math.Min(segmentMin[idx].Y, imgPoint.Y),
+                    segmentMin[idx] = new IntPoint2(y: Math.Min(segmentMin[idx].Y, imgPoint.Y),
                         x: Math.Min(segmentMin[idx].X, imgPoint.X));
-                    segmentMax[idx] = new Point2D<int>(y: Math.Max(segmentMax[idx].Y, imgPoint.Y),
+                    segmentMax[idx] = new IntPoint2(y: Math.Max(segmentMax[idx].Y, imgPoint.Y),
                         x: Math.Max(segmentMax[idx].X, imgPoint.X));
                 }
             }
@@ -111,7 +111,7 @@ namespace Visualisation3dModule
             // 3) For each point add it to surface
             for(int i = 0; i < Points3D.Count; ++i)
             {
-                Point2D<int> imgPoint = new Point2D<int>(
+                IntPoint2 imgPoint = new IntPoint2(
                     y: (int)Points3D[i].ImageLeft.Y, x: (int)Points3D[i].ImageLeft.X);
                 int idx = segmentAssignments[imgPoint.Y, imgPoint.X];
                 if(idx >= 0 && surfaces[idx] != null)

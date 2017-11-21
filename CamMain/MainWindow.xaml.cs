@@ -13,8 +13,8 @@ namespace CamMain
     /// </summary>
     public partial class MainWindow : Window
     {
-        private Dictionary<object, Module> _modules;
-        private Module _currentModule = null;
+        private Dictionary<object, GuiModule> _modules;
+        private GuiModule _currentModule = null;
         public double CalibResultsLeft
         {
             get
@@ -29,14 +29,14 @@ namespace CamMain
 
             InitializeComponent();
 
-            _modules = new Dictionary<object, Module>()
+            _modules = new Dictionary<object, GuiModule>()
             {
                  { _headerCalibration, new CalibrationModule.Module() },
                  { _headerRectification, new RectificationModule.Module() },
                  { _headerMatching, new ImageMatchingModule.Module() },
                  { _headerTriangulation, new TriangulationModule.Module() },
                  { _headerImage3D, new Visualisation3dModule.Module() },
-                 { _headerCapture, new CamCapture.Module() },
+                 { _headerCapture, new CaptureModule.Module() },
                  { _headerOperations, new ImageOperationsModule.Module() },
             };
 
@@ -55,11 +55,11 @@ namespace CamMain
         private void OpenModule(object sender, RoutedEventArgs e)
         {
             MenuItem item = sender as MenuItem;
-            Module module = _modules[item];
+            GuiModule module = _modules[item];
             OpenModule(module);
         }
 
-        private void OpenModule(Module module)
+        private void OpenModule(GuiModule module)
         {
             if(_currentModule != null)
             {

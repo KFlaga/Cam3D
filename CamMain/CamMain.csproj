@@ -138,9 +138,9 @@
       <Project>{70424b17-eda2-4d63-aa2c-1344ace10e11}</Project>
       <Name>CamAutomatization</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CamCapture\CamCapture.csproj">
+    <ProjectReference Include="..\CamCapture\CaptureModule.csproj">
       <Project>{4a7a81a4-29ad-4b02-a40a-a425bf3d133e}</Project>
-      <Name>CamCapture</Name>
+      <Name>CaptureModule</Name>
     </ProjectReference>
     <ProjectReference Include="..\CamControls\CamControls.csproj">
       <Project>{8fa0ea0f-de8b-49a7-829b-9672cc61b11d}</Project>

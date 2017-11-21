@@ -2,7 +2,7 @@
 
 namespace ImageOperationsModule
 {
-    public class Module : CamCore.Module
+    public class Module : CamCore.GuiModule
     {
         private UserControl _calibControl = null;
 

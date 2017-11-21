@@ -4,7 +4,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Windows.Media.Imaging;
 
-namespace CamCapture
+namespace CaptureModule
 {
     // Video Mixed Renderer custom Allocator/Presenter
     // Creates DirectX Devices and surfaces, which then exposes

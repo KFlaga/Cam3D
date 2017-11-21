@@ -262,35 +262,26 @@ namespace CamAlgorithms
                 base.Init();
             }
 
+            void LimitAngle(int idx)
+            {
+                while(ResultsVector.At(idx) < -Math.PI * 1.01)
+                {
+                    ResultsVector.At(idx, ResultsVector.At(idx) + 2.0 * Math.PI);
+                }
+                while(ResultsVector.At(idx) > Math.PI * 1.01)
+                {
+                    ResultsVector.At(idx, ResultsVector.At(idx) - 2.0 * Math.PI);
+                }
+            }
+
             public override void UpdateAfterParametersChanged()
             {
-                // Limit angles to +-(pi+e)
-                double lim = Math.PI * 1.01;
-                while(ResultsVector.At(_eYlIdx) < -lim)
-                    ResultsVector.At(_eYlIdx, ResultsVector.At(_eYlIdx) + 2.0 * Math.PI);
-                while(ResultsVector.At(_eYlIdx) > +lim)
-                    ResultsVector.At(_eYlIdx, ResultsVector.At(_eYlIdx) - 2.0 * Math.PI);
-
-                while(ResultsVector.At(_eYlIdx) < -lim)
-                    ResultsVector.At(_eYlIdx, ResultsVector.At(_eZlIdx) + 2.0 * Math.PI);
-                while(ResultsVector.At(_eYlIdx) > +lim)
-                    ResultsVector.At(_eYlIdx, ResultsVector.At(_eZlIdx) - 2.0 * Math.PI);
-
-                while(ResultsVector.At(_eYlIdx) < -lim)
-                    ResultsVector.At(_eYlIdx, ResultsVector.At(_eXrIdx) + 2.0 * Math.PI);
-                while(ResultsVector.At(_eYlIdx) > +lim)
-                    ResultsVector.At(_eYlIdx, ResultsVector.At(_eXrIdx) - 2.0 * Math.PI);
-
-                while(ResultsVector.At(_eYlIdx) < -lim)
-                    ResultsVector.At(_eYlIdx, ResultsVector.At(_eYrIdx) + 2.0 * Math.PI);
-                while(ResultsVector.At(_eYlIdx) > +lim)
-                    ResultsVector.At(_eYlIdx, ResultsVector.At(_eYrIdx) - 2.0 * Math.PI);
-
-                while(ResultsVector.At(_eYlIdx) < -lim)
-                    ResultsVector.At(_eYlIdx, ResultsVector.At(_eZrIdx) + 2.0 * Math.PI);
-                while(ResultsVector.At(_eYlIdx) > +lim)
-                    ResultsVector.At(_eYlIdx, ResultsVector.At(_eZrIdx) - 2.0 * Math.PI);
-
+                LimitAngle(_eYlIdx);
+                LimitAngle(_eZlIdx);
+                LimitAngle(_eXrIdx);
+                LimitAngle(_eYrIdx);
+                LimitAngle(_eZrIdx);
+                
                 _eulerL.At(0, 0.0);
                 _eulerL.At(1, ResultsVector.At(_eYlIdx));
                 _eulerL.At(2, ResultsVector.At(_eZlIdx));

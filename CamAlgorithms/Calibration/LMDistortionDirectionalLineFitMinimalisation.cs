@@ -92,7 +92,7 @@ namespace CamAlgorithms.Calibration
             return new DistortionPoint_Directional(DistortionModel.ParametersCount);
         }
 
-        public override void UpdateAll(int line)
+        public override void UpdateLine(int line)
         {
             UpdateLinePoints(line);
             base.ComputeSums(line);
@@ -207,7 +207,7 @@ namespace CamAlgorithms.Calibration
             LineCoeffs[line, 2] = -(pf.X * LineCoeffs[line, 0] + pf.Y * LineCoeffs[line, 1]);
         }
 
-        public double Get_RadiusErrorCoeff(int line, int point)
+        public double GetRadiusErrorCoeff(int line, int point)
         {
             //if(BaseDistortionDirections[line] == DistortionDirection.None)
             //    return 1;
@@ -224,7 +224,7 @@ namespace CamAlgorithms.Calibration
         {
             // e = dL_i'^2 = (Axi+Byi+C)^2 / A^2 + B^2 * (rd/ru)^2
             var point = CorrectedPoints[l][p];
-            double R = Get_RadiusErrorCoeff(l, p);
+            double R = GetRadiusErrorCoeff(l, p);
             double d = LineCoeffs[l, 0] * point.Pf.X + LineCoeffs[l, 1] * point.Pf.Y + LineCoeffs[l, 2];
             double error = d * R / Math.Sqrt(LineCoeffs[l, 0] * LineCoeffs[l, 0] + LineCoeffs[l, 1] * LineCoeffs[l, 1]);
             //double error = d * d * R * R / (LineCoeffs[l, 0] * LineCoeffs[l, 0] + LineCoeffs[l, 1] * LineCoeffs[l, 1]);

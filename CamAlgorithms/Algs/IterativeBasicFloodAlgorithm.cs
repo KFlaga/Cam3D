@@ -3,11 +3,9 @@ using CamCore;
 
 namespace CamAlgorithms
 {
-    using Point2D = Point2D<int>;
-
     public class IterativeBasicFloodAlgorithm : IFloodAlgorithm
     {
-        Stack<Point2D> _pointStack;
+        Stack<IntPoint2> _pointStack;
 
         public override void FloodFill(int y, int x)
         {
@@ -19,31 +17,31 @@ namespace CamAlgorithms
 
             FillAction(y, x);
 
-            _pointStack = new Stack<Point2D<int>>();
-            _pointStack.Push(new Point2D(x, y));
+            _pointStack = new Stack<IntPoint2>();
+            _pointStack.Push(new IntPoint2(x, y));
             while(_pointStack.Count > 0)
             {
-                Point2D point = _pointStack.Pop();
+                IntPoint2 point = _pointStack.Pop();
 
                 if(point.Y > 0 && FillCondition(point.Y - 1, point.X))
                 {
                     FillAction(point.Y - 1, point.X);
-                    _pointStack.Push(new Point2D(y : point.Y - 1, x : point.X));
+                    _pointStack.Push(new IntPoint2(y : point.Y - 1, x : point.X));
                 }
                 if(point.Y + 1 < ImageHeight && FillCondition(point.Y + 1, point.X))
                 {
                     FillAction(point.Y + 1, point.X);
-                    _pointStack.Push(new Point2D(y: point.Y + 1, x: point.X));
+                    _pointStack.Push(new IntPoint2(y: point.Y + 1, x: point.X));
                 }
                 if(point.X > 0 && FillCondition(point.Y, point.X - 1))
                 {
                     FillAction(point.Y, point.X - 1);
-                    _pointStack.Push(new Point2D(y: point.Y, x: point.X - 1));
+                    _pointStack.Push(new IntPoint2(y: point.Y, x: point.X - 1));
                 }
                 if(point.X + 1 < ImageWidth && FillCondition(point.Y, point.X + 1))
                 {
                     FillAction(point.Y, point.X + 1);
-                    _pointStack.Push(new Point2D(y: point.Y, x: point.X + 1));
+                    _pointStack.Push(new IntPoint2(y: point.Y, x: point.X + 1));
                 }
             }
         }
@@ -63,10 +61,10 @@ namespace CamAlgorithms
                 return true;
             }
 
-            _pointStack.Push(new Point2D(x, y));
+            _pointStack.Push(new IntPoint2(x, y));
             while(_pointStack.Count > 0)
             {
-                Point2D point = _pointStack.Pop();
+                IntPoint2 point = _pointStack.Pop();
 
                 if(point.Y > 0 && FillCondition(point.Y - 1, point.X))
                 {
@@ -76,7 +74,7 @@ namespace CamAlgorithms
                         foundY = point.Y - 1;
                         return true;
                     }
-                    _pointStack.Push(new Point2D(point.Y - 1, point.X));
+                    _pointStack.Push(new IntPoint2(point.Y - 1, point.X));
                 }
                 if(point.Y + 1 < ImageHeight && FillCondition(point.Y + 1, point.X))
                 {
@@ -86,7 +84,7 @@ namespace CamAlgorithms
                         foundY = point.Y + 1;
                         return true;
                     }
-                    _pointStack.Push(new Point2D(point.Y + 1, point.X));
+                    _pointStack.Push(new IntPoint2(point.Y + 1, point.X));
                 }
                 if(point.X > 0 && FillCondition(point.Y, point.X - 1))
                 {
@@ -96,7 +94,7 @@ namespace CamAlgorithms
                         foundY = point.Y;
                         return true;
                     }
-                    _pointStack.Push(new Point2D(point.Y, point.X - 1));
+                    _pointStack.Push(new IntPoint2(point.Y, point.X - 1));
                 }
                 if(point.X + 1 < ImageWidth && FillCondition(point.Y, point.X + 1))
                 {
@@ -106,7 +104,7 @@ namespace CamAlgorithms
                         foundY = point.Y;
                         return true;
                     }
-                    _pointStack.Push(new Point2D(point.Y, point.X + 1));
+                    _pointStack.Push(new IntPoint2(point.Y, point.X + 1));
                 }
             }
             return false;

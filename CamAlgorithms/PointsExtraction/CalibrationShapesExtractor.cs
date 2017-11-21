@@ -20,7 +20,7 @@ namespace CamAlgorithms.PointsExtraction
         }
         private CellCode[,] _pixelCodes;
 
-        private List<Point2D<int>> _whiteBorder;
+        private List<IntPoint2> _whiteBorder;
         int _currentWhiteField;
         CalibrationShape _currentShape;
         
@@ -32,7 +32,7 @@ namespace CamAlgorithms.PointsExtraction
         {
             CalibShapes = new List<CalibrationShape>();
             
-            _whiteBorder = new List<Point2D<int>>();
+            _whiteBorder = new List<IntPoint2>();
             _image = image;
             _tBrightness = brightnessTreshold;
             _pixelCodes = new CellCode[_image.RowCount, _image.ColumnCount];
@@ -100,7 +100,7 @@ namespace CamAlgorithms.PointsExtraction
             else
             {
                 _pixelCodes[y, x] = CellCode.WhiteField;
-                _whiteBorder.Add(new Point2D<int>(y: y, x: x));
+                _whiteBorder.Add(new IntPoint2(y: y, x: x));
                 return false;
             }
         }

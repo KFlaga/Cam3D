@@ -120,11 +120,11 @@ namespace CamAlgorithms.Calibration
         {
             for(int line = 0; line < LinePoints.Count; ++line)
             {
-                UpdateAll(line);
+                UpdateLine(line);
             }
         }
 
-        public virtual void UpdateAll(int line)
+        public virtual void UpdateLine(int line)
         {
             UpdateLinePoints(line);
             ComputeSums(line);
@@ -521,12 +521,12 @@ namespace CamAlgorithms.Calibration
                 double k_p = Math.Abs(oldK) > float.Epsilon ? oldK * (1 + NumericalDerivativeStep) : NumericalDerivativeStep * 0.01;
 
                 DistortionModel.Coeffs[k] = k_n;
-                UpdateAll(l);
+                UpdateLine(l);
                 ComputeErrorVector(error_n);
                 Vector<double> error_n_line = error_n.SubVector(p0, LinePoints[l].Count);
 
                 DistortionModel.Coeffs[k] = k_p;
-                UpdateAll(l);
+                UpdateLine(l);
                 ComputeErrorVector(error_p);
                 Vector<double> error_p_line = error_p.SubVector(p0, LinePoints[l].Count);
 
@@ -543,7 +543,7 @@ namespace CamAlgorithms.Calibration
                 }
             }
 
-            UpdateAll(l);
+            UpdateLine(l);
         }
 
         // Computes d(ei)/d(P) for ith line numericaly

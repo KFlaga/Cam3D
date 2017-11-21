@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using CamCore;
-using Point2D = CamCore.Point2D<int>;
 using System.Diagnostics;
 
 namespace CamAlgorithms.ImageMatching
@@ -21,7 +20,7 @@ namespace CamAlgorithms.ImageMatching
             public bool Visited;
         }
 
-        List<List<Point2D>> _segments;
+        List<List<IntPoint2>> _segments;
 
         Cell[,] _cellMap;
 
@@ -45,7 +44,7 @@ namespace CamAlgorithms.ImageMatching
 
         public DisparityMap FilterMap(DisparityMap map)
         {
-            _segments = new List<List<Point2D<int>>>();
+            _segments = new List<List<IntPoint2>>();
             InitCellMap(map);
             FindCellSegments(map);
 
@@ -71,7 +70,7 @@ namespace CamAlgorithms.ImageMatching
             return map;
         }
 
-        private bool CheckIfSegmentIsTooSmall(List<Point2D<int>> segment)
+        private bool CheckIfSegmentIsTooSmall(List<IntPoint2> segment)
         {
             return segment.Count < MinSegmentSize;
         }
@@ -104,11 +103,11 @@ namespace CamAlgorithms.ImageMatching
             }
         }
 
-        private void InterpolateInvalidatedSegment(DisparityMap map, List<Point2D<int>> segment)
+        private void InterpolateInvalidatedSegment(DisparityMap map, List<IntPoint2> segment)
         {
             for(int p = 0; p < segment.Count; ++p)
             {
-                Point2D point = segment[p];
+                IntPoint2 point = segment[p];
                 // Omit pixels on border
                 if(point.X < 1 || point.Y < 1 || point.X >= map.ColumnCount - 1 || point.Y >= map.RowCount - 1)
                     continue;
@@ -136,8 +135,8 @@ namespace CamAlgorithms.ImageMatching
         }
 
 
-        Stack<Point2D> _pointStack = new Stack<Point2D>();
-        List<Point2D> _currentSegment;
+        Stack<IntPoint2> _pointStack = new Stack<IntPoint2>();
+        List<IntPoint2> _currentSegment;
 
         public void FloodFillSegments(DisparityMap map, int y, int x)
         {
@@ -145,14 +144,14 @@ namespace CamAlgorithms.ImageMatching
                 return;
 
             _cellMap[y, x].Visited = true;
-            _currentSegment = new List<Point2D>();
-            _currentSegment.Add(new Point2D(x, y));
+            _currentSegment = new List<IntPoint2>();
+            _currentSegment.Add(new IntPoint2(x, y));
             _cellMap[y, x].SegmentIndex = _segments.Count;
 
-            _pointStack.Push(new Point2D(x, y));
+            _pointStack.Push(new IntPoint2(x, y));
             while(_pointStack.Count > 0)
             {
-                Point2D point = _pointStack.Pop();
+                IntPoint2 point = _pointStack.Pop();
 
                 if(point.Y > 0)
                 {
@@ -183,8 +182,8 @@ namespace CamAlgorithms.ImageMatching
             {
                 _cellMap[newY, newX].Visited = true;
                 _cellMap[newY, newX].SegmentIndex = _segments.Count;
-                _currentSegment.Add(new Point2D(y: newY, x: newX));
-                _pointStack.Push(new Point2D(y: newY, x: newX));
+                _currentSegment.Add(new IntPoint2(y: newY, x: newX));
+                _pointStack.Push(new IntPoint2(y: newY, x: newX));
             }
         }
 

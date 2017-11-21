@@ -3,7 +3,7 @@ using System.Windows.Controls;
 
 namespace TriangulationModule
 {
-    public class Module : CamCore.Module
+    public class Module : CamCore.GuiModule
     {
         private UserControl _moduleControl = null;
 

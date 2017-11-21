@@ -31,7 +31,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CamDX.WPF", "CamDX.WPF\CamD
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CamAlgorithms", "CamAlgorithms\CamAlgorithms.csproj", "{3077792D-E973-4D3F-83C6-8553287A6604}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CamCapture", "CamCapture\CamCapture.csproj", "{4A7A81A4-29AD-4B02-A40A-A425BF3D133E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CaptureModule", "CamCapture\CaptureModule.csproj", "{4A7A81A4-29AD-4B02-A40A-A425BF3D133E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageOperationsModule", "CamImageOperationsModule\ImageOperationsModule.csproj", "{3D588C4A-259A-4E7D-A155-C2A96DF504C7}"
 EndProject

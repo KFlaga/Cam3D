@@ -180,7 +180,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ImageMatching\SeperateChannelCostComputer.cs" />
     <Compile Include="ImageProcessing\WatershedSegmentation.cs" />
-    <Compile Include="Triangulation\TriangulatedPoint.cs" />
     <Compile Include="Triangulation\TriangulationAlgorithm.cs" />
     <Compile Include="Triangulation\TwoPointsTriangulation.cs" />
   </ItemGroup>

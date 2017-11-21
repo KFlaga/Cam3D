@@ -4,7 +4,7 @@ using System.Windows.Controls;
 
 namespace Visualisation3dModule
 {
-    public class Module : CamCore.Module
+    public class Module : CamCore.GuiModule
     {
         private UserControl _moduleControl = null;
 

@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Timers;
 
-namespace CamCapture
+namespace CaptureModule
 {
     public class CameraEventArgs : EventArgs
     {

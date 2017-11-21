@@ -2,7 +2,7 @@
 
 namespace RectificationModule
 {
-    public class Module : CamCore.Module
+    public class Module : CamCore.GuiModule
     {
         private RectificationModeTabs _mainControl = null;
 

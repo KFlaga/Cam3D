@@ -2,7 +2,7 @@
 using System.Windows.Interop;
 using System.Windows.Media.Imaging;
 
-namespace CamCapture
+namespace CaptureModule
 {
     // Converts D3DSurfaces (as NativePointers) to BitmapSource
     // for image showing/processing

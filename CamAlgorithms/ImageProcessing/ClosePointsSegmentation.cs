@@ -1,7 +1,6 @@
 ﻿using CamCore;
 using System;
 using System.Collections.Generic;
-using Point2D = CamCore.Point2D<int>;
 using MathNet.Numerics.LinearAlgebra;
 
 namespace CamAlgorithms
@@ -9,7 +8,7 @@ namespace CamAlgorithms
     public class ClosePointsSegmentation : ImageSegmentation
     {
         public double MaxDiffSquared { get; set; }
-        Stack<Point2D> _pointStack = new Stack<Point2D>();
+        Stack<IntPoint2> _pointStack = new Stack<IntPoint2>();
         Segment _currentSegment;
 
         Matrix<double> _imageMatrix;
@@ -76,14 +75,14 @@ namespace CamAlgorithms
                 return;
 
             _currentSegment = new Segment();
-            _currentSegment.Pixels.Add(new Point2D(x, y));
+            _currentSegment.Pixels.Add(new IntPoint2(x, y));
             _currentSegment.SegmentIndex = Segments.Count;
             SegmentAssignments[y, x] = _currentSegment.SegmentIndex;
 
-            _pointStack.Push(new Point2D(x, y));
+            _pointStack.Push(new IntPoint2(x, y));
             while(_pointStack.Count > 0)
             {
-                Point2D point = _pointStack.Pop();
+                IntPoint2 point = _pointStack.Pop();
 
                 if(point.Y > 0)
                 {
@@ -118,8 +117,8 @@ namespace CamAlgorithms
                 Math.Abs(GetDisparity(oldY, oldX) - GetDisparity(newY, newX)) <= MaxDiffSquared)
             {
                 SegmentAssignments[newY, newX] = _currentSegment.SegmentIndex;
-                _currentSegment.Pixels.Add(new Point2D(y: newY, x: newX));
-                _pointStack.Push(new Point2D(y: newY, x: newX));
+                _currentSegment.Pixels.Add(new IntPoint2(y: newY, x: newX));
+                _pointStack.Push(new IntPoint2(y: newY, x: newX));
             }
         }
 
@@ -134,8 +133,8 @@ namespace CamAlgorithms
                 Math.Abs(GetGrayValue(oldY, oldX) - GetGrayValue(newY, newX)) <= MaxDiffSquared)
             {
                 SegmentAssignments[newY, newX] = _currentSegment.SegmentIndex;
-                _currentSegment.Pixels.Add(new Point2D(y: newY, x: newX));
-                _pointStack.Push(new Point2D(y: newY, x: newX));
+                _currentSegment.Pixels.Add(new IntPoint2(y: newY, x: newX));
+                _pointStack.Push(new IntPoint2(y: newY, x: newX));
             }
         }
         private double GetColorValue(int y, int x, RGBChannel channel)
@@ -151,8 +150,8 @@ namespace CamAlgorithms
                 Math.Abs(GetColorValue(oldY, oldX, RGBChannel.Blue) - GetColorValue(newY, newX, RGBChannel.Blue)) <= MaxDiffSquared)
             {
                 SegmentAssignments[newY, newX] = _currentSegment.SegmentIndex;
-                _currentSegment.Pixels.Add(new Point2D(y: newY, x: newX));
-                _pointStack.Push(new Point2D(y: newY, x: newX));
+                _currentSegment.Pixels.Add(new IntPoint2(y: newY, x: newX));
+                _pointStack.Push(new IntPoint2(y: newY, x: newX));
             }
         }
 

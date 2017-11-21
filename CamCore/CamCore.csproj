@@ -78,7 +78,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Alg\IControllableAlgorithm.cs" />
+    <Compile Include="ModuleInterfaces\IAlgorithmUi.cs" />
+    <Compile Include="Data\Point2.cs" />
+    <Compile Include="Data\TriangulatedPoint.cs" />
     <Compile Include="Images\BorderFunction.cs" />
     <Compile Include="Images\ColorImage.cs" />
     <Compile Include="Images\GrayScaleImage.cs" />
@@ -88,33 +90,29 @@
     <Compile Include="Images\MaskedImage.cs" />
     <Compile Include="Misc\ListExtensions.cs" />
     <Compile Include="Misc\DictionaryExtensions.cs" />
-    <Compile Include="Alg\Disparity.cs" />
-    <Compile Include="Alg\DisparityMap.cs" />
+    <Compile Include="Data\Disparity.cs" />
+    <Compile Include="Data\DisparityMap.cs" />
     <Compile Include="Misc\FloatExtensions.cs" />
-    <Compile Include="Alg\Math.cs" />
-    <Compile Include="Alg\Point2D.cs" />
-    <Compile Include="Alg\RotationConverter.cs" />
-    <Compile Include="Alg\VectorTuples.cs" />
-    <Compile Include="Alg\Vector3.cs" />
+    <Compile Include="Misc\Math.cs" />
+    <Compile Include="Misc\RotationConverter.cs" />
+    <Compile Include="Data\Vector2Pair.cs" />
+    <Compile Include="Data\Vector3.cs" />
     <Compile Include="Misc\SideIndex.cs" />
     <Compile Include="Misc\VectorExtensions.cs" />
-    <Compile Include="Alg\PointNormalization.cs" />
+    <Compile Include="Misc\PointNormalization.cs" />
     <Compile Include="Converters\DoubleToStringConverter.cs" />
     <Compile Include="Misc\FileOperations.cs" />
     <Compile Include="Converters\IntToStringConverter.cs" />
     <Compile Include="InterModularConnection.cs" />
     <Compile Include="Misc\MatrixExtensions.cs" />
-    <Compile Include="Module.cs" />
-    <Compile Include="ModuleInfo.cs" />
-    <Compile Include="ModuleLoader.cs" />
-    <Compile Include="Alg\NoiseGenerators.cs" />
-    <Compile Include="Alg\Vector2.cs" />
-    <Compile Include="Alg\Point3D.cs" />
-    <Compile Include="Parametrizable\AlgorithmParameter.cs" />
-    <Compile Include="Parametrizable\FinalParameters.cs" />
-    <Compile Include="Parametrizable\INamed.cs" />
-    <Compile Include="Parametrizable\IParametrizable.cs" />
-    <Compile Include="Parametrizable\ParamterInput.cs" />
+    <Compile Include="ModuleInterfaces\GuiModule.cs" />
+    <Compile Include="Misc\NoiseGenerators.cs" />
+    <Compile Include="Data\Vector2.cs" />
+    <Compile Include="ModuleInterfaces\AlgorithmParameter.cs" />
+    <Compile Include="ModuleInterfaces\FinalParameters.cs" />
+    <Compile Include="ModuleInterfaces\INamed.cs" />
+    <Compile Include="ModuleInterfaces\IParametrizable.cs" />
+    <Compile Include="ModuleInterfaces\ParamterInput.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

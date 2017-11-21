@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 using System.Windows.Media.Imaging;
 using System.Threading.Tasks;
 
-namespace CamCapture
+namespace CaptureModule
 {
     public enum CaptureStates
     {

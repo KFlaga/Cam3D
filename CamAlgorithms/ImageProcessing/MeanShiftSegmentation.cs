@@ -2,7 +2,6 @@
 using MathNet.Numerics.LinearAlgebra;
 using System;
 using System.Collections.Generic;
-using Point2D = CamCore.Point2D<int>;
 
 namespace CamAlgorithms
 {
@@ -161,7 +160,7 @@ namespace CamAlgorithms
             return m;
         }
 
-        Stack<Point2D> _pointStack = new Stack<Point2D>();
+        Stack<IntPoint2> _pointStack = new Stack<IntPoint2>();
         Segment_Gray _currentSegment_Gray;
 
         public void FloodFillSegments_Gray(int y, int x)
@@ -174,15 +173,15 @@ namespace CamAlgorithms
             {
                 Value = _values[y, x],
                 SegmentIndex = Segments.Count,
-                Pixels = new List<Point2D>()
+                Pixels = new List<IntPoint2>()
             };
-            _currentSegment_Gray.Pixels.Add(new Point2D(x, y));
+            _currentSegment_Gray.Pixels.Add(new IntPoint2(x, y));
             SegmentAssignments[y, x] = _currentSegment_Gray.SegmentIndex;
 
-            _pointStack.Push(new Point2D(x, y));
+            _pointStack.Push(new IntPoint2(x, y));
             while(_pointStack.Count > 0)
             {
-                Point2D point = _pointStack.Pop();
+                IntPoint2 point = _pointStack.Pop();
 
                 if(point.Y > Radius)
                 {
@@ -217,8 +216,8 @@ namespace CamAlgorithms
                 _currentSegment_Gray.Value = (_currentSegment_Gray.Value * _currentSegment_Gray.Pixels.Count + _values[newY, newX]) /
                     (_currentSegment_Gray.Pixels.Count + 1);
 
-                _currentSegment_Gray.Pixels.Add(new Point2D(y: newY, x: newX));
-                _pointStack.Push(new Point2D(y: newY, x: newX));
+                _currentSegment_Gray.Pixels.Add(new IntPoint2(y: newY, x: newX));
+                _pointStack.Push(new IntPoint2(y: newY, x: newX));
             }
         }
 
@@ -336,15 +335,15 @@ namespace CamAlgorithms
                 Green = _green[y, x],
                 Blue = _blue[y, x],
                 SegmentIndex = Segments.Count,
-                Pixels = new List<Point2D>()
+                Pixels = new List<IntPoint2>()
             };
-            _currentSegment_Color.Pixels.Add(new Point2D(x, y));
+            _currentSegment_Color.Pixels.Add(new IntPoint2(x, y));
             SegmentAssignments[y, x] = _currentSegment_Color.SegmentIndex;
 
-            _pointStack.Push(new Point2D(x, y));
+            _pointStack.Push(new IntPoint2(x, y));
             while(_pointStack.Count > 0)
             {
-                Point2D point = _pointStack.Pop();
+                IntPoint2 point = _pointStack.Pop();
 
                 if(point.Y > Radius)
                 {
@@ -383,8 +382,8 @@ namespace CamAlgorithms
                 _currentSegment_Color.Green = (_currentSegment_Color.Green * _currentSegment_Color.Pixels.Count + _green[newY, newX]) * N1;
                 _currentSegment_Color.Blue = (_currentSegment_Color.Blue * _currentSegment_Color.Pixels.Count + _blue[newY, newX]) * N1;
 
-                _currentSegment_Color.Pixels.Add(new Point2D(y: newY, x: newX));
-                _pointStack.Push(new Point2D(y: newY, x: newX));
+                _currentSegment_Color.Pixels.Add(new IntPoint2(y: newY, x: newX));
+                _pointStack.Push(new IntPoint2(y: newY, x: newX));
             }
         }
         #endregion

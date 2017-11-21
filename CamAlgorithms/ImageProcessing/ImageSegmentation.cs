@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using MathNet.Numerics.LinearAlgebra;
 using CamCore;
-using Point2D = CamCore.Point2D<int>;
 using System.Diagnostics;
 
 namespace CamAlgorithms
@@ -12,7 +11,7 @@ namespace CamAlgorithms
         public class Segment
         {
             public int SegmentIndex { get; set; } = -1;
-            public List<Point2D> Pixels { get; set; } = new List<Point2D>();
+            public List<IntPoint2> Pixels { get; set; } = new List<IntPoint2>();
         }
 
         public class Segment_Gray : Segment

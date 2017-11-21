@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace CamCapture
+namespace CaptureModule
 {
     // List of free cameras to choose. Updates itself when camera is plugged/unplugged
     // or reserved/freed.

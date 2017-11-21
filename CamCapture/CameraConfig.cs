@@ -1,7 +1,7 @@
 ﻿using DirectShowLib;
 using System;
 
-namespace CamCapture
+namespace CaptureModule
 {
     public class CameraConfig
     {

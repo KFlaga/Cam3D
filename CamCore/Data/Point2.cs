@@ -1,28 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 using System.Xml.Serialization;
 
 namespace CamCore
 {
     [DebuggerDisplay("X = {X}, Y = {Y}")]
-    public struct Point2D<T> where T : struct
+    public struct IntPoint2
     {
         [XmlAttribute("X")]
-        public T X { get; set; }
+        public int X { get; set; }
         [XmlAttribute("Y")]
-        public T Y { get; set; }
+        public int Y { get; set; }
 
-        public Point2D(T x = default(T), T y = default(T))
+        public IntPoint2(int x = 0, int y = 0)
         {
             X = x;
             Y = y;
         }
 
-        public Point2D(Point2D<T> other)
+        public IntPoint2(IntPoint2 other)
         {
             X = other.X;
             Y = other.Y;

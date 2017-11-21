@@ -2,7 +2,7 @@
 
 namespace CalibrationModule
 {
-    public class Module : CamCore.Module
+    public class Module : CamCore.GuiModule
     {
         private CalibrationModeTabs _calibControl = null;
 

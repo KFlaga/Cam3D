@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-namespace CamCapture
+namespace CaptureModule
 {
     /// <summary>
     /// Control used to select cameras for further video capture

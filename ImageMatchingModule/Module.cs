@@ -2,7 +2,7 @@
 
 namespace ImageMatchingModule
 {
-    public class Module : CamCore.Module
+    public class Module : CamCore.GuiModule
     {
         private ImageMatchingModeTabs _matchingControl = null;
 

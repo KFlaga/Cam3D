@@ -1,9 +1,8 @@
-﻿using CamCore;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 
-namespace CamCapture
+namespace CaptureModule
 {
-    public class Module : CamCore.Module
+    public class Module : CamCore.GuiModule
     {
         private CameraCaptureTabs _captureTabs = null;
 

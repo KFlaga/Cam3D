@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace CamCapture
+namespace CaptureModule
 {
     // User control containg 2 comboboxes to choose used camera device and one
     // of availiable configuration. Uses FreeCameraCollection for storing cameras,

@@ -372,226 +372,51 @@ namespace CamAlgorithms
             _Hs_R = ComputeShearingMatrix(imgWidth, imgHeight, _Hr_R * _Hp_R);
         }
 
-        #region SHEARING MATRIX
-
-        public Matrix<double> ComputeShearingMatrix_My(int imgWidth, int imgHeight, Matrix<double> H)
+        public Matrix<double> ComputeShearingMatrix(int imgWidth, int imgHeight, Matrix<double> H)
         {
-            // Transform corner points
-            _shTopLeft = H * new DenseVector(new double[3] { 0.0, 0.0, 1.0 }); ;
-            _shTopRight = H * new DenseVector(new double[3] { imgWidth - 1, 0.0, 1.0 }); ;
-            _shBotLeft = H * new DenseVector(new double[3] { 0.0, imgHeight - 1, 1.0 }); ;
-            _shBotRight = H * new DenseVector(new double[3] { imgWidth - 1, imgHeight - 1, 1.0 }); ;
+            // 4 points : middles of image edges
+            Vector<double> a = new DenseVector(new double[] { (imgWidth - 1) * 0.5, 0.0, 1.0 });
+            Vector<double> b = new DenseVector(new double[] { imgWidth - 1, (imgHeight - 1) * 0.5, 1.0 });
+            Vector<double> c = new DenseVector(new double[] { (imgWidth - 1) * 0.5, imgHeight - 1, 1.0 });
+            Vector<double> d = new DenseVector(new double[] { 0.0, (imgHeight - 1) * 0.5, 1.0 });
+            // Transform those points
+            Vector<double> ar = H * a;
+            Vector<double> br = H * b;
+            Vector<double> cr = H * c;
+            Vector<double> dr = H * d;
             // Scale so that weights are 1
-            _shTopLeft.DivideThis(_shTopLeft.At(2));
-            _shTopRight.DivideThis(_shTopRight.At(2));
-            _shBotLeft.DivideThis(_shBotLeft.At(2));
-            _shBotRight.DivideThis(_shBotRight.At(2));
+            ar[0] = ar[0] / ar[2];
+            ar[1] = ar[1] / ar[2];
+            br[0] = br[0] / br[2];
+            br[1] = br[1] / br[2];
+            cr[0] = cr[0] / cr[2];
+            cr[1] = cr[1] / cr[2];
+            dr[0] = dr[0] / dr[2];
+            dr[1] = dr[1] / dr[2];
+            // 2 vectors corresponding to lines joining opposite ends of above points
+            var x = br - dr;
+            var y = cr - ar;
 
-            double s1 = 1.0, s2 = 0.0;
+            double h = imgHeight;
+            double w = imgWidth;
 
-            MultivariateFunctionMinimalisation miniAlg = new MultivariateFunctionMinimalisation();
-            miniAlg.DoComputeDerivativesNumerically = true;
-            miniAlg.Function = GetErrorFunction_NewS_Beta;
-            miniAlg.IterationInit = UpdateShearingParams_Beta;
-            miniAlg.MaximumIterations = 100;
-            miniAlg.NumericalDerivativeStep = 1e-3;
-            miniAlg.UseBFGSMethod = false;
-            miniAlg.DoComputeDerivativesNumerically = true;
-            miniAlg.InitialParameters = new DenseVector(new double[2] { s1, s2 });
-            miniAlg.Process();
+            // Result for Hs to : preserve x, y perpendicularity and their aspect ratio
+            double s1 = (h * h * x[1] * x[1] + w * w * y[1] * y[1]) /
+                (h * w * (x[1] * y[0] - x[0] * y[1]));
+            double s2 = (h * h * x[1] * x[0] + w * w * y[1] * y[0]) /
+                (h * w * (x[0] * y[1] - x[1] * y[0]));
 
-            s1 = miniAlg.MinimalParameters.At(0);
-            s2 = miniAlg.MinimalParameters.At(1);
+            if(s1 < 0.0) // ??
+            {
+                s1 = -s1;
+                s2 = -s2;
+            }
 
             var Hs = DenseMatrix.CreateIdentity(3);
             Hs[0, 0] = s1;
             Hs[0, 1] = s2;
-
-            _shTopLeft = Hs * _shTopLeft;
-            _shTopRight = Hs * _shTopRight;
-            _shBotLeft = Hs * _shBotLeft;
-            _shBotRight = Hs * _shBotRight;
-
-            double wt = (_shTopLeft - _shTopRight).L2Norm();
-            double wb = (_shBotLeft - _shBotRight).L2Norm();
-            double hl = (_shTopLeft - _shBotLeft).L2Norm();
-            double hr = (_shTopRight - _shBotRight).L2Norm();
-
             return Hs;
         }
-
-        // Returns ||p1-p2||^2 where pi is Hs * [x,y,1], Hs is shearing martix with first row [s1,s2,0] 
-        public double ShearLen(double s1, double s2, double x1, double y1, double x2, double y2)
-        {
-            double X = s1 * (x1 - x2) + s2 * (y1 - y2);
-            return X * X + (y1 - y2) * (y1 - y2);
-        }
-
-        public double ShearLen_DerS1(double s1, double s2, double x1, double y1, double x2, double y2)
-        {
-            return 2.0 * (x1 - x2) * (s1 * (x1 - x2) + s2 * (y1 - y2));
-        }
-
-        public double ShearLen_DerS2(double s1, double s2, double x1, double y1, double x2, double y2)
-        {
-            return 2.0 * (y1 - y2) * (s1 * (x1 - x2) + s2 * (y1 - y2));
-        }
-
-        // Computes deformation error alfa : (slen1/slen2 - 1)^2
-        public double ShearLenRatio_Alfa(double slen1, double slen2)
-        {
-            double r = slen1 / slen2;
-            return (r - 1) * (r - 1);
-        }
-
-        // Computes deformation error alfa : slen1/slen2 + slen2/slen1
-        public double ShearLenRatio_Beta(double slen1, double slen2)
-        {
-            return slen1 / slen2 + slen2 / slen1;
-        }
-
-        // Computes da = d((slen1/slen2 - 1)^2) / d(s)
-        public double ShearLenRatio_Alfa_Derivative(double slen1, double slen2, double dslen1, double dslen2)
-        {
-            return 2.0 * (slen2 - slen1) * (slen1 * dslen2 - slen2 * dslen1) / (slen2 * slen2 * slen2);
-        }
-
-        // Computes db = d(slen1/slen2 + slen2/slen1) / d(s)
-        public double ShearLenRatio_Beta_Derivative(double slen1, double slen2, double dslen1, double dslen2)
-        {
-            return 2.0 * (slen1 - slen2) * (slen1 * slen1 * dslen2 + slen2 * slen2 * dslen1) / (slen1 * slen1 * slen2 * slen2);
-        }
-
-        Vector<double> _shTopLeft;
-        Vector<double> _shTopRight;
-        Vector<double> _shBotLeft;
-        Vector<double> _shBotRight;
-        double _widthTop, _widthBot;
-        double _heightLeft, _heightRight;
-        double _ratioW, _ratioH;
-        double _dwtS1, _dwtS2, _dwbS1, _dwbS2;
-        double _dhlS1, _dhlS2, _dhrS1, _dhrS2;
-        double _drWS1, _drWS2, _drHS1, _drHS2;
-        double _error, _derrS1, _derrS2;
-
-        public void UpdateShearingParams_Alfa(Vector<double> s)
-        {
-            UpdateShearingLengths(s);
-            UpdateShearingErrorRatios_Alfa(s);
-            UpdateShearingErrors(s);
-        }
-
-        public void UpdateShearingParams_Beta(Vector<double> s)
-        {
-            UpdateShearingLengths(s);
-            UpdateShearingErrorRatios_Beta(s);
-            UpdateShearingErrors(s);
-        }
-
-        public void UpdateShearingLengths(Vector<double> s)
-        {
-            _widthTop = ShearLen(s.At(0), s.At(1),
-                _shTopLeft.At(0), _shTopLeft.At(1), _shTopRight.At(0), _shTopRight.At(1));
-            _widthBot = ShearLen(s.At(0), s.At(1),
-                _shBotLeft.At(0), _shBotLeft.At(1), _shBotRight.At(0), _shBotRight.At(1));
-            _heightLeft = ShearLen(s.At(0), s.At(1),
-                _shTopLeft.At(0), _shTopLeft.At(1), _shBotLeft.At(0), _shBotLeft.At(1));
-            _heightRight = ShearLen(s.At(0), s.At(1),
-                _shTopRight.At(0), _shTopRight.At(1), _shBotRight.At(0), _shBotRight.At(1));
-
-            _dwtS1 = ShearLen_DerS1(s.At(0), s.At(1),
-                _shTopLeft.At(0), _shTopLeft.At(1), _shTopRight.At(0), _shTopRight.At(1));
-            _dwbS1 = ShearLen_DerS1(s.At(0), s.At(1),
-                _shBotLeft.At(0), _shBotLeft.At(1), _shBotRight.At(0), _shBotRight.At(1));
-            _dhlS1 = ShearLen_DerS1(s.At(0), s.At(1),
-                _shTopLeft.At(0), _shTopLeft.At(1), _shBotLeft.At(0), _shBotLeft.At(1));
-            _dhrS1 = ShearLen_DerS1(s.At(0), s.At(1),
-                _shTopRight.At(0), _shTopRight.At(1), _shBotRight.At(0), _shBotRight.At(1));
-            _dwtS2 = ShearLen_DerS2(s.At(0), s.At(1),
-                _shTopLeft.At(0), _shTopLeft.At(1), _shTopRight.At(0), _shTopRight.At(1));
-            _dwbS2 = ShearLen_DerS2(s.At(0), s.At(1),
-                _shBotLeft.At(0), _shBotLeft.At(1), _shBotRight.At(0), _shBotRight.At(1));
-            _dhlS2 = ShearLen_DerS2(s.At(0), s.At(1),
-                _shTopLeft.At(0), _shTopLeft.At(1), _shBotLeft.At(0), _shBotLeft.At(1));
-            _dhrS2 = ShearLen_DerS2(s.At(0), s.At(1),
-                _shTopRight.At(0), _shTopRight.At(1), _shBotRight.At(0), _shBotRight.At(1));
-        }
-
-        public void UpdateShearingErrorRatios_Alfa(Vector<double> s)
-        {
-            _ratioH = ShearLenRatio_Alfa(_widthTop, _widthBot);
-            _ratioW = ShearLenRatio_Alfa(_heightLeft, _heightRight);
-            _drWS1 = ShearLenRatio_Alfa_Derivative(_widthTop, _widthBot, _dwtS1, _dwbS1);
-            _drWS2 = ShearLenRatio_Alfa_Derivative(_widthTop, _widthBot, _dwtS2, _dwbS2);
-            _drHS1 = ShearLenRatio_Alfa_Derivative(_heightLeft, _heightRight, _dhlS1, _dhrS1);
-            _drHS2 = ShearLenRatio_Alfa_Derivative(_heightLeft, _heightRight, _dhlS2, _dhrS2);
-        }
-
-        public void UpdateShearingErrorRatios_Beta(Vector<double> s)
-        {
-            _ratioH = ShearLenRatio_Beta(_widthTop, _widthBot);
-            _ratioW = ShearLenRatio_Beta(_heightLeft, _heightRight);
-            _drWS1 = ShearLenRatio_Beta_Derivative(_widthTop, _widthBot, _dwtS1, _dwbS1);
-            _drWS2 = ShearLenRatio_Beta_Derivative(_widthTop, _widthBot, _dwtS2, _dwbS2);
-            _drHS1 = ShearLenRatio_Beta_Derivative(_heightLeft, _heightRight, _dhlS1, _dhrS1);
-            _drHS2 = ShearLenRatio_Beta_Derivative(_heightLeft, _heightRight, _dhlS2, _dhrS2);
-        }
-
-        public void UpdateShearingErrors(Vector<double> s)
-        {
-            _error = _ratioW + _ratioH;
-            _derrS1 = _drWS1 + _drHS1;
-            _derrS2 = _drWS2 + _drHS2;
-        }
-
-        public double GetErrorFunction(Vector<double> s)
-        {
-            return _error;
-        }
-
-        public Vector<double> GetErrorJacobian(Vector<double> s)
-        {
-            return new DenseVector(new double[2] { _derrS1, _derrS2 });
-        }
-
-        // Doesnt use precomputed values (used in numerical drivatives)
-        public double GetErrorFunction_NewS_Alfa(Vector<double> s)
-        {
-            double widthTop = ShearLen(s.At(0), s.At(1),
-                _shTopLeft.At(0), _shTopLeft.At(1), _shTopRight.At(0), _shTopRight.At(1));
-            double widthBot = ShearLen(s.At(0), s.At(1),
-                _shBotLeft.At(0), _shBotLeft.At(1), _shBotRight.At(0), _shBotRight.At(1));
-            double heightLeft = ShearLen(s.At(0), s.At(1),
-                _shTopLeft.At(0), _shTopLeft.At(1), _shBotLeft.At(0), _shBotLeft.At(1));
-            double heightRight = ShearLen(s.At(0), s.At(1),
-                _shTopRight.At(0), _shTopRight.At(1), _shBotRight.At(0), _shBotRight.At(1));
-
-            double ratioH = ShearLenRatio_Alfa(widthTop, widthBot);
-            double ratioW = ShearLenRatio_Alfa(heightLeft, heightRight);
-
-            return ratioW + ratioH;
-        }
-
-        // Doesnt use precomputed values (used in numerical drivatives)
-        public double GetErrorFunction_NewS_Beta(Vector<double> s)
-        {
-            double widthTop = ShearLen(s.At(0), s.At(1),
-                _shTopLeft.At(0), _shTopLeft.At(1), _shTopRight.At(0), _shTopRight.At(1));
-            double widthBot = ShearLen(s.At(0), s.At(1),
-                _shBotLeft.At(0), _shBotLeft.At(1), _shBotRight.At(0), _shBotRight.At(1));
-            double heightLeft = ShearLen(s.At(0), s.At(1),
-                _shTopLeft.At(0), _shTopLeft.At(1), _shBotLeft.At(0), _shBotLeft.At(1));
-            double heightRight = ShearLen(s.At(0), s.At(1),
-                _shTopRight.At(0), _shTopRight.At(1), _shBotRight.At(0), _shBotRight.At(1));
-
-            double ratioH = ShearLenRatio_Beta(widthTop, widthBot);
-            double ratioW = ShearLenRatio_Beta(heightLeft, heightRight);
-
-            return ratioW + ratioH;
-        }
-
-        #endregion
-
 
         public void ComputeScalingMatrices(int imgWidth, int imgHeight)
         {
@@ -684,52 +509,6 @@ namespace CamAlgorithms
             bl_L.DivideThis(bl_L.At(2));
             br_L = H_L * new DenseVector(new double[3] { imgWidth - 1, imgHeight - 1, 1.0 });
             br_L.DivideThis(br_L.At(2));
-        }
-
-        public Matrix<double> ComputeShearingMatrix(int imgWidth, int imgHeight, Matrix<double> H)
-        {
-            // 4 points : middles of image edges
-            Vector<double> a = new DenseVector(new double[] { (imgWidth - 1) * 0.5, 0.0, 1.0 });
-            Vector<double> b = new DenseVector(new double[] { imgWidth - 1, (imgHeight - 1) * 0.5, 1.0 });
-            Vector<double> c = new DenseVector(new double[] { (imgWidth - 1) * 0.5, imgHeight - 1, 1.0 });
-            Vector<double> d = new DenseVector(new double[] { 0.0, (imgHeight - 1) * 0.5, 1.0 });
-            // Transform those points
-            Vector<double> ar = H * a;
-            Vector<double> br = H * b;
-            Vector<double> cr = H * c;
-            Vector<double> dr = H * d;
-            // Scale so that weights are 1
-            ar[0] = ar[0] / ar[2];
-            ar[1] = ar[1] / ar[2];
-            br[0] = br[0] / br[2];
-            br[1] = br[1] / br[2];
-            cr[0] = cr[0] / cr[2];
-            cr[1] = cr[1] / cr[2];
-            dr[0] = dr[0] / dr[2];
-            dr[1] = dr[1] / dr[2];
-            // 2 vectors corresponding to lines joining opposite ends of above points
-            var x = br - dr;
-            var y = cr - ar;
-
-            double h = imgHeight;
-            double w = imgWidth;
-
-            // Result for Hs to : preserve x, y perpendicularity and their aspect ratio
-            double s1 = (h * h * x[1] * x[1] + w * w * y[1] * y[1]) /
-                (h * w * (x[1] * y[0] - x[0] * y[1]));
-            double s2 = (h * h * x[1] * x[0] + w * w * y[1] * y[0]) /
-                (h * w * (x[0] * y[1] - x[1] * y[0]));
-
-            if(s1 < 0.0) // ??
-            {
-                s1 = -s1;
-                s2 = -s2;
-            }
-
-            var Hs = DenseMatrix.CreateIdentity(3);
-            Hs[0, 0] = s1;
-            Hs[0, 1] = s2;
-            return Hs;
         }
     }
 }

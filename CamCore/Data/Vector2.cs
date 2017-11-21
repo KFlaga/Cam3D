@@ -69,26 +69,6 @@ namespace CamCore
             return new DenseVector(new double[3] { X, Y, 1.0 });
         }
 
-        public static Vector2 operator +(Point2D<double> p1, Vector2 p2)
-        {
-            return new Vector2(p1.X + p2.X, p1.Y + p2.Y);
-        }
-
-        public static Vector2 operator +(Vector2 p1, Point2D<double> p2)
-        {
-            return new Vector2(p1.X + p2.X, p1.Y + p2.Y);
-        }
-
-        public static Vector2 operator -(Point2D<double> p1, Vector2 p2)
-        {
-            return new Vector2(p1.X - p2.X, p1.Y - p2.Y);
-        }
-
-        public static Vector2 operator -(Vector2 p1, Point2D<double> p2)
-        {
-            return new Vector2(p1.X - p2.X, p1.Y - p2.Y);
-        }
-
         public static Vector2 operator +(Vector2 p1, Vector2 p2)
         {
             return new Vector2(p1.X + p2.X, p1.Y + p2.Y);
@@ -277,26 +257,6 @@ namespace CamCore
         {
             X = x;
             Y = y;
-        }
-
-        public static IntVector2 operator +(Point2D<int> p1, IntVector2 p2)
-        {
-            return new IntVector2(p1.X + p2.X, p1.Y + p2.Y);
-        }
-
-        public static IntVector2 operator +(IntVector2 p1, Point2D<int> p2)
-        {
-            return new IntVector2(p1.X + p2.X, p1.Y + p2.Y);
-        }
-
-        public static IntVector2 operator -(Point2D<int> p1, IntVector2 p2)
-        {
-            return new IntVector2(p1.X - p2.X, p1.Y - p2.Y);
-        }
-
-        public static IntVector2 operator -(IntVector2 p1, Point2D<int> p2)
-        {
-            return new IntVector2(p1.X - p2.X, p1.Y - p2.Y);
         }
 
         public static IntVector2 operator +(IntVector2 p1, IntVector2 p2)

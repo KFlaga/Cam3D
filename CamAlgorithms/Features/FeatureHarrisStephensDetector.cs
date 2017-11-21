@@ -3,7 +3,7 @@ using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
 using System;
 using System.Collections.Generic;
-using Point2D = CamCore.Point2D<int>;
+using IntPoint2 = CamCore.IntPoint2;
 
 namespace CamAlgorithms
 {
@@ -151,19 +151,19 @@ namespace CamAlgorithms
             }
         }
         
-        Stack<Point2D> _pointStack;
+        Stack<IntPoint2> _pointStack;
         double _t_seg = 0.1;
         public void FloodFindMaximum(int y, int x)
         {
-            _pointStack = new Stack<Point2D<int>>();
-            _pointStack.Push(new Point2D(x, y));
+            _pointStack = new Stack<IntPoint2>();
+            _pointStack.Push(new IntPoint2(x, y));
 
-            Point2D maxp = new Point2D(y, x);
+            IntPoint2 maxp = new IntPoint2(y, x);
             double max = FeatureMap[y, x];
 
             while(_pointStack.Count > 0)
             {
-                Point2D point = _pointStack.Pop();
+                IntPoint2 point = _pointStack.Pop();
                 double f = FeatureMap[point.Y, point.X];
                 if(f >= max)
                 {
@@ -176,22 +176,22 @@ namespace CamAlgorithms
                 if(point.Y > 0 && 
                     FeatureMap[point.Y - 1, point.X] > 0.0)
                 {
-                    _pointStack.Push(new Point2D(y: point.Y - 1, x: point.X));
+                    _pointStack.Push(new IntPoint2(y: point.Y - 1, x: point.X));
                 }
                 if(point.Y + 1 < Image.RowCount &&
                     FeatureMap[point.Y + 1, point.X] > 0.0)
                 {
-                    _pointStack.Push(new Point2D(y: point.Y + 1, x: point.X));
+                    _pointStack.Push(new IntPoint2(y: point.Y + 1, x: point.X));
                 }
                 if(point.X > 0 &&
                     FeatureMap[point.Y, point.X - 1] > 0.0)
                 {
-                    _pointStack.Push(new Point2D(y: point.Y, x: point.X - 1));
+                    _pointStack.Push(new IntPoint2(y: point.Y, x: point.X - 1));
                 }
                 if(point.X + 1 < Image.ColumnCount &&
                     FeatureMap[point.Y, point.X + 1] > 0.0)
                 {
-                    _pointStack.Push(new Point2D(y: point.Y, x: point.X + 1));
+                    _pointStack.Push(new IntPoint2(y: point.Y, x: point.X + 1));
                 }
             }
         }

@@ -137,7 +137,7 @@ namespace CamAlgorithms
 
             double ratioErr = ComputeEdgesRatioError(_leftCorners, _rightCorners);
 
-            // TODO: add some Fundamental error (recitifed should have Fi or check H_r.Transpose() * Fi * H_l == Cameras.Fundamental)
+            // TODO: add some Fundamental error (recitifed should have Fi or check H_r.Transpose() * Fi * H_l == Cameras.Fundamental), maybe reprojection error
 
             return 1.0 / (yErr + perpErr + ratioErr);
         }
@@ -230,25 +230,6 @@ namespace CamAlgorithms
         public virtual void WriteXml(XmlWriter writer)
         {
             XmlSerialisation.WriteXmlNonIgnoredProperties(writer, this);
-            //writer.WriteElementString("ImageHeight", ImageHeight.ToString());
-            //writer.WriteElementString("ImageWidth", ImageWidth.ToString());
-            //writer.WriteElementString("Quality", Quality.ToString());
-
-            //writer.WriteStartElement("RectificationLeft");
-            //new MatrixXmlSerializer(RectificationLeft).WriteXml(writer);
-            //writer.WriteEndElement();
-
-            //writer.WriteStartElement("RectificationLeft_Inverse");
-            //new MatrixXmlSerializer(RectificationLeft_Inverse).WriteXml(writer);
-            //writer.WriteEndElement();
-
-            //writer.WriteStartElement("RectificationRight");
-            //new MatrixXmlSerializer(RectificationRight).WriteXml(writer);
-            //writer.WriteEndElement();
-
-            //writer.WriteStartElement("RectificationRight_Inverse");
-            //new MatrixXmlSerializer(RectificationRight_Inverse).WriteXml(writer);
-            //writer.WriteEndElement();
         }
     }
 }

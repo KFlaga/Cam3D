@@ -5,7 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 
-namespace CamCapture
+namespace CaptureModule
 {
     /// <summary>
     /// Interaction logic for CameraCaptureTabs.xaml
