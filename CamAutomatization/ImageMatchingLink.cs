@@ -32,14 +32,6 @@ namespace CamAutomatization
 
     public class ImageMatchingLink : ILink
     {
-        public LinkType LinkType
-        {
-            get
-            {
-                return LinkType.ImageMatching;
-            }
-        }
-
         bool _storedDataOnDisc = true;
         public bool StoreDataOnDisc
         {

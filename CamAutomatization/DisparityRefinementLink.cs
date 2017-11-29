@@ -15,14 +15,6 @@ namespace CamAutomatization
 
     public class DisparityRefinementLink : ILink
     {
-        public LinkType LinkType
-        {
-            get
-            {
-                return LinkType.DisparityRefinement;
-            }
-        }
-
         bool _storedDataOnDisc = true;
         public bool StoreDataOnDisc
         {

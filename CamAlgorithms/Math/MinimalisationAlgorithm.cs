@@ -1,4 +1,5 @@
 ﻿using MathNet.Numerics.LinearAlgebra;
+using MathNet.Numerics.LinearAlgebra.Double;
 
 namespace CamAlgorithms
 {
@@ -12,6 +13,7 @@ namespace CamAlgorithms
         public Vector<double> ParametersVector { get; set; } // May change after processing
         public Vector<double> ResultsVector { get; protected set; }
         public Vector<double> BestResultVector { get; protected set; }
+        public Vector<double> InitialParameters { get; protected set; }
         public bool UseCovarianceMatrix { get; set; } = false;
         public Vector<double> InverseVariancesVector { get; set; }
         public bool DoComputeJacobianNumerically { get; set; } = false;
@@ -35,6 +37,8 @@ namespace CamAlgorithms
             CurrentIteration = 0;
 
             Init();
+            InitialParameters = new DenseVector(ParametersVector.Count);
+            ParametersVector.CopyTo(InitialParameters);
 
             // Find base residual
             UpdateAfterParametersChanged();

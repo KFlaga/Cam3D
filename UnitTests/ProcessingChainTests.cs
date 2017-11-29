@@ -329,7 +329,7 @@ namespace CamUnitTest
             PrepareDistortionModelData();
             PrepareRectificationData();
 
-            UndistortCalibrationImagesLink undistortLink = new UndistortCalibrationImagesLink(_globalData)
+            UndistortImagesLink undistortLink = new UndistortImagesLink(_globalData)
             {
                 LoadDataFromDisc = false,
                 StoreDataOnDisc = true

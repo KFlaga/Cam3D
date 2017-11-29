@@ -1,6 +1,5 @@
 ﻿using SharpDX;
 using System.Runtime.InteropServices;
-using System;
 
 namespace CamDX
 {

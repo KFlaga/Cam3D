@@ -12,14 +12,6 @@ namespace CamAutomatization
 
     public class RectificationLink : ILink
     {
-        public LinkType LinkType
-        {
-            get
-            {
-                return LinkType.RectificationComputation;
-            }
-        }
-
         bool _storedDataOnDisc = true;
         public bool StoreDataOnDisc
         {

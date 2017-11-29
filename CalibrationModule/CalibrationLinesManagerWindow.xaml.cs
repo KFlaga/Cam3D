@@ -124,67 +124,17 @@ namespace CalibrationModule
 
         public void LoadFromFile(Stream file, string path)
         {
-            XmlDocument dataDoc = new XmlDocument();
-            dataDoc.Load(file);
-
             _currentLine.Clear();
             _linesList.Clear();
             _linesNumbers.Clear();
-            XmlNodeList lines = dataDoc.GetElementsByTagName("Line");
-            foreach(XmlNode lineNode in lines)
-            {
-                List<Vector2> line = new List<Vector2>();
-                XmlNode pointNode = lineNode.FirstChildWithName("Point");
 
-                while(pointNode != null)
-                {
-                    Vector2 point = new Vector2();
-
-                    var imgx = pointNode.Attributes["x"];
-                    if(imgx != null)
-                        point.X = double.Parse(imgx.Value);
-
-                    var imgy = pointNode.Attributes["y"];
-                    if(imgy != null)
-                        point.Y = double.Parse(imgy.Value);
-
-                    line.Add(point);
-
-                    pointNode = pointNode.NextSibling;
-                }
-
-                _linesList.Add(line);
-                _linesNumbers.Add(_linesList.Count - 1);
-            }
+            _linesList.AddRange(XmlSerialisation.CreateFromFile<List<List<Vector2>>>(file));
+            for(int i = 0; i < _linesList.Count; ++i) { _linesNumbers.Add(i); }
         }
 
         public void SaveToFile(Stream file, string path)
         {
-            XmlDocument dataDoc = new XmlDocument();
-            var rootNode = dataDoc.CreateElement("Lines");
-
-            foreach(var line in _linesList)
-            {
-                var lineNode = dataDoc.CreateElement("Line");
-                foreach(var point in line)
-                {
-                    var pointNode = dataDoc.CreateElement("Point");
-
-                    var attImgX = dataDoc.CreateAttribute("x");
-                    attImgX.Value = point.X.ToString("F3");
-                    var attImgY = dataDoc.CreateAttribute("y");
-                    attImgY.Value = point.Y.ToString("F3");
-
-                    pointNode.Attributes.Append(attImgX);
-                    pointNode.Attributes.Append(attImgY);
-                    lineNode.AppendChild(pointNode);
-                }
-
-                rootNode.AppendChild(lineNode);
-            }
-
-            dataDoc.InsertAfter(rootNode, dataDoc.DocumentElement);
-            dataDoc.Save(file);
+            XmlSerialisation.SaveToFile(_linesList, file);
         }
     }
 }

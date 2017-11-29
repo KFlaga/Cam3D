@@ -13,9 +13,12 @@ namespace CamAlgorithms.Calibration
     public class CameraPair : IXmlSerializable
     {
         private static CameraPair _data = new CameraPair();
+        [XmlIgnore]
         public static CameraPair Data { get { return _data; } }
-        
+
+        [XmlIgnore]
         public bool HaveImagesSet { get { return Left.ImageHeight > 0 && Left.ImageWidth > 0 && Right.ImageHeight > 0 && Right.ImageWidth > 0; } }
+        [XmlIgnore]
         public bool AreCalibrated { get { return Left.IsCalibrated && Right.IsCalibrated && HaveImagesSet; } }
         
         private Camera _camLeft = new Camera();
@@ -206,11 +209,13 @@ namespace CamAlgorithms.Calibration
 
         public void CopyFrom(CameraPair cameras)
         {
-            foreach(var prop in GetType().GetProperties())
-            {
-                prop.SetValue(this, prop.GetValue(cameras));
-            }
-            Update();
+            this.Left = cameras.Left;
+            this.Right = cameras.Right;
+            this.RectificationLeft = cameras.RectificationLeft;
+            this.RectificationRight = cameras.RectificationRight;
+            if(RectificationLeft != null) { RectificationLeftInverse = RectificationLeft.Inverse(); }
+            if(RectificationRight != null) { RectificationRightInverse = RectificationRight.Inverse(); }
+            if(AreCalibrated) { Update(); }
         }
     }
 }

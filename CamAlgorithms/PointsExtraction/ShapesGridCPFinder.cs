@@ -24,9 +24,9 @@ namespace CamAlgorithms.PointsExtraction
         {
             return new List<ReferncePoint>()
             {
-                new ReferncePoint(new IntVector2(x: 4, y: 4), new ColorShapeChecker(new Vector3(0, 0.3, 0))),
-                new ReferncePoint(new IntVector2(x: 5, y: 4), new ColorShapeChecker(new Vector3(0.3, 0, 0))),
-                new ReferncePoint(new IntVector2(x: 4, y: 5), new ColorShapeChecker(new Vector3(0, 0, 0.3)))
+                new ReferncePoint(new IntVector2(x: 4, y: 3), new ColorShapeChecker(new Vector3(0.3, 0.0, 0))),
+                new ReferncePoint(new IntVector2(x: 5, y: 3), new ColorShapeChecker(new Vector3(0, 0, 0.3))),
+                new ReferncePoint(new IntVector2(x: 4, y: 4), new ColorShapeChecker(new Vector3(0, 0.3, 0.0)))
             };
         }
     }
@@ -207,19 +207,19 @@ namespace CamAlgorithms.PointsExtraction
                 new Vector3(0.3, 0.0, 0.0), new Vector3(0.0, 0.0, 0.0), new Vector3(1.0, 1.0, 1.0)));
             Parameters.Add(new Vector2Parameter(
                 "Main Reference Point Position", "RefPos0",
-                new Vector2(4, 4), new Vector2(-1000, -1000), new Vector2(1000, 1000)));
+                new Vector2(4, 3), new Vector2(-1000, -1000), new Vector2(1000, 1000)));
             Parameters.Add(new Vector3Parameter(
                 "X Reference Point Color", "RefColorX",
-                new Vector3(0.0, 0.3, 0.0), new Vector3(0.0, 0.0, 0.0), new Vector3(1.0, 1.0, 1.0)));
-            Parameters.Add(new Vector2Parameter(
-                "X Reference Point Position", "RefPosX",
-                new Vector2(5, 4), new Vector2(-1000, -1000), new Vector2(1000, 1000)));
-            Parameters.Add(new Vector3Parameter(
-                "Y Reference Point Color", "RefColorY",
                 new Vector3(0.0, 0.0, 0.3), new Vector3(0.0, 0.0, 0.0), new Vector3(1.0, 1.0, 1.0)));
             Parameters.Add(new Vector2Parameter(
+                "X Reference Point Position", "RefPosX",
+                new Vector2(5, 3), new Vector2(-1000, -1000), new Vector2(1000, 1000)));
+            Parameters.Add(new Vector3Parameter(
+                "Y Reference Point Color", "RefColorY",
+                new Vector3(0.0, 0.3, 0.0), new Vector3(0.0, 0.0, 0.0), new Vector3(1.0, 1.0, 1.0)));
+            Parameters.Add(new Vector2Parameter(
                 "Y Reference Point Position", "RefPosY",
-                new Vector2(4, 5), new Vector2(-1000, -1000), new Vector2(1000, 1000)));
+                new Vector2(4, 4), new Vector2(-1000, -1000), new Vector2(1000, 1000)));
         }
 
         public override void UpdateParameters()

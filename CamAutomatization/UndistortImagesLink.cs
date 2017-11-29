@@ -3,46 +3,34 @@ using System.Collections.Generic;
 
 namespace CamAutomatization
 {
-    public class UndistortCalibrationImagesLinkData
+    public class UndistortedImagesOutputData
     {
+        public string ImageSetName { get; set; }
+        public Dictionary<int, ImagesPair> Images { get; } = new Dictionary<int, ImagesPair>();
+    }
+    
+    public class UndistortedImagesInputData
+    {
+        public string ImageSetName { get; set; }
         public Dictionary<int, ImagesPair> Images { get; } = new Dictionary<int, ImagesPair>();
     }
 
-    public class UndistortCalibrationImagesLink : ILink
+    public class UndistortImagesLink : ILink
     {
-        public LinkType LinkType
-        {
-            get
-            {
-                return LinkType.CalibrationImagesUndistortion;
-            }
-        }
-
-        bool _storedDataOnDisc = true;
-        public bool StoreDataOnDisc
-        {
-            get { return _storedDataOnDisc; }
-            set { _storedDataOnDisc = value; }
-        }
-
-        bool _loadDataFromDisc = false;
-        public bool LoadDataFromDisc
-        {
-            get { return _loadDataFromDisc; }
-            set { _loadDataFromDisc = value; }
-        }
+        public bool StoreDataOnDisc { get; set; } = true;
+        public bool LoadDataFromDisc { get; set; } = false;
 
         private GlobalData _globalData;
-        private RawCalibrationImagesLinkData _rawCalibData;
+        private RawCalibrationImagesLinkData _inputImageSet;
         private DistortionModelLinkData _distortion;
         private ConfigurationLinkData _config;
         private ImagesSizeLinkData _imgSize;
-        private UndistortCalibrationImagesLinkData _linkData;
+        private UndistortedImagesOutputData _outputImageSet;
 
-        public UndistortCalibrationImagesLink(GlobalData gData)
+        public UndistortImagesLink(GlobalData gData)
         {
             _globalData = gData;
-            _linkData = new UndistortCalibrationImagesLinkData();
+            _outputImageSet = new UndistortedImagesOutputData();
         }
 
         public void Load()
@@ -55,7 +43,7 @@ namespace CamAutomatization
             }
             else
             {
-                _rawCalibData = _globalData.Get<RawCalibrationImagesLinkData>();
+                _inputImageSet = _globalData.Get<RawCalibrationImagesLinkData>();
                 _imgSize = _globalData.Get<ImagesSizeLinkData>();
                 _distortion = _globalData.Get<DistortionModelLinkData>();
             }
@@ -68,30 +56,30 @@ namespace CamAutomatization
 
         public void Save()
         {
-            if(_storedDataOnDisc)
+            if(StoreDataOnDisc)
             {
                 SaveUndistortedImages();
             }
 
-            _globalData.Set(_linkData);
+            _globalData.Set(_outputImageSet);
         }
 
 
         private void UndistortImages()
         {
-            LinkUtilities.UndistortImages(_rawCalibData.Images,
-                _linkData.Images, _distortion);
+            LinkUtilities.UndistortImages(_inputImageSet.Images,
+                _outputImageSet.Images, _distortion);
         }
 
         private void SaveUndistortedImages()
         {
-            LinkUtilities.SaveImages(_linkData.Images, _config,
+            LinkUtilities.SaveImages(_outputImageSet.Images, _config,
                 "CalibrationImages_Undistorted", "image_calibration_undistorted");
         }
 
         private void LoadUndistortedImages()
         {
-            LinkUtilities.LoadImages<MaskedImage>(_linkData.Images, _config,
+            LinkUtilities.LoadImages<MaskedImage>(_outputImageSet.Images, _config,
                 "CalibrationImages_Undistorted");
         }
     }

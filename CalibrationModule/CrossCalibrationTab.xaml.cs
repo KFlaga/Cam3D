@@ -14,11 +14,12 @@ namespace CalibrationModule
         public List<CalibrationPoint> CalibrationPointsLeft { get; set; } = new List<CalibrationPoint>();
         public List<CalibrationPoint> CalibrationPointsRight { get; set; } = new List<CalibrationPoint>();
 
-        public List<RealGridData> GridsLeft { get; set; } = new List<RealGridData>();
-       // public List<RealGridData> GridsRight { get; set; } = new List<RealGridData>();
+        public List<RealGridData> Grids { get; set; } = new List<RealGridData>();
 
         public List<Vector2> MatchedPointsLeft { get; set; } = new List<Vector2>();
         public List<Vector2> MatchedPointsRight { get; set; } = new List<Vector2>();
+
+        public List<Vector2Pair> CalibrationPointsMatched { get; set; } = new List<Vector2Pair>();
 
         CrossCalibrationRefiner _calibrator = new CrossCalibrationRefiner();
 
@@ -31,11 +32,11 @@ namespace CalibrationModule
         private void ManageGridsLeft(object sender, RoutedEventArgs e)
         {
             RealGridsManagerWindow gridsManager = new RealGridsManagerWindow();
-            gridsManager.RealGrids = GridsLeft;
+            gridsManager.RealGrids = Grids;
             bool? res = gridsManager.ShowDialog();
             if(res != null && res == true)
             {
-                GridsLeft = gridsManager.RealGrids;
+                Grids = gridsManager.RealGrids;
             }
         }
 
@@ -49,17 +50,6 @@ namespace CalibrationModule
                 CalibrationPointsLeft = pointsManager.CalibrationPoints;
             }
         }
-
-        //private void ManageGridsRight(object sender, RoutedEventArgs e)
-        //{
-        //    RealGridsManagerWindow gridsManager = new RealGridsManagerWindow();
-        //    gridsManager.RealGrids = GridsRight;
-        //    bool? res = gridsManager.ShowDialog();
-        //    if(res != null && res == true)
-        //    {
-        //        GridsRight = gridsManager.RealGrids;
-        //    }
-        //}
 
         private void ManagePointsRight(object sender, RoutedEventArgs e)
         {
@@ -127,7 +117,7 @@ namespace CalibrationModule
 
            // _calibrator.CalibPointsLeft = CalibrationPointsLeft;
             //_calibrator.CalibPointsRight = CalibrationPointsRight;
-            _calibrator.CalibGrids = GridsLeft;
+            _calibrator.CalibGrids = Grids;
            // _calibrator.GridsRight = GridsRight;
             _calibrator.MatchedPointsLeft = MatchedPointsLeft;
             _calibrator.MatchedPointsRight = MatchedPointsRight;
@@ -138,11 +128,7 @@ namespace CalibrationModule
         
         public void SaveCalibMatched(Stream file, string path)
         {
-            XmlDocument dataDoc = new XmlDocument();
-            var rootNode = dataDoc.CreateElement("Points");
-
-            var calibMatchedLeft = new List<CalibrationPoint>(CalibrationPointsLeft.Count);
-            var calibMatchedRight = new List<CalibrationPoint>(CalibrationPointsRight.Count);
+            CalibrationPointsMatched = new List<Vector2Pair>();
             for(int i = 0; i < CalibrationPointsLeft.Count; ++i)
             {
                 var cleft = CalibrationPointsLeft[i];
@@ -154,37 +140,15 @@ namespace CalibrationModule
                 });
                 if(cright != null)
                 {
-                    calibMatchedLeft.Add(cleft);
-                    calibMatchedRight.Add(cright);
+                    CalibrationPointsMatched.Add(new Vector2Pair()
+                    {
+                        V1 = cleft.Img,
+                        V2 = cright.Img
+                    });
                 }
             }
 
-            for(int i = 0; i < calibMatchedLeft.Count; ++i)
-            {
-                var cpL = calibMatchedLeft[i];
-                var cpR = calibMatchedRight[i];
-
-                var pointNode = dataDoc.CreateElement("Point");
-
-                var attImgX = dataDoc.CreateAttribute("imgx");
-                attImgX.Value = cpL.ImgX.ToString("F3");
-                var attImgY = dataDoc.CreateAttribute("imgy");
-                attImgY.Value = cpL.ImgY.ToString("F3");
-                var attImgX2 = dataDoc.CreateAttribute("imgx2");
-                attImgX2.Value = cpR.ImgX.ToString("F3");
-                var attImgY2 = dataDoc.CreateAttribute("imgy2");
-                attImgY2.Value = cpR.ImgY.ToString("F3");
-
-                pointNode.Attributes.Append(attImgX);
-                pointNode.Attributes.Append(attImgY);
-                pointNode.Attributes.Append(attImgX2);
-                pointNode.Attributes.Append(attImgY2);
-
-                rootNode.AppendChild(pointNode);
-            }
-
-            dataDoc.InsertAfter(rootNode, dataDoc.DocumentElement);
-            dataDoc.Save(file);
+            XmlSerialisation.SaveToFile(CalibrationPointsMatched, file);
         }
 
     }

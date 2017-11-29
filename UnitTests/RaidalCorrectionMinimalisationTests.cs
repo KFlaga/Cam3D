@@ -23,7 +23,7 @@ namespace CamUnitTest
             // Check if 'minimalisation' computes them ok
             var lines = GenerateTestLines();
             miniAlg.DistortionModel = new DummyModel();
-            miniAlg.DistortionModel.InitParameters();
+            miniAlg.DistortionModel.InitCoeffs();
             miniAlg.LinePoints = lines;
             miniAlg.MeasurementsVector = new DenseVector(lines.Count);
             miniAlg.ParametersVector = new DenseVector(1);
@@ -57,7 +57,7 @@ namespace CamUnitTest
 
             var lines = GenerateTestLinesNoised();
             miniAlg.DistortionModel = new DummyModel();
-            miniAlg.DistortionModel.InitParameters();
+            miniAlg.DistortionModel.InitCoeffs();
             miniAlg.LinePoints = lines;
             miniAlg.ParametersVector = new DenseVector(1);
 
@@ -90,9 +90,8 @@ namespace CamUnitTest
         public void PrepareMinimalizationAlgorithm_JacobianTests()
         {
             _model = new Rational3RDModel();
-            _model.InitialAspectEstimation = 1.0;
             _model.InitialCenterEstimation = new Vector2(0.25, 0.5);
-            _model.InitParameters();
+            _model.InitCoeffs();
 
             _model.Coeffs[0] = 1e-1; // k1
             _model.Coeffs[1] = -2e-2; // k2
@@ -214,9 +213,8 @@ namespace CamUnitTest
         public void PrepareMinimalizationAlgorithm_MinimalisationTests()
         {
             _model = new Rational3RDModel();
-            _model.InitialAspectEstimation = 1.0;
             _model.InitialCenterEstimation = new Vector2(0.45, 0.55);
-            _model.InitParameters();
+            _model.InitCoeffs();
 
             _model.Coeffs[0] = 1e-1; // k1
             _model.Coeffs[1] = -2e-2; // k2
@@ -275,7 +273,7 @@ namespace CamUnitTest
 
             // Set close initial values
             _model.InitialCenterEstimation = new Vector2(0.5, 0.5);
-            _model.InitParameters();
+            _model.InitCoeffs();
 
             _miniAlg.ParametersVector = _model.Coeffs;
             _miniAlg.MaximumResidiual = 1e-10;
@@ -298,9 +296,8 @@ namespace CamUnitTest
         public void Test_DistortionDirection()
         {
             _model = new Rational3RDModel();
-            _model.InitialAspectEstimation = 1.0;
             _model.InitialCenterEstimation = new Vector2(0.5, 0.5);
-            _model.InitParameters();
+            _model.InitCoeffs();
 
             _model.Coeffs[0] = 1e-1; // k1
             _model.Coeffs[1] = -2e-2; // k2
@@ -311,7 +308,7 @@ namespace CamUnitTest
             _miniAlg = new LMDistortionDirectionalLineFitMinimalisation();
             
             _miniAlg.DistortionModel = new DummyModel();
-            _miniAlg.DistortionModel.InitParameters();
+            _miniAlg.DistortionModel.InitCoeffs();
             _miniAlg.LinePoints = _distLines;
             _miniAlg.MeasurementsVector = new DenseVector(_distLines.Count);
             _miniAlg.ParametersVector = new DenseVector(1);
@@ -355,9 +352,8 @@ namespace CamUnitTest
         public void Test_InitalModelParameters()
         {
             _model = new Rational3RDModel();
-            _model.InitialAspectEstimation = 1.0;
             _model.InitialCenterEstimation = new Vector2(0.55, 0.45);
-            _model.InitParameters();
+            _model.InitCoeffs();
 
             _model.Coeffs[0] = -1e-1; // k1
             _model.Coeffs[1] = 2e-2; // k2
@@ -369,7 +365,7 @@ namespace CamUnitTest
 
             _miniAlg.DistortionModel = new Rational3RDModel();
             _miniAlg.DistortionModel.InitialCenterEstimation = new Vector2(0.5, 0.5);
-            _miniAlg.DistortionModel.InitParameters();
+            _miniAlg.DistortionModel.InitCoeffs();
             _miniAlg.LinePoints = _distLines;
             _miniAlg.MeasurementsVector = new DenseVector(_distLines.Count);
             _miniAlg.ParametersVector = new DenseVector(1);
@@ -384,9 +380,8 @@ namespace CamUnitTest
                 new LMDistortionDirectionalLineFitMinimalisation();
             
             _model = new Rational3RDModel();
-            _model.InitialAspectEstimation = 1.0;
             _model.InitialCenterEstimation = new Vector2(0.5, 0.5);
-            _model.InitParameters();
+            _model.InitCoeffs();
 
             _model.Coeffs[0] = 1e-2; // k1
             _model.Coeffs[1] = -2e-3; // k2
@@ -426,9 +421,8 @@ namespace CamUnitTest
         public void Test_ComputeJacobian_Ver3()
         {
             _model = new Rational3RDModel();
-            _model.InitialAspectEstimation = 1.0;
             _model.InitialCenterEstimation = new Vector2(0.25, 0.5);
-            _model.InitParameters();
+            _model.InitCoeffs();
 
             _model.Coeffs[0] = 1e-1; // k1
             _model.Coeffs[1] = -2e-2; // k2
@@ -478,9 +472,8 @@ namespace CamUnitTest
         public void PrepareMinimalizationAlgorithm_MinimalisationTests_Ver3()
         {
             _realModel = new Rational3RDModel();
-            _realModel.InitialAspectEstimation = 1.0;
             _realModel.InitialCenterEstimation = new Vector2(0.5, 0.5);
-            _realModel.InitParameters();
+            _realModel.InitCoeffs();
 
             _realModel.Coeffs[0] = 0.2; // k1
             _realModel.Coeffs[1] = -0.2; // k2
@@ -496,9 +489,8 @@ namespace CamUnitTest
             _distLines = DistortLines(_realModel, _realLines);
 
             _model = new Rational3RDModel();
-            _model.InitialAspectEstimation = 1.0;
             _model.InitialCenterEstimation = new Vector2(0.5, 0.5);
-            _model.InitParameters();
+            _model.InitCoeffs();
 
             _model.UseNumericDerivative = true;
             _model.NumericDerivativeStep = 1e-4;
@@ -564,9 +556,8 @@ namespace CamUnitTest
             PrepareMinimalizationAlgorithm_MinimalisationTests_Ver3();
 
             _model = new Taylor4Model();
-            _model.InitialAspectEstimation = 1.0;
             _model.InitialCenterEstimation = new Vector2(0.5, 0.5);
-            _model.InitParameters();
+            _model.InitCoeffs();
 
             _model.UseNumericDerivative = true;
             _model.NumericDerivativeStep = 1e-4;
@@ -641,9 +632,8 @@ namespace CamUnitTest
         public void Test_DistortionDirection_Quadric()
         {
             _model = new Rational3RDModel();
-            _model.InitialAspectEstimation = 1.0;
             _model.InitialCenterEstimation = new Vector2(0.5, 0.5);
-            _model.InitParameters();
+            _model.InitCoeffs();
 
             _model.Coeffs[0] = 0.2; // k1
             _model.Coeffs[1] = -0.2; // k2
@@ -834,6 +824,7 @@ namespace CamUnitTest
 
         class DummyModel : RadialDistortionModel
         {
+            public override string Name { get { return "Dummy"; } }
             public override int ParametersCount => 1;
 
             public override void FullUpdate()
@@ -841,7 +832,7 @@ namespace CamUnitTest
                 Pf = new Vector2(P);
             }
 
-            public override void InitParameters()
+            public override void InitCoeffs()
             {
                 Coeffs = new DenseVector(ParametersCount);
                 Diff_Xf = new DenseVector(ParametersCount);
@@ -856,14 +847,18 @@ namespace CamUnitTest
                 Pu = new Vector2();
                 Pd = new Vector2();
                 Pf = new Vector2();
-
-                Aspect = 1.0;
+                
                 DistortionCenter = new Vector2(0.5, 0.5);
             }
 
             public override void SetInitialParametersFromQuadrics(List<Quadric> quadrics, List<List<Vector2>> linePoints, List<int> fitPoints)
             {
-                InitParameters();
+                InitCoeffs();
+            }
+
+            public override void Distort()
+            {
+                Pf = new Vector2(P);
             }
 
             public override void Undistort()

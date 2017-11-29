@@ -607,16 +607,16 @@ namespace CamAlgorithms.Calibration
         {   
             // Start with computing error
             ComputeErrorVector(_currentErrorVector);
-            
-            ComputeDelta(_delta);
+
             var oldRes = DistortionModel.Coeffs.Clone();
-
-            DistortionModel.Coeffs.CopyTo(ResultsVector);
-            ResultsVector += _delta;
-            ResultsVector.CopyTo(DistortionModel.Coeffs);
-
             try
             {
+                ComputeDelta(_delta);
+
+                DistortionModel.Coeffs.CopyTo(ResultsVector);
+                ResultsVector += _delta;
+                ResultsVector.CopyTo(DistortionModel.Coeffs);
+
                 UpdateAfterParametersChanged();
 
                 _lastResidiual = _currentResidiual;
@@ -627,10 +627,9 @@ namespace CamAlgorithms.Calibration
             catch(Exception)
             {
                 // New parameters resulted in throwing -> enlarge lambda
-                _lam *= 100.0;
+                _lam *= 10.0;
                 oldRes.CopyTo(ResultsVector);
                 ResultsVector.CopyTo(DistortionModel.Coeffs);
-                return;
             }
 
             if(_currentResidiual < MinimumResidiual)
@@ -640,7 +639,7 @@ namespace CamAlgorithms.Calibration
             }
             else if(_currentResidiual < _lastResidiual)
             {
-                _lam *= 2;
+                _lam *= 0.5; // Maybe *0.8?
             }
             else
             {

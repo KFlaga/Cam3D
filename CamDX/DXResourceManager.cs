@@ -1,7 +1,5 @@
 ﻿using SharpDX.Direct3D11;
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Xml;
 
 namespace CamDX

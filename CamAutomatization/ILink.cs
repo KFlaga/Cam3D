@@ -1,27 +1,6 @@
 ﻿namespace CamAutomatization
 {
     /// <summary>
-    /// Types of processing links can do.
-    /// All links should be added in predefined order, specified in this enum
-    /// </summary>
-    public enum LinkType
-    {
-        Configuration = 0,
-        RawCalibrationImagesExtraction,
-        DistortionModelComputation,
-        UndistortedPointsExtraction,
-        CalibrationImagesUndistortion,
-        OneCameraCalibration,
-        CrossCalibration,
-        RectificationComputation,
-        CalibrationImagesRectification,
-        MatchedImagesPrepare,
-        ImageMatching,
-        DisparityRefinement,
-        Triangulation
-    }
-
-    /// <summary>
     /// Provides one processing link in chain.
     /// Each link have some input data, loaded from files or global data (output from previous links)
     /// and after processing produces output data stored in global data and
@@ -30,8 +9,6 @@
     /// </summary>
     public interface ILink
     {
-        LinkType LinkType { get; }
-        
         /// <summary>
         /// Indicates if output data should be stored on disc
         /// </summary>

@@ -28,74 +28,26 @@ namespace CamAlgorithms
             _minimalisation.ParametersVector = new DenseVector(Minimalisation._paramsCount);
             if(UseInitialCalibration && Cameras.AreCalibrated)
             {
-                _minimalisation.ParametersVector.At(Minimalisation._flIdx,
-                    0.5 * (Cameras.Left.InternalMatrix.At(0, 0) +
-                    Cameras.Left.InternalMatrix.At(1, 1)));
-                // _minimalisation.ParametersVector.At(Minimalisation._pxlIdx,
-                //     CalibData.CalibrationLeft.At(0, 2));
-                // _minimalisation.ParametersVector.At(Minimalisation._pylIdx,
-                //     CalibData.CalibrationLeft.At(1, 2));
-
-                Vector<double> euler = new DenseVector(3);
-                RotationConverter.MatrixToEuler(euler, Cameras.Left.RotationMatrix);
-                _minimalisation.ParametersVector.At(Minimalisation._eYlIdx, euler.At(1));
-                _minimalisation.ParametersVector.At(Minimalisation._eZlIdx, euler.At(2));
-
-                _minimalisation.ParametersVector.At(Minimalisation._frIdx,
-                    0.5 * (Cameras.Right.InternalMatrix.At(0, 0) +
-                    Cameras.Right.InternalMatrix.At(1, 1)));
-                // _minimalisation.ParametersVector.At(Minimalisation._pxrIdx,
-                //     CalibData.CalibrationRight.At(0, 2));
-                // _minimalisation.ParametersVector.At(Minimalisation._pyrIdx,
-                //     CalibData.CalibrationRight.At(1, 2));
-
-                RotationConverter.MatrixToEuler(euler, Cameras.Right.RotationMatrix);
-                _minimalisation.ParametersVector.At(Minimalisation._eXrIdx, euler.At(0));
-                _minimalisation.ParametersVector.At(Minimalisation._eYrIdx, euler.At(1));
-                _minimalisation.ParametersVector.At(Minimalisation._eZrIdx, euler.At(2));
+                SetInitialParametersFromCalibration();
             }
             else
             {
-                // Some other normalisation:
-                // let unit length be (imgwidth + imgheight)
-                // then fx0 = 1, px0 = w/(w+h), py0 = h/(w+h)
-                // Also limit angle range to -+pi
-
-                _minimalisation.ParametersVector.At(Minimalisation._flIdx, 1.0);
-                _minimalisation.ParametersVector.At(Minimalisation._pxlIdx, 0.5 * (double)ImageWidth / (double)(ImageWidth + ImageHeight));
-                _minimalisation.ParametersVector.At(Minimalisation._pylIdx, 0.5 * (double)ImageHeight / (double)(ImageWidth + ImageHeight));
-                //_minimalisation.ParametersVector.At(Minimalisation._flIdx, ImageWidth + ImageHeight);
-                //_minimalisation.ParametersVector.At(Minimalisation._pxlIdx, ImageWidth / 2);
-                //_minimalisation.ParametersVector.At(Minimalisation._pylIdx, ImageHeight / 2);
-
-                _minimalisation.ParametersVector.At(Minimalisation._eYlIdx, 0.0);
-                _minimalisation.ParametersVector.At(Minimalisation._eZlIdx, 0.0);
-
-                _minimalisation.ParametersVector.At(Minimalisation._frIdx, 1.0);
-                _minimalisation.ParametersVector.At(Minimalisation._pxrIdx, 0.5 * (double)ImageWidth / (double)(ImageWidth + ImageHeight));
-                _minimalisation.ParametersVector.At(Minimalisation._pyrIdx, 0.5 * (double)ImageHeight / (double)(ImageWidth + ImageHeight));
-                //_minimalisation.ParametersVector.At(Minimalisation._frIdx, ImageWidth + ImageHeight);
-                //_minimalisation.ParametersVector.At(Minimalisation._pxrIdx, ImageWidth / 2);
-                //_minimalisation.ParametersVector.At(Minimalisation._pyrIdx, ImageHeight / 2);
-
-                _minimalisation.ParametersVector.At(Minimalisation._eXrIdx, 0.0);
-                _minimalisation.ParametersVector.At(Minimalisation._eYrIdx, 0.0);
-                _minimalisation.ParametersVector.At(Minimalisation._eZrIdx, 0.0);
+                SetInitialParametersFromGuess();
             }
 
+            double N = GetNormalizationCoeff();
             _minimalisation.PointsLeft = new List<Vector<double>>();
             _minimalisation.PointsRight = new List<Vector<double>>();
             for(int i = 0; i < MatchedPairs.Count; ++i)
             {
-                _minimalisation.PointsLeft.Add(MatchedPairs[i].V1.ToMathNetVector3());
-                _minimalisation.PointsRight.Add(MatchedPairs[i].V2.ToMathNetVector3());
+                _minimalisation.PointsLeft.Add((MatchedPairs[i].V1).ToMathNetVector3());
+                _minimalisation.PointsRight.Add((MatchedPairs[i].V2).ToMathNetVector3());
             }
 
             _minimalisation.ImageHeight = ImageHeight;
             _minimalisation.ImageWidth = ImageWidth;
             _minimalisation.Process();
-
-            //_minimalisation.Init();
+            
             _minimalisation.BestResultVector.CopyTo(_minimalisation.ResultsVector);
             _minimalisation.UpdateAfterParametersChanged();
 
@@ -111,6 +63,60 @@ namespace CamAlgorithms
 
             RectificationLeft = _Ht_L * _H_L;
             RectificationRight = _Ht_R * _H_R;
+        }
+
+        private double GetNormalizationCoeff()
+        {
+            return 1.0 / (ImageWidth + ImageHeight);
+        }
+
+        private void SetInitialParametersFromGuess()
+        {
+            _minimalisation.ParametersVector.At(Minimalisation._flIdx, 1.0);
+            _minimalisation.ParametersVector.At(Minimalisation._pxlIdx, 0.5 * (double)ImageWidth / (double)(ImageWidth + ImageHeight));
+            _minimalisation.ParametersVector.At(Minimalisation._pylIdx, 0.5 * (double)ImageHeight / (double)(ImageWidth + ImageHeight));
+
+            _minimalisation.ParametersVector.At(Minimalisation._eYlIdx, 0.0);
+            _minimalisation.ParametersVector.At(Minimalisation._eZlIdx, 0.0);
+
+            _minimalisation.ParametersVector.At(Minimalisation._frIdx, 1.0);
+            _minimalisation.ParametersVector.At(Minimalisation._pxrIdx, 0.5 * (double)ImageWidth / (double)(ImageWidth + ImageHeight));
+            _minimalisation.ParametersVector.At(Minimalisation._pyrIdx, 0.5 * (double)ImageHeight / (double)(ImageWidth + ImageHeight));
+
+            _minimalisation.ParametersVector.At(Minimalisation._eXrIdx, 0.0);
+            _minimalisation.ParametersVector.At(Minimalisation._eYrIdx, 0.0);
+            _minimalisation.ParametersVector.At(Minimalisation._eZrIdx, 0.0);
+
+            _minimalisation.EulerLX = 0.0;
+        }
+
+        private void SetInitialParametersFromCalibration()
+        {
+            double N = GetNormalizationCoeff();
+            _minimalisation.ParametersVector.At(Minimalisation._flIdx,
+                0.5 * N * (Cameras.Left.InternalMatrix.At(0, 0) + Cameras.Left.InternalMatrix.At(1, 1)));
+            _minimalisation.ParametersVector.At(Minimalisation._pxlIdx,
+                N * Cameras.Left.InternalMatrix.At(0, 2));
+            _minimalisation.ParametersVector.At(Minimalisation._pylIdx,
+                N * Cameras.Left.InternalMatrix.At(1, 2));
+
+            Vector<double> euler = new DenseVector(3);
+            RotationConverter.MatrixToEuler(euler, Cameras.Left.RotationMatrix);
+            _minimalisation.EulerLX = euler.At(0);
+            _minimalisation.ParametersVector.At(Minimalisation._eYlIdx, euler.At(1));
+            _minimalisation.ParametersVector.At(Minimalisation._eZlIdx, euler.At(2));
+
+            _minimalisation.ParametersVector.At(Minimalisation._frIdx,
+                0.5 * N * (Cameras.Right.InternalMatrix.At(0, 0) + Cameras.Right.InternalMatrix.At(1, 1)));
+            _minimalisation.ParametersVector.At(Minimalisation._pxrIdx,
+                Cameras.Right.InternalMatrix.At(0, 2));
+            _minimalisation.ParametersVector.At(Minimalisation._pyrIdx,
+                Cameras.Right.InternalMatrix.At(1, 2));
+
+            RotationConverter.MatrixToEuler(euler, Cameras.Right.RotationMatrix);
+            _minimalisation.ParametersVector.At(Minimalisation._eXrIdx, euler.At(0));
+            _minimalisation.ParametersVector.At(Minimalisation._eYrIdx, euler.At(1));
+            _minimalisation.ParametersVector.At(Minimalisation._eZrIdx, euler.At(2));
         }
 
         public void ComputeScalingMatrices(int imgWidth, int imgHeight)
@@ -212,6 +218,8 @@ namespace CamAlgorithms
             public int ImageWidth { get; set; }
             public int ImageHeight { get; set; }
 
+            public double EulerLX { get; set; }
+
             public Matrix<double> _F;
             public Matrix<double> _Rl, _Rr;
             public Matrix<double> _Kol, _Kor;
@@ -282,7 +290,7 @@ namespace CamAlgorithms
                 LimitAngle(_eYrIdx);
                 LimitAngle(_eZrIdx);
                 
-                _eulerL.At(0, 0.0);
+                _eulerL.At(0, EulerLX);
                 _eulerL.At(1, ResultsVector.At(_eYlIdx));
                 _eulerL.At(2, ResultsVector.At(_eZlIdx));
 
@@ -293,18 +301,18 @@ namespace CamAlgorithms
                 RotationConverter.EulerToMatrix(_eulerL, _Rl);
                 RotationConverter.EulerToMatrix(_eulerR, _Rr);
 
-                double sc = (ImageWidth + ImageHeight);
+                double N = ImageHeight + ImageWidth;
 
-                _Kol.At(0, 0, ResultsVector.At(_flIdx) * sc);
-                _Kol.At(1, 1, ResultsVector.At(_flIdx) * sc);
-                _Kol.At(0, 2, ResultsVector.At(_pxlIdx) * sc);
-                _Kol.At(1, 2, ResultsVector.At(_pylIdx) * sc);
+                _Kol.At(0, 0, ResultsVector.At(_flIdx) * N);
+                _Kol.At(1, 1, ResultsVector.At(_flIdx) * N);
+                _Kol.At(0, 2, ResultsVector.At(_pxlIdx) * N);
+                _Kol.At(1, 2, ResultsVector.At(_pylIdx) * N);
                 _Kol.At(2, 2, 1.0);
 
-                _Kor.At(0, 0, ResultsVector.At(_frIdx) * sc);
-                _Kor.At(1, 1, ResultsVector.At(_frIdx) * sc);
-                _Kor.At(0, 2, ResultsVector.At(_pxrIdx) * sc);
-                _Kor.At(1, 2, ResultsVector.At(_pyrIdx) * sc);
+                _Kor.At(0, 0, ResultsVector.At(_frIdx) * N);
+                _Kor.At(1, 1, ResultsVector.At(_frIdx) * N);
+                _Kor.At(0, 2, ResultsVector.At(_pxrIdx) * N);
+                _Kor.At(1, 2, ResultsVector.At(_pyrIdx) * N);
                 _Kor.At(2, 2, 1.0);
 
                 _F = (_Kor.Inverse().Transpose()) * _Rr.Transpose() * _u1x * _Rl * _Kol.Inverse();
@@ -312,27 +320,42 @@ namespace CamAlgorithms
 
             public override void ComputeMappingFucntion(Vector<double> mapFuncResult)
             {
-
+                
             }
 
             public override void ComputeErrorVector(Vector<double> error)
             {
                 int measuredPointsCount = MeasurementsVector.Count / 3;
+                //for(int i = 0; i < measuredPointsCount; ++i)
+                //{
+                //    error.At(i, ComputeSampsonError(PointsLeft[i], PointsRight[i]));
+                //}
+
+                _H_L = _Rl * (_Kol.Inverse());
+                _H_R = _Rr * (_Kor.Inverse());
                 for(int i = 0; i < measuredPointsCount; ++i)
                 {
-                    error.At(i, ComputeSampsonError(PointsLeft[i], PointsRight[i]));
+                    error.At(i, ComputeMyError(_H_L, PointsLeft[i], _H_R, PointsRight[i]));
                 }
             }
 
-            public double ComputeSampsonError(Vector<double> pl, Vector<double> pr)
+            public double ComputeMyError(Matrix<double> Hl, Vector<double> pl, Matrix<double> Hr, Vector<double> pr)
             {
-                double mrFml = pr * _F * pl;
+                var rectLeft = Hl * pl;
+                var rectRight = Hr * pr;
+                double yError = new Vector2(rectLeft).Y - new Vector2(rectRight).Y;
+                return yError;
+            }
+
+            public double ComputeSampsonError(Vector<double> pl, Vector<double> pr)
+            { 
+                double mrFml = pr * (_F * pl);
                 Vector<double> uFml = _u3x * _F * pl;
                 Vector<double> mrFu = pr * _F * _u3x;
                 double uFml_d = uFml.DotProduct(uFml);
                 double mrFu_d = mrFu.DotProduct(mrFu);
                 return (mrFml * mrFml) / (uFml_d + mrFu_d);
-                return (mrFml * mrFml);
+                //return (mrFml * mrFml);
             }
         }
     }

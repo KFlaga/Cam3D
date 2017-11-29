@@ -14,14 +14,6 @@ namespace CamAutomatization
 
     public class CalibrationLink : ILink
     {
-        public LinkType LinkType
-        {
-            get
-            {
-                return LinkType.OneCameraCalibration;
-            }
-        }
-
         bool _storedDataOnDisc = true;
         public bool StoreDataOnDisc
         {

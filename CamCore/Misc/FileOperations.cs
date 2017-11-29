@@ -1,10 +1,6 @@
 ﻿using Microsoft.Win32;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace CamCore
@@ -21,6 +17,9 @@ namespace CamCore
             if (res != null && res == true && File.Exists(fileDialog.FileName))
             {
                 Stream fs = fileDialog.OpenFile();
+#if DEBUG
+                onFileOpen(fs, fileDialog.FileName);
+#else
                 try
                 {
                     onFileOpen(fs, fileDialog.FileName);
@@ -29,6 +28,7 @@ namespace CamCore
                 {
                     MessageBox.Show("Failed to load data: " + exc.Message, "Error");
                 }
+#endif
                 fs.Close();
             }
         }

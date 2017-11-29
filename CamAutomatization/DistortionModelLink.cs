@@ -19,14 +19,6 @@ namespace CamAutomatization
 
     public class DistortionModelLink : ILink
     {
-        public LinkType LinkType
-        {
-            get
-            {
-                return LinkType.DistortionModelComputation;
-            }
-        }
-
         bool _storedDataOnDisc = true;
         public bool StoreDataOnDisc
         {
@@ -110,7 +102,7 @@ namespace CamAutomatization
             distCorrector.Distortion.Model = new Rational3RDModel();
             distCorrector.Distortion.Model.InitialCenterEstimation = 
                 new Vector2(_imgSize.ImageWidth * 0.5, _imgSize.ImageHeight * 0.5);
-            distCorrector.Distortion.Model.InitParameters();
+            distCorrector.Distortion.Model.InitCoeffs();
 
             distCorrector.FindModelParameters();
 

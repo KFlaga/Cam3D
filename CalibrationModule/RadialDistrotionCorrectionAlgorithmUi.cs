@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System;
 using System.Text;
 using CamAlgorithms.Calibration;
+using CamControls;
 
 namespace CalibrationModule
 {
     class RadialDistrotionCorrectionAlgorithmUi : IControllableAlgorithm
     {
-        public RadialDistrotionCorrectionAlgorithm Algorithm { get; } = new RadialDistrotionCorrectionAlgorithm();
+        public RadialDistrotionCorrectionAlgorithm Algorithm { get; private set; } = new RadialDistrotionCorrectionAlgorithm();
         public RadialDistortion Distortion { get { return Algorithm.Distortion; } set { Algorithm.Distortion = value; } }
 
         public int ImageWidth { get { return Algorithm.ImageWidth; } set { Algorithm.ImageWidth = value; } }
@@ -59,20 +60,13 @@ namespace CalibrationModule
 
         public void ShowParametersWindow()
         {
-            // TODO
-            //var algChooserWindow = new ParametrizedProcessorsSelectionWindow();
-            //algChooserWindow.AddProcessorFamily("Radial Distortion Model");
-            //algChooserWindow.AddToFamily("Radial Distortion Model", new Rational3RDModel());
-            //algChooserWindow.AddToFamily("Radial Distortion Model", new Taylor4Model());
-
-            //algChooserWindow.ShowDialog();
-            //if(algChooserWindow.Accepted)
-            //{
-            //    DistortionModel = algChooserWindow.GetSelectedProcessor("Radial Distortion Model") as RadialDistortionModel;
-            //    _minimalisation.DistortionModel = DistortionModel;
-            //    _modelParams = DistortionModel.Parameters.Clone();
-            //    ParamtersAccepted?.Invoke(this, new EventArgs());
-            //}
+            var window = new ParametersSelectionWindow();
+            window.Processor = Algorithm;
+            window.ShowDialog();
+            if(window.Accepted)
+            {
+                ParamtersAccepted?.Invoke(this, new EventArgs());
+            }
         }
 
         private string PrepareResults()
@@ -94,17 +88,12 @@ namespace CalibrationModule
             result.AppendLine("Estmated Paramters:");
 
             int paramsCount = Distortion.Model.ParametersCount - 2; // Center
-            paramsCount = Distortion.Model.ComputesAspect ? paramsCount - 1 : paramsCount; // Aspect
             for(int k = 0; k < paramsCount; ++k)
             {
                 result.AppendLine("K" + k + ": " + Distortion.Model.Coeffs[k]);
             }
             result.AppendLine("Cx: " + Distortion.Model.Coeffs[paramsCount] / Algorithm.Scale);
             result.AppendLine("Cy: " + Distortion.Model.Coeffs[paramsCount + 1] / Algorithm.Scale);
-            if(Distortion.Model.ComputesAspect)
-            {
-                result.AppendLine("Sx: " + Distortion.Model.Coeffs[paramsCount + 2]);
-            }
 
             result.AppendLine();
 

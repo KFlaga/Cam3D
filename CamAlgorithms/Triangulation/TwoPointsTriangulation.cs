@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using CamCore;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
-using CamAlgorithms.Calibration;
 
 namespace CamAlgorithms.Triangulation
 {
@@ -38,25 +37,33 @@ namespace CamAlgorithms.Triangulation
             Points3D = new List<Vector<double>>(PointsLeft.Count);
             for(CurrentPoint = 0; CurrentPoint < PointsLeft.Count && !Terminate; ++CurrentPoint)
             {
-                _pL = PointsLeft[CurrentPoint];
-                _pL = _pL / _pL[2]; // Ensure w = 1
-
-                _pR = PointsRight[CurrentPoint];
-                _pR = _pR / _pR[2];
-
-                if(Rectified)
+                try
                 {
-                    Estimate3DPoint_Rect();
-                }
-                else
-                {
-                    if(UseLinearEstimationOnly)
-                        ComputeBackprojected3DPoint();
+                    _pL = PointsLeft[CurrentPoint];
+                    _pL = _pL / _pL[2]; // Ensure w = 1
+
+                    _pR = PointsRight[CurrentPoint];
+                    _pR = _pR / _pR[2];
+
+                    if(Rectified)
+                    {
+                        Estimate3DPoint_Rect();
+                    }
                     else
-                        Estimate3DPoint();
-                }
+                    {
+                        if(UseLinearEstimationOnly)
+                            ComputeBackprojected3DPoint();
+                        else
+                            Estimate3DPoint();
+                    }
 
-                Points3D.Add(_p3D);
+                    Points3D.Add(_p3D);
+                }
+                catch(MathNet.Numerics.NonConvergenceException e)
+                {
+                    // TODO: remove this hack
+                    Points3D.Add(new DenseVector(new double[] { double.NaN, double.NaN, double.NaN, 1.0 }));
+                }
             }
         }
 

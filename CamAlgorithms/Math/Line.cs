@@ -1,5 +1,6 @@
 ﻿using CamCore;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace CamAlgorithms
@@ -12,7 +13,7 @@ namespace CamAlgorithms
             None = 0,
             Horizontal,
             Vertical,
-            Other
+            Skew
         }
 
         public double[] Coeffs { get; set; } = new double[3];
@@ -52,7 +53,7 @@ namespace CamAlgorithms
             {
                 this.A = -(p1.Y - p2.Y) / (p1.X - p2.X);
                 this.B = 1.0;
-                this.Direction = LineDirection.Other;
+                this.Direction = LineDirection.Skew;
             }
             this.C = -this.A * p1.X - this.B * p1.Y;
         }
@@ -67,7 +68,69 @@ namespace CamAlgorithms
             else if(IsVertical())
                 Direction = LineDirection.Vertical;
             else
-                Direction = LineDirection.Other;
+                Direction = LineDirection.Skew;
+        }
+
+        public Vector2 GetPointForX(double x)
+        {
+            if(Direction == LineDirection.Vertical) { return null; }
+            if(Direction == LineDirection.Horizontal) { return new Vector2(x, -C / B); }
+            return new Vector2(x, -(A * x + C) / B);
+        }
+
+        public Vector2 GetPointForY(double y)
+        {
+            if(Direction == LineDirection.Vertical) { return new Vector2(-C / A, y); }
+            if(Direction == LineDirection.Horizontal) { return null; }
+            return new Vector2(-(B * y + C) / A, y);
+        }
+
+        public double DistanceToSquared(Vector2 point)
+        {
+            double d = A * point.X + B * point.Y + C;
+            return d * d / (A * A + B * B);
+        }
+
+        public double DistanceTo(Vector2 point)
+        {
+            return Math.Sqrt(DistanceToSquared(point));
+        }
+
+        public static Line2D GetRegressionLine(List<Vector2> points)
+        {
+            double sumX = 0.0, sumY = 0.0, sumXY = 0.0, sumX2 = 0, sumY2 = 0;
+            double n = points.Count;
+
+            foreach(var p in points)
+            {
+                sumX += p.X;
+                sumY += p.Y;
+                sumXY += p.X * p.Y;
+                sumX2 += p.X * p.X;
+                sumY2 += p.Y * p.Y;
+            }
+
+            double a = sumXY - sumX * sumY / n;
+            if(Math.Abs(a) < 1e-10 * Math.Abs(sumXY))
+            {
+                // Line is horizontal or vertical
+                if(Math.Abs(n * sumX2 - sumX * sumX) < Math.Abs(sumX) * 0.01)
+                {
+                    // X-es vary by little, so we may assume its vertical
+                    return new Line2D(1.0, 0.0, -sumX / n);
+                }
+                else
+                {
+                    return new Line2D(0.0, 1.0, -sumY / n);
+                }
+            }
+
+            double b = sumY2 - sumX2 + (sumX * sumX - sumY * sumY) / n;
+            double d = b * b + 4 * a * a;
+            double A = (-b - Math.Sqrt(d)) / (2 * a);
+            double B = 1.0;
+            double C = -(A * sumX + B * sumY) / n;
+            return new Line2D(A, B, C);
         }
 
         // Returns point of intersetion of 2 lines or null if they are parallel

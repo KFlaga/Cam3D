@@ -3,6 +3,7 @@ using CamCore;
 using System.Windows;
 using System.Windows.Controls;
 using CamAlgorithms.Calibration;
+using System.Windows.Media.Imaging;
 
 namespace RectificationModule
 {
@@ -79,7 +80,7 @@ namespace RectificationModule
 
         private void _butFindRectification_Click(object sender, RoutedEventArgs e)
         {
-            if(Cameras.AreCalibrated)
+            if(Cameras.AreCalibrated == false)
             {
                 MessageBox.Show("Cameras must be calibrated");
                 return;
@@ -124,6 +125,42 @@ namespace RectificationModule
                    XmlSerialisation.SaveToFile(Rectification, stream);
                },
                "Xml File|*.xml");
+        }
+
+        private void _butUndostort_Click(object sender, RoutedEventArgs e)
+        {
+            if(_camImageFirst.ImageSource == null || _camImageSec.ImageSource == null)
+            {
+                MessageBox.Show("Images must be set");
+                return;
+            }
+            if(_camImageFirst.ImageSource.PixelWidth != _camImageSec.ImageSource.PixelWidth ||
+                _camImageFirst.ImageSource.PixelHeight != _camImageSec.ImageSource.PixelHeight)
+            {
+                MessageBox.Show("Images must have same size");
+                return;
+            }
+            if(Cameras.Left.Distortion.Model == null || Cameras.Right.Distortion.Model == null)
+            {
+                MessageBox.Show("Distortion must be set");
+                return;
+            }
+            _camImageFirst.ImageSource = UndistortImage(Cameras.Left.Distortion.Model, _camImageFirst.ImageSource);
+            _camImageSec.ImageSource = UndistortImage(Cameras.Right.Distortion.Model, _camImageSec.ImageSource);
+        }
+
+        BitmapSource UndistortImage(RadialDistortionModel model, BitmapSource source)
+        {
+            ImageTransformer undistort = new ImageTransformer(ImageTransformer.InterpolationMethod.Cubic, 1)
+            {
+                Transformation = new RadialDistortionTransformation(model)
+            };
+
+            MaskedImage img = new MaskedImage();
+            img.FromBitmapSource(source);
+
+            MaskedImage imgFinal = undistort.TransfromImageBackwards(img, true);
+            return imgFinal.ToBitmapSource();
         }
     }
 }

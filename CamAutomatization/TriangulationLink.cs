@@ -14,14 +14,6 @@ namespace CamAutomatization
 
     public class TriangulationLink : ILink
     {
-        public LinkType LinkType
-        {
-            get
-            {
-                return LinkType.Triangulation;
-            }
-        }
-
         bool _storedDataOnDisc = true;
         public bool StoreDataOnDisc
         {

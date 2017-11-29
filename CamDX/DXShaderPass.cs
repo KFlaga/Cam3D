@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using SharpDX;
-using SharpDX.Direct3D11;
-using SharpDX.D3DCompiler;
-using SharpDX.DXGI;
-using System.Runtime.InteropServices;
 using System.Xml;
 
 namespace CamDX

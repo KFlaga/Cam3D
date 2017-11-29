@@ -3,9 +3,6 @@ using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
@@ -65,8 +62,10 @@ namespace CamAlgorithms.Calibration
         public void FullUpdate(DistortionPoint dpoint) { Model.FullUpdate(dpoint); }
         public void Undistort() { Model.Undistort(); }
         public void Undistort(DistortionPoint dpoint) { Model.Undistort(dpoint); }
+        public Vector2 Undistort(Vector2 dpoint) { return Model.Undistort(dpoint); }
         public void Distort() { Model.Distort(); }
         public void Distort(DistortionPoint dpoint) { Model.Distort(dpoint); }
+        public Vector2 Distort(Vector2 dpoint) { return Model.Distort(dpoint); }
 
         #region DistortionDirection
         // Returns direction of distortion based on distorted points and fitted line between them
@@ -135,6 +134,7 @@ namespace CamAlgorithms.Calibration
             for(int i = 0; i < linePoints.Count; ++i)
             {
                 var pt = linePoints[i].Pf;
+                if(pt == fitPoint) { continue; }
 
                 // Find line from center to fit point
                 Line2D centerToFit = new Line2D(distCenter, pt);
@@ -158,12 +158,12 @@ namespace CamAlgorithms.Calibration
                 }
             }
 
-            if(centerCloserToQuadCount > linePoints.Count * 0.75)
+            if(centerCloserToQuadCount > (linePoints.Count - 1) * 0.75)
             {
                 // Almost all points on quad are closer to center, so we have barrel distortion
                 return DistortionDirection.Barrel;
             }
-            else if(centerCloserToTangnetCount > linePoints.Count * 0.75)
+            else if(centerCloserToTangnetCount > (linePoints.Count - 1) * 0.75)
             {
                 // Almost all points on tangent are closer to center, so we have cushion distortion
                 return DistortionDirection.Cushion;
@@ -182,6 +182,13 @@ namespace CamAlgorithms.Calibration
         {
             reader.MoveToElement(); // Moves to begining of <RadialDistortion>
             string name = reader.GetAttribute("name");
+            if(name == null)
+            {
+                Model = null;
+                reader.ReadEndElement();
+                return;
+            }
+
             if(name.Equals("Rational3", StringComparison.OrdinalIgnoreCase))
             {
                 Model = new Rational3RDModel();

@@ -1,21 +1,19 @@
-﻿//using CalibrationModule;
-using CamCore;
+﻿using CamCore;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
-using CamAutomatization;
 
-namespace CamMain
+namespace CamAutomatization
 {
-    public class ProcessingChain1
+    public class ProcessingChain
     {
         private XmlDocument _xmlDoc;
 
         private GlobalData _globalData;
         private List<ILink> _links;
 
-        public ProcessingChain1()
+        public ProcessingChain()
         {
             _globalData = new GlobalData();
         }
@@ -33,22 +31,8 @@ namespace CamMain
 
         public void Process()
         {
-            //try
-            //{
             OpenChainFile();
-
-            _links = new List<ILink>();
-            _links.Add(new ConfigurationLink(_globalData, _xmlDoc));
-            _links.Add(new RawCalibrationImagesLink(_globalData));
-            _links.Add(new DistortionModelLink(_globalData));
-            _links.Add(new UndistortPointsLink(_globalData));
-            _links.Add(new UndistortCalibrationImagesLink(_globalData));
-            _links.Add(new CalibrationLink(_globalData));
-            _links.Add(new RectificationLink(_globalData));
-            _links.Add(new MatchedImagesLink(_globalData));
-            _links.Add(new ImageMatchingLink(_globalData));
-            _links.Add(new DisparityRefinementLink(_globalData));
-            _links.Add(new TriangulationLink(_globalData));
+            AddStandardLinks();
 
             try
             {
@@ -69,12 +53,22 @@ namespace CamMain
             {
                 _xmlDoc.Save(outFile);
             }
+        }
 
-            //}
-            //catch (Exception e)
-            //{
-
-            //}
+        private void AddStandardLinks()
+        {
+            _links = new List<ILink>();
+            _links.Add(new ConfigurationLink(_globalData, _xmlDoc));
+            _links.Add(new RawCalibrationImagesLink(_globalData));
+            _links.Add(new DistortionModelLink(_globalData));
+            _links.Add(new UndistortPointsLink(_globalData));
+            _links.Add(new UndistortImagesLink(_globalData));
+            _links.Add(new CalibrationLink(_globalData));
+            _links.Add(new RectificationLink(_globalData));
+            _links.Add(new MatchedImagesLink(_globalData));
+            _links.Add(new ImageMatchingLink(_globalData));
+            _links.Add(new DisparityRefinementLink(_globalData));
+            _links.Add(new TriangulationLink(_globalData));
         }
     }
 }

@@ -309,8 +309,8 @@ namespace CamAlgorithms
 
         private static bool IsOutOfOldImageOrPointsToPixelWithNoValue(IImage image, IntVector2 oldPixel)
         {
-            return oldPixel.X < 0 || oldPixel.X > image.ColumnCount ||
-                   oldPixel.Y < 0 || oldPixel.Y > image.RowCount ||
+            return oldPixel.X < 0 || oldPixel.X >= image.ColumnCount ||
+                   oldPixel.Y < 0 || oldPixel.Y >= image.RowCount ||
                    image.HaveValueAt(oldPixel.Y, oldPixel.X) == false;
         }
 

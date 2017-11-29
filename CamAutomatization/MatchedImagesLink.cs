@@ -14,14 +14,6 @@ namespace CamAutomatization
 
     public class MatchedImagesLink : ILink
     {
-        public LinkType LinkType
-        {
-            get
-            {
-                return LinkType.RawCalibrationImagesExtraction;
-            }
-        }
-
         bool _storedDataOnDisc = true;
         public bool StoreDataOnDisc
         {

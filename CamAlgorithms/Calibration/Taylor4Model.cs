@@ -14,7 +14,7 @@ namespace CamAlgorithms.Calibration
 
     public class Taylor4Model : RadialDistortionModel, IParameterizable
     {
-        public string Name { get { return "Taylor 4 Model"; } }
+        public override string Name { get { return "Taylor4"; } }
         public override int ParametersCount
         {
             get
@@ -29,14 +29,12 @@ namespace CamAlgorithms.Calibration
         private int _k4Idx { get { return 3; } }
         private int _cxIdx { get { return 4; } }
         private int _cyIdx { get { return 5; } }
-       // private int _sxIdx { get { return 6; } }
         private double _k1 { get { return Coeffs[_k1Idx]; } }
         private double _k2 { get { return Coeffs[_k2Idx]; } }
         private double _k3 { get { return Coeffs[_k3Idx]; } }
         private double _k4 { get { return Coeffs[_k4Idx]; } }
         private double _cx { get { return Coeffs[_cxIdx]; } }
         private double _cy { get { return Coeffs[_cyIdx]; } }
-        //private double _sx { get { return Parameters[_sxIdx]; } }
         
         public override Vector2 DistortionCenter
         {
@@ -48,18 +46,6 @@ namespace CamAlgorithms.Calibration
             {
                 Coeffs[_cxIdx] = value.X;
                 Coeffs[_cyIdx] = value.Y;
-            }
-        }
-
-        public override double Aspect
-        {
-            get
-            {
-                return 1.0;
-            }
-            set
-            {
-              //  Parameters[_sxIdx] = value;
             }
         }
 
@@ -81,7 +67,7 @@ namespace CamAlgorithms.Calibration
            // ComputesAspect = true;
         }
 
-        public override void InitParameters()
+        public override void InitCoeffs()
         {
             Coeffs[_k1Idx] = 0.0f;
             Coeffs[_k2Idx] = 0.0f;
@@ -89,10 +75,6 @@ namespace CamAlgorithms.Calibration
             Coeffs[_k4Idx] = 0.0f;
             Coeffs[_cxIdx] = InitialCenterEstimation.X;
             Coeffs[_cyIdx] = InitialCenterEstimation.Y;
-           // Parameters[_sxIdx] = InitialAspectEstimation;
-
-            //DistortionCenter.X = Parameters[_cxIdx];
-            //DistortionCenter.Y = Parameters[_cyIdx];
         }
 
         public override void FullUpdate()
@@ -111,6 +93,11 @@ namespace CamAlgorithms.Calibration
                 ComputeDiff_Pu();
                 ComputeDiff_Pf();
             }
+        }
+
+        public override void Distort()
+        {
+            throw new NotImplementedException();
         }
 
         public override void Undistort()
@@ -177,9 +164,6 @@ namespace CamAlgorithms.Calibration
             // d(xd)/d(cy) = 0, d(yd)/d(cy) = -1
             Diff_Xd[_cyIdx] = 0.0;
             Diff_Yd[_cyIdx] = -1.0;
-            // d(xd)/d(sx) = -(x-cx)/2sx^2, d(yd)/d(sx) = 0
-            //Diff_Xd[_sxIdx] = -Pd.X / _sx;
-            //Diff_Yd[_sxIdx] = 0.0;
         }
 
         private void ComputeDiff_Rd()
@@ -193,8 +177,6 @@ namespace CamAlgorithms.Calibration
             Diff_Rd[_cxIdx] = -2.0 * Pd.X * Diff_Xd[_cxIdx] / Rd;
             // d(rd)/d(cy) = (-1/rd)*2*yd*[d(yd)/d(cx)]
             Diff_Rd[_cyIdx] = -2.0 * Pd.Y * Diff_Yd[_cyIdx] / Rd;
-            // d(rd)/d(sx) = (-1/rd)*2*xd*[d(xd)/d(sx)]
-            // Diff_Rd[_sxIdx] = -2.0 * Pd.X * Diff_Xd[_sxIdx] / Rd;
         }
 
 
@@ -209,7 +191,6 @@ namespace CamAlgorithms.Calibration
 
             Diff_Ru[_cxIdx] = Diff_Rd[_cxIdx] * (1.0 + 2.0 * _k1 * Rd + 3.0 * _k2 * Rd * Rd + 4.0 * _k3 * Rd * Rd * Rd + 5.0 * _k4 * Rd * Rd * Rd * Rd);
             Diff_Ru[_cyIdx] = Diff_Rd[_cyIdx] * (1.0 + 2.0 * _k1 * Rd + 3.0 * _k2 * Rd * Rd + 4.0 * _k3 * Rd * Rd * Rd + 5.0 * _k4 * Rd * Rd * Rd * Rd);
-            //Diff_Ru[_sxIdx] = Diff_Rd[_sxIdx] * (_k1 + 2.0 * _k2 * Rd + 3.0 * _k3 * Rd * Rd + 4.0 * _k4 * Rd * Rd * Rd);
         }
 
         private void ComputeDiff_Pu()
@@ -237,8 +218,6 @@ namespace CamAlgorithms.Calibration
             Diff_Yu[_cxIdx] = (Pd.Y / (Rd * Rd)) * (Rd * Diff_Ru[_cxIdx] - Ru * Diff_Rd[_cxIdx]);
             // d(yu)/d(cy) = ru/rd * d(xd)/d(cx) + (xd/rd^2)(d(ru)/d(cx) * rd - d(rd)/d(cx) * ru)
             Diff_Yu[_cyIdx] = (Ru / Rd) * Diff_Yd[_cyIdx] + (Pd.Y / (Rd * Rd)) * (Rd * Diff_Ru[_cyIdx] - Ru * Diff_Rd[_cyIdx]);
-            // d(yu)/d(sx) = (yd / rd ^ 2)(d(ru) / d(cy) * rd - d(rd) / d(cy) * ru)
-            //Diff_Yu[_sxIdx] = (Pd.Y / (Rd * Rd)) * (Rd * Diff_Ru[_sxIdx] - Ru * Diff_Rd[_sxIdx]);
         }
 
         private void ComputeDiff_Pf()
@@ -261,9 +240,6 @@ namespace CamAlgorithms.Calibration
             // d(xu)/d(cy) = sx * d(xu)/d(cy), d(yf)/d(cy) = d(yu)/d(cy) + 1
             Diff_Xf[_cyIdx] = Diff_Xu[_cyIdx];
             Diff_Yf[_cyIdx] = Diff_Yu[_cyIdx] + 1.0;
-            // d(xu)/d(sx) = sx * d(xu)/d(cx) + xu, d(yf)/d(sx) = d(yu)/d(sx)
-            //Diff_Xf[_sxIdx] = _sx * Diff_Xu[_sxIdx] + Pu.X;
-            //Diff_Yf[_sxIdx] = Diff_Yu[_sxIdx];
             
         }
 
@@ -317,8 +293,7 @@ namespace CamAlgorithms.Calibration
             ComputePf();
         }
 
-        public List<IAlgorithmParameter> Parameters { get; protected set; }
-        void IParameterizable.InitParameters()
+        public override void InitParameters()
         {
             Parameters = new List<IAlgorithmParameter>();
 
@@ -329,10 +304,6 @@ namespace CamAlgorithms.Calibration
             IAlgorithmParameter initalCy = new DoubleParameter(
                 "Inital Cy", "ICY", 240.0, 0.0, 99999.0);
             Parameters.Add(initalCy);
-
-            IAlgorithmParameter initalSx = new DoubleParameter(
-                "Inital Sx", "ISX", 1.0, 0.01, 100.0);
-            Parameters.Add(initalSx);
 
             IAlgorithmParameter initalK1 = new DoubleParameter(
                 "Inital K1", "IK1", 0.0, -100.0, 100.0);
@@ -351,14 +322,13 @@ namespace CamAlgorithms.Calibration
             Parameters.Add(initalK4);
         }
 
-        void IParameterizable.UpdateParameters()
+        public override void UpdateParameters()
         {
-            InitialAspectEstimation = IAlgorithmParameter.FindValue<double>("ISX", Parameters);
             InitialCenterEstimation = new Vector2();
             InitialCenterEstimation.X = IAlgorithmParameter.FindValue<double>("ICX", Parameters);
             InitialCenterEstimation.Y = IAlgorithmParameter.FindValue<double>("ICY", Parameters);
 
-            InitParameters();
+            InitCoeffs();
 
             Coeffs[_k1Idx] = IAlgorithmParameter.FindValue<double>("IK1", Parameters);
             Coeffs[_k2Idx] = IAlgorithmParameter.FindValue<double>("IK2", Parameters);
@@ -368,7 +338,7 @@ namespace CamAlgorithms.Calibration
 
         public override void SetInitialParametersFromQuadrics(List<Quadric> quadrics, List<List<Vector2>> linePoints, List<int> fitPoints)
         {
-            InitParameters();
+            InitCoeffs();
         }
     }
 }

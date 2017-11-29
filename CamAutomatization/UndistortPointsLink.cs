@@ -28,14 +28,6 @@ namespace CamAutomatization
 
     public class UndistortPointsLink : ILink
     {
-        public LinkType LinkType
-        {
-            get
-            {
-                return LinkType.UndistortedPointsExtraction;
-            }
-        }
-
         bool _storedDataOnDisc = true;
         public bool StoreDataOnDisc
         {

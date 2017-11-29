@@ -9,6 +9,7 @@ using CamCore;
 using CamAlgorithms;
 using MathNet.Numerics.LinearAlgebra.Double;
 using System.Text;
+using System.Linq;
 using System.IO;
 using CamAlgorithms.Calibration;
 
@@ -77,11 +78,20 @@ namespace CalibrationModule
         private void SetImageSize(object sender, RoutedEventArgs e)
         {
             SetImageSizeWindow imageSizeDialog = new SetImageSizeWindow();
+
+            if(_imageControl.ImageSource != null)
+            {
+                imageSizeDialog.X = _imageControl.ImageSource.PixelWidth;
+                imageSizeDialog.Y = _imageControl.ImageSource.PixelHeight;
+            }
+
             bool? res = imageSizeDialog.ShowDialog();
             if(res != null && res == true)
             {
                 Camera.ImageWidth = imageSizeDialog.X;
                 Camera.ImageHeight = imageSizeDialog.Y;
+                CameraPair.Data.GetCamera(CameraIndex).ImageHeight = Camera.ImageHeight;
+                CameraPair.Data.GetCamera(CameraIndex).ImageWidth = Camera.ImageWidth;
             }
         }
 
@@ -258,15 +268,29 @@ namespace CalibrationModule
 
         private void UndistortCalibrationPoints(object sender, RoutedEventArgs e)
         {
-            if(_currentImagePoints != null && _currentImagePoints.Count > 0)
+            if(CalibrationPoints == null || CalibrationPoints.Count == 0)
             {
-                foreach(var point in _currentImagePoints)
-                {
-                    Distortion.Model.P = point.Img * Distortion.Model.ImageScale;
-                    Distortion.Undistort();
-                    point.Img = Distortion.Model.Pf / Distortion.Model.ImageScale;
-                }
-                RefreshCalibrationPoints();
+                MessageBox.Show("CalibrationPoints must be set");
+                return;
+            }
+            if(Distortion.Model == null)
+            {
+                MessageBox.Show("Distortion Model must be set");
+                return;
+            }
+            if(!(Camera.ImageHeight > 0 || Camera.ImageWidth > 0))
+            {
+                MessageBox.Show("Image size must be set");
+                return;
+            }
+            
+            List<Vector2> imgPoints = new List<Vector2>( CalibrationPoints.Select( (cp) => { return cp.Img; } ));
+            _distortionCorrector.ImageHeight = Camera.ImageHeight;
+            _distortionCorrector.ImageWidth = Camera.ImageWidth;
+            imgPoints = _distortionCorrector.Algorithm.CorrectPoints(imgPoints);
+            for(int i = 0; i < CalibrationPoints.Count; ++i)
+            {
+                CalibrationPoints[i].Img = imgPoints[i];
             }
         }
 
@@ -278,7 +302,7 @@ namespace CalibrationModule
                 return;
             }
 
-            ImageTransformer undistort = new ImageTransformer(ImageTransformer.InterpolationMethod.Quadratic, 1)
+            ImageTransformer undistort = new ImageTransformer(ImageTransformer.InterpolationMethod.Cubic, 1)
             {
                 Transformation = new RadialDistortionTransformation(Distortion.Model)
             };
@@ -297,7 +321,7 @@ namespace CalibrationModule
         
         private void SaveDistortionModel(object sender, RoutedEventArgs e)
         {
-            if(Distortion.Model != null)
+            if(Distortion.Model == null)
             {
                 MessageBox.Show("Distortion model must be set");
                 return;
@@ -328,7 +352,8 @@ namespace CalibrationModule
                 CalibrationPoint cp = CalibrationPoints[p];
                 if(cp.GridNum >= RealGrids.Count)
                 {
-                    continue;
+                    MessageBox.Show("Calibration Point have grid number = " + cp.GridNum + " but only " + RealGrids.Count + " grids defined");
+                    return;
                 }
                 // First compute real point for every calib point
                 RealGridData grid = RealGrids[cp.GridNum];

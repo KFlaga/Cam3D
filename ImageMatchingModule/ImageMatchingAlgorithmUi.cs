@@ -63,7 +63,7 @@ namespace ImageMatchingModule
         public void ShowParametersWindow()
         {
             var window = new ParametrizableSelectionWindow();
-            window.AddParametrizable(new CppSgmMatchingAlgorithm());
+            //window.AddParametrizable(new CppSgmMatchingAlgorithm());
             window.AddParametrizable(new GenericImageMatchingAlgorithm());
             window.ShowDialog();
             if(window.Accepted)

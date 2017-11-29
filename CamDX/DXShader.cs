@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using SharpDX;
 using SharpDX.Direct3D11;
 using SharpDX.D3DCompiler;
-using SharpDX.DXGI;
 using System.Xml;
 using System.Runtime.InteropServices;
-using System.IO;
 
 namespace CamDX
 {

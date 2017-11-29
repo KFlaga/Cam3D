@@ -1,11 +1,6 @@
 ﻿using CamCore;
 using MathNet.Numerics.LinearAlgebra;
-using MathNet.Numerics.LinearAlgebra.Double;
-using System;
 using System.Collections.Generic;
-using System.Xml;
-using System.Xml.Serialization;
-using System.Xml.Schema;
 
 namespace CamAlgorithms.Calibration
 {
@@ -14,7 +9,7 @@ namespace CamAlgorithms.Calibration
     // as well as 1st order derivatives needed to minimise error
     // (all definitions same as in RadialDistortionCorrector)
     // Point p is set to X,Y and
-    public abstract class RadialDistortionModel
+    public abstract class RadialDistortionModel : IParameterizable
     {
         public abstract int ParametersCount { get; } // Length of P
         public Vector<double> Coeffs { get; protected set; } // Vector P
@@ -23,8 +18,6 @@ namespace CamAlgorithms.Calibration
                                                       // to be scaled to old ones
 
         public Vector2 InitialCenterEstimation { get; set; } = new Vector2(); // Initial guess for DC ( probably principal point or image center )
-        public double InitialAspectEstimation { get; set; } // Initial guess for Aspect ratio ( probably 1 )
-        public bool ComputesAspect { get; protected set; } = false;
 
         public Vector2 P { get; set; } // measured point
         public Vector2 Pd { get; protected set; } // distorted point in local (distortion) space
@@ -53,7 +46,7 @@ namespace CamAlgorithms.Calibration
         public virtual double Aspect { get; set; }
 
         // Sets initial values for parameters
-        public abstract void InitParameters();
+        public abstract void InitCoeffs();
 
         // Computes pd,pu,rd,ru and derivatives after new point (X,Y) or parameter vector is set
         public abstract void FullUpdate();
@@ -92,8 +85,22 @@ namespace CamAlgorithms.Calibration
             dpoint.Ru = Ru;
         }
 
+        public Vector2 Undistort(Vector2 p)
+        {
+            P = p;
+            Undistort();
+            return new Vector2(Pf);
+        }
+
         // Distorts point P ( result in Pf )
-        public virtual void Distort() { }
+        public abstract void Distort();
+        
+        public Vector2 Distort(Vector2 p)
+        {
+            P = p;
+            Distort();
+            return new Vector2(Pf);
+        }
 
         // Distorts point P ( result in Pf )
         public virtual void Distort(DistortionPoint dpoint)
@@ -105,5 +112,17 @@ namespace CamAlgorithms.Calibration
         
         public abstract void SetInitialParametersFromQuadrics(List<Quadric> quadrics,
             List<List<Vector2>> linePoints, List<int> fitPoints);
+
+        public List<IAlgorithmParameter> Parameters { get; protected set; } = new List<IAlgorithmParameter>();
+        public virtual void InitParameters()
+        {
+            Parameters = new List<IAlgorithmParameter>();
+        }
+
+        public virtual void UpdateParameters()
+        {
+        }
+
+        public abstract string Name { get; }
     }
 }

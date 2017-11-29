@@ -9,10 +9,12 @@
     <DockPanel>
         <Border BorderBrush="Black" BorderThickness="1" DockPanel.Dock="Right">
             <StackPanel>
-                <Button Content="Manage Points Left" Click="ManagePoints_Left" Margin="5,3,5,3"/>
-                <Button Content="Manage Points Right" Click="ManagePoints_Right" Margin="5,3,5,3"/>
+                <Button Content="Load Matched Points" Click="ManageMatchedPoints" Margin="5,3,5,3"/>
+                <Button Content="Load Triangulated Points" Click="ManageTriangulatedPoints" Margin="5,3,5,3"/>
                 <Rectangle Fill="Black" Height="2"/>
                 <Button Content="Triangulate" Click="Triangulate" Margin="5,3,5,3"/>
+                <Rectangle Fill="Black" Height="2"/>
+                <Button Content="Save Triangulated Points" Click="SaveTriangulatedPoints" Margin="5,3,5,3"/>
             </StackPanel>
         </Border>
         <Border BorderThickness="1" BorderBrush="Black" DockPanel.Dock="Left">

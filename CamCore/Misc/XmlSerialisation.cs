@@ -109,6 +109,10 @@ namespace CamCore
                     {
                         IXmlSerializable serializer = propertyInfo.GetValue(obj) as IXmlSerializable;
                         serializer.ReadXml(reader);
+                        if(reader.NodeType == XmlNodeType.EndElement && reader.Name == nodeName)
+                        {
+                            reader.ReadEndElement();
+                        }
                     }
                     else
                     {

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using SharpDX;
+﻿using SharpDX;
 using System.Runtime.InteropServices;
 using System.Xml;
 

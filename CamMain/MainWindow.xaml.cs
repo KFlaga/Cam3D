@@ -1,4 +1,5 @@
 ﻿using CamAlgorithms.Calibration;
+using CamAutomatization;
 using CamCore;
 using System.Collections.Generic;
 using System.IO;
@@ -121,7 +122,7 @@ namespace CamMain
 
         private void StartChainProcess(object sender, RoutedEventArgs e)
         {
-            ProcessingChain1 pc = new ProcessingChain1();
+            ProcessingChain pc = new ProcessingChain();
             pc.Process();
         }
     }

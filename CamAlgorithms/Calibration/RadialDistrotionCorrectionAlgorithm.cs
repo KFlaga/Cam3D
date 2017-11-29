@@ -64,15 +64,16 @@ namespace CamAlgorithms.Calibration
         public double InitialResidiual { get { return _minimalization != null ? _minimalization.BaseResidiual : -1.0; } }
         public double BestResidiual { get { return _minimalization != null ? _minimalization.MinimumResidiual : -1.0; } }
 
-        protected LMDistortionDirectionalLineFitMinimalisation _minimalization;
+        protected LMDistortionDirectionalLineFitMinimalisation _minimalization = new LMDistortionDirectionalLineFitMinimalisation();
         protected List<List<Vector2>> _scaledLines;
         
         public void FindModelParameters()
         {
             if(CorrectionLines.Count == 0) { throw new Exception("CorrectionLines not set"); }
-            
-            // Find scale so that max radius is sqrt(w^2+h^2) is equal to 1
-            Scale = 1.0 / Math.Sqrt(ImageHeight * ImageHeight + ImageWidth * ImageWidth);
+            if(ImageHeight == 0 || ImageWidth == 0) { throw new Exception("Image size not set"); }
+
+            // Find scale so that max radius is sqrt(w^2+h^2) is equal to 4, mean is around 1
+            Scale = 4.0 / Math.Sqrt(ImageHeight * ImageHeight + ImageWidth * ImageWidth);
             Distortion.Model.ImageScale = Scale;
 
             ScaleCorrectionLines();
@@ -84,16 +85,13 @@ namespace CamAlgorithms.Calibration
 
             _minimalization.BestResultVector.CopyTo(Distortion.Model.Coeffs);
         }
-
-        // Corrects image points using previously computed model
+        
         public List<Vector2> CorrectPoints(List<Vector2> points)
         {
-            Scale = 1.0 / Math.Sqrt(ImageHeight * ImageHeight + ImageWidth * ImageWidth);
-            Distortion.Model.ImageScale = Scale;
             List<Vector2>  correctedPoints = new List<Vector2>(points.Count);
             foreach(var point in points)
             {
-                Distortion.Model.P = point * Scale;
+                Distortion.Model.P = point * Distortion.Model.ImageScale;
                 Distortion.Undistort();
                 correctedPoints.Add(new Vector2(Distortion.Model.Pf / Scale));
             }
@@ -144,7 +142,6 @@ namespace CamAlgorithms.Calibration
             _minimalization.ParametersVector = parVec;
             _minimalization.LinePoints = _scaledLines;
             _minimalization.Terminate = false;
-            _minimalization.FindInitialModelParameters = FindInitialModelParameters;
         }
 
         private void FindTargetErrorForMinimalization()
@@ -155,7 +152,7 @@ namespace CamAlgorithms.Calibration
             {
                 foreach(var point in points)
                 {
-                    _minimalization.MaximumResidiual += point.DistanceToSquared(imgCenter) * 0.01 * Scale * Scale;
+                    _minimalization.MaximumResidiual += point.DistanceToSquared(imgCenter) * 0.000001;
                 }
             }
         }
@@ -182,6 +179,7 @@ namespace CamAlgorithms.Calibration
             taylorModel.InitParameters();
             modelParam.Parameterizables.Add(taylorModel);
 
+            Parameters.Add(modelParam);
             Parameters.Add(new IntParameter("Max Iterations", "MaxIterations", 100, 1, 10000));
             Parameters.Add(new BooleanParameter("Find Initial Model Parameters", "FindInitialModelParameters", true));
         }
@@ -189,6 +187,8 @@ namespace CamAlgorithms.Calibration
         public void UpdateParameters()
         {
             Distortion.Model = IAlgorithmParameter.FindValue<RadialDistortionModel>("DistortionModel", Parameters);
+            Distortion.Model.UpdateParameters();
+
             MaxIterations = IAlgorithmParameter.FindValue<int>("MaxIterations", Parameters);
             FindInitialModelParameters = IAlgorithmParameter.FindValue<bool>("FindInitialModelParameters", Parameters);
         }

@@ -64,7 +64,7 @@ namespace CamAlgorithms.Calibration
 
             if(FindInitialModelParameters)
             {
-                DistortionModel.InitParameters();
+                DistortionModel.InitCoeffs();
             }
 
             base.Init();
@@ -84,6 +84,7 @@ namespace CamAlgorithms.Calibration
             {
                 DistortionModel.SetInitialParametersFromQuadrics(
                     FitQuadrics, LinePoints, FitPoints);
+                DistortionModel.Coeffs.CopyTo(ParametersVector);
             }
         }
 

@@ -1,9 +1,4 @@
-﻿using SharpDX;
-using SharpDX.Direct3D;
-using SharpDX.Direct3D11;
-using Buffer = SharpDX.Direct3D11.Buffer;
-
-namespace CamDX
+﻿namespace CamDX
 {
     //public class DXTestCube : DXModel
     //{

@@ -18,14 +18,6 @@ namespace CamAutomatization
 
     public class ConfigurationLink : ILink
     {
-        public LinkType LinkType
-        {
-            get
-            {
-                return LinkType.Configuration;
-            }
-        }
-        
         bool _storedDataOnDisc = true;
         public bool StoreDataOnDisc
         {

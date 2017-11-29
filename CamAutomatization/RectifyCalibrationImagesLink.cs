@@ -10,14 +10,6 @@ namespace CamAutomatization
 
     public class RectifyCalibrationImagesLink : ILink
     {
-        public LinkType LinkType
-        {
-            get
-            {
-                return LinkType.CalibrationImagesUndistortion;
-            }
-        }
-
         bool _storedDataOnDisc = true;
         public bool StoreDataOnDisc
         {
@@ -34,7 +26,7 @@ namespace CamAutomatization
 
         private GlobalData _globalData;
         private ConfigurationLinkData _config;
-        private UndistortCalibrationImagesLinkData _images;
+        private UndistortedImagesOutputData _images;
         private RectificationLinkData _rectification;
         private RectifyCalibrationImagesLinkData _linkData;
 
@@ -54,7 +46,7 @@ namespace CamAutomatization
             }
             else
             {
-                _images = _globalData.Get<UndistortCalibrationImagesLinkData>();
+                _images = _globalData.Get<UndistortedImagesOutputData>();
                 _rectification = _globalData.Get<RectificationLinkData>();
             }
         }

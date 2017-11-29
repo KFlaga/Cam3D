@@ -49,7 +49,7 @@
                 <Label></Label>
             </DockPanel>
         </Border>
-        <CamControls:PointImage x:Name="_imageControl" SelectedColor="Red" CrossColor="Blue">
+        <CamControls:PointImage x:Name="_imageControl" SelectedColor="Yellow" CrossColor="White">
         </CamControls:PointImage>
     </DockPanel>
 </UserControl>

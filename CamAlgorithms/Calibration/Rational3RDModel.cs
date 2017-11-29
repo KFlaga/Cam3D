@@ -18,14 +18,14 @@ namespace CamAlgorithms.Calibration
     //  # = b^2 - 4*a*c
     //  
     // In real scenraios k2*rd should be << 1, and # > 0
-    // Also minus sign for sqrt(#) is used -> ensure that R^-1(0) = 0
+    // Also plus sign for sqrt(#) is used -> ensure that R^-1(0) = 0
     //
     // TODO Ensure # > 0 even for every rd
     // if a == 0 then ru = -c/b
 
-    public class Rational3RDModel : RadialDistortionModel, IParameterizable
+    public class Rational3RDModel : RadialDistortionModel
     {
-        public string Name { get { return "Rational 3 Model"; } }
+        public override string Name { get { return "Rational3"; } }
 
         public override int ParametersCount
         {
@@ -40,15 +40,15 @@ namespace CamAlgorithms.Calibration
         private int _k3Idx { get { return 2; } }
         private int _cxIdx { get { return 3; } }
         private int _cyIdx { get { return 4; } }
-       // private int _sxIdx { get { return 5; } }
+
         private double _k1 { get { return Coeffs[_k1Idx]; } }
         private double _k2 { get { return Coeffs[_k2Idx]; } }
         private double _k3 { get { return Coeffs[_k3Idx]; } }
         private double _cx { get { return Coeffs[_cxIdx]; } }
         private double _cy { get { return Coeffs[_cyIdx]; } }
-        
+
         private Vector<double> _diff_delta;
-        
+
         public override Vector2 DistortionCenter
         {
             get
@@ -62,19 +62,72 @@ namespace CamAlgorithms.Calibration
             }
         }
 
-        public override double Aspect
+        public delegate double K1Finder(double ru, double rd);
+        public delegate void InitialParametersSetter(Rational3RDModel model, double k1);
+        public enum InitialMethods
+        {
+            SymmertricK1,
+            HighK1,
+            Generic
+        }
+
+        InitialMethods _findInitial = InitialMethods.SymmertricK1;
+        K1Finder _findK1;
+        InitialParametersSetter _setInitialParams;
+        public InitialMethods InitialMethod
         {
             get
             {
-                return 1;// _sx;
+                return _findInitial;
             }
             set
             {
-                //Parameters[_sxIdx] = value;
+                _findInitial = value;
+                switch(value)
+                {
+                    case InitialMethods.Generic:
+                        _findK1 = FindK1_GenericModel;
+                        _setInitialParams = SetInitialParams_SymmetricModel;
+                        break;
+                    case InitialMethods.HighK1:
+                        _findK1 = FindK1_HighK1Model;
+                        _setInitialParams = SetInitialParams_HighK1Model;
+                        break;
+                    case InitialMethods.SymmertricK1:
+                    default:
+                        _findK1 = FindK1_SymmetricModel;
+                        _setInitialParams = SetInitialParams_GenericModel;
+                        break;
+                }
             }
         }
 
+
         public Rational3RDModel()
+        {
+            AllocateWhatNeeded();
+            InitialMethod = InitialMethods.SymmertricK1;
+        }
+
+        public Rational3RDModel(double k1, double k2, double k3, double cx, double cy)
+        {
+            AllocateWhatNeeded();
+            Coeffs[_k1Idx] = k1;
+            Coeffs[_k2Idx] = k2;
+            Coeffs[_k3Idx] = k3;
+            Coeffs[_cxIdx] = cx;
+            Coeffs[_cyIdx] = cy;
+            InitialCenterEstimation = new Vector2(_cx, _cy);
+        }
+
+        public Rational3RDModel(Vector<double> par)
+        {
+            AllocateWhatNeeded();
+            par.CopyTo(Coeffs);
+            InitialCenterEstimation = new Vector2(_cx, _cy);
+        }
+
+        void AllocateWhatNeeded()
         {
             Coeffs = new DenseVector(ParametersCount);
             Diff_Xf = new DenseVector(ParametersCount);
@@ -90,17 +143,15 @@ namespace CamAlgorithms.Calibration
             Pu = new Vector2();
             Pd = new Vector2();
             Pf = new Vector2();
-           // ComputesAspect = true;
         }
 
-        public override void InitParameters()
+        public override void InitCoeffs()
         {
             Coeffs[0] = 0; // ?? : img_diag * 1e-12 
             Coeffs[1] = -0; // ?? : img_diag * 1e-12 
             Coeffs[2] = 0;
             Coeffs[3] = InitialCenterEstimation.X;
             Coeffs[4] = InitialCenterEstimation.Y;
-           // Parameters[5] = InitialAspectEstimation;
         }
 
         public override void FullUpdate()
@@ -160,17 +211,16 @@ namespace CamAlgorithms.Calibration
             //  # = b^2 - 4*a*c
             double b = 1.0 - Rd * _k2;
             double a = _k1 - Rd * _k3;
-            if(Math.Abs(a) < float.Epsilon)
+            if(Math.Abs(a) < 1e-6 * Rd)
             {
-                if(Rd * _k2 >= 1.0 - float.Epsilon)
-                    throw new System.NotFiniteNumberException();
-
+                if(Rd * _k2 >= 1.0 - 1e-6 * Rd) { throw new System.NotFiniteNumberException(); }
                 Ru = Rd / b;
             }
-            else if(b * b + 4.0 * Rd * a < 0)
-                throw new System.NotFiniteNumberException();
+            else if(b * b + 4.0 * Rd * a < 0) { throw new System.NotFiniteNumberException(); }
             else
+            {
                 Ru = (-b + Math.Sqrt(b * b + 4.0 * Rd * a)) / (2.0 * a);
+            }
         }
 
         private void ComputePu()
@@ -204,9 +254,6 @@ namespace CamAlgorithms.Calibration
             // d(xd)/d(cy) = 0, d(yd)/d(cy) = -1
             Diff_Xd[_cyIdx] = 0.0;
             Diff_Yd[_cyIdx] = -1.0;
-            // d(xd)/d(sx) = -(x-cx)/2sx^2, d(yd)/d(sx) = 0
-          //  Diff_Xd[_sxIdx] = -Pd.X / (_sx * _sx);
-          //  Diff_Yd[_sxIdx] = 0.0;
         }
 
         private void ComputeDiff_Rd()
@@ -220,8 +267,6 @@ namespace CamAlgorithms.Calibration
             Diff_Rd[_cxIdx] = Pd.X * Diff_Xd[_cxIdx] / Rd;
             // d(rd)/d(cy) = (yd/rd)*[d(yd)/d(cx)]
             Diff_Rd[_cyIdx] = Pd.Y * Diff_Yd[_cyIdx] / Rd;
-            // d(rd)/d(sx) = (xd/rd)*[d(xd)/d(sx)]
-          //  Diff_Rd[_sxIdx] = Pd.X * Diff_Xd[_sxIdx] / Rd;
         }
 
 
@@ -242,7 +287,6 @@ namespace CamAlgorithms.Calibration
             double dd = -(2.0 * b * _k2 + 4.0 * (-a + Rd*_k3));
             _diff_delta[_cxIdx] = dd * Diff_Rd[_cxIdx];
             _diff_delta[_cyIdx] = dd * Diff_Rd[_cyIdx];
-          //  _diff_delta[_sxIdx] = dd * Diff_Rd[_sxIdx];
 
             // Limit a and delta with float epsilon ( limit somewhat arbitrary, just to avoid overflow )
             a = Math.Abs(a) < float.Epsilon ? float.Epsilon : a;
@@ -262,9 +306,6 @@ namespace CamAlgorithms.Calibration
             // d(ru)/d(cy) = ( a*(k2*d(rd)+#Inv2*d(#)) + k3*d(rd)*(-b+sqrt(#))) ) / 2a^2
             Diff_Ru[_cyIdx] = (a * (_k2 * Diff_Rd[_cyIdx] + deltaInv2 * _diff_delta[_cyIdx]) + 
                 _k3 * Diff_Rd[_cyIdx] * (-b + delta)) / (2.0 * a * a);
-            // d(ru)/d(sx) = ( a*(k2*d(rd)+#Inv2*d(#)) + k3*d(rd)*(-b+sqrt(#))) ) / 2a^2
-          //  Diff_Ru[_sxIdx] = (a * (_k2 * Diff_Rd[_sxIdx] + deltaInv2 * _diff_delta[_sxIdx]) + 
-         //       _k3 * Diff_Rd[_sxIdx] * (-b + delta)) / (2.0 * a * a);
         }
 
         private void ComputeDiff_Pu()
@@ -290,8 +331,6 @@ namespace CamAlgorithms.Calibration
             Diff_Yu[_cxIdx] = (Pd.Y / (Rd * Rd)) * (Rd * Diff_Ru[_cxIdx] - Ru * Diff_Rd[_cxIdx]);
             // d(yu)/d(cy) = ru/rd * d(xd)/d(cx) + (xd/rd^2)(d(ru)/d(cx) * rd - d(rd)/d(cx) * ru)
             Diff_Yu[_cyIdx] = (Ru / Rd) * Diff_Yd[_cyIdx] + (Pd.Y / (Rd * Rd)) * (Rd * Diff_Ru[_cyIdx] - Ru * Diff_Rd[_cyIdx]);
-            // d(yu)/d(sx) = (yd / rd ^ 2)(d(ru) / d(cy) * rd - d(rd) / d(cy) * ru)
-        //    Diff_Yu[_sxIdx] = (Pd.Y / (Rd * Rd)) * (Rd * Diff_Ru[_sxIdx] - Ru * Diff_Rd[_sxIdx]);
         }
 
         private void ComputeDiff_Pf()
@@ -311,9 +350,6 @@ namespace CamAlgorithms.Calibration
             // d(xu)/d(cy) = sx * d(xu)/d(cy), d(yf)/d(cy) = d(yu)/d(cy) + 1
             Diff_Xf[_cyIdx] = Diff_Xu[_cyIdx];
             Diff_Yf[_cyIdx] = Diff_Yu[_cyIdx] + 1.0;
-            // d(xu)/d(sx) = sx * d(xu)/d(cx) + xu, d(yf)/d(sx) = d(yu)/d(sx)
-         //   Diff_Xf[_sxIdx] = _sx * Diff_Xu[_sxIdx] + Pu.X;
-         //   Diff_Yf[_sxIdx] = Diff_Yu[_sxIdx];
         }
 
         private void ComputeDiff_Numeric()
@@ -387,37 +423,79 @@ namespace CamAlgorithms.Calibration
                 Line2D tangnet = quadrics[l].GetTangentThroughPoint(linePoints[l][fitPoints[l]]);
                 for(int p = 0; p < fitPoints[l] - 1; ++p)
                 {
-                    k1sum += FindK1(linePoints[l][p], tangnet);
+                    double k1 = FindK1(linePoints[l][p], tangnet);
+                    k1sum += k1;
                     ++count;
                 }
 
                 for(int p = fitPoints[l] + 2; p < linePoints[l].Count; ++p)
                 {
-                    k1sum += FindK1(linePoints[l][p], tangnet);
+                    double k1 = FindK1(linePoints[l][p], tangnet);
+                    k1sum += k1;
                     ++count;
                 }
             }
+
             k1sum = k1sum / count;
-            Coeffs[_k1Idx] = k1sum;
-            Coeffs[_k2Idx] = -k1sum;
-            Coeffs[_k3Idx] = 0;
+            _setInitialParams(this, k1sum);
         }
 
-        public double FindK1(Vector2 quadricPoint, Line2D tangent)
+        double FindK1(Vector2 quadricPoint, Line2D tangent)
         {
             double rd = quadricPoint.DistanceTo(DistortionCenter);
             Line2D pointToCenter = new Line2D(quadricPoint, DistortionCenter);
             Vector2 intersection = Line2D.IntersectionPoint(pointToCenter, tangent);
             double ru = intersection.DistanceTo(DistortionCenter);
-
-            double k1 = 2.0*(rd - ru) / (ru + rd);
-            //double k1 = (rd/ru - 1) / ru;
-            //double k1 = (rd / ru - 1); // this one is the empirical best
-            return k1;
+            
+            return _findK1(ru, rd);
         }
 
-        public List<IAlgorithmParameter> Parameters { get; protected set; }
-        void IParameterizable.InitParameters()
+        static double FindK1_SymmetricModel(double ru, double rd)
+        {
+            return (rd - ru) / (ru + rd);
+        }
+
+        static double FindK1_HighK1Model(double ru, double rd)
+        {
+            return (rd - ru) / (1.25 * ru * ru - ru * rd);
+        }
+
+        static double FindK1_GenericModel(double ru, double rd)
+        {
+            return rd / ru - 1;
+        }
+
+        static void SetInitialParams_SymmetricModel(Rational3RDModel model, double k1)
+        {
+            model.Coeffs[model._k1Idx] = 4.0 * k1;
+            model.Coeffs[model._k2Idx] = 4.0 * -k1;
+            model.Coeffs[model._k3Idx] = 0.0;
+        }
+
+        static void SetInitialParams_HighK1Model(Rational3RDModel model, double k1)
+        {
+            model.Coeffs[model._k1Idx] = 2 * k1;
+            model.Coeffs[model._k2Idx] = 1.6 * k1;
+            model.Coeffs[model._k3Idx] = 0.4 * k1;
+        }
+
+        static void SetInitialParams_GenericModel(Rational3RDModel model, double k1)
+        {
+            if(k1 > 0.0)
+            {
+                model.Coeffs[model._k1Idx] = 2.0 * k1;
+                model.Coeffs[model._k2Idx] = k1;
+                model.Coeffs[model._k3Idx] = 0.0;
+            }
+            else
+            {
+                model.Coeffs[model._k1Idx] = 1.4 * k1;
+                model.Coeffs[model._k2Idx] = 1.3 * k1;
+                model.Coeffs[model._k3Idx] = 0.5 * k1;
+            }
+        }
+
+        public override void InitParameters()
         {
             Parameters = new List<IAlgorithmParameter>();
             
@@ -426,27 +504,36 @@ namespace CamAlgorithms.Calibration
             Parameters.Add(new DoubleParameter(
                 "Inital Cy", "CY", 240.0, 0.0, 99999.0));
             Parameters.Add(new DoubleParameter(
-                "Inital Sx", "SX", 1.0, 0.01, 100.0));
-            Parameters.Add(new DoubleParameter(
                 "Inital K1", "K1", 0.0, -100.0, 100.0));
             Parameters.Add(new DoubleParameter(
                 "Inital K2", "K2", 0.0, -100.0, 100.0));
             Parameters.Add(new DoubleParameter(
                 "Inital K3", "K3", 0.0, -100.0, 100.0));
+
+            var initialParam = new DictionaryParameter("Initial parameters method", "InitialMethod");
+            initialParam.ValuesMap = new Dictionary< string, object> ()
+            {
+                { "k2 = -k1; k3 = 0.1k1", InitialMethods.SymmertricK1 },
+                { "k1 = 2.0k1; k2 = 1.6k1; k3 = 0.4k1", InitialMethods.HighK1 },
+                { "Experimental", InitialMethods.Generic }
+            };
+
+            Parameters.Add(initialParam);
         }
 
-        void IParameterizable.UpdateParameters()
+        public override void UpdateParameters()
         {
-            InitialAspectEstimation = IAlgorithmParameter.FindValue<double>("SX", Parameters);
             InitialCenterEstimation = new Vector2();
             InitialCenterEstimation.X = IAlgorithmParameter.FindValue<double>("CX", Parameters);
             InitialCenterEstimation.Y = IAlgorithmParameter.FindValue<double>("CY", Parameters);
 
-            InitParameters();
+            InitCoeffs();
 
             Coeffs[_k1Idx] = IAlgorithmParameter.FindValue<double>("K1", Parameters);
             Coeffs[_k2Idx] = IAlgorithmParameter.FindValue<double>("K2", Parameters);
             Coeffs[_k3Idx] = IAlgorithmParameter.FindValue<double>("K3", Parameters);
+
+            InitialMethod = IAlgorithmParameter.FindValue<InitialMethods>("InitialMethod", Parameters);
         }
     }
 }

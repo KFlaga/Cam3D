@@ -21,10 +21,11 @@
         <CamControls:PointImage x:Name="_camImageSec" Grid.Column="2" Grid.Row="0"/>
         <Border Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="3" BorderBrush="Black" BorderThickness="1">
             <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" Height="35" Background="LightGray">
-                <Button x:Name="_butFindRectification" Margin="3,4,4,3" Click="_butFindRectification_Click">Find Rectification</Button>
-                <Button x:Name="_butRectifyImages" Margin="3,4,4,3" Click="_butRectifyImages_Click">Rectify Images</Button>
-                <Button x:Name="_butLoadRectification" Margin="3,4,4,3" Click="_butLoadRectification_Click">Load Rectification</Button>
-                <Button x:Name="_butSaveRectification" Margin="3,4,4,3" Click="_butSaveRectification_Click">Save Rectification</Button>
+                <Button x:Name="_butLoadMatchedPoints" Margin="3,4,4,3" Click="_butLoadMatchedPoints_Click" Width="120">Load Points</Button>
+                <Button x:Name="_butFindRectification" Margin="3,4,4,3" Click="_butFindRectification_Click" Width="140">Find Rect No Calib</Button>
+                <Button x:Name="_butFindRectificationWithInitial" Margin="3,4,4,3" Click="_butFindRectificationWithInitial_Click" Width="140">Find Rect With Calib</Button>
+                <Button x:Name="_butUndostort" Margin="3,4,4,3" Click="_butUndostort_Click" Width="140">Undistort Images</Button>
+                <Button x:Name="_butRectifyImages" Margin="3,4,4,3" Click="_butRectifyImages_Click" Width="140">Rectify Images</Button>
             </StackPanel>
         </Border>
     </Grid>

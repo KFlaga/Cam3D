@@ -70,6 +70,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="TriangulatedPointManagerWindow.xaml.cs">
+      <DependentUpon>TriangulatedPointManagerWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="TriangulationAlgorithmUi.cs" />
     <Compile Include="TraingulationModeTabs.xaml.cs">
       <DependentUpon>TraingulationModeTabs.xaml</DependentUpon>
@@ -108,6 +111,10 @@
     <Page Include="MatchedPointsManagerWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="TriangulatedPointManagerWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="TriangulationFromPointsTab.xaml">
       <Generator>MSBuild:Compile</Generator>

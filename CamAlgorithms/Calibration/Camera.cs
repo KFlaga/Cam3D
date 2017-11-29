@@ -36,16 +36,17 @@ namespace CamAlgorithms.Calibration
     [DebuggerDisplay("{Matrix}")]
     public class Camera : IXmlSerializable
     {
-        public Matrix<double> Matrix = new DenseMatrix(3, 4);
+        public Matrix<double> Matrix { get; set; } = new DenseMatrix(3, 4);
         
-        public Matrix<double> InternalMatrix = new DenseMatrix(3, 3);
-        public Matrix<double> RotationMatrix = new DenseMatrix(3, 3);
-        public Vector<double> Translation = new DenseVector(3);
+        public Matrix<double> InternalMatrix { get; set; } = new DenseMatrix(3, 3);
+        public Matrix<double> RotationMatrix { get; set; } = new DenseMatrix(3, 3);
+        public Vector<double> Translation { get; set; } = new DenseVector(3);
 
-        public RadialDistortion Distortion { get; set; }
+        public RadialDistortion Distortion { get; set; } = new RadialDistortion();
 
+        [XmlIgnore]
         public bool IsCalibrated { get { return System.Math.Abs(Matrix[0, 0]) > 1e-12; } }
-
+        
         public int ImageWidth { get; set; } = 0;
         public int ImageHeight { get; set; } = 0;
 
@@ -71,7 +72,12 @@ namespace CamAlgorithms.Calibration
 
         public void Decompose()
         {
-            Matrix = Decomposed(Matrix, out InternalMatrix, out RotationMatrix, out Translation);
+            Matrix<double> i, r;
+            Vector<double> t;
+            Matrix = Decomposed(Matrix, out i, out r, out t);
+            InternalMatrix = i;
+            RotationMatrix = r;
+            Translation = t;
         }
 
         public static Matrix<double> Decomposed(Matrix<double> camera, 
@@ -124,7 +130,8 @@ namespace CamAlgorithms.Calibration
 
             translation = -camera.SubMatrix(0, 3, 0, 3).Inverse().Multiply(camera.SubMatrix(0, 3, 3, 1)).Column(0);
 
-            return camera;
+            var KR = internalMatrix * rotationMatrix;
+            return KR.Append(-KR * translation.ToColumnMatrix());
         }
 
         public Camera Clone()
@@ -163,6 +170,10 @@ namespace CamAlgorithms.Calibration
         public virtual void ReadXml(XmlReader reader)
         {
             XmlSerialisation.ReadXmlAllProperties(reader, this);
+            if(IsCalibrated)
+            {
+                Decompose();
+            }
         }
 
         public virtual void WriteXml(XmlWriter writer)

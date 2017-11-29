@@ -1,12 +1,4 @@
-﻿using SharpDX;
-using SharpDX.Direct3D;
-using SharpDX.Direct3D11;
-using System;
-using System.Collections.Generic;
-using Buffer = SharpDX.Direct3D11.Buffer;
-
-
-namespace CamDX
+﻿namespace CamDX
 {
     //public class DX11PointCollection : DXModel
     //{

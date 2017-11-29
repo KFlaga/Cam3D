@@ -49,7 +49,7 @@ namespace CamAlgorithms.ImageMatching
 
         public override string GetProgress()
         {
-            return "Run: " + (Aggregator.IsLeftImageBase ? "1" : "2") + ". Pixel: (" +
+            return "Run: " + (Aggregator.IsLeftImageBase ? "Left" : "Right") + ". Pixel: (" +
                 Aggregator.CurrentPixel.X + ", " + Aggregator.CurrentPixel.Y +
                 ") of [" + ImageLeft.ColumnCount + ", " + ImageLeft.RowCount + "].";
         }

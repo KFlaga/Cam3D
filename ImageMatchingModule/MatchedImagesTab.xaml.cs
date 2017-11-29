@@ -81,32 +81,26 @@ namespace ImageMatchingModule
                 MessageBox.Show("Images must have same size");
                 return;
             }
-            if(CameraPair.Data.AreCalibrated)
+            if(CameraPair.Data.RectificationLeft == null || CameraPair.Data.RectificationRight == null)
             {
-                MessageBox.Show("Cameras must be calibrated");
+                MessageBox.Show("Rectification must be set");
                 return;
             }
-
-            ImageRectification rectifier = new ImageRectification(new ImageRectification_ZhangLoop());
-            rectifier.ImageHeight = _camImageFirst.ImageSource.PixelHeight;
-            rectifier.ImageWidth = _camImageFirst.ImageSource.PixelWidth;
-            rectifier.Cameras = CameraPair.Data;
-            rectifier.ComputeRectificationMatrices();
-
+            
             ImageTransformer transformer = new ImageTransformer();
             transformer.UsedInterpolationMethod = ImageTransformer.InterpolationMethod.Quadratic;
             
             transformer.Transformation = new RectificationTransformation()
             {
-                RectificationMatrix = rectifier.RectificationLeft,
-                RectificationMatrixInverse = rectifier.RectificationLeftInverse,
+                RectificationMatrix = CameraPair.Data.RectificationLeft,
+                RectificationMatrixInverse = CameraPair.Data.RectificationLeftInverse,
             }; ;
             MaskedImage rectLeft = transformer.TransfromImageBackwards(_imgLeft, true);
 
             transformer.Transformation = new RectificationTransformation()
             {
-                RectificationMatrix = rectifier.RectificationRight,
-                RectificationMatrixInverse = rectifier.RectificationRightInverse,
+                RectificationMatrix = CameraPair.Data.RectificationRight,
+                RectificationMatrixInverse = CameraPair.Data.RectificationRightInverse,
             }; ;
             MaskedImage rectRight = transformer.TransfromImageBackwards(_imgRight, true);
 
@@ -125,11 +119,6 @@ namespace ImageMatchingModule
                 _camImageFirst.ImageSource.PixelHeight != _camImageSec.ImageSource.PixelHeight)
             {
                 MessageBox.Show("Images must have same size");
-                return;
-            }
-            if(CameraPair.Data.AreCalibrated)
-            {
-                MessageBox.Show("Cameras must be calibrated");
                 return;
             }
 
