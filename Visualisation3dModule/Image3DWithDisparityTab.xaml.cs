@@ -24,7 +24,7 @@ namespace Visualisation3dModule
 
         private void ManagePoints(object sender, RoutedEventArgs e)
         {
-            Points3DManagerWindow pointsManager = new Points3DManagerWindow();
+            TriangulatedPointsManagerWindow pointsManager = new TriangulatedPointsManagerWindow();
             pointsManager.Points = Points3D;
             bool? res = pointsManager.ShowDialog();
             if(res != null && res == true)

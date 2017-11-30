@@ -83,16 +83,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Module.cs" />
-    <Compile Include="CalibratedRectificationTab.xaml.cs">
-      <DependentUpon>CalibratedRectificationTab.xaml</DependentUpon>
+    <Compile Include="RectificationTab.xaml.cs">
+      <DependentUpon>RectificationTab.xaml</DependentUpon>
     </Compile>
+    <Compile Include="RectificationAlgorithmUi.cs" />
     <Compile Include="RectificationModeTabs.xaml.cs">
       <DependentUpon>RectificationModeTabs.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UncalibratedRectificationTab.xaml.cs">
-      <DependentUpon>UncalibratedRectificationTab.xaml</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CamControls\CamControls.csproj">
@@ -109,17 +107,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="CalibratedRectificationTab.xaml">
+    <Page Include="RectificationTab.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
     <Page Include="RectificationModeTabs.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="UncalibratedRectificationTab.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>

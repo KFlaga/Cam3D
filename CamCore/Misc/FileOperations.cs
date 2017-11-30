@@ -17,9 +17,9 @@ namespace CamCore
             if (res != null && res == true && File.Exists(fileDialog.FileName))
             {
                 Stream fs = fileDialog.OpenFile();
-#if DEBUG
-                onFileOpen(fs, fileDialog.FileName);
-#else
+//#if DEBUG
+//                onFileOpen(fs, fileDialog.FileName);
+//#else
                 try
                 {
                     onFileOpen(fs, fileDialog.FileName);
@@ -28,7 +28,7 @@ namespace CamCore
                 {
                     MessageBox.Show("Failed to load data: " + exc.Message, "Error");
                 }
-#endif
+//#endif
                 fs.Close();
             }
         }

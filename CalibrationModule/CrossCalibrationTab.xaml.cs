@@ -64,24 +64,24 @@ namespace CalibrationModule
 
         private void ManageMatchedPointsLeft(object sender, RoutedEventArgs e)
         {
-            MatchedPointsManagerWindow pointsManager = new MatchedPointsManagerWindow();
-            pointsManager.Points = MatchedPointsLeft;
-            bool? res = pointsManager.ShowDialog();
-            if(res != null && res == true)
-            {
-                MatchedPointsLeft = pointsManager.Points;
-            }
+            //MatchedPointsManagerWindow pointsManager = new MatchedPointsManagerWindow();
+            //pointsManager.Points = MatchedPointsLeft;
+            //bool? res = pointsManager.ShowDialog();
+            //if(res != null && res == true)
+            //{
+            //    MatchedPointsLeft = pointsManager.Points;
+            //}
         }
 
         private void ManageMatchedPointsRight(object sender, RoutedEventArgs e)
         {
-            MatchedPointsManagerWindow pointsManager = new MatchedPointsManagerWindow();
-            pointsManager.Points = MatchedPointsRight;
-            bool? res = pointsManager.ShowDialog();
-            if(res != null && res == true)
-            {
-                MatchedPointsRight = pointsManager.Points;
-            }
+            //MatchedPointsManagerWindow pointsManager = new MatchedPointsManagerWindow();
+            //pointsManager.Points = MatchedPointsRight;
+            //bool? res = pointsManager.ShowDialog();
+            //if(res != null && res == true)
+            //{
+            //    MatchedPointsRight = pointsManager.Points;
+            //}
         }
 
         private void SaveCalibMatched(object sender, RoutedEventArgs e)

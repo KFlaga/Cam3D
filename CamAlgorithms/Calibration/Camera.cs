@@ -141,7 +141,9 @@ namespace CamAlgorithms.Calibration
                 Matrix = this.Matrix.Clone(),
                 RotationMatrix = this.RotationMatrix.Clone(),
                 InternalMatrix = this.InternalMatrix.Clone(),
-                Translation = this.Translation.Clone()
+                Translation = this.Translation.Clone(),
+                ImageWidth = this.ImageWidth,
+                ImageHeight = this.ImageHeight
             };
         }
 

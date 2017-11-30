@@ -1,12 +1,8 @@
 ﻿using CamAlgorithms.Calibration;
-using CamAlgorithms.Triangulation;
 using CamControls;
 using CamCore;
-using MathNet.Numerics.LinearAlgebra;
-using MathNet.Numerics.LinearAlgebra.Double;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 

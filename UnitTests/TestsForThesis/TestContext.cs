@@ -134,8 +134,6 @@ namespace CamUnitTest.TestsForThesis
             {
                 results.AppendLine("Error details:");
                 results.AppendLine(ex.Message);
-                //results.AppendLine("Stack trace:");
-                //results.AppendLine(ex.StackTrace);
             }
 
             if(Output.Length > 0)

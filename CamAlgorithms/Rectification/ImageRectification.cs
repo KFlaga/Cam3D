@@ -26,7 +26,7 @@ namespace CamAlgorithms
     }
 
     [XmlRoot("Rectification")]
-    public class ImageRectification : IXmlSerializable
+    public class ImageRectification : IXmlSerializable, IParameterizable
     {
         private class RectifiedImageCorners
         {
@@ -63,12 +63,7 @@ namespace CamAlgorithms
         // Pairs of matched points - needed for uncalibrated methods
         [XmlIgnore]
         public List<Vector2Pair> MatchedPairs { get; set; }
-
-        public double Quality { get; set; }
-
-        private RectifiedImageCorners _leftCorners;
-        private RectifiedImageCorners _rightCorners;
-
+        
         public ImageRectification() { }
         public ImageRectification(ImageRectificationComputer rectComp)
         {
@@ -83,34 +78,33 @@ namespace CamAlgorithms
             RectificationComputer.MatchedPairs = MatchedPairs;
 
             RectificationComputer.ComputeRectificationMatrices();
+            Matrix<double> HtL, HtR;
+            ComputeScalingMatrices(RectificationComputer.RectificationLeft, RectificationComputer.RectificationRight, out HtL, out HtR);
 
-            RectificationLeft = RectificationComputer.RectificationLeft;
-            RectificationRight = RectificationComputer.RectificationRight;
-
-            _leftCorners = new RectifiedImageCorners(RectificationLeft, ImageWidth, ImageHeight);
-            _rightCorners = new RectifiedImageCorners(RectificationRight, ImageWidth, ImageHeight);
+            RectificationLeft = HtL * RectificationComputer.RectificationLeft;
+            RectificationRight = HtR * RectificationComputer.RectificationRight;
+            
             EnsureCorrectHorizontalOrder();
 
             RectificationLeftInverse = RectificationLeft.Inverse();
-            RectificationRightInverse = RectificationRight.Inverse();
-
-            Quality = ComputeRectificationQuality();
+            RectificationRightInverse = RectificationRight.Inverse();    
         }
 
         private void EnsureCorrectHorizontalOrder()
         {
-            EnsureCorrectHorizontalOrder(ref _leftCorners, RectificationLeft);
-            EnsureCorrectHorizontalOrder(ref _rightCorners, RectificationRight);
+            EnsureCorrectHorizontalOrder(RectificationLeft);
+            EnsureCorrectHorizontalOrder(RectificationRight);
         }
 
-        private void EnsureCorrectHorizontalOrder(ref RectifiedImageCorners corners, Matrix<double> rectification)
+        private void EnsureCorrectHorizontalOrder(Matrix<double> rectification)
         {
+            RectifiedImageCorners corners = new RectifiedImageCorners(rectification, ImageWidth, ImageHeight);
             // Now sometimes we have verticaly mirrored image - pixels appears in reversed
             // x order. So we need to check if right edge - left edge is negative or not.
             // If it is so, then reverse x order -> negate first row and add ImageWidth to 3rd element
             // so then x_rect_rev = (W - (H11x + H12y + H13)) / (H31x + H32y + H33) = W / (H31x + H32y + H33) - x_rect
             // Assuming H31 and H32 are quite small x_rect_rev = W/H33 - x_rect
-            if(corners.TopRight.X - _leftCorners.TopLeft.X < 0)
+            if(corners.TopRight.X - corners.TopLeft.X < 0)
             {
                 rectification[0, 0] = -rectification[0, 0];
                 rectification[0, 1] = -rectification[0, 1];
@@ -129,95 +123,55 @@ namespace CamAlgorithms
             }
         }
 
-        public double ComputeRectificationQuality()
+        public void ComputeScalingMatrices(Matrix<double> Hl, Matrix<double> Hr, out Matrix<double> HtL, out Matrix<double> HtR)
         {
-            double yErr = ComputeNonhorizontalityError();
+            // Scale and move images (after rectification) so that they have lowest
+            // coordinates (0,0) and same width/height as original image
+            RectifiedImageCorners left = new RectifiedImageCorners(Hl, ImageWidth, ImageHeight);
+            RectifiedImageCorners right = new RectifiedImageCorners(Hr, ImageWidth, ImageHeight);
 
-            double perpErr = ComputeCenterNonPerpendicularityError(_leftCorners, _rightCorners);
+            // (scale and y-translation must be same for both images to perserve rectification)
+            // Scale so that both images fits to (imgHeight*2, imgWidth*2)
+            // If it fits w/o scaling, scale so that bigger image have width imgWidth
+            // Translate in y so that left(0,0) is transformed into left'(0,x)
+            // Translate in x (independently) so that img(0,0) is transformed into img'(y,0)
+            // 1) Find max/min x/y
+            double minX_L = Math.Min(left.BotLeft.X, Math.Min(left.BotRight.X, Math.Min(left.TopLeft.X, left.TopRight.X)));
+            double minY_L = Math.Min(left.BotLeft.Y, Math.Min(left.BotRight.Y, Math.Min(left.TopLeft.Y, left.TopRight.Y)));
+            double maxX_L = Math.Max(left.BotLeft.X, Math.Max(left.BotRight.X, Math.Max(left.TopLeft.X, left.TopRight.X)));
+            double maxY_L = Math.Max(left.BotLeft.Y, Math.Max(left.BotRight.Y, Math.Max(left.TopLeft.Y, left.TopRight.Y)));
 
-            double ratioErr = ComputeEdgesRatioError(_leftCorners, _rightCorners);
+            double minX_R = Math.Min(right.BotLeft.X, Math.Min(right.BotRight.X, Math.Min(right.TopLeft.X, right.TopRight.X)));
+            double minY_R = Math.Min(right.BotLeft.Y, Math.Min(right.BotRight.Y, Math.Min(right.TopLeft.Y, right.TopRight.Y)));
+            double maxX_R = Math.Max(right.BotLeft.X, Math.Max(right.BotRight.X, Math.Max(right.TopLeft.X, right.TopRight.X)));
+            double maxY_R = Math.Max(right.BotLeft.Y, Math.Max(right.BotRight.Y, Math.Max(right.TopLeft.Y, right.TopRight.Y)));
 
-            // TODO: add some Fundamental error (recitifed should have Fi or check H_r.Transpose() * Fi * H_l == Cameras.Fundamental), maybe reprojection error
+            double wr = (maxX_L - minX_L) / (maxX_R - minX_R);
+            double hr = (maxY_L - minY_L) / (maxY_R - minY_R);
+            double maxWidth = Math.Max(maxX_L - minX_L, maxX_R - minX_R);
+            double maxHeight = Math.Max(maxY_L - minY_L, maxY_R - minY_R);
 
-            return 1.0 / (yErr + perpErr + ratioErr);
-        }
-
-
-        private double ComputeNonhorizontalityError()
-        {
-            if(MatchedPairs == null)
-            {
-                return 0.0;
-            }
-
-            double error = 0;
-            for(int i = 0; i < MatchedPairs.Count; ++i)
-            {
-                var pair = MatchedPairs[i];
-
-                // rectify points pair
-                var rectLeft = RectificationLeft * pair.V1.ToMathNetVector3();
-                var rectRight = RectificationRight * pair.V2.ToMathNetVector3();
-
-                // get error -> squared difference of y-coord
-                double yError = new Vector2(rectLeft).Y - new Vector2(rectRight).Y;
-                error += yError * yError;
-            }
-            return Math.Sqrt(error) / MatchedPairs.Count;
-        }
-
-        private double ComputeCenterNonPerpendicularityError(RectifiedImageCorners leftCorners, RectifiedImageCorners rightCorners)
-        {
-            // Perpendicularity of lines through centers of rectified edges
-            // 1.1) find edge centers
-            var edgeTopCenterLeft = (leftCorners.TopLeft + leftCorners.TopRight) * 0.5;
-            var edgeBotCenterLeft = (leftCorners.BotLeft + leftCorners.BotRight) * 0.5;
-            var edgeLeftCenterLeft = (leftCorners.TopLeft + leftCorners.BotLeft) * 0.5;
-            var edgeRightCenterLeft = (leftCorners.TopRight + leftCorners.BotRight) * 0.5;
-            var edgeTopCenterRight = (rightCorners.TopLeft + rightCorners.TopRight) * 0.5;
-            var edgeBotCenterRight = (rightCorners.BotLeft + rightCorners.BotRight) * 0.5;
-            var edgeLeftCenterRight = (rightCorners.TopLeft + rightCorners.BotLeft) * 0.5;
-            var edgeRightCenterRight = (rightCorners.TopRight + rightCorners.BotRight) * 0.5;
-            // 1.2) find vectors joining centers
-            var verticalJoinLeft = edgeBotCenterLeft - edgeTopCenterLeft;
-            var horizontalJoinLeft = edgeRightCenterLeft - edgeLeftCenterLeft;
-            var verticalJoinRight = edgeBotCenterRight - edgeTopCenterRight;
-            var horizontalJoinRight = edgeRightCenterRight - edgeLeftCenterRight;
-            // 1.3) perpedicularuty value??
-
-            return 0.0;
-        }
-
-        private double ComputeEdgesRatioError(RectifiedImageCorners leftCorners, RectifiedImageCorners rightCorners)
-        {
-            // Ratio of width and height of base and recitifed images (that is ratio of edges length) :
-            //      it should be as small as possible and similar for both cameras
-            // 2.1) find edges lengths
-            var edgeTopLeftLength = (leftCorners.TopRight - leftCorners.TopLeft).Length();
-            var edgeBotLeftLength = (leftCorners.BotRight - leftCorners.BotLeft).Length();
-            var edgeLeftLeftLength = (leftCorners.BotLeft - leftCorners.TopLeft).Length();
-            var edgeRightLeftLength = (leftCorners.BotRight - leftCorners.TopRight).Length();
-            var edgeTopRightLength = (rightCorners.TopRight - rightCorners.TopLeft).Length();
-            var edgeBotRightLength = (rightCorners.BotRight - rightCorners.BotLeft).Length();
-            var edgeLeftRightLength = (rightCorners.BotLeft - rightCorners.TopLeft).Length();
-            var edgeRightRightLength = (rightCorners.BotRight - rightCorners.TopRight).Length();
-            // 2.2) find lengths ratios
-            var ratioWidthLeft = edgeTopLeftLength / edgeBotLeftLength;
-            var ratioHeightLeft = edgeLeftLeftLength / edgeRightLeftLength;
-            var ratioWidthRight = edgeTopRightLength / edgeBotRightLength;
-            var ratioHeightRight = edgeLeftRightLength / edgeRightRightLength;
-            // 2.3) what to do with that?
-            // Idea: sum of squares of each ratio : so they are small
-            //       + sum of quares of ratios of left/right image, so they are similar 
-            double errInternal = (1 - ratioWidthLeft) * (1 - ratioWidthLeft) +
-                (1 - ratioHeightLeft) * (1 - ratioHeightLeft) +
-                (1 - ratioWidthRight) * (1 - ratioWidthRight) +
-                (1 - ratioHeightRight) * (1 - ratioHeightRight);
-            double rw = (1 - (ratioWidthLeft / ratioWidthRight));
-            double rh = (1 - (ratioHeightLeft / ratioHeightRight));
-            double errCorss = rw * rw + rh * rh;
-
-            return Math.Sqrt(errInternal + errCorss);
+            // 2) Scale image so that longest of all dimensions is equal to old image size
+            double scale = Math.Min(ImageWidth / maxWidth, ImageHeight / maxHeight);
+            // For now leave scale as it is otherwise
+            HtL = DenseMatrix.CreateIdentity(3);
+            HtR = DenseMatrix.CreateIdentity(3);
+            HtL.At(0, 0, scale);
+            HtL.At(1, 1, scale);
+            HtR.At(0, 0, scale);
+            HtR.At(1, 1, scale);
+            // 3) Translate in y so that minY on both images = 0
+            double transY = -Math.Min(minY_L, minY_R) * scale;
+            // Translate in x (independently) so that minX on both images = 0
+            double transX_L = -minX_L * scale;
+            double transX_R = -minX_R * scale;
+            HtL.At(0, 2, transX_L);
+            HtL.At(1, 2, transY);
+            HtR.At(0, 2, transX_R);
+            HtR.At(1, 2, transY);
+            
+            left = new RectifiedImageCorners(HtL*Hl, ImageWidth, ImageHeight);
+            right = new RectifiedImageCorners(HtR*Hr, ImageWidth, ImageHeight);
         }
 
         public XmlSchema GetSchema() { return null; }
@@ -230,6 +184,37 @@ namespace CamAlgorithms
         public virtual void WriteXml(XmlWriter writer)
         {
             XmlSerialisation.WriteXmlNonIgnoredProperties(writer, this);
+        }
+
+        public List<IAlgorithmParameter> Parameters { get; private set; } = new List<IAlgorithmParameter>();
+
+        public void InitParameters()
+        {
+            Parameters = new List<IAlgorithmParameter>();
+
+            DictionaryParameter computersParam = new DictionaryParameter("Rectification Algorithm", "RectificationComputer");
+            computersParam.ValuesMap = new Dictionary<string, object>()
+            {
+                { "Zhang-Loop", new ImageRectification_ZhangLoop() },
+                { "Fusiello-Trucco-Verri", new ImageRectification_FusielloCalibrated() },
+                { "Fusiello-Irsara", new ImageRectification_FussieloUncalibrated() { UseInitialCalibration = false } },
+                { "Fusiello-Irsara with initial calibration", new ImageRectification_FussieloUncalibrated() { UseInitialCalibration = true } }
+            };
+            computersParam.DefaultValue = computersParam.ValuesMap["Zhang-Loop"];
+            Parameters.Add(computersParam);
+        }
+
+        public void UpdateParameters()
+        {
+            RectificationComputer = IAlgorithmParameter.FindValue<ImageRectificationComputer>("RectificationComputer", Parameters);
+        }
+
+        public string Name
+        {
+            get
+            {
+                return "ImageRectification";
+            }
         }
     }
 }

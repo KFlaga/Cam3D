@@ -4,20 +4,17 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Xml;
 
-namespace TriangulationModule
+namespace CamControls
 {
     /// <summary>
-    /// Interaction logic for CalibrationPointsManagerWindow.xaml
+    /// Interaction logic for TriangulatedPointManagerWindow.xaml
     /// </summary>
-    public partial class MatchedPointsManagerWindow : Window
+    public partial class TriangulatedPointsManagerWindow : Window
     {
-        private BindingList<Vector2Pair> _pointList;
-        private List<Vector2Pair> _savedList;
-        public List<Vector2Pair> Points 
+        private BindingList<TriangulatedPoint> _pointList;
+        private List<TriangulatedPoint> _savedList;
+        public List<TriangulatedPoint> Points
         {
             get
             {
@@ -27,7 +24,7 @@ namespace TriangulationModule
             {
                 _pointList.Clear();
                 _savedList.Clear();
-                foreach (var point in value)
+                foreach(var point in value)
                 {
                     _pointList.Add(point);
                     _savedList.Add(point);
@@ -35,20 +32,20 @@ namespace TriangulationModule
             }
         }
 
-        public MatchedPointsManagerWindow()
+        public TriangulatedPointsManagerWindow()
         {
             InitializeComponent();
-            _savedList = new List<Vector2Pair>();
-            _pointList = new BindingList<Vector2Pair>();
+            _savedList = new List<TriangulatedPoint>();
+            _pointList = new BindingList<TriangulatedPoint>();
             _pointListView.ItemsSource = _pointList;
         }
-        
+
         private void Accept(object sender, RoutedEventArgs e)
         {
             DialogResult = true;
             Close();
         }
-        
+
         private void Cancel(object sender, RoutedEventArgs e)
         {
             DialogResult = false;
@@ -67,7 +64,7 @@ namespace TriangulationModule
 
         public void LoadFromFile(Stream file, string path)
         {
-            _savedList = XmlSerialisation.CreateFromFile<List<Vector2Pair>>(file);
+            _savedList = XmlSerialisation.CreateFromFile<List<TriangulatedPoint>>(file);
             _pointList.Clear();
             foreach(var p in _savedList)
             {

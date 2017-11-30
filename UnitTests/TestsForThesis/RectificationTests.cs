@@ -47,7 +47,7 @@ namespace CamUnitTest.TestsForThesis
             //TestCase.AddTestCase(CaseType.IdealVerification, "Zhang-Loop",
             //   new ImageRectification_ZhangLoop());
             //TestCase.AddTestCase(CaseType.IdealVerification, "Fusiello Uncalib",
-            //   new ImageRectification_FussieloUncalibrated() { UseInitialCalibration = false } );
+            //   new ImageRectification_FussieloUncalibrated() { UseInitialCalibration = false });
             //TestCase.AddTestCase(CaseType.IdealVerification, "Fusiello Uncalib With Initial",
             //   new ImageRectification_FussieloUncalibrated() { UseInitialCalibration = true });
             TestCase.AddTestCase(CaseType.IdealVerification, "Fusiello Calib",
@@ -75,7 +75,7 @@ namespace CamUnitTest.TestsForThesis
 
             public static bool TestIdealRectification(ImageRectification rect)
             {
-                CameraPair cameras = RectificationTestUtils.PrepareCalibrationData();
+                CameraPair cameras = RectificationTestUtils.PrepareCalibrationData_CloseToBeRectified();
                 List<Vector2Pair> matchedPairs = RectificationTestUtils.PrepareMatchedPoints(cameras);
                 
                 rect.ImageHeight = cameras.Left.ImageHeight;
@@ -89,12 +89,14 @@ namespace CamUnitTest.TestsForThesis
                 var H_l = rect.RectificationLeft;
                 var estimatedFundamental = H_r.Transpose() * Fi * H_l;
                 estimatedFundamental = estimatedFundamental.Divide(estimatedFundamental[2, 2]);
+                
+                new NonhorizontalityError(matchedPairs, DenseMatrix.CreateIdentity(3), DenseMatrix.CreateIdentity(3)).Store(MyContext, "Initial");
+                new NonhorizontalityError(matchedPairs, H_l, H_r).Store(MyContext, "Final");
+                new NonperpendicularityError(H_l, H_r, new Vector2(rect.ImageHeight, rect.ImageWidth)).Store(MyContext);
+                new AspectError(H_l, H_r, new Vector2(rect.ImageHeight, rect.ImageWidth)).Store(MyContext);
 
                 RectificationTestUtils.StoreRectificationMatrices(MyContext, H_l, H_r);
-                RectificationTestUtils.StoreCamerasInfo(MyContext, cameras);
-
-                Deviation.Store(MyContext, new NonhorizontalityError(matchedPairs, DenseMatrix.CreateIdentity(3), DenseMatrix.CreateIdentity(3)), "Initial");
-                Deviation.Store(MyContext, new NonhorizontalityError(matchedPairs, H_l, H_r), "Final");
+                RectificationTestUtils.StoreCamerasInfo(MyContext, cameras, H_l, H_r);
 
                 return true;
             }

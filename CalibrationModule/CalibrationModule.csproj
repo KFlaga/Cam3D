@@ -82,9 +82,9 @@
     <Compile Include="CrossCalibrationTab.xaml.cs">
       <DependentUpon>CrossCalibrationTab.xaml</DependentUpon>
     </Compile>
-    <Compile Include="CalibModeCamTab.xaml.cs">
+    <Compile Include="CalibrationForOneCameraTab.xaml.cs">
       <SubType>Code</SubType>
-      <DependentUpon>CalibModeCamTab.xaml</DependentUpon>
+      <DependentUpon>CalibrationForOneCameraTab.xaml</DependentUpon>
     </Compile>
     <Compile Include="CalibrationModeTabs.xaml.cs">
       <SubType>Code</SubType>
@@ -106,9 +106,6 @@
     </Compile>
     <Compile Include="CalibrationTestTab.xaml.cs">
       <DependentUpon>CalibrationTestTab.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="MatchedPointsManagerWindow.xaml.cs">
-      <DependentUpon>MatchedPointsManagerWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="PointsExtractionAlgorithmUi.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -140,7 +137,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="CalibModeCamTab.xaml">
+    <Page Include="CalibrationForOneCameraTab.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -161,10 +158,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="CalibrationTestTab.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="MatchedPointsManagerWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

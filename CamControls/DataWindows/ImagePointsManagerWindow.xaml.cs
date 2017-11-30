@@ -1,31 +1,20 @@
 ﻿using CamCore;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
-namespace TriangulationModule
+namespace CamControls
 {
     /// <summary>
-    /// Interaction logic for TriangulatedPointManagerWindow.xaml
+    /// Interaction logic for MatchedPointsManagerWindow.xaml
     /// </summary>
-    public partial class TriangulatedPointManagerWindow : Window
+    public partial class ImagePointsManagerWindow : Window
     {
-        private BindingList<TriangulatedPoint> _pointList;
-        private List<TriangulatedPoint> _savedList;
-        public List<TriangulatedPoint> Points
+        private BindingList<Vector2> _pointList;
+        private List<Vector2> _savedList;
+        public List<Vector2> Points
         {
             get
             {
@@ -43,11 +32,11 @@ namespace TriangulationModule
             }
         }
 
-        public TriangulatedPointManagerWindow()
+        public ImagePointsManagerWindow()
         {
             InitializeComponent();
-            _savedList = new List<TriangulatedPoint>();
-            _pointList = new BindingList<TriangulatedPoint>();
+            _savedList = new List<Vector2>();
+            _pointList = new BindingList<Vector2>();
             _pointListView.ItemsSource = _pointList;
         }
 
@@ -65,17 +54,17 @@ namespace TriangulationModule
 
         private void SaveToFile(object sender, RoutedEventArgs e)
         {
-            CamCore.FileOperations.SaveToFile(SaveToFile, "Xml File|*.xml");
+            FileOperations.SaveToFile(SaveToFile, "Xml File|*.xml");
         }
 
         private void LoadFromFile(object sender, RoutedEventArgs e)
         {
-            CamCore.FileOperations.LoadFromFile(LoadFromFile, "Xml File|*.xml");
+            FileOperations.LoadFromFile(LoadFromFile, "Xml File|*.xml");
         }
 
         public void LoadFromFile(Stream file, string path)
         {
-            _savedList = XmlSerialisation.CreateFromFile<List<TriangulatedPoint>>(file);
+            _savedList = XmlSerialisation.CreateFromFile<List<Vector2>>(file);
             _pointList.Clear();
             foreach(var p in _savedList)
             {

@@ -7,27 +7,6 @@ using System.Collections.Generic;
 
 namespace CamUnitTest.TestsForThesis
 {
-    public class NonhorizontalityError : Deviation
-    {
-        public NonhorizontalityError(List<Vector2Pair> matchedPairs, Matrix<double> Hl, Matrix<double> Hr) :
-            base(() =>
-            {
-                List<double> errors = new List<double>();
-                for(int i = 0; i < matchedPairs.Count; ++i)
-                {
-                    var pair = matchedPairs[i];
-                    // rectify points pair
-                    var rectLeft = Hl * pair.V1.ToMathNetVector3();
-                    var rectRight = Hr * pair.V2.ToMathNetVector3();
-                    // get error -> squared difference of y-coord
-                    double yError = new Vector2(rectLeft).Y - new Vector2(rectRight).Y;
-                    errors.Add(yError * yError);
-                }
-                return errors;
-            }, "Nonhorizontality Error")
-        { }
-    }
-    
     public class RectificationTestUtils
     {
         public class CameraParams
@@ -44,24 +23,68 @@ namespace CamUnitTest.TestsForThesis
             public double cz { get; set; } = 0.0;
         }
 
-        public static CameraPair PrepareCalibrationData()
+        public static CameraPair PrepareCalibrationData_CloseToBeRectified()
         {
             var K_L = DenseMatrix.OfRowArrays(new double[][]
             {
-                new double[] { 10.0, 0.0, 300.0 },
-                new double[] { 0.0, 10.0, 250.0 },
+                new double[] { 500.0, 0.0, 300.0 },
+                new double[] { 0.0, 500.0, 220.0 },
                 new double[] { 0.0,  0.0,   1.0 }
             });
             var K_R = DenseMatrix.OfRowArrays(new double[][]
             {
-                new double[] { 12.0, 0.0, 300.0 },
-                new double[] { 0.0, 12.5, 200.0 },
+                new double[] { 550.0, 0.0, 280.0 },
+                new double[] { 0.0, 570.0, 200.0 },
+                new double[] { 0.0,  0.0,   1.0 }
+            });
+            var R_L = RotationConverter.EulerToMatrix(new double[3] { Math.PI / 90, 0, 0 });
+            var R_R = RotationConverter.EulerToMatrix(new double[3] { 0, Math.PI / 90, 0 });
+            var C_L = new DenseVector(new double[] { 50.0, 50.0, 0.0 });
+            var C_R = new DenseVector(new double[] { 40.0, 40.0, 5.0 });
+
+            return TestUtils.CreateTestCamerasFromMatrices(K_L, K_R, R_L, R_R, C_L, C_R);
+        }
+
+        public static CameraPair PrepareCalibrationData_AlmostRectified()
+        {
+            var K_L = DenseMatrix.OfRowArrays(new double[][]
+            {
+                new double[] { 500.0, 0.0, 300.0 },
+                new double[] { 0.0, 500.0, 250.0 },
+                new double[] { 0.0,  0.0,   1.0 }
+            });
+            var K_R = DenseMatrix.OfRowArrays(new double[][]
+            {
+                new double[] { 490.0, 0.0, 305.0 },
+                new double[] { 0.0, 490.0, 245.0 },
                 new double[] { 0.0,  0.0,   1.0 }
             });
             var R_L = DenseMatrix.CreateIdentity(3);
             var R_R = DenseMatrix.CreateIdentity(3);
             var C_L = new DenseVector(new double[] { 50.0, 50.0, 0.0 });
-            var C_R = new DenseVector(new double[] { 40.0, 40.0, 10.0 });
+            var C_R = new DenseVector(new double[] { 30.0, 50.0, 2.0 });
+
+            return TestUtils.CreateTestCamerasFromMatrices(K_L, K_R, R_L, R_R, C_L, C_R);
+        }
+
+        public static CameraPair PrepareCalibrationData_FarToRectified()
+        {
+            var K_L = DenseMatrix.OfRowArrays(new double[][]
+            {
+                new double[] { 550.0, 0.0, 300.0 },
+                new double[] { 0.0, 550.0, 250.0 },
+                new double[] { 0.0,  0.0,   1.0 }
+            });
+            var K_R = DenseMatrix.OfRowArrays(new double[][]
+            {
+                new double[] { 450.0, 0.0, 320.0 },
+                new double[] { 0.0, 450.0, 200.0 },
+                new double[] { 0.0,  0.0,   1.0 }
+            });
+            var R_L = RotationConverter.EulerToMatrix(new double[3] { Math.PI / 30, 0, Math.PI / 30 });
+            var R_R = RotationConverter.EulerToMatrix(new double[3] { 0, Math.PI / 30, 0 });
+            var C_L = new DenseVector(new double[] { 50.0, 50.0, 0.0 });
+            var C_R = new DenseVector(new double[] { 30.0, 40.0, 10.0 });
 
             return TestUtils.CreateTestCamerasFromMatrices(K_L, K_R, R_L, R_R, C_L, C_R);
         }
@@ -125,45 +148,7 @@ namespace CamUnitTest.TestsForThesis
             }
             return matchedPairs;
         }
-
-        public static double ComputeAspectError()
-        {
-            return 0.0;
-        }
-
-        public static double ComputePerpendicularityError()
-        {
-            return 0.0;
-        }
-
-        public static double ComputeNonhorizontalityError(List<Vector2Pair> matchedPairs, Matrix<double> Hl, Matrix<double> Hr)
-        { 
-            double error = 0;
-            for(int i = 0; i < matchedPairs.Count; ++i)
-            {
-                var pair = matchedPairs[i];
-
-                // rectify points pair
-                var rectLeft = Hl * pair.V1.ToMathNetVector3();
-                var rectRight = Hr * pair.V2.ToMathNetVector3();
-
-                // get error -> squared difference of y-coord
-                double yError = new Vector2(rectLeft).Y - new Vector2(rectRight).Y;
-                error += yError * yError;
-            }
-            return Math.Sqrt(error) / matchedPairs.Count;
-        }
-
-        public static double ComputeDisparityError()
-        {
-            return 0.0;
-        }
-
-        public static double ComputeReprojectionError()
-        {
-            return 0.0;
-        }
-
+        
         public struct MatrixInfo
         {
             public string Name { get; set; }
@@ -195,12 +180,40 @@ namespace CamUnitTest.TestsForThesis
             });
         }
 
-        public static void StoreCamerasInfo(Context context, CameraPair cameras)
+        public static void StoreCamerasInfo(Context context, CameraPair cameras, Matrix<double> Hl, Matrix<double> Hr)
         {
+            cameras.Update();
+            context.Output.AppendLine("Cameras Initial:");
             StoreMatrices(context, new List<MatrixInfo>()
             {
                 new MatrixInfo( "Left Camera", cameras.Left.Matrix),
-                new MatrixInfo( "Right Camera", cameras.Right.Matrix)
+                new MatrixInfo( "Left Camera Internal", cameras.Left.InternalMatrix),
+                new MatrixInfo( "Left Camera Center", cameras.Left.Translation.ToRowMatrix()),
+                new MatrixInfo( "Right Camera", cameras.Right.Matrix),
+                new MatrixInfo( "Right Camera Internal", cameras.Right.InternalMatrix),
+                new MatrixInfo( "Right Camera Center", cameras.Right.Translation.ToRowMatrix()),
+                new MatrixInfo( "Fundamental", cameras.Fundamental)
+            });
+
+            cameras = new CameraPair()
+            {
+                Left = cameras.Left.Clone(),
+                Right = cameras.Right.Clone()
+            };
+            cameras.Left.Matrix = Hl * cameras.Left.Matrix;
+            cameras.Right.Matrix = Hr * cameras.Right.Matrix;
+            cameras.Update();
+
+            context.Output.AppendLine("Cameras Final:");
+            StoreMatrices(context, new List<MatrixInfo>()
+            {
+                new MatrixInfo( "Left Camera", cameras.Left.Matrix),
+                new MatrixInfo( "Left Camera Internal", cameras.Left.InternalMatrix),
+                new MatrixInfo( "Left Camera Center", cameras.Left.Translation.ToRowMatrix()),
+                new MatrixInfo( "Right Camera", cameras.Right.Matrix),
+                new MatrixInfo( "Right Camera Internal", cameras.Right.InternalMatrix),
+                new MatrixInfo( "Right Camera Center", cameras.Right.Translation.ToRowMatrix()),
+                new MatrixInfo( "Fundamental", cameras.Fundamental)
             });
         }
     }

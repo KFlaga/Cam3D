@@ -103,9 +103,6 @@
     <Compile Include="Image3DFromPointsTab.xaml.cs">
       <DependentUpon>Image3DFromPointsTab.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Points3DManagerWindow.xaml.cs">
-      <DependentUpon>Points3DManagerWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -163,10 +160,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Image3DFromPointsTab.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Points3DManagerWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

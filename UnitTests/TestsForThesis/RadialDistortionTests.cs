@@ -261,10 +261,9 @@ namespace CamUnitTest.TestsForThesis
                 double meanRadius = RadialDistortionTestUtils.GetMeanRadius(idealLines, idealModel.DistortionCenter);
 
                 RadialDistortionTestUtils.StoreModelInfo(MyContext, idealModel, usedModel, minimalization);
-                RadialDistortionTestUtils.StoreTestInfo(MyContext,
-                    RadialDistortionTestUtils.GetPointsCount(idealLines), meanRadius, 0.0);
-                Deviation.Store(MyContext, new RegressionDeviation(distortedLines, meanRadius), "Inital");
-                Deviation.Store(MyContext, new RegressionDeviation(correctedLines, meanRadius), "Final");
+                RadialDistortionTestUtils.StoreTestInfo(MyContext, RadialDistortionTestUtils.GetPointsCount(idealLines), meanRadius, 0.0);
+                new RegressionDeviation(distortedLines, meanRadius).Store(MyContext, "Inital");
+                new RegressionDeviation(correctedLines, meanRadius).Store(MyContext, "Final");
                 RadialDistortionTestUtils.StoreMinimalizationInfo(MyContext, minimalization);
 
                 return minimalization.MinimumResidiual < minimalization.MaximumResidiual * 10.0;
@@ -292,10 +291,9 @@ namespace CamUnitTest.TestsForThesis
                 double meanRadius = RadialDistortionTestUtils.GetMeanRadius(idealLines, idealModel.DistortionCenter);
 
                 RadialDistortionTestUtils.StoreModelInfo(MyContext, idealModel, usedModel, minimalization);
-                //RadialDistortionTestUtils.StoreTestInfo(MyContext,
-                //    RadialDistortionTestUtils.GetPointsCount(idealLines), meanRadius, deviation);
-                //Deviation.Store(MyContext, new RegressionDeviation(distortedLines, meanRadius), "Inital");
-                Deviation.Store(MyContext, new RegressionDeviation(correctedLines, meanRadius), "Final", true);
+                //RadialDistortionTestUtils.StoreTestInfo(MyContext, RadialDistortionTestUtils.GetPointsCount(idealLines), meanRadius, deviation);
+                //new RegressionDeviation(distortedLines, meanRadius).Store(MyContext, "Inital", true);
+                new RegressionDeviation(correctedLines, meanRadius).Store(MyContext, "Final", true);
                // RadialDistortionTestUtils.StoreMinimalizationInfo(MyContext, minimalization);
 
                 return minimalization.MinimumResidiual < minimalization.MaximumResidiual * 10.0;

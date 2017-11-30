@@ -15,7 +15,7 @@ using CamAlgorithms.Calibration;
 
 namespace CalibrationModule
 {
-    public partial class CalibModeCamTab : UserControl, IDisposable
+    public partial class CalibrationForOneCameraTab : UserControl, IDisposable
     {
         public SideIndex CameraIndex { get; set; }
 
@@ -56,7 +56,7 @@ namespace CalibrationModule
         }
         public bool IsCameraCaptureInMemory { get { return _cameraCaptureImage != null; } }
         
-        public CalibModeCamTab()
+        public CalibrationForOneCameraTab()
         {
             InitializeComponent();
 

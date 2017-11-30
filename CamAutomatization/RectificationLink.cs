@@ -110,20 +110,22 @@ namespace CamAutomatization
                 UseInitialCalibration = true
             }));
 
+            // TODO:
             // Return rectification with best quality
-            if(zhangLoop.Quality > fussUncalib.Quality &&
-                zhangLoop.Quality > fussUncalibWithInitial.Quality)
-            {
-                _linkData.Rectification = zhangLoop;
-            }
-            else if(fussUncalib.Quality > fussUncalibWithInitial.Quality)
-            {
-                _linkData.Rectification = fussUncalib;
-            }
-            else
-            {
-                _linkData.Rectification = fussUncalibWithInitial;
-            }
+            _linkData.Rectification = zhangLoop;
+            //if(zhangLoop.Quality > fussUncalib.Quality &&
+            //    zhangLoop.Quality > fussUncalibWithInitial.Quality)
+            //{
+            //    _linkData.Rectification = zhangLoop;
+            //}
+            //else if(fussUncalib.Quality > fussUncalibWithInitial.Quality)
+            //{
+            //    _linkData.Rectification = fussUncalib;
+            //}
+            //else
+            //{
+            //    _linkData.Rectification = fussUncalibWithInitial;
+            //}
         }
 
         private ImageRectification FindRectification(ImageRectification rectAlg)

@@ -4,19 +4,21 @@ using System.Windows;
 using System.Windows.Controls;
 using CamAlgorithms.Calibration;
 using System.Windows.Media.Imaging;
+using System.Collections.Generic;
+using CamControls;
 
 namespace RectificationModule
 {
-    public partial class CalibratedRectificationTab : UserControl
+    public partial class RectificationTab : UserControl
     {
         public MaskedImage ImageLeft { get; set; }
         public MaskedImage ImageRight { get; set; }
-
         public CameraPair Cameras { get { return CameraPair.Data; } }
-        public ImageRectification Rectification { get; private set; } = new ImageRectification(new ImageRectification_ZhangLoop());
+        public List<Vector2Pair> MatchedPoints { get; set; } = new List<Vector2Pair>();
 
+        RectificationAlgorithmUi _algorithm = new RectificationAlgorithmUi();
 
-        public CalibratedRectificationTab()
+        public RectificationTab()
         {
             InitializeComponent();
 
@@ -62,69 +64,20 @@ namespace RectificationModule
 
             transformer.Transformation = new RectificationTransformation()
             {
-                RectificationMatrix = Rectification.RectificationLeft,
-                RectificationMatrixInverse = Rectification.RectificationLeftInverse,
+                RectificationMatrix = Cameras.RectificationLeft,
+                RectificationMatrixInverse = Cameras.RectificationLeftInverse,
             };
             MaskedImage rectLeft = transformer.TransfromImageBackwards(ImageLeft, true);
 
             transformer.Transformation = new RectificationTransformation()
             {
-                RectificationMatrix = Rectification.RectificationRight,
-                RectificationMatrixInverse = Rectification.RectificationRightInverse,
+                RectificationMatrix = Cameras.RectificationRight,
+                RectificationMatrixInverse = Cameras.RectificationRightInverse,
             };
             MaskedImage rectRight = transformer.TransfromImageBackwards(ImageRight, true);
 
             _camImageFirst.ImageSource = rectLeft.ToBitmapSource();
             _camImageSec.ImageSource = rectRight.ToBitmapSource();
-        }
-
-        private void _butFindRectification_Click(object sender, RoutedEventArgs e)
-        {
-            if(Cameras.AreCalibrated == false)
-            {
-                MessageBox.Show("Cameras must be calibrated");
-                return;
-            }
-
-            Rectification.ImageHeight = Cameras.Left.ImageHeight;
-            Rectification.ImageWidth = Cameras.Left.ImageWidth;
-            Rectification.Cameras = Cameras;
-            Rectification.ComputeRectificationMatrices();
-
-            Cameras.RectificationLeft = Rectification.RectificationLeft;
-            Cameras.RectificationLeftInverse = Rectification.RectificationLeftInverse;
-            Cameras.RectificationRight = Rectification.RectificationRight;
-            Cameras.RectificationRightInverse = Rectification.RectificationRightInverse;
-            ShowRectificationResults();
-        }
-
-        private void ShowRectificationResults()
-        {
-            MessageBox.Show("ZhangLoop Rectification finished with Q = " + Rectification.Quality);
-        }
-
-        private void _butLoadRectification_Click(object sender, RoutedEventArgs e)
-        {
-            FileOperations.LoadFromFile(
-               (stream, path) => 
-               {
-                   Rectification = XmlSerialisation.CreateFromFile<ImageRectification>(stream);
-                   Cameras.RectificationLeft = Rectification.RectificationLeft;
-                   Cameras.RectificationLeftInverse = Rectification.RectificationLeftInverse;
-                   Cameras.RectificationRight = Rectification.RectificationRight;
-                   Cameras.RectificationRightInverse = Rectification.RectificationRightInverse;
-               },
-               "Xml File|*.xml");
-        }
-
-        private void _butSaveRectification_Click(object sender, RoutedEventArgs e)
-        {
-            FileOperations.SaveToFile(
-               (stream, path) =>
-               {
-                   XmlSerialisation.SaveToFile(Rectification, stream);
-               },
-               "Xml File|*.xml");
         }
 
         private void _butUndostort_Click(object sender, RoutedEventArgs e)
@@ -161,6 +114,80 @@ namespace RectificationModule
 
             MaskedImage imgFinal = undistort.TransfromImageBackwards(img, true);
             return imgFinal.ToBitmapSource();
+        }
+        
+        private void _butFindRectification_Click(object sender, RoutedEventArgs e)
+        {
+            if(Cameras.AreCalibrated == false)
+            {
+                MessageBox.Show("Cameras must be calibrated");
+                return;
+            }
+
+            _algorithm.Algorithm.ImageWidth = Cameras.Left.ImageWidth;
+            _algorithm.Algorithm.ImageHeight = Cameras.Left.ImageHeight;
+            _algorithm.Algorithm.Cameras = Cameras;
+            _algorithm.Algorithm.MatchedPairs = MatchedPoints;
+            _algorithm.StatusChanged += _algorithm_StatusChanged;
+
+            AlgorithmWindow algWindow = new AlgorithmWindow(_algorithm);
+            algWindow.Show();
+        }
+
+        private void _algorithm_StatusChanged(object sender, AlgorithmEventArgs e)
+        {
+            if(e.CurrentStatus == AlgorithmStatus.Finished || e.CurrentStatus == AlgorithmStatus.Terminated)
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    Cameras.RectificationLeft = _algorithm.Algorithm.RectificationLeft;
+                    Cameras.RectificationLeftInverse = _algorithm.Algorithm.RectificationLeftInverse;
+                    Cameras.RectificationRight = _algorithm.Algorithm.RectificationRight;
+                    Cameras.RectificationRightInverse = _algorithm.Algorithm.RectificationRightInverse;
+                });
+            }
+        }
+
+        private void _butLoad_Click(object sender, RoutedEventArgs e)
+        {
+            FileOperations.LoadFromFile((f, p) => 
+            {
+                ImageRectification rectification = XmlSerialisation.CreateFromFile<ImageRectification>(f);
+                Cameras.RectificationLeft = rectification.RectificationLeft;
+                Cameras.RectificationRight = rectification.RectificationRight;
+                Cameras.RectificationLeftInverse = rectification.RectificationLeftInverse;
+                Cameras.RectificationRightInverse = rectification.RectificationRightInverse;
+            }, "Xml File|*.xml");
+        }
+
+        private void _butSave_Click(object sender, RoutedEventArgs e)
+        {
+            if(Cameras.RectificationLeft == null || Cameras.RectificationRight == null)
+            {
+                MessageBox.Show("Rectification matrices must be set");
+                return;
+            }
+
+            FileOperations.SaveToFile((f, p) =>
+            {
+                ImageRectification rectification = new ImageRectification();
+                rectification.RectificationLeft = Cameras.RectificationLeft;
+                rectification.RectificationRight = Cameras.RectificationRight;
+                rectification.RectificationLeftInverse = Cameras.RectificationLeftInverse;
+                rectification.RectificationRightInverse = Cameras.RectificationRightInverse;
+                XmlSerialisation.SaveToFile(rectification, f);
+            }, "Xml File|*.xml");
+        }
+
+        private void _butLoadPoints_Click(object sender, RoutedEventArgs e)
+        {
+            MatchedPointsManagerWindow pointsManager = new MatchedPointsManagerWindow();
+            pointsManager.Points = MatchedPoints;
+            bool? res = pointsManager.ShowDialog();
+            if(res != null && res == true)
+            {
+                MatchedPoints = pointsManager.Points;
+            }
         }
     }
 }

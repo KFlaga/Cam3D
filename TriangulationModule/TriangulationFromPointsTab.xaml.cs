@@ -4,7 +4,6 @@ using System.Windows.Controls;
 using CamCore;
 using System.Text;
 using CamAlgorithms.Calibration;
-using CamAlgorithms.Triangulation;
 using CamControls;
 
 namespace TriangulationModule
@@ -39,7 +38,7 @@ namespace TriangulationModule
 
         private void ManageTriangulatedPoints(object sender, RoutedEventArgs e)
         {
-            TriangulatedPointManagerWindow pointsManager = new TriangulatedPointManagerWindow();
+            TriangulatedPointsManagerWindow pointsManager = new TriangulatedPointsManagerWindow();
             pointsManager.Points = _triangulatedPointsInput;
             bool? res = pointsManager.ShowDialog();
             if(res != null && res == true)

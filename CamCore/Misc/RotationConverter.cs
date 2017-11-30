@@ -1,4 +1,5 @@
 ﻿using MathNet.Numerics.LinearAlgebra;
+using MathNet.Numerics.LinearAlgebra.Double;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -57,6 +58,20 @@ namespace CamCore
             matrix.At(2, 2, cx * cy);
         }
 
+        public static Matrix<double> EulerToMatrix(double[] euler)
+        {
+            Matrix<double> matrix = new DenseMatrix(3, 3);
+            EulerToMatrix(euler, matrix);
+            return matrix;
+        }
+
+        public static Matrix<double> EulerToMatrix(Vector<double> euler)
+        {
+            Matrix<double> matrix = new DenseMatrix(3, 3);
+            EulerToMatrix(euler, matrix);
+            return matrix;
+        }
+
         // Converts 3x3 rotation matrix to XYZ euler angles (assumes vector is correctly allocated)
         public static void MatrixToEuler(Vector<double> euler, Matrix<double> matrix)
         {
@@ -92,6 +107,14 @@ namespace CamCore
                 euler.At(0, -Math.Atan2(-matrix.At(1, 0), matrix.At(1, 1)));
                 euler.At(2, 0.0);
             }
+        }
+
+        // Converts 3x3 rotation matrix to XYZ euler angles (assumes vector is correctly allocated)
+        public static Vector<double> MatrixToEuler(Matrix<double> matrix)
+        {
+            Vector<double> euler = new DenseVector(3);
+            MatrixToEuler(euler, matrix);
+            return euler;
         }
     }
 }

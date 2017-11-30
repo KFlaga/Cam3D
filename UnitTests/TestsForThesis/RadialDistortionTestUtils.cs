@@ -9,26 +9,6 @@ using System.Linq;
 
 namespace CamUnitTest.TestsForThesis
 {
-    public class RegressionDeviation : Deviation
-    {
-        public RegressionDeviation(List<List<Vector2>> correctedLines, double meanRadius) : 
-            base( () => 
-            {
-                List<double> variation = new List<double>();
-                for(int l = 0; l < correctedLines.Count; ++l)
-                {
-                    var regLine = Line2D.GetRegressionLine(correctedLines[l]);
-                    for(int i = 0; i < correctedLines[l].Count; ++i)
-                    {
-                        var p = correctedLines[l][i];
-                        variation.Add(regLine.DistanceToSquared(p) / (meanRadius * meanRadius));
-                    }
-                }
-                return variation;
-            })
-        { }
-    }
-
     public class RadialDistortionTestUtils
     {
         public static void StoreModelInfo(Context context,

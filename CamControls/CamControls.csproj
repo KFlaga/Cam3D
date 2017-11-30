@@ -82,6 +82,9 @@
     <Compile Include="AlgorithmWindow.xaml.cs">
       <DependentUpon>AlgorithmWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DataWindows\ImagePointsManagerWindow.xaml.cs">
+      <DependentUpon>ImagePointsManagerWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="DisparityBox.xaml.cs">
       <DependentUpon>DisparityBox.xaml</DependentUpon>
     </Compile>
@@ -90,6 +93,9 @@
     </Compile>
     <Compile Include="DisparityLegend.xaml.cs">
       <DependentUpon>DisparityLegend.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DataWindows\MatchedPointsManagerWindow.xaml.cs">
+      <DependentUpon>MatchedPointsManagerWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="ParametrizedProcessorsSelectionPanel.xaml.cs">
       <DependentUpon>ParametrizedProcessorsSelectionPanel.xaml</DependentUpon>
@@ -124,6 +130,9 @@
     <Compile Include="ParametrizedProcessorsSelectionWindow.xaml.cs">
       <DependentUpon>ParametrizedProcessorsSelectionWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DataWindows\TriangulatedPointsManagerWindow.xaml.cs">
+      <DependentUpon>TriangulatedPointsManagerWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ZoomingScrollControl.xaml.cs">
       <DependentUpon>ZoomingScrollControl.xaml</DependentUpon>
     </Compile>
@@ -132,6 +141,10 @@
     <Page Include="AlgorithmWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DataWindows\ImagePointsManagerWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="DisparityBox.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -144,6 +157,10 @@
     <Page Include="DisparityLegend.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="DataWindows\MatchedPointsManagerWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="MatrixControl.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -176,6 +193,10 @@
     <Page Include="RangeSelectionPanel.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="DataWindows\TriangulatedPointsManagerWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ZoomingScrollControl.xaml">
       <Generator>MSBuild:Compile</Generator>

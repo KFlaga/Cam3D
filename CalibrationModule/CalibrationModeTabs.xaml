@@ -9,10 +9,10 @@
              >
     <TabControl>
         <TabItem Header="Camera Left">
-            <local:CalibModeCamTab x:Name="_tabCam1" CameraCaptureLabel="LeftCameraCaptureSnapshot"/>
+            <local:CalibrationForOneCameraTab x:Name="_tabCam1" CameraCaptureLabel="LeftCameraCaptureSnapshot"/>
         </TabItem>
         <TabItem Header="Camera Right">
-            <local:CalibModeCamTab x:Name="_tabCam2" CameraCaptureLabel="RightCameraCaptureSnapshot"/>
+            <local:CalibrationForOneCameraTab x:Name="_tabCam2" CameraCaptureLabel="RightCameraCaptureSnapshot"/>
         </TabItem>
         <TabItem Header="Cross Calibration">
             <local:CrossCalibrationTab x:Name="_tabCross"/>

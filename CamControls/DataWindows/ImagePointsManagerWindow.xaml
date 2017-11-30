@@ -1,0 +1,23 @@
+﻿<Window x:Class="CamControls.ImagePointsManagerWindow"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CamControls"
+             mc:Ignorable="d" 
+             Height="400" Width="400">
+    <DockPanel>
+        <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom" FlowDirection="RightToLeft" VerticalAlignment="Bottom">
+            <Button Width="60" Margin="3" Click="Accept">OK</Button>
+            <Button Width="60" Margin="3" Click="Cancel">Cancel</Button>
+            <Button Width="100" Margin="3" Click="LoadFromFile">Load From File</Button>
+            <Button Width="100" Margin="3" Click="SaveToFile">Save To File</Button>
+        </StackPanel>
+        <Border DockPanel.Dock="Left" BorderBrush="Black" BorderThickness="1">
+            <ListBox x:Name="_pointListView" VerticalAlignment="Stretch" SelectionMode="Single">
+
+            </ListBox>
+        </Border>
+
+    </DockPanel>
+</Window>
