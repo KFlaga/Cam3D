@@ -1,4 +1,5 @@
 ﻿using CamAlgorithms;
+using CamAlgorithms.Calibration;
 using CamCore;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
@@ -75,6 +76,22 @@ namespace CamUnitTest.TestsForThesis
                 {
                     Vector<double> rp = realPoints[i].ToMathNetVector4();
                     Vector<double> ip = imagePoints[i].ToMathNetVector3();
+                    Vector<double> eip = P * rp;
+                    eip.MultiplyThis(1 / eip[2]);
+                    errors.Add((eip - ip).L2Norm());
+                }
+                return errors;
+            }, "Reprojection Error")
+        { }
+
+        public ReprojectionError(Matrix<double> P, List<CalibrationPoint> cpoints) :
+            base(() =>
+            {
+                List<double> errors = new List<double>();
+                for(int i = 0; i < cpoints.Count; ++i)
+                {
+                    Vector<double> rp = cpoints[i].Real.ToMathNetVector4();
+                    Vector<double> ip = cpoints[i].Img.ToMathNetVector3();
                     Vector<double> eip = P * rp;
                     eip.MultiplyThis(1 / eip[2]);
                     errors.Add((eip - ip).L2Norm());
@@ -192,16 +209,25 @@ namespace CamUnitTest.TestsForThesis
             // Error is angle - pi/2 between lines joining centers
             double angleLeft = Math.Abs(left.horizontal.AngleTo(left.vertical));
             errorLeft = angleLeft - Math.PI / 2;
+            if(Math.Abs(errorLeft) > Math.PI / 2)
+            {
+                errorLeft = errorLeft - Math.Sign(errorLeft) * Math.PI;
+            }
             double angleRight = Math.Abs(right.horizontal.AngleTo(right.vertical));
-            errorRight = angleLeft - Math.PI / 2;
+            errorRight = angleRight - Math.PI / 2;
+            if(Math.Abs(errorRight) > Math.PI / 2)
+            {
+                errorRight = errorRight - Math.Sign(errorRight) * Math.PI;
+            }
         }
 
         public void Store(Context context, string info = "", bool shortVer = false)
         {
             if(shortVer)
             {
-                context.Output.AppendLine(errorLeft.ToString("F3"));
-                context.Output.AppendLine(errorRight.ToString("F3"));
+                context.Output.AppendLine((errorLeft * 180.0 / Math.PI).ToString("F3"));
+                context.Output.AppendLine((errorRight * 180.0 / Math.PI).ToString("F3"));
+                context.Output.AppendLine(((errorLeft - errorRight) * 180.0 / Math.PI).ToString());
             }
             else
             {
@@ -211,6 +237,7 @@ namespace CamUnitTest.TestsForThesis
                 }
                 context.Output.AppendLine("Left Angle to pi/2: " + errorLeft.ToString("F3"));
                 context.Output.AppendLine("Right Angle to pi/2: " + errorRight.ToString("F3"));
+                context.Output.AppendLine("Angle difference: " + (errorLeft - errorRight).ToString());
             }
             context.Output.AppendLine();
         }
@@ -250,6 +277,7 @@ namespace CamUnitTest.TestsForThesis
         double rightTopBot;
         double rightLeftRight;
         double sumRatio;
+        double diffRatio;
 
         public AspectError(Matrix<double> Hl, Matrix<double> Hr, Vector2 imageSize)
         {
@@ -260,6 +288,7 @@ namespace CamUnitTest.TestsForThesis
             leftLeftRight = left.ratioHeight;
             rightTopBot = right.ratioWidth;
             rightLeftRight = right.ratioHeight;
+            diffRatio = Math.Abs(leftTopBot - rightTopBot) + Math.Abs(leftLeftRight - rightLeftRight);
             sumRatio = Math.Max(1 - leftTopBot, 1 - 1 / leftTopBot) +
                 Math.Max(1 - leftLeftRight, 1 - 1 / leftLeftRight) +
                 Math.Max(1 - rightTopBot, 1 - 1 / rightTopBot) +
@@ -275,6 +304,7 @@ namespace CamUnitTest.TestsForThesis
                 context.Output.AppendLine(rightTopBot.ToString("F3"));
                 context.Output.AppendLine(rightLeftRight.ToString("F3"));
                 context.Output.AppendLine(sumRatio.ToString("F3"));
+                context.Output.AppendLine(diffRatio.ToString("F3"));
             }
             else
             {
@@ -287,6 +317,7 @@ namespace CamUnitTest.TestsForThesis
                 context.Output.AppendLine("Right top/bot ratio: " + rightTopBot.ToString("F3"));
                 context.Output.AppendLine("Right left/right ratio: " + rightLeftRight.ToString("F3"));
                 context.Output.AppendLine("Sum of ratios: " + sumRatio.ToString("F3"));
+                context.Output.AppendLine("Difference of ratios: " + diffRatio.ToString("F3"));
             }
             context.Output.AppendLine();
         }

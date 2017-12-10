@@ -126,19 +126,34 @@ namespace CamUnitTest
             Ext_r.SetSubMatrix(0, 0, R_r);
             Ext_r.SetColumn(3, -R_r * T_r);
 
-            var _cameras = new CameraPair();
-            _cameras.Left.ImageHeight = imageHeight;
-            _cameras.Left.ImageWidth = imageWidth;
-            _cameras.Right.ImageHeight = imageHeight;
-            _cameras.Right.ImageWidth = imageWidth;
-            _cameras.Left.Matrix = K_l * Ext_l;
-            _cameras.Right.Matrix = K_r * Ext_r;
-            _cameras.Update();
-            return _cameras;
+            var cameras = new CameraPair();
+            cameras.Left.ImageHeight = imageHeight;
+            cameras.Left.ImageWidth = imageWidth;
+            cameras.Right.ImageHeight = imageHeight;
+            cameras.Right.ImageWidth = imageWidth;
+            cameras.Left.Matrix = K_l * Ext_l;
+            cameras.Right.Matrix = K_r * Ext_r;
+            cameras.Update();
+            return cameras;
         }
 
-        public static List<Vector<double>> AddNoise(List<Vector<double>> points,
-           double variance, int seed = 0)
+        public static Camera CreateTestCameraFromMatrices(
+            Matrix<double> K, Matrix<double> R, Vector<double> T,
+            int imageWidth = 640, int imageHeight = 480)
+        {
+            Matrix<double> Ext = new DenseMatrix(3, 4);
+            Ext.SetSubMatrix(0, 0, R);
+            Ext.SetColumn(3, -R * T);
+
+            var camera = new Camera();
+            camera.ImageHeight = imageHeight;
+            camera.ImageWidth = imageWidth;
+            camera.Matrix = K * Ext;
+            camera.Decompose();
+            return camera;
+        }
+
+        public static List<Vector<double>> AddNoise(List<Vector<double>> points, double variance, int seed = 0)
         {
             List<Vector<double>> noisedPoints = new List<Vector<double>>(points.Count);
             int pointSize = points[0].Count;
@@ -180,7 +195,7 @@ namespace CamUnitTest
                 {
                     noise.Seed = rand.Next();
                     noise.Variance = Math.Abs(noisedMat[r, c]) < 1e-12 ?
-                        1e-12 : Math.Abs(noisedMat[r, c]) * relativeVariance;
+                        1e-12 : noisedMat[r, c] * noisedMat[r, c] * relativeVariance;
                     noise.UpdateDistribution();
 
                     noisedMat[r, c] = noisedMat[r, c] + noise.GetSample();
@@ -190,8 +205,7 @@ namespace CamUnitTest
             return noisedMat;
         }
 
-        public static List<Vector2> AddNoise(List<Vector2> points,
-           double variance, int seed = 0)
+        public static List<Vector2> AddNoise(List<Vector2> points, double variance, int seed = 0)
         {
             List<Vector2> noisedPoints = new List<Vector2>(points.Count);
 
@@ -205,6 +219,27 @@ namespace CamUnitTest
             for(int i = 0; i < points.Count; ++i)
             {
                 Vector2 d = new Vector2(noise.GetSample(), noise.GetSample());
+                noisedPoints.Add(points[i] + d);
+            }
+
+            return noisedPoints;
+        }
+
+
+        public static List<Vector3> AddNoise(List<Vector3> points, double variance, int seed = 0)
+        {
+            List<Vector3> noisedPoints = new List<Vector3>(points.Count);
+
+            GaussianNoiseGenerator noise = new GaussianNoiseGenerator();
+            noise.Variance = variance;
+            noise.Mean = 0.0;
+            noise.RandomSeed = seed == 0;
+            noise.Seed = seed;
+            noise.UpdateDistribution();
+
+            for(int i = 0; i < points.Count; ++i)
+            {
+                Vector3 d = new Vector3(noise.GetSample(), noise.GetSample(), noise.GetSample());
                 noisedPoints.Add(points[i] + d);
             }
 

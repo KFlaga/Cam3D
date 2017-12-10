@@ -64,7 +64,7 @@ namespace CamAlgorithms.Calibration
         public double InitialResidiual { get { return _minimalization != null ? _minimalization.BaseResidiual : -1.0; } }
         public double BestResidiual { get { return _minimalization != null ? _minimalization.MinimumResidiual : -1.0; } }
 
-        protected LMDistortionDirectionalLineFitMinimalisation _minimalization = new LMDistortionDirectionalLineFitMinimalisation();
+        protected RadialDistortionQuadricFitMinimalisation _minimalization = new RadialDistortionQuadricFitMinimalisation();
         protected List<List<Vector2>> _scaledLines;
         
         public void FindModelParameters()
@@ -128,7 +128,7 @@ namespace CamAlgorithms.Calibration
 
         protected void PrepareMinimalizationAlgorithm()
         {
-            _minimalization = new LMDistortionDirectionalLineFitMinimalisation();
+            _minimalization = new RadialDistortionQuadricFitMinimalisation();
             _minimalization.MaximumIterations = MaxIterations;
             _minimalization.DoComputeJacobianNumerically = true;
             _minimalization.NumericalDerivativeStep = 1e-4;

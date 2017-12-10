@@ -150,26 +150,26 @@ namespace CamUnitTest.TestsForThesis
         {
             List<double> deviations = new List<double>()
             {
-                0.0, 0.001, 0.005, 0.01, 0.05, 0.1
+                0.0, 0.002, 0.005, 0.01, 0.02, 0.05
             };
 
             foreach(var v in deviations)
             {
-                //TestCase.AddTestCase(CaseType.NoisedRadial, "Cushion. [0.2, 1.0, 2.0] -> [0.2%, 2.0%, 6.0%]",
-                //    new Rational3RDModel(0.1755, 0.1491, 0.00337, 0, 0),
-                //    new Rational3RDModel(0, 0, 0, -0.01, -0.01), deviation: v);
+                TestCase.AddTestCase(CaseType.NoisedRadial, "Cushion. [0.2, 1.0, 2.0] -> [0.2%, 2.0%, 6.0%]",
+                    new Rational3RDModel(0.1755, 0.1491, 0.00337, 0, 0),
+                    new Rational3RDModel(0, 0, 0, -0.01, -0.01) { InitialMethod = Rational3RDModel.InitialMethods.SymmertricK1 }, deviation: v);
 
-                //TestCase.AddTestCase(CaseType.NoisedRadial, "Barrel. [0.2, 1.0, 2.0] -> [0.3%, 5.0%, 20%]",
-                //   new Rational3RDModel(1, 0.9, 0.2, 0, 0),
-                //   new Rational3RDModel(0, 0, 0, -0.01, -0.01), deviation: v);
+                TestCase.AddTestCase(CaseType.NoisedRadial, "Barrel. [0.2, 1.0, 2.0] -> [0.3%, 5.0%, 20%]",
+                   new Rational3RDModel(1, 0.9, 0.2, 0, 0),
+                   new Rational3RDModel(0, 0, 0, -0.01, -0.01) { InitialMethod = Rational3RDModel.InitialMethods.SymmertricK1 }, deviation: v);
 
-                //TestCase.AddTestCase(CaseType.NoisedPolynomial, "Cushion Polynomial. [0.2, 1.0, 2.0] -> [0.2%, 4.5%, 11%]",
-                //   new PolynomialModel(0.05035, -0.009, 0, 0),
-                //   new Rational3RDModel(0, 0, 0, -0.01, -0.01), deviation: v);
+                TestCase.AddTestCase(CaseType.NoisedPolynomial, "Cushion Polynomial. [0.2, 1.0, 2.0] -> [0.2%, 4.5%, 11%]",
+                   new PolynomialModel(0.05035, -0.009, 0, 0),
+                   new Rational3RDModel(0, 0, 0, -0.01, -0.01) { InitialMethod = Rational3RDModel.InitialMethods.SymmertricK1 }, deviation: v);
 
                 TestCase.AddTestCase(CaseType.NoisedPolynomial, "Barrel Polynomial. [0.2, 1.0, 2.0] -> [0.4%, 5%, 7%]",
                    new PolynomialModel(-0.08, 0.018, 0, 0),
-                   new Rational3RDModel(0, 0, 0, -0.01, -0.01), deviation: v);
+                   new Rational3RDModel(0, 0, 0, -0.01, -0.01) { InitialMethod = Rational3RDModel.InitialMethods.SymmertricK1 }, deviation: v);
             }
         }
 
@@ -199,6 +199,20 @@ namespace CamUnitTest.TestsForThesis
 
         class TestCase
         {
+            static int seed = 0;
+            public static int Seed
+            {
+                get
+                {
+                    if(seed == 0)
+                    {
+                        seed = DateTime.Now.Second * 1000 + DateTime.Now.Millisecond;
+                    }
+                    return seed;
+                }
+            }
+
+
             static List<List<Vector2>> synteticTestLines = null;
             public static List<List<Vector2>> SynteticTestLines
             {
@@ -278,11 +292,10 @@ namespace CamUnitTest.TestsForThesis
 
                 if(deviation > 1e-16)
                 {
-                    noisedLines = RadialDistortionTestUtils.AddNoiseToLines(distortedLines, deviation * deviation, 
-                       (DateTime.Now.Second + DateTime.Now.Minute) * 1000 + DateTime.Now.Millisecond);
+                    noisedLines = RadialDistortionTestUtils.AddNoiseToLines(distortedLines, deviation * deviation, Seed);
                 }
 
-                var minimalization = RadialDistortionTestUtils.PrepareMinimalizationAlgorithm(usedModel, noisedLines, 1e-8, 300, true);
+                var minimalization = RadialDistortionTestUtils.PrepareMinimalizationAlgorithm(usedModel, noisedLines, 1e-8, 200, true);
                 minimalization.Process();
 
                 Rational3RDModel bestModel = new Rational3RDModel();
@@ -291,8 +304,8 @@ namespace CamUnitTest.TestsForThesis
                 double meanRadius = RadialDistortionTestUtils.GetMeanRadius(idealLines, idealModel.DistortionCenter);
 
                 RadialDistortionTestUtils.StoreModelInfo(MyContext, idealModel, usedModel, minimalization);
-                //RadialDistortionTestUtils.StoreTestInfo(MyContext, RadialDistortionTestUtils.GetPointsCount(idealLines), meanRadius, deviation);
-                //new RegressionDeviation(distortedLines, meanRadius).Store(MyContext, "Inital", true);
+                RadialDistortionTestUtils.StoreTestInfo(MyContext, RadialDistortionTestUtils.GetPointsCount(idealLines), meanRadius, deviation);
+                new RegressionDeviation(distortedLines, meanRadius).Store(MyContext, "Inital", true);
                 new RegressionDeviation(correctedLines, meanRadius).Store(MyContext, "Final", true);
                // RadialDistortionTestUtils.StoreMinimalizationInfo(MyContext, minimalization);
 

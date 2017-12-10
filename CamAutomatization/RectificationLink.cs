@@ -100,12 +100,12 @@ namespace CamAutomatization
 
         private void FindRectification()
         {
-            ImageRectification zhangLoop = FindRectification(new ImageRectification(new ImageRectification_ZhangLoop()));
-            ImageRectification fussUncalib = FindRectification(new ImageRectification(new ImageRectification_FussieloUncalibrated()
+            ImageRectification zhangLoop = FindRectification(new ImageRectification(new Rectification_ZhangLoop()));
+            ImageRectification fussUncalib = FindRectification(new ImageRectification(new Rectification_FussieloIrsara()
             {
                 UseInitialCalibration = false
             }));
-            ImageRectification fussUncalibWithInitial = FindRectification(new ImageRectification(new ImageRectification_FussieloUncalibrated()
+            ImageRectification fussUncalibWithInitial = FindRectification(new ImageRectification(new Rectification_FussieloIrsara()
             {
                 UseInitialCalibration = true
             }));

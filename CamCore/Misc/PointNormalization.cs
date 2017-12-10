@@ -30,12 +30,12 @@ namespace CamCore
             double dist = 0;
             for(int c = 0; c < n; ++c)
             {
-                dist += Math.Sqrt((points.At(0, c) - xc) * (points.At(0, c) - xc) +
-                    (points.At(1, c) - yc) * (points.At(1, c) - yc));
+                dist += (points.At(0, c) - xc) * (points.At(0, c) - xc) + 
+                    (points.At(1, c) - yc) * (points.At(1, c) - yc);
             }
             dist /= n;
             // Normalize in a way that mean dist = sqrt(2)
-            double ratio = Math.Sqrt(2) / dist;
+            double ratio = Math.Sqrt(2) / Math.Sqrt(dist);
             // Noramlize matrix - homonogeus point must be multiplied by it
             norm[0, 0] = ratio;
             norm[1, 1] = ratio;
@@ -66,12 +66,12 @@ namespace CamCore
             double dist = 0;
             for(int c = 0; c < n; ++c)
             {
-                dist += Math.Sqrt((points[c].At(0) - xc) * (points[c].At(0) - xc) +
-                    (points[c].At(1) - yc) * (points[c].At(1) - yc));
+                dist += (points[c].At(0) - xc) * (points[c].At(0) - xc) +
+                    (points[c].At(1) - yc) * (points[c].At(1) - yc);
             }
             dist /= n;
             // Normalize in a way that mean dist = sqrt(2)
-            double ratio = Math.Sqrt(2) / dist;
+            double ratio = Math.Sqrt(2) / Math.Sqrt(dist);
             // Noramlize matrix - homonogeus point must be multiplied by it
             norm[0, 0] = ratio;
             norm[1, 1] = ratio;
@@ -105,13 +105,13 @@ namespace CamCore
             double dist = 0;
             for(int c = 0; c < n; ++c)
             {
-                dist += Math.Sqrt((points.At(0, c) - xc) * (points.At(0, c) - xc) +
+                dist += (points.At(0, c) - xc) * (points.At(0, c) - xc) +
                     (points.At(1, c) - yc) * (points.At(1, c) - yc) +
-                    (points.At(2, c) - zc) * (points.At(2, c) - zc));
+                    (points.At(2, c) - zc) * (points.At(2, c) - zc);
             }
             dist /= n;
-            // Normalize in a way that mean dist = sqrt(2)
-            double ratio = Math.Sqrt(3) / dist;
+            // Normalize in a way that mean dist = sqrt(3)
+            double ratio = Math.Sqrt(3) / Math.Sqrt(dist);
             // Noramlize matrix - homonogeus point must be multiplied by it
             norm[0, 0] = ratio;
             norm[1, 1] = ratio;
@@ -146,13 +146,13 @@ namespace CamCore
             double dist = 0;
             for(int c = 0; c < n; ++c)
             {
-                dist += Math.Sqrt((points[c].At(0) - xc) * (points[c].At(0) - xc) +
+                dist += (points[c].At(0) - xc) * (points[c].At(0) - xc) +
                     (points[c].At(1) - yc) * (points[c].At(1) - yc) +
-                    (points[c].At(2) - zc) * (points[c].At(2) - zc));
+                    (points[c].At(2) - zc) * (points[c].At(2) - zc);
             }
             dist /= n;
-            // Normalize in a way that mean dist = sqrt(2)
-            double ratio = Math.Sqrt(3) / dist;
+            // Normalize in a way that mean dist = sqrt(3)
+            double ratio = Math.Sqrt(3) / Math.Sqrt(dist);
             // Noramlize matrix - homonogeus point must be multiplied by it
             norm[0, 0] = ratio;
             norm[1, 1] = ratio;
@@ -225,14 +225,14 @@ namespace CamCore
             double distY = 0;
             for(int c = 0; c < n; ++c)
             {
-                distX += Math.Sqrt((points.At(0, c) - xc) * (points.At(0, c) - xc));
-                distY += Math.Sqrt((points.At(1, c) - yc) * (points.At(1, c) - yc));
+                distX += (points.At(0, c) - xc) * (points.At(0, c) - xc);
+                distY += (points.At(1, c) - yc) * (points.At(1, c) - yc);
             }
             distX /= n;
             distY /= n;
             // Normalize in a way that mean dist = sqrt(2)
-            double ratiox = Math.Sqrt(2) / distX;
-            double ratioy = Math.Sqrt(2) / distY;
+            double ratiox = Math.Sqrt(2) / Math.Sqrt(distX);
+            double ratioy = Math.Sqrt(2) / Math.Sqrt(distY);
             // Noramlize matrix - homonogeus point must be multiplied by it
             norm[0, 0] = ratiox;
             norm[1, 1] = ratioy;

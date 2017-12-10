@@ -27,7 +27,7 @@ namespace CamAlgorithms.Calibration
     //   For horizontal lines we have line equation : By + C = 0, for vertical : Ax + C = 0
     //
     //
-    public class LMDistortionBasicLineFitMinimalisation : LevenbergMarquardtBaseAlgorithm
+    public class RadialDistortionLineFitMinimalisation : LevenbergMarquardtBaseAlgorithm
     {
         public RadialDistortionModel DistortionModel { get; set; } // Distortion model, needed for d(pu)/d(P)
         public List<List<Vector2>> LinePoints { get; set; } // List of points of lines ( measured ones )

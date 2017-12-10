@@ -24,7 +24,7 @@ namespace CalibrationModule
 
         public List<CalibrationPoint> CalibrationPoints { get; set; } = new List<CalibrationPoint>();
         public List<RealGridData> RealGrids { get; set; } = new List<RealGridData>();
-        public Camera Camera { get { return _calibrator.Algorithm.Camera; } set { _calibrator.Algorithm.Camera = value; } }
+        public Camera Camera { get; set; } = new Camera();
         public RadialDistortion Distortion { get { return _distortionCorrector.Distortion; } }
 
         private Point _curPoint = new Point();
@@ -366,16 +366,30 @@ namespace CalibrationModule
                 cp.Real = grid.GetRealFromCell(cp.RealRow, cp.RealCol);
             }
 
+            _calibrator.Camera = Camera;
             _calibrator.Points = CalibrationPoints;
             _calibrator.Grids = RealGrids;
+            _calibrator.StatusChanged += _calibrator_StatusChanged;
 
             AlgorithmWindow algWindow = new AlgorithmWindow(_calibrator);
             algWindow.Show();
         }
-        
+
+        private void _calibrator_StatusChanged(object sender, AlgorithmEventArgs e)
+        {
+            if(e.CurrentStatus == AlgorithmStatus.Finished)
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    Camera = _calibrator.Camera;
+                    RealGrids = _calibrator.Grids;
+                });
+            }
+        }
+
         private void AcceptCalibration(object sender, RoutedEventArgs e)
         {
-            CameraPair.Data.SetCameraMatrix(CameraIndex, _calibrator.Camera.Matrix);
+            CameraPair.Data.SetCameraMatrix(CameraIndex, Camera.Matrix);
         }
 
         private void TestCalibration(object sender, RoutedEventArgs e)

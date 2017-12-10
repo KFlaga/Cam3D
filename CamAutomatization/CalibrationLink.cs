@@ -111,7 +111,6 @@ namespace CamAutomatization
             _calibrator.InitParameters();
             IAlgorithmParameter.ReadParametersFromXml(_calibrator.Parameters,
                 calibConfigNode.FirstChildWithName("Parameters"));
-            _calibrator.OverwriteGridsWithEstimated = false;
             _calibrator.UpdateParameters();
         }
 
@@ -134,7 +133,6 @@ namespace CamAutomatization
 
             _calibrator.EliminateOuliers = true;
             _calibrator.OutliersCoeff = 1.3;
-            _calibrator.OverwriteGridsWithEstimated = false;
 
             _calibrator.UpdateParameters();
         }

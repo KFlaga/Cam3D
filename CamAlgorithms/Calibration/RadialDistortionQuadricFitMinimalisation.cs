@@ -27,7 +27,7 @@ namespace CamAlgorithms.Calibration
     // L : (x-x0)df(x0,y0)/dx + (y-y0)df(x0,y0) = 0
     // 
     //  
-    public class LMDistortionDirectionalLineFitMinimalisation : LMDistortionBasicLineFitMinimalisation
+    public class RadialDistortionQuadricFitMinimalisation : RadialDistortionLineFitMinimalisation
     {
         public List<DistortionDirection> LineDistortionDirections { get; private set; } // Direction of distortion on lines ( after correction points )
         public List<DistortionDirection> BaseDistortionDirections { get; private set; } // Direction of distortion on inital lines

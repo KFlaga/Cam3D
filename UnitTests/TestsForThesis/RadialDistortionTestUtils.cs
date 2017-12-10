@@ -68,13 +68,13 @@ namespace CamUnitTest.TestsForThesis
             context.Output.AppendLine();
         }
 
-        public static LMDistortionDirectionalLineFitMinimalisation PrepareMinimalizationAlgorithm(
+        public static RadialDistortionQuadricFitMinimalisation PrepareMinimalizationAlgorithm(
             RadialDistortionModel model, List<List<Vector2>> distortedLines, double maxError = 0.001, int iters = 50, bool findInitialParameters = false)
         {
             model.UseNumericDerivative = true;
             model.NumericDerivativeStep = 1e-4;
             
-            var minimalization = new LMDistortionDirectionalLineFitMinimalisation();
+            var minimalization = new RadialDistortionQuadricFitMinimalisation();
 
             minimalization.DistortionModel = model;
             minimalization.LinePoints = distortedLines;

@@ -10,22 +10,23 @@ using CamAlgorithms.Calibration;
 
 namespace CamAlgorithms
 {
-    public abstract class ImageRectificationComputer
+    public abstract class IRectificationAlgorithm  // TODO: change name to IRectificationAlgorithm
     {
         public int ImageWidth { get; set; }
         public int ImageHeight { get; set; }
 
         public CameraPair Cameras { get; set; }
         public List<Vector2Pair> MatchedPairs { get; set; }
-        public abstract void ComputeRectificationMatrices();
 
         // Rectification matrix H for left camera, such that rectified point p_rect = H * p_img
         public Matrix<double> RectificationLeft { get; set; }
         // Rectification matrix H for right camera, such that rectified point p_rect = H * p_img
         public Matrix<double> RectificationRight { get; set; }
+		
+        public abstract void ComputeRectificationMatrices();
     }
 
-    [XmlRoot("Rectification")]
+    [XmlRoot("Rectification")] // TODO: change name to RectificationAlgorithm
     public class ImageRectification : IXmlSerializable, IParameterizable
     {
         private class RectifiedImageCorners
@@ -45,7 +46,7 @@ namespace CamAlgorithms
         }
 
         [XmlIgnore]
-        public ImageRectificationComputer RectificationComputer { get; set; }
+        public IRectificationAlgorithm RectificationComputer { get; set; }
 
         public int ImageWidth { get; set; }
         public int ImageHeight { get; set; }
@@ -65,7 +66,7 @@ namespace CamAlgorithms
         public List<Vector2Pair> MatchedPairs { get; set; }
         
         public ImageRectification() { }
-        public ImageRectification(ImageRectificationComputer rectComp)
+        public ImageRectification(IRectificationAlgorithm rectComp)
         {
             RectificationComputer = rectComp;
         }
@@ -84,16 +85,11 @@ namespace CamAlgorithms
             RectificationLeft = HtL * RectificationComputer.RectificationLeft;
             RectificationRight = HtR * RectificationComputer.RectificationRight;
             
-            EnsureCorrectHorizontalOrder();
+            EnsureCorrectHorizontalOrder(RectificationLeft);
+            EnsureCorrectHorizontalOrder(RectificationRight);
 
             RectificationLeftInverse = RectificationLeft.Inverse();
             RectificationRightInverse = RectificationRight.Inverse();    
-        }
-
-        private void EnsureCorrectHorizontalOrder()
-        {
-            EnsureCorrectHorizontalOrder(RectificationLeft);
-            EnsureCorrectHorizontalOrder(RectificationRight);
         }
 
         private void EnsureCorrectHorizontalOrder(Matrix<double> rectification)
@@ -151,20 +147,22 @@ namespace CamAlgorithms
             double maxWidth = Math.Max(maxX_L - minX_L, maxX_R - minX_R);
             double maxHeight = Math.Max(maxY_L - minY_L, maxY_R - minY_R);
 
-            // 2) Scale image so that longest of all dimensions is equal to old image size
-            double scale = Math.Min(ImageWidth / maxWidth, ImageHeight / maxHeight);
-            // For now leave scale as it is otherwise
+            // 2) Scale image so that images fills old size
+            double scaleX = ImageWidth / maxWidth;
+            double scaleY = ImageHeight / maxHeight;
+            double scale = Math.Min(scaleX, scaleY);
+
             HtL = DenseMatrix.CreateIdentity(3);
             HtR = DenseMatrix.CreateIdentity(3);
-            HtL.At(0, 0, scale);
-            HtL.At(1, 1, scale);
-            HtR.At(0, 0, scale);
-            HtR.At(1, 1, scale);
-            // 3) Translate in y so that minY on both images = 0
-            double transY = -Math.Min(minY_L, minY_R) * scale;
+            HtL.At(0, 0, scaleX);
+            HtL.At(1, 1, scaleY);
+            HtR.At(0, 0, scaleX);
+            HtR.At(1, 1, scaleY);
+            // 3) Translate in y so that minY on larger image = 0
+            double transY = -Math.Min(minY_L, minY_R) * scaleY;
             // Translate in x (independently) so that minX on both images = 0
-            double transX_L = -minX_L * scale;
-            double transX_R = -minX_R * scale;
+            double transX_L = -minX_L * scaleX;
+            double transX_R = -minX_R * scaleX;
             HtL.At(0, 2, transX_L);
             HtL.At(1, 2, transY);
             HtR.At(0, 2, transX_R);
@@ -195,10 +193,10 @@ namespace CamAlgorithms
             DictionaryParameter computersParam = new DictionaryParameter("Rectification Algorithm", "RectificationComputer");
             computersParam.ValuesMap = new Dictionary<string, object>()
             {
-                { "Zhang-Loop", new ImageRectification_ZhangLoop() },
-                { "Fusiello-Trucco-Verri", new ImageRectification_FusielloCalibrated() },
-                { "Fusiello-Irsara", new ImageRectification_FussieloUncalibrated() { UseInitialCalibration = false } },
-                { "Fusiello-Irsara with initial calibration", new ImageRectification_FussieloUncalibrated() { UseInitialCalibration = true } }
+                { "Zhang-Loop", new Rectification_ZhangLoop() },
+                { "Fusiello-Trucco-Verri", new Rectification_FusielloTruccoVerri() },
+                { "Fusiello-Irsara", new Rectification_FussieloIrsara() { UseInitialCalibration = false } },
+                { "Fusiello-Irsara with initial calibration", new Rectification_FussieloIrsara() { UseInitialCalibration = true } }
             };
             computersParam.DefaultValue = computersParam.ValuesMap["Zhang-Loop"];
             Parameters.Add(computersParam);
@@ -206,7 +204,7 @@ namespace CamAlgorithms
 
         public void UpdateParameters()
         {
-            RectificationComputer = IAlgorithmParameter.FindValue<ImageRectificationComputer>("RectificationComputer", Parameters);
+            RectificationComputer = IAlgorithmParameter.FindValue<IRectificationAlgorithm>("RectificationComputer", Parameters);
         }
 
         public string Name

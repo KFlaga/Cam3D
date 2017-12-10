@@ -82,8 +82,8 @@ namespace CamUnitTest
             TestUtils.AssertEquals(cData.Right.InternalMatrix, K_r, "Right.InternalMatrix");
             TestUtils.AssertEquals(cData.Left.RotationMatrix, R_l, "Left.RotationMatrix");
             TestUtils.AssertEquals(cData.Right.RotationMatrix, R_r, "Right.RotationMatrix");
-            TestUtils.AssertEquals(cData.Left.Translation, C_l, "Left.Translation");
-            TestUtils.AssertEquals(cData.Right.Translation, C_r, "Right.Translation");
+            TestUtils.AssertEquals(cData.Left.Center, C_l, "Left.Translation");
+            TestUtils.AssertEquals(cData.Right.Center, C_r, "Right.Translation");
         }
 
         [TestMethod]

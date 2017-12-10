@@ -40,22 +40,7 @@ namespace CamAlgorithms.Calibration
 
             UpdateAfterParametersChanged();
 
-            //if(DumpingMethodUsed == DumpingMethod.Additive)
-            //{
-            //    // Compute initial lambda lam = 10^-3*diag(J'J)/size(J'J)
-            //    ComputeJacobian(_J);
-            //    _J.TransposeToOther(_Jt);
-            //    _Jt.MultiplyToOther(_J, _JtJ);
-            //    _lam = 1e-3f * _JtJ.Trace() / (double)_JtJ.ColumnCount;
-            //}
-            //else 
-            if(DumpingMethodUsed == DumpingMethod.Multiplicative)
-            {
-                _lam = 1e-3f;
-            }
-            else
-                _lam = 0.0;
-
+            _lam = DumpingMethodUsed == DumpingMethod.Multiplicative ? 1e-3 : 0.0;
             _lastResidiual = _currentResidiual;
         }
         

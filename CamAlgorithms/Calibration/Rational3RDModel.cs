@@ -87,7 +87,7 @@ namespace CamAlgorithms.Calibration
                 {
                     case InitialMethods.Generic:
                         _findK1 = FindK1_GenericModel;
-                        _setInitialParams = SetInitialParams_SymmetricModel;
+                        _setInitialParams = SetInitialParams_GenericModel;
                         break;
                     case InitialMethods.HighK1:
                         _findK1 = FindK1_HighK1Model;
@@ -96,7 +96,7 @@ namespace CamAlgorithms.Calibration
                     case InitialMethods.SymmertricK1:
                     default:
                         _findK1 = FindK1_SymmetricModel;
-                        _setInitialParams = SetInitialParams_GenericModel;
+                        _setInitialParams = SetInitialParams_SymmetricModel;
                         break;
                 }
             }
@@ -467,15 +467,24 @@ namespace CamAlgorithms.Calibration
 
         static void SetInitialParams_SymmetricModel(Rational3RDModel model, double k1)
         {
-            model.Coeffs[model._k1Idx] = 4.0 * k1;
-            model.Coeffs[model._k2Idx] = 4.0 * -k1;
-            model.Coeffs[model._k3Idx] = 0.0;
+            if(k1 > 0)
+            {
+                model.Coeffs[model._k1Idx] = 4.0 * k1;
+                model.Coeffs[model._k2Idx] = 4.0 * -k1;
+                model.Coeffs[model._k3Idx] = 0.0;
+            }
+            else
+            {
+                model.Coeffs[model._k1Idx] = 3.0 * k1;
+                model.Coeffs[model._k2Idx] = 2.0 * -k1;
+                model.Coeffs[model._k3Idx] = 0.5 * -k1;
+            }
         }
 
         static void SetInitialParams_HighK1Model(Rational3RDModel model, double k1)
         {
             model.Coeffs[model._k1Idx] = 2 * k1;
-            model.Coeffs[model._k2Idx] = 1.6 * k1;
+            model.Coeffs[model._k2Idx] = 1.8 * k1;
             model.Coeffs[model._k3Idx] = 0.4 * k1;
         }
 
@@ -489,9 +498,9 @@ namespace CamAlgorithms.Calibration
             }
             else
             {
-                model.Coeffs[model._k1Idx] = 1.4 * k1;
-                model.Coeffs[model._k2Idx] = 1.3 * k1;
-                model.Coeffs[model._k3Idx] = 0.5 * k1;
+                model.Coeffs[model._k1Idx] = 1.4 * -k1;
+                model.Coeffs[model._k2Idx] = 1.3 * -k1;
+                model.Coeffs[model._k3Idx] = 0.5 * -k1;
             }
         }
 

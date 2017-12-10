@@ -97,8 +97,8 @@
     <Compile Include="DataWindows\MatchedPointsManagerWindow.xaml.cs">
       <DependentUpon>MatchedPointsManagerWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ParametrizedProcessorsSelectionPanel.xaml.cs">
-      <DependentUpon>ParametrizedProcessorsSelectionPanel.xaml</DependentUpon>
+    <Compile Include="ParametrizableSelectionPanel.xaml.cs">
+      <DependentUpon>ParametrizableSelectionPanel.xaml</DependentUpon>
     </Compile>
     <Compile Include="RangeSelectionPanel.xaml.cs">
       <DependentUpon>RangeSelectionPanel.xaml</DependentUpon>
@@ -127,8 +127,8 @@
     <Compile Include="ColorPicker.xaml.cs">
       <DependentUpon>ColorPicker.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ParametrizedProcessorsSelectionWindow.xaml.cs">
-      <DependentUpon>ParametrizedProcessorsSelectionWindow.xaml</DependentUpon>
+    <Compile Include="ParametrizableSelectionWindow.xaml.cs">
+      <DependentUpon>ParametrizableSelectionWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="DataWindows\TriangulatedPointsManagerWindow.xaml.cs">
       <DependentUpon>TriangulatedPointsManagerWindow.xaml</DependentUpon>
@@ -174,7 +174,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ParametrizedProcessorsSelectionPanel.xaml">
+    <Page Include="ParametrizableSelectionPanel.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -186,7 +186,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ParametrizedProcessorsSelectionWindow.xaml">
+    <Page Include="ParametrizableSelectionWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

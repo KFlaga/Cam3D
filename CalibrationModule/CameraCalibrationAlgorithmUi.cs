@@ -11,16 +11,16 @@ namespace CalibrationModule
 {
     class CameraCalibrationAlgorithmUi : IControllableAlgorithm
     {
-        public CalibrationAlgorithm Algorithm { get; set; } = new CalibrationAlgorithm();
-        public Camera Camera { get { return Algorithm.Camera; } }
-        public List<CalibrationPoint> Points { set { Algorithm.Points = value; } get { return Algorithm.Points; } }
-        public List<RealGridData> Grids { set { Algorithm.Grids = value; } get { return Algorithm.Grids; } }
+        public CalibrationAlgorithm Algorithm { get; set; }
+        public Camera Camera { get; set; }
+        public List<CalibrationPoint> Points { get; set; }
+        public List<RealGridData> Grids { get; set; }
 
         public string Name
         {
             get
             {
-                return Algorithm.Name;
+                return "Calibration Algorithm";
             }
         }
         
@@ -45,8 +45,14 @@ namespace CalibrationModule
         public void Process()
         {
             Status = AlgorithmStatus.Running;
-            Algorithm.Minimalisation.Terminate = false;
+            Algorithm.Camera = Camera;
+            Algorithm.Points = Points;
+            Algorithm.Grids = Grids;
+
+            Algorithm.NonlinearMinimalization.Terminate = false;
             Algorithm.Calibrate();
+
+            Grids = Algorithm.Grids;
             Status = AlgorithmStatus.Finished;
         }
 
@@ -59,8 +65,8 @@ namespace CalibrationModule
         {
             if(Algorithm.IsLinearEstimationDone)
             {
-                return "Iteration " + Algorithm.Minimalisation.CurrentIteration.ToString() +
-                    " of " + Algorithm.Minimalisation.MaximumIterations.ToString();
+                return "Iteration " + Algorithm.NonlinearMinimalization.CurrentIteration.ToString() +
+                    " of " + Algorithm.NonlinearMinimalization.MaximumIterations.ToString();
             }
             else
             {
@@ -70,17 +76,20 @@ namespace CalibrationModule
 
         public void Terminate()
         {
-            Algorithm.Minimalisation.Terminate = true;
+            Algorithm.NonlinearMinimalization.Terminate = true;
         }
 
         public void ShowParametersWindow()
         {
-            var paramsWindow = new ParametersSelectionWindow();
-            paramsWindow.Processor = Algorithm;
-            paramsWindow.Width = 350;
+            var paramsWindow = new ParametrizableSelectionWindow();
+            paramsWindow.AddParametrizable(new CalibrationWithGrids());
+            paramsWindow.AddParametrizable(new CalibrationHartleyZisserman());
+
+            paramsWindow.Width = 450;
             paramsWindow.ShowDialog();
             if(paramsWindow.Accepted)
             {
+                Algorithm = (CalibrationAlgorithm)paramsWindow.Selected;
                 ParamtersAccepted?.Invoke(this, new EventArgs());
             }
         }
@@ -104,9 +113,9 @@ namespace CalibrationModule
 
             if(Algorithm.IsLinearEstimationDone)
             {
-                if(Algorithm.IsInMinimzation)
+                if(Algorithm.IsInNonlinearMinimzation)
                 {
-                    camera.Matrix.CopyFromVector(Algorithm.Minimalisation.BestResultVector);
+                    camera.Matrix.CopyFromVector(Algorithm.NonlinearMinimalization.BestResultVector);
                 }
 
                 if(Algorithm.IsPointsNormalized)
@@ -158,8 +167,8 @@ namespace CalibrationModule
 
                 if(Algorithm.LinearOnly == false)
                 {
-                    result.AppendLine("GeoMini - base residual: " + Algorithm.Minimalisation.BaseResidiual.ToString("F4"));
-                    result.AppendLine("GeoMini - best residual: " + Algorithm.Minimalisation.MinimumResidiual.ToString("F4"));
+                    result.AppendLine("GeoMini - base residual: " + Algorithm.NonlinearMinimalization.BaseResidiual.ToString("F4"));
+                    result.AppendLine("GeoMini - best residual: " + Algorithm.NonlinearMinimalization.MinimumResidiual.ToString("F4"));
                 }
             }
             else

@@ -158,10 +158,6 @@
       <Project>{0f590ae5-d00f-4c9c-bbc0-6112b19f2ea5}</Project>
       <Name>CamDX</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CamImageOperationsModule\ImageOperationsModule.csproj">
-      <Project>{3d588c4a-259a-4e7d-a155-c2a96df504c7}</Project>
-      <Name>ImageOperationsModule</Name>
-    </ProjectReference>
     <ProjectReference Include="..\CamAlgorithms\CamAlgorithms.csproj">
       <Project>{3077792d-e973-4d3f-83c6-8553287a6604}</Project>
       <Name>CamAlgorithms</Name>

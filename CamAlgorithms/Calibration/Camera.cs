@@ -40,7 +40,7 @@ namespace CamAlgorithms.Calibration
         
         public Matrix<double> InternalMatrix { get; set; } = new DenseMatrix(3, 3);
         public Matrix<double> RotationMatrix { get; set; } = new DenseMatrix(3, 3);
-        public Vector<double> Translation { get; set; } = new DenseVector(3);
+        public Vector<double> Center { get; set; } = new DenseVector(3);
 
         public RadialDistortion Distortion { get; set; } = new RadialDistortion();
 
@@ -77,7 +77,7 @@ namespace CamAlgorithms.Calibration
             Matrix = Decomposed(Matrix, out i, out r, out t);
             InternalMatrix = i;
             RotationMatrix = r;
-            Translation = t;
+            Center = t;
         }
 
         public static Matrix<double> Decomposed(Matrix<double> camera, 
@@ -134,6 +134,22 @@ namespace CamAlgorithms.Calibration
             return KR.Append(-KR * translation.ToColumnMatrix());
         }
 
+        public static Camera FromDecomposition(Matrix<double> K, Matrix<double> R, Vector<double> C)
+        {
+            Matrix<double> Ext = new DenseMatrix(3, 4);
+            Ext.SetSubMatrix(0, 0, R);
+            Ext.SetColumn(3, -R * C);
+
+            var camera = new Camera()
+            {
+                Matrix = K * Ext,
+                InternalMatrix = K,
+                RotationMatrix = R,
+                Center = C
+            };
+            return camera;
+        }
+
         public Camera Clone()
         {
             return new Camera()
@@ -141,7 +157,7 @@ namespace CamAlgorithms.Calibration
                 Matrix = this.Matrix.Clone(),
                 RotationMatrix = this.RotationMatrix.Clone(),
                 InternalMatrix = this.InternalMatrix.Clone(),
-                Translation = this.Translation.Clone(),
+                Center = this.Center.Clone(),
                 ImageWidth = this.ImageWidth,
                 ImageHeight = this.ImageHeight
             };
@@ -161,7 +177,7 @@ namespace CamAlgorithms.Calibration
             result.AppendLine(RotationMatrix.CustomToString());
                 
             result.AppendLine("Translation Vector:");
-            result.AppendLine(Translation.ToColumnVectorString());
+            result.AppendLine(Center.ToColumnVectorString());
 
             return result.ToString();
         }

@@ -33,14 +33,14 @@ namespace CamUnitTest.TestsForThesis
             });
             var K_R = DenseMatrix.OfRowArrays(new double[][]
             {
-                new double[] { 550.0, 0.0, 280.0 },
-                new double[] { 0.0, 570.0, 200.0 },
+                new double[] { 530.0, 0.0, 280.0 },
+                new double[] { 0.0, 540.0, 200.0 },
                 new double[] { 0.0,  0.0,   1.0 }
             });
-            var R_L = RotationConverter.EulerToMatrix(new double[3] { Math.PI / 90, 0, 0 });
-            var R_R = RotationConverter.EulerToMatrix(new double[3] { 0, Math.PI / 90, 0 });
-            var C_L = new DenseVector(new double[] { 50.0, 50.0, 0.0 });
-            var C_R = new DenseVector(new double[] { 40.0, 40.0, 5.0 });
+            var R_L = RotationConverter.EulerToMatrix(new double[3] { Math.PI / 60, 0, 0 });
+            var R_R = RotationConverter.EulerToMatrix(new double[3] { 0, Math.PI / 60, 0 });
+            var C_L = new DenseVector(new double[] { 0, 0, 0.0 });
+            var C_R = new DenseVector(new double[] { 50.0, 10.0, 5.0 });
 
             return TestUtils.CreateTestCamerasFromMatrices(K_L, K_R, R_L, R_R, C_L, C_R);
         }
@@ -59,10 +59,10 @@ namespace CamUnitTest.TestsForThesis
                 new double[] { 0.0, 490.0, 245.0 },
                 new double[] { 0.0,  0.0,   1.0 }
             });
-            var R_L = DenseMatrix.CreateIdentity(3);
-            var R_R = DenseMatrix.CreateIdentity(3);
-            var C_L = new DenseVector(new double[] { 50.0, 50.0, 0.0 });
-            var C_R = new DenseVector(new double[] { 30.0, 50.0, 2.0 });
+            var R_L = RotationConverter.EulerToMatrix(new double[3] { Math.PI / 180, 0, 0 });
+            var R_R = RotationConverter.EulerToMatrix(new double[3] { 0, Math.PI / 180, 0 });
+            var C_L = new DenseVector(new double[] { 0, 0, 0.0 });
+            var C_R = new DenseVector(new double[] { 50, 2.0, 2.0 });
 
             return TestUtils.CreateTestCamerasFromMatrices(K_L, K_R, R_L, R_R, C_L, C_R);
         }
@@ -71,20 +71,20 @@ namespace CamUnitTest.TestsForThesis
         {
             var K_L = DenseMatrix.OfRowArrays(new double[][]
             {
-                new double[] { 550.0, 0.0, 300.0 },
-                new double[] { 0.0, 550.0, 250.0 },
+                new double[] { 520.0, 0.0, 300.0 },
+                new double[] { 0.0, 520.0, 250.0 },
                 new double[] { 0.0,  0.0,   1.0 }
             });
             var K_R = DenseMatrix.OfRowArrays(new double[][]
             {
-                new double[] { 450.0, 0.0, 320.0 },
-                new double[] { 0.0, 450.0, 200.0 },
+                new double[] { 490.0, 0.0, 320.0 },
+                new double[] { 0.0, 480.0, 200.0 },
                 new double[] { 0.0,  0.0,   1.0 }
             });
             var R_L = RotationConverter.EulerToMatrix(new double[3] { Math.PI / 30, 0, Math.PI / 30 });
             var R_R = RotationConverter.EulerToMatrix(new double[3] { 0, Math.PI / 30, 0 });
-            var C_L = new DenseVector(new double[] { 50.0, 50.0, 0.0 });
-            var C_R = new DenseVector(new double[] { 30.0, 40.0, 10.0 });
+            var C_L = new DenseVector(new double[] { 0, 0, 0.0 });
+            var C_R = new DenseVector(new double[] { 50.0, 25.0, 10.0 });
 
             return TestUtils.CreateTestCamerasFromMatrices(K_L, K_R, R_L, R_R, C_L, C_R);
         }
@@ -115,12 +115,12 @@ namespace CamUnitTest.TestsForThesis
 
         public class Range
         {
-            public double MaxX { get; set; } = 100;
-            public double MinX { get; set; } = -100;
-            public double MaxY { get; set; } = 100;
+            public double MaxX { get; set; } = 300;
+            public double MinX { get; set; } = -150;
+            public double MaxY { get; set; } = 250;
             public double MinY { get; set; } = -100;
-            public double MaxZ { get; set; } = 100;
-            public double MinZ { get; set; } = 50;
+            public double MaxZ { get; set; } = 800;
+            public double MinZ { get; set; } = 500;
         }
 
         public static List<Vector2Pair> PrepareMatchedPoints(CameraPair cameras, int pointCount = 100, Range range = null, int seed = 0)
@@ -188,10 +188,10 @@ namespace CamUnitTest.TestsForThesis
             {
                 new MatrixInfo( "Left Camera", cameras.Left.Matrix),
                 new MatrixInfo( "Left Camera Internal", cameras.Left.InternalMatrix),
-                new MatrixInfo( "Left Camera Center", cameras.Left.Translation.ToRowMatrix()),
+                new MatrixInfo( "Left Camera Center", cameras.Left.Center.ToRowMatrix()),
                 new MatrixInfo( "Right Camera", cameras.Right.Matrix),
                 new MatrixInfo( "Right Camera Internal", cameras.Right.InternalMatrix),
-                new MatrixInfo( "Right Camera Center", cameras.Right.Translation.ToRowMatrix()),
+                new MatrixInfo( "Right Camera Center", cameras.Right.Center.ToRowMatrix()),
                 new MatrixInfo( "Fundamental", cameras.Fundamental)
             });
 
@@ -209,10 +209,10 @@ namespace CamUnitTest.TestsForThesis
             {
                 new MatrixInfo( "Left Camera", cameras.Left.Matrix),
                 new MatrixInfo( "Left Camera Internal", cameras.Left.InternalMatrix),
-                new MatrixInfo( "Left Camera Center", cameras.Left.Translation.ToRowMatrix()),
+                new MatrixInfo( "Left Camera Center", cameras.Left.Center.ToRowMatrix()),
                 new MatrixInfo( "Right Camera", cameras.Right.Matrix),
                 new MatrixInfo( "Right Camera Internal", cameras.Right.InternalMatrix),
-                new MatrixInfo( "Right Camera Center", cameras.Right.Translation.ToRowMatrix()),
+                new MatrixInfo( "Right Camera Center", cameras.Right.Center.ToRowMatrix()),
                 new MatrixInfo( "Fundamental", cameras.Fundamental)
             });
         }

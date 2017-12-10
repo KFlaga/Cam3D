@@ -12,7 +12,7 @@ namespace CamUnitTest
     [TestClass]
     public class Rational3ModelTests
     {
-        [TestMethod]
+        //[TestMethod]
         public void Test_Distort()
         {
             Rational3RDModel model = new Rational3RDModel();
@@ -36,7 +36,7 @@ namespace CamUnitTest
                 "Rational3 model distortion test failed");
         }
 
-        [TestMethod]
+        //[TestMethod]
         public void Test_Undistort()
         {
             Rational3RDModel model = new Rational3RDModel();
@@ -87,7 +87,7 @@ namespace CamUnitTest
                 "Rational3 model undistort final test failed");
         }
 
-        [TestMethod]
+        //[TestMethod]
         public void Test_UndistortDerivatives()
         {
             Rational3RDModel model = new Rational3RDModel();

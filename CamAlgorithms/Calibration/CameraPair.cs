@@ -116,8 +116,8 @@ namespace CamAlgorithms.Calibration
             }
             
             // Find e_R = P_R*C_L, e_L = P_L*C_R
-            EpiPoleRight = Right.Matrix * new DenseVector(new double[] { Left.Translation.At(0), Left.Translation.At(1), Left.Translation.At(2), 1.0 });
-            EpiPoleLeft = Left.Matrix * new DenseVector(new double[] { Right.Translation.At(0), Right.Translation.At(1), Right.Translation.At(2), 1.0 });
+            EpiPoleRight = Right.Matrix * new DenseVector(new double[] { Left.Center.At(0), Left.Center.At(1), Left.Center.At(2), 1.0 });
+            EpiPoleLeft = Left.Matrix * new DenseVector(new double[] { Right.Center.At(0), Right.Center.At(1), Right.Center.At(2), 1.0 });
 
             EpiLeftInInfinity = false;
             EpiRightInInfinity = false;
@@ -184,7 +184,10 @@ namespace CamAlgorithms.Calibration
             }
 
             // Scale F, so that F33 = 1
-            Fundamental = Fundamental.Divide(Fundamental[2, 2]);
+            if(Fundamental[2, 2] > 1e-8)
+            {
+                Fundamental = Fundamental.Divide(Fundamental[2, 2]);
+            }
 
             // E = Kr^T F Kl
             Essential = Right.InternalMatrix.Transpose() * Fundamental * Left.InternalMatrix;

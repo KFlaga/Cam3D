@@ -129,9 +129,9 @@ namespace CamAlgorithms.Calibration
             if(_euYIdx >= 0) ParametersVector.At(_euYIdx, euler.At(1));
             if(_euZIdx >= 0) ParametersVector.At(_euZIdx, euler.At(2));
 
-            if(_cXIdx >= 0) ParametersVector.At(_cXIdx, Cameras.Left.Translation.At(0));
-            if(_cYIdx >= 0) ParametersVector.At(_cYIdx, Cameras.Left.Translation.At(1));
-            if(_cZIdx >= 0) ParametersVector.At(_cZIdx, Cameras.Left.Translation.At(2));
+            if(_cXIdx >= 0) ParametersVector.At(_cXIdx, Cameras.Left.Center.At(0));
+            if(_cYIdx >= 0) ParametersVector.At(_cYIdx, Cameras.Left.Center.At(1));
+            if(_cZIdx >= 0) ParametersVector.At(_cZIdx, Cameras.Left.Center.At(2));
 
             int n0 = _cameraParamsCount;
             if(_fxIdx >= 0) ParametersVector.At(_fxIdx + n0, Cameras.Right.InternalMatrix.At(0, 0));
@@ -145,9 +145,9 @@ namespace CamAlgorithms.Calibration
             if(_euYIdx >= 0) ParametersVector.At(_euYIdx + n0, euler.At(1));
             if(_euZIdx >= 0) ParametersVector.At(_euZIdx + n0, euler.At(2));
 
-            if(_cXIdx >= 0) ParametersVector.At(_cXIdx + n0, Cameras.Right.Translation.At(0));
-            if(_cYIdx >= 0) ParametersVector.At(_cYIdx + n0, Cameras.Right.Translation.At(1));
-            if(_cZIdx >= 0) ParametersVector.At(_cZIdx + n0, Cameras.Right.Translation.At(2));
+            if(_cXIdx >= 0) ParametersVector.At(_cXIdx + n0, Cameras.Right.Center.At(0));
+            if(_cYIdx >= 0) ParametersVector.At(_cYIdx + n0, Cameras.Right.Center.At(1));
+            if(_cZIdx >= 0) ParametersVector.At(_cZIdx + n0, Cameras.Right.Center.At(2));
 
             //_imgCenterLeft = new Vector2(Cameras.Left.InternalMatrix.At(0, 2),
             //    Cameras.Left.InternalMatrix.At(1, 2));
@@ -703,7 +703,7 @@ namespace CamAlgorithms.Calibration
             Matrix<double> camera = CameraPair.Data.GetCamera(camIdx).Matrix;
             Matrix<double> calib = CameraPair.Data.GetCamera(camIdx).InternalMatrix;
             Matrix<double> rotation = CameraPair.Data.GetCamera(camIdx).RotationMatrix;
-            Vector<double> center = CameraPair.Data.GetCamera(camIdx).Translation;
+            Vector<double> center = CameraPair.Data.GetCamera(camIdx).Center;
             Vector<double> epiPole = CameraPair.Data.GetEpipole(camIdx);
 
             result.Append("|" + camera[0, 0].ToString("F3"));

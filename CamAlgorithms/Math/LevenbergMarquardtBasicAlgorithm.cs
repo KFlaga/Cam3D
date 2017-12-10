@@ -158,6 +158,11 @@ namespace CamAlgorithms
             }
         }
 
+        public override bool CheckIterationEndConditions()
+        {
+            return base.CheckIterationEndConditions() || _lam > 1e24;
+        }
+
         public override void Iterate()
         {
             // Start with computing error
@@ -189,17 +194,14 @@ namespace CamAlgorithms
         {
             if(_currentResidiual < MinimumResidiual)
             {
-                // Update lambda -> lower only if new residiual is good enough
-                // (1% difference as it tends to stuck with high lambda and almost no change in results)
                 _lam *= 0.1;
             }
-            else if(_currentResidiual < MinimumResidiual * 1.01)
+            else if(_currentResidiual < MinimumResidiual * 1.01 && _currentResidiual < _lastResidiual * 0.99)
             {
-                // Update lambda -> lower only if new residiual is good enough
                 // (1% difference as it tends to stuck with high lambda and almost no change in results)
                 _lam *= 0.5;
             }
-            else if(_currentResidiual >= _lastResidiual)
+            else
             {
                 _lam *= 10.0;
             }
@@ -229,7 +231,7 @@ namespace CamAlgorithms
                 UpdateAfterParametersChanged();
                 ComputeErrorVector(error_p);
 
-                Vector<double> diff_e = 1.0 / (k_p - k_n) * (error_p - error_n);
+                Vector<double> diff_e = (error_p - error_n) / (k_p - k_n);
                 J.SetColumn(k, diff_e);
 
                 ResultsVector[k] = oldK;

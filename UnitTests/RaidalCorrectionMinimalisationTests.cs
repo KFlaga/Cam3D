@@ -17,7 +17,7 @@ namespace CamUnitTest
         [TestMethod]
         public void Test_Compute_ABC()
         {
-            LMDistortionDirectionalLineFitMinimalisation miniAlg = new LMDistortionDirectionalLineFitMinimalisation();
+            RadialDistortionQuadricFitMinimalisation miniAlg = new RadialDistortionQuadricFitMinimalisation();
 
             // Create some lines with known A,B,C
             // Check if 'minimalisation' computes them ok
@@ -53,7 +53,7 @@ namespace CamUnitTest
             // Check if 'minimalisation' computes them ok :            
             // sum of squared distances is equal/less than distance to (A,B,C)
 
-            LMDistortionBasicLineFitMinimalisation miniAlg = new LMDistortionBasicLineFitMinimalisation();
+            RadialDistortionLineFitMinimalisation miniAlg = new RadialDistortionLineFitMinimalisation();
 
             var lines = GenerateTestLinesNoised();
             miniAlg.DistortionModel = new DummyModel();
@@ -81,7 +81,7 @@ namespace CamUnitTest
                 "Noised lines coefficients approximation failed");
         }
 
-        LMDistortionBasicLineFitMinimalisation _miniAlg;
+        RadialDistortionLineFitMinimalisation _miniAlg;
         RadialDistortionModel _model;
         List<List<Vector2>> _distLines;
         List<List<Vector2>> _realLines;
@@ -110,7 +110,7 @@ namespace CamUnitTest
             // Just test if analitic jacobian is close to numeric one
             // 2) Compute jacobian for lines
 
-            _miniAlg = new LMDistortionBasicLineFitMinimalisation();
+            _miniAlg = new RadialDistortionLineFitMinimalisation();
 
             _miniAlg.DistortionModel = _model;
             _miniAlg.LinePoints = _distLines;
@@ -228,7 +228,7 @@ namespace CamUnitTest
 
             _distLines = DistortLines(_model, GenerateTestLines_Many());
 
-            _miniAlg = new LMDistortionDirectionalLineFitMinimalisation();
+            _miniAlg = new RadialDistortionQuadricFitMinimalisation();
 
             _miniAlg.DistortionModel = _model;
             _miniAlg.LinePoints = _distLines;
@@ -256,7 +256,7 @@ namespace CamUnitTest
             _miniAlg.ParametersVector = _model.Coeffs;
             _miniAlg.MaximumResidiual = 1e-8;
             _miniAlg.MaximumIterations = 100;
-            ((LMDistortionDirectionalLineFitMinimalisation)_miniAlg).FindInitialModelParameters = false;
+            ((RadialDistortionQuadricFitMinimalisation)_miniAlg).FindInitialModelParameters = false;
             _miniAlg.Process();
 
             double residiual = _miniAlg.ComputeResidiual();
@@ -278,7 +278,7 @@ namespace CamUnitTest
             _miniAlg.ParametersVector = _model.Coeffs;
             _miniAlg.MaximumResidiual = 1e-10;
             _miniAlg.MaximumIterations = 100;
-            ((LMDistortionDirectionalLineFitMinimalisation)_miniAlg).FindInitialModelParameters = true;
+            ((RadialDistortionQuadricFitMinimalisation)_miniAlg).FindInitialModelParameters = true;
             _miniAlg.DumpingMethodUsed = LevenbergMarquardtBaseAlgorithm.DumpingMethod.Multiplicative;
             _miniAlg.Process();
 
@@ -305,7 +305,7 @@ namespace CamUnitTest
             
             _distLines = DistortLines(_model, GenerateTestLines_Many());
             
-            _miniAlg = new LMDistortionDirectionalLineFitMinimalisation();
+            _miniAlg = new RadialDistortionQuadricFitMinimalisation();
             
             _miniAlg.DistortionModel = new DummyModel();
             _miniAlg.DistortionModel.InitCoeffs();
@@ -361,7 +361,7 @@ namespace CamUnitTest
 
             _distLines = DistortLines(_model, GenerateTestLines_Many());
 
-            _miniAlg = new LMDistortionDirectionalLineFitMinimalisation();
+            _miniAlg = new RadialDistortionQuadricFitMinimalisation();
 
             _miniAlg.DistortionModel = new Rational3RDModel();
             _miniAlg.DistortionModel.InitialCenterEstimation = new Vector2(0.5, 0.5);
@@ -376,8 +376,8 @@ namespace CamUnitTest
         [TestMethod]
         public void Test_Compute_ABC_Ver3()
         {
-            LMDistortionDirectionalLineFitMinimalisation miniAlg = 
-                new LMDistortionDirectionalLineFitMinimalisation();
+            RadialDistortionQuadricFitMinimalisation miniAlg = 
+                new RadialDistortionQuadricFitMinimalisation();
             
             _model = new Rational3RDModel();
             _model.InitialCenterEstimation = new Vector2(0.5, 0.5);
@@ -438,7 +438,7 @@ namespace CamUnitTest
             _model.Coeffs[4] = 0.5; // cy
            // _model.Parameters[5] = 1.0; // sx
 
-            _miniAlg = new LMDistortionDirectionalLineFitMinimalisation();
+            _miniAlg = new RadialDistortionQuadricFitMinimalisation();
 
             _miniAlg.DistortionModel = _model;
             _miniAlg.LinePoints = _distLines;
@@ -495,7 +495,7 @@ namespace CamUnitTest
             _model.UseNumericDerivative = true;
             _model.NumericDerivativeStep = 1e-4;
 
-            _miniAlg = new LMDistortionDirectionalLineFitMinimalisation();
+            _miniAlg = new RadialDistortionQuadricFitMinimalisation();
 
             _miniAlg.DistortionModel = _model;
             _miniAlg.LinePoints = _distLines;
@@ -641,8 +641,8 @@ namespace CamUnitTest
 
             _distLines = DistortLines(_model, GenerateTestLines_Many());
 
-            _miniAlg = new LMDistortionDirectionalLineFitMinimalisation();
-            var miniAlg = (LMDistortionDirectionalLineFitMinimalisation)_miniAlg;
+            _miniAlg = new RadialDistortionQuadricFitMinimalisation();
+            var miniAlg = (RadialDistortionQuadricFitMinimalisation)_miniAlg;
 
             miniAlg.DistortionModel = _model;
             _model.Coeffs[0] = 0.0;

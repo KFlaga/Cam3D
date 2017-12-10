@@ -37,8 +37,7 @@ namespace CamMain
                  { _headerMatching, new ImageMatchingModule.Module() },
                  { _headerTriangulation, new TriangulationModule.Module() },
                  { _headerImage3D, new Visualisation3dModule.Module() },
-                 { _headerCapture, new CaptureModule.Module() },
-                 { _headerOperations, new ImageOperationsModule.Module() },
+                 { _headerCapture, new CaptureModule.Module() }
             };
 
             InitCalibrationResultsAnimation();

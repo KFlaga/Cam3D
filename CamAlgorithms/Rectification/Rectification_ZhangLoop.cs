@@ -6,11 +6,8 @@ using System.Xml.Serialization;
 
 namespace CamAlgorithms
 {
-    // Computes rectification matrices for 2 cameras from CalibrationData
-    // 
-    //
     [XmlRoot("Rectification_ZhangLoop")]
-    public class ImageRectification_ZhangLoop : ImageRectificationComputer
+    public class Rectification_ZhangLoop : IRectificationAlgorithm
     {
         private Matrix<double> _A_L;
         private Matrix<double> _B_L;

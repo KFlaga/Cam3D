@@ -8,7 +8,7 @@ using System.Xml.Serialization;
 namespace CamAlgorithms
 {
     [XmlRoot("Rectification_FusielloUncalibrated")]
-    public class ImageRectification_FussieloUncalibrated : ImageRectificationComputer
+    public class Rectification_FussieloIrsara : IRectificationAlgorithm
     {
         public bool UseInitialCalibration { get; set; }
 
@@ -49,10 +49,7 @@ namespace CamAlgorithms
             
             _minimalisation.BestResultVector.CopyTo(_minimalisation.ResultsVector);
             _minimalisation.UpdateAfterParametersChanged();
-
-            Matrix<double> halfRevolve = new DenseMatrix(3, 3);
-            RotationConverter.EulerToMatrix(new double[] { 0.0, 0.0, Math.PI }, halfRevolve);
-
+            
             Matrix<double> K = (_minimalisation._Kol + _minimalisation._Kor).Multiply(0.5);
 
             RectificationLeft = K * _minimalisation._Rl * (_minimalisation._Kol.Inverse());
@@ -103,9 +100,9 @@ namespace CamAlgorithms
             _minimalisation.ParametersVector.At(Minimalisation._frIdx,
                 0.5 * N * (Cameras.Right.InternalMatrix.At(0, 0) + Cameras.Right.InternalMatrix.At(1, 1)));
             _minimalisation.ParametersVector.At(Minimalisation._pxrIdx,
-                Cameras.Right.InternalMatrix.At(0, 2));
+                N * Cameras.Right.InternalMatrix.At(0, 2));
             _minimalisation.ParametersVector.At(Minimalisation._pyrIdx,
-                Cameras.Right.InternalMatrix.At(1, 2));
+                N * Cameras.Right.InternalMatrix.At(1, 2));
 
             RotationConverter.MatrixToEuler(euler, Cameras.Right.RotationMatrix);
             _minimalisation.ParametersVector.At(Minimalisation._eXrIdx, euler.At(0));
@@ -228,17 +225,18 @@ namespace CamAlgorithms
             public override void ComputeErrorVector(Vector<double> error)
             {
                 int measuredPointsCount = MeasurementsVector.Count / 3;
-                //for(int i = 0; i < measuredPointsCount; ++i)
-                //{
-                //    error.At(i, ComputeSampsonError(PointsLeft[i], PointsRight[i]));
-                //}
-
-                _H_L = _Rl * (_Kol.Inverse());
-                _H_R = _Rr * (_Kor.Inverse());
                 for(int i = 0; i < measuredPointsCount; ++i)
                 {
-                    error.At(i, ComputeMyError(_H_L, PointsLeft[i], _H_R, PointsRight[i]));
+                    error.At(i, ComputeSampsonError(PointsLeft[i], PointsRight[i]));
                 }
+
+                //Matrix<double> K = (_Kol + _Kor).Multiply(0.5);
+                //_H_L = K * _Rl * (_Kol.Inverse());
+                //_H_R = K * _Rr * (_Kor.Inverse());
+                //for(int i = 0; i < measuredPointsCount; ++i)
+                //{
+                //    error.At(i, ComputeMyError(_H_L, PointsLeft[i], _H_R, PointsRight[i]));
+                //}
             }
 
             public double ComputeMyError(Matrix<double> Hl, Vector<double> pl, Matrix<double> Hr, Vector<double> pr)

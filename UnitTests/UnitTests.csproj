@@ -89,12 +89,16 @@
     <Compile Include="MinimalisationTests.cs" />
     <Compile Include="CameraMatrixComputationTests.cs" />
     <Compile Include="RectificationTests.cs" />
+    <Compile Include="TestsForThesis\CalibrationTests.cs" />
+    <Compile Include="TestsForThesis\CalibrationTestUtils.cs" />
     <Compile Include="TestsForThesis\Errors.cs" />
     <Compile Include="TestsForThesis\RadialDistortionTestUtils.cs" />
     <Compile Include="TestsForThesis\RectificationTests.cs" />
     <Compile Include="TestsForThesis\RectificationTestUtils.cs" />
     <Compile Include="TestsForThesis\TestContext.cs" />
     <Compile Include="TestsForThesis\RadialDistortionTests.cs" />
+    <Compile Include="TestsForThesis\TriangulationTests.cs" />
+    <Compile Include="TestsForThesis\TriangulationTestUtils.cs" />
     <Compile Include="TestUtils.cs" />
     <Compile Include="TriangulationTests.cs" />
     <Compile Include="ProcessingChainTests.cs" />

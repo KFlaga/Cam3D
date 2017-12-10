@@ -1,5 +1,6 @@
 ﻿using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
+using System;
 
 namespace CamAlgorithms.Calibration
 {
@@ -118,10 +119,10 @@ namespace CamAlgorithms.Calibration
             int measuredPointsCount = (MeasurementsVector.Count) / 5;
             for(int i = 0; i < measuredPointsCount; ++i)
             {
-                error.At(2 * i, MeasurementsVector[3 * measuredPointsCount + 2 * i] - error[2 * i]);
-                error.At(2 * i + 1, MeasurementsVector[3 * measuredPointsCount + 2 * i + 1] - error[2 * i + 1]);
+                error.At(2 * i, Math.Abs(MeasurementsVector[3 * measuredPointsCount + 2 * i] - error[2 * i]));
+                error.At(2 * i + 1, Math.Abs(MeasurementsVector[3 * measuredPointsCount + 2 * i + 1] - error[2 * i + 1]));
             }
-            error[error.Count - 1] = _w * error[error.Count - 1];
+            error[error.Count - 1] = _w * Math.Abs(error[error.Count - 1]);
         }
 
         public override void ComputeJacobian(Matrix<double> J)
@@ -156,7 +157,7 @@ namespace CamAlgorithms.Calibration
             }
 
             base.Iterate();
-          //  _w = _w * 2.0;
+            _w = _w * 1.2;
         }
     }
 }

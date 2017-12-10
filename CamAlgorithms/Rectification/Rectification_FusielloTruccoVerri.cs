@@ -7,7 +7,7 @@ using System.Xml.Serialization;
 namespace CamAlgorithms
 {
     [XmlRoot("Rectification_FusielloCalibrated")]
-    public class ImageRectification_FusielloCalibrated : ImageRectificationComputer
+    public class Rectification_FusielloTruccoVerri : IRectificationAlgorithm
     {
         Matrix<double> _R;
         Matrix<double> _K;
@@ -42,8 +42,8 @@ namespace CamAlgorithms
             //% rectifying image transformation
             //T1 = Pn1(1:3, 1:3) * inv(Po1(1:3, 1:3));
             //T2 = Pn2(1:3,1:3)* inv(Po2(1:3,1:3));
-            Vector<double> c1 = Cameras.Left.Translation;
-            Vector<double> c2 = Cameras.Right.Translation;
+            Vector<double> c1 = Cameras.Left.Center;
+            Vector<double> c2 = Cameras.Right.Center;
 
             Vector<double> v1 = c1 - c2;
             Vector<double> v2 = Cameras.Left.RotationMatrix.Row(2).Cross(v1);
@@ -53,11 +53,7 @@ namespace CamAlgorithms
             _R.SetRow(0, v1.Normalize(2));
             _R.SetRow(1, v2.Normalize(2));
             _R.SetRow(2, v3.Normalize(2));
-
-            //Matrix<double> halfRevolve = new DenseMatrix(3, 3);
-            //RotationConverter.EulerToMatrix(new double[] { 0.0, 0.0, Math.PI }, halfRevolve);
-            //_R = halfRevolve * _R;
-
+            
             _K = (Cameras.Left.InternalMatrix + Cameras.Right.InternalMatrix).Multiply(0.5);
             _K[0, 1] = 0.0;
             
