@@ -13,7 +13,7 @@ namespace CamCore
     }
 
     // Mached = Base + Disparity
-    [DebuggerDisplay("X = {DX}, Y = {DY}, c = {Cost}, t = {Confidence}")]
+    [DebuggerDisplay("X = {DX}, c = {Cost}, t = {Confidence}")]
     public class Disparity : ICloneable
     {
         public int DX;

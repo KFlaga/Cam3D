@@ -10,6 +10,11 @@ namespace CamCore
         public Vector2 ImageRight { get; set; }
         [XmlElement("Real")]
         public Vector3 Real { get; set; }
+
+        public override string ToString()
+        {
+            return "Left = " + ImageLeft.ToString() + ", Right = " + ImageRight.ToString() + ", Real = " + Real.ToString();
+        }
     }
 
 }

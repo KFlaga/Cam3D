@@ -113,8 +113,8 @@ namespace CamUnitTest
         public void Test_Census()
         {
             CensusCostComputer costCpu = new CensusCostComputer();
-            costCpu.MaskHeight = 1;
-            costCpu.MaskWidth = 1;
+            costCpu.HeightRadius = 1;
+            costCpu.WidthRadius = 1;
             costCpu.ImageBase = new GrayScaleImage() { ImageMatrix = _imageLeft };
             costCpu.ImageMatched = new GrayScaleImage() { ImageMatrix = _imageRight };
 

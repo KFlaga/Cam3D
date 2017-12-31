@@ -42,7 +42,7 @@ namespace CamUnitTest.TestsForThesis
                 Angle = Math.PI / 6
             };
 
-            public static GridRange LeftSide = new GridRange()
+            public static GridRange Side = new GridRange()
             {
                 MinX = 350,
                 MaxX = 550,
@@ -211,14 +211,32 @@ namespace CamUnitTest.TestsForThesis
             }
             else
             {
-                context.Output.AppendLine("Camera Estimated:");
+                context.Output.AppendLine("Camera id:");
                 StoreMatrices(context, new List<MatrixInfo>()
                 {
-                    new MatrixInfo( "Internal", cameraEstimated.InternalMatrix),
-                    new MatrixInfo( "Rotation", cameraEstimated.RotationMatrix),
-                    new MatrixInfo( "Center", cameraEstimated.Center.ToRowMatrix()),
+                    new MatrixInfo("Internal", cameraIdeal.InternalMatrix),
+                    new MatrixInfo("Rotation", cameraIdeal.RotationMatrix),
+                    new MatrixInfo("Rotation", RotationConverter.MatrixToEuler(cameraIdeal.RotationMatrix).Multiply(180 / Math.PI).ToRowMatrix()),
+                    new MatrixInfo("Center", cameraIdeal.Center.ToRowMatrix()),
                 });
+                context.Output.AppendLine("Camera Estimated:");
+
                 var R = cameraEstimated.RotationMatrix[0, 0] > 0 ? cameraEstimated.RotationMatrix : -cameraEstimated.RotationMatrix;
+                StoreMatrices(context, new List<MatrixInfo>()
+                {
+                    new MatrixInfo("Internal", cameraEstimated.InternalMatrix),
+                    new MatrixInfo("Rotation", R),
+                    new MatrixInfo("Rotation", RotationConverter.MatrixToEuler(R).Multiply(180 / Math.PI).ToRowMatrix()),
+                    new MatrixInfo("Center", cameraEstimated.Center.ToRowMatrix()),
+                });
+                StoreMatrices(context, new List<MatrixInfo>()
+                {
+                    new MatrixInfo("InternalDiff", cameraEstimated.InternalMatrix - cameraIdeal.InternalMatrix),
+                    new MatrixInfo("EulerDiff", (RotationConverter.MatrixToEuler(R) - RotationConverter.MatrixToEuler(cameraIdeal.RotationMatrix)).Multiply(180 / Math.PI).ToRowMatrix()),
+                    new MatrixInfo("RotationDiff", (R - cameraIdeal.RotationMatrix)),
+                    new MatrixInfo("CenterDiff", (cameraEstimated.Center - cameraIdeal.Center).ToRowMatrix()),
+                });
+
                 context.Output.AppendLine("Internals estimation error: " + (cameraEstimated.InternalMatrix - cameraIdeal.InternalMatrix).FrobeniusNorm());
                 context.Output.AppendLine("Rotation estimation error: " + (R - cameraIdeal.RotationMatrix).FrobeniusNorm());
                 context.Output.AppendLine("Center estimation error: " + (cameraEstimated.Center - cameraIdeal.Center).L2Norm());

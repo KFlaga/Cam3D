@@ -3,16 +3,29 @@ using System.Collections.Generic;
 using CamCore;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
+using CamAlgorithms.Calibration;
 
 namespace CamAlgorithms.Triangulation
 {
     // Computes best fit 3D point based on 2 matching points on images
     // made by 2 calibrated cameras (their P, P', F is needed)
-    public class TwoPointsTriangulation : TriangulationComputer
+    public class TwoPointsTriangulation
     {
+        public CameraPair Cameras { get; set; }
+        public bool Rectified { get; set; }
+
+        public List<Vector<double>> PointsLeft { get; set; }
+        public List<Vector<double>> PointsRight { get; set; }
+        public List<Vector<double>> PointsLeftOut { get; protected set; }
+        public List<Vector<double>> PointsRightOut { get; protected set; }
+        public List<Vector<double>> Points3D { get; protected set; }
+
+        public bool Terminate { get; set; }
+        public int CurrentPoint { get; protected set; }
+
         public Vector<double> _pL;
         public Vector<double> _pR;
-        public Vector<double> _p3D;
+        public Vector<double> _p3D; // TODO: remove this
 
         private Matrix<double> _T_L = DenseMatrix.CreateIdentity(3);
         private Matrix<double> _T_R = DenseMatrix.CreateIdentity(3);
@@ -32,36 +45,46 @@ namespace CamAlgorithms.Triangulation
 
         // Computes 3d points from left/right points
         // Result points are scaled so that w = 1
-        public override void Estimate3DPoints()
+        public void Estimate3DPoints()
         {
             Points3D = new List<Vector<double>>(PointsLeft.Count);
+            PointsLeftOut = new List<Vector<double>>();
+            PointsRightOut = new List<Vector<double>>();
             for(CurrentPoint = 0; CurrentPoint < PointsLeft.Count && !Terminate; ++CurrentPoint)
             {
                 try
                 {
-                    _pL = PointsLeft[CurrentPoint];
+                    _pL = PointsLeft[CurrentPoint].Clone();
                     _pL = _pL / _pL[2]; // Ensure w = 1
 
-                    _pR = PointsRight[CurrentPoint];
+                    _pR = PointsRight[CurrentPoint].Clone();
                     _pR = _pR / _pR[2];
 
                     if(Rectified)
                     {
-                        Estimate3DPoint_Rect();
+                        Estimate3DPointRectified();
                     }
                     else
                     {
                         if(UseLinearEstimationOnly)
+						{
                             ComputeBackprojected3DPoint();
+						}
                         else
+						{
                             Estimate3DPoint();
+						}
                     }
 
                     Points3D.Add(_p3D);
+                    PointsLeftOut.Add(_pL.Clone());
+                    PointsRightOut.Add(_pR.Clone());
                 }
                 catch(MathNet.Numerics.NonConvergenceException e)
                 {
                     // TODO: remove this hack
+                    PointsLeftOut.Add(PointsLeft[CurrentPoint].Clone());
+                    PointsRightOut.Add(PointsRight[CurrentPoint].Clone());
                     Points3D.Add(new DenseVector(new double[] { double.NaN, double.NaN, double.NaN, 1.0 }));
                 }
             }
@@ -74,10 +97,7 @@ namespace CamAlgorithms.Triangulation
             ComputeNormalisedTransformedEpipoles();
             ComputeRotationMatrices();
             ComputeRotatedFundamental();
-            // Fundamental should have form:
-            //     | f*f'*d -f'*c -f'*d |
-            // F = |   -f*b     a     b |
-            //     |   -f*d     c     d |
+            
             FindMinimalErrorEpipolarLines();
             FindMinimalErrorPoints();
             TransformEstimatedImagePointsBack();
@@ -156,12 +176,14 @@ namespace CamAlgorithms.Triangulation
         {
             // 5) Replace F by R'*F*R^T
             _F_TR = _R_R * _F_T * _Rinv_L;
+			// Fundamental should have form:
+            //     | f*f'*d -f'*c -f'*d |
+            // F = |   -f*b     a     b |
+            //     |   -f*d     c     d |
         }
 
         protected void FindMinimalErrorPoints()
         {
-            // TODO: What to to id t is Inf
-
             // 10) Having t, we can find closest points to origin on this lines
             // For line l = (a,b,c), closes point is p = (-ac, -bc, a^2 + b^2)
             //
@@ -169,19 +191,40 @@ namespace CamAlgorithms.Triangulation
             // l = (tf, 1, -t), 
             // l' = (-f'(ct+d), at+b, ct+d),
             // Where : f = e.w, f' = e'.w, a = F22, b = F23, c = F32, d = F33
-            double la = _tParam * _e_T_L[2];
-            double lb = 1.0;
-            double lc = -_tParam;
-            double w = 1.0 / (la * la + lb * lb);
+            // if t = inf we have:
+            // l = (f, 0, -1), l' = (-f'c, a, c)
+            double la, lb, lc;
+            if(double.IsPositiveInfinity(_tParam))
+            {
+                la = _e_T_L[2];
+                lb = 0.0;
+                lc = -1.0;
+            }
+            else
+            {
+                la = _tParam * _e_T_L[2];
+                lb = 1.0;
+                lc = -_tParam;
+            }
 
+            double w = 1.0 / (la * la + lb * lb);
             _pL = new DenseVector(3);
             _pL[0] = -la * lc * w;
             _pL[1] = -lb * lc * w;
             _pL[2] = 1.0;
 
-            la = -_e_T_R[2] * (_F_TR[2, 1] * _tParam + _F_TR[2, 2]);
-            lb = _F_TR[1, 1] * _tParam + _F_TR[1, 2];
-            lc = _F_TR[2, 1] * _tParam + _F_TR[2, 2];
+            if(double.IsPositiveInfinity(_tParam))
+            {
+                la = _e_T_R[2] * _F_TR[2, 1];
+                lb = _F_TR[1, 1];
+                lc = _F_TR[2, 1];
+            }
+            else
+            {
+                la = -_e_T_R[2] * (_F_TR[2, 1] * _tParam + _F_TR[2, 2]);
+                lb = _F_TR[1, 1] * _tParam + _F_TR[1, 2];
+                lc = _F_TR[2, 1] * _tParam + _F_TR[2, 2];
+            }
             w = 1.0 / (la * la + lb * lb);
 
             _pR = new DenseVector(3);
@@ -239,8 +282,6 @@ namespace CamAlgorithms.Triangulation
             double minCost = 1e40;
             if(roots.Count > 0)
             {
-                // TODO: should it happen??
-
                 _tParam = roots[0];
                 minCost = ComputeEpilineFitCost(_tParam);
                 for(int i = 1; i < roots.Count; ++i)
@@ -252,6 +293,10 @@ namespace CamAlgorithms.Triangulation
                         _tParam = roots[i];
                     }
                 }
+            }
+            else
+            {
+                throw new MathNet.Numerics.NonConvergenceException("Polynomial has no real roots");
             }
 
             // Check also for t = inf
@@ -403,9 +448,21 @@ namespace CamAlgorithms.Triangulation
             _p3D.DivideThis(_p3D[3]);
         }
 
-        void Estimate3DPoint_Rect()
+        void Estimate3DPointRectified()
         {
-            throw new NotImplementedException();
+            _p3D = new DenseVector(4);
+            _p3D[3] = 1.0;
+
+            double f = Cameras.Left.InternalMatrix[0, 0];
+            double baseline = (Cameras.Left.Center - Cameras.Right.Center).L2Norm();
+            double px_diff = Cameras.Left.InternalMatrix[0, 2] - Cameras.Right.InternalMatrix[0, 2];
+            double px = Cameras.Left.InternalMatrix[0, 2];
+            double py = Cameras.Left.InternalMatrix[1, 2];
+            double dx = _pR[0] - _pL[0];
+
+            _p3D[2] = -f * baseline / (dx + px_diff);
+            _p3D[0] = _p3D[2] * (_pL[0] - px) / f;
+            _p3D[1] = -_p3D[2] * (_pL[1] - py) / f;
         }
     }
 }

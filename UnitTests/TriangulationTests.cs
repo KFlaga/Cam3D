@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using CamCore;
 using CamAlgorithms;
@@ -14,7 +13,7 @@ using System.Text;
 namespace CamUnitTest
 {
     [TestClass]
-    public class TriangulationTests
+    public class TriangulationUnitTests
     {
         CameraPair _cameras = new CameraPair();
         List<Vector<double>> _imagePointsLeft;
@@ -156,14 +155,14 @@ namespace CamUnitTest
         {
             var K_L = DenseMatrix.OfRowArrays(new double[][]
             {
-                new double[] { 10.0, 0.0, 300.0 },
-                new double[] { 0.0, 10.0, 250.0 },
+                new double[] { 500.0, 0.0, 300.0 },
+                new double[] { 0.0, 500.0, 250.0 },
                 new double[] { 0.0,  0.0,   1.0 }
             });
             var K_R = DenseMatrix.OfRowArrays(new double[][]
             {
-                new double[] { 10.0, 0.0, 300.0 },
-                new double[] { 0.0, 10.5, 200.0 },
+                new double[] { 500.0, 0.0, 300.0 },
+                new double[] { 0.0, 520.0, 200.0 },
                 new double[] { 0.0,  0.0,   1.0 }
             });
             var R_L = DenseMatrix.CreateIdentity(3);

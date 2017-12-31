@@ -6,7 +6,6 @@ using CamCore;
 using CamAlgorithms;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
-using MatrixInfo = CamUnitTest.TestsForThesis.RectificationTestUtils.MatrixInfo;
 using System.Linq;
 
 namespace CamUnitTest.TestsForThesis
@@ -17,7 +16,7 @@ namespace CamUnitTest.TestsForThesis
         public TestContext TestContext { get; set; }
         public static Context MyContext { get; set; }
 
-        static Matrix<double> Fi = DenseMatrix.Build.SparseOfRowArrays(new double[][]
+        static Matrix<double> Fi = DenseMatrix.Build.DenseOfRowArrays(new double[][]
         {
             new double[] { 0,  0,  0 },
             new double[] { 0,  0, -1 },
@@ -40,7 +39,7 @@ namespace CamUnitTest.TestsForThesis
         [TestCleanup()]
         public void MyTestCleanup()
         {
-            MyContext.StoreTestResults();
+            MyContext.StoreTestOutput();
         }
 
         //[TestMethod]
@@ -66,11 +65,6 @@ namespace CamUnitTest.TestsForThesis
                 TestCase.AddTestCase(CaseType.NoisedSyntetic, "Zhang-Loop Almost Rectified",
                    new Rectification_ZhangLoop(), noiseVariance: v, cameras: RectificationTestUtils.PrepareCalibrationData_AlmostRectified());
             }
-            //foreach(var v in variances)
-            //{
-            //    TestCase.AddTestCase(CaseType.NoisedSyntetic, "Zhang-Loop Close To Rectified",
-            //       new Rectification_ZhangLoop(), noiseVariance: v, cameras: RectificationTestUtils.PrepareCalibrationData_CloseToBeRectified());
-            //}
             foreach(var v in variances)
             {
                 TestCase.AddTestCase(CaseType.NoisedSyntetic, "Zhang-Loop Far To Rectified",
@@ -88,11 +82,6 @@ namespace CamUnitTest.TestsForThesis
                 TestCase.AddTestCase(CaseType.NoisedSyntetic, "Fusiello Uncalib Almost Rectified",
                    new Rectification_FussieloIrsara() { UseInitialCalibration = false }, noiseVariance: v, cameras: RectificationTestUtils.PrepareCalibrationData_AlmostRectified());
             }
-            //foreach(var v in variances)
-            //{
-            //    TestCase.AddTestCase(CaseType.NoisedSyntetic, "Fusiello Uncalib Close To Rectified",
-            //       new Rectification_FussieloIrsara() { UseInitialCalibration = false }, noiseVariance: v, cameras: RectificationTestUtils.PrepareCalibrationData_CloseToBeRectified());
-            //}
             foreach(var v in variances)
             {
                 TestCase.AddTestCase(CaseType.NoisedSyntetic, "Fusiello Uncalib Far To Rectified",
@@ -110,11 +99,6 @@ namespace CamUnitTest.TestsForThesis
                 TestCase.AddTestCase(CaseType.NoisedSyntetic, "Fusiello Uncalib Init Almost Rectified",
                    new Rectification_FussieloIrsara() { UseInitialCalibration = true }, noiseVariance: v, cameras: RectificationTestUtils.PrepareCalibrationData_AlmostRectified());
             }
-            //foreach(var v in variances)
-            //{
-            //    TestCase.AddTestCase(CaseType.NoisedSyntetic, "Fusiello Uncalib Init Close To Rectified",
-            //       new Rectification_FussieloIrsara() { UseInitialCalibration = true }, noiseVariance: v, cameras: RectificationTestUtils.PrepareCalibrationData_CloseToBeRectified());
-            //}
             foreach(var v in variances)
             {
                 TestCase.AddTestCase(CaseType.NoisedSyntetic, "Fusiello Uncalib Init Far To Rectified",
@@ -132,11 +116,6 @@ namespace CamUnitTest.TestsForThesis
                 TestCase.AddTestCase(CaseType.NoisedSyntetic, "Fusiello Calib Almost Rectified",
                    new Rectification_FusielloTruccoVerri(), noiseVariance: v, cameras: RectificationTestUtils.PrepareCalibrationData_AlmostRectified());
             }
-            //foreach(var v in variances)
-            //{
-            //    TestCase.AddTestCase(CaseType.NoisedSyntetic, "Fusiello Calib Close To Rectified",
-            //       new Rectification_FusielloTruccoVerri() , noiseVariance: v, cameras: RectificationTestUtils.PrepareCalibrationData_CloseToBeRectified());
-            //}
             foreach(var v in variances)
             {
                 TestCase.AddTestCase(CaseType.NoisedSyntetic, "Fusiello Calib Far To Rectified",
@@ -144,16 +123,17 @@ namespace CamUnitTest.TestsForThesis
             }
         }
 
-        //[TestMethod]
-        public void ImageBaseEstimation()
-        { 
-            
+        [TestMethod]
+        public void TestRealImages()
+        {
+            TestCase.AddTestCase(CaseType.RealImages, "Real Images", null);
         }
 
         public enum CaseType
         {
             IdealVerification,
             NoisedSyntetic,
+            RealImages
         }
 
         class TestCase
@@ -178,7 +158,7 @@ namespace CamUnitTest.TestsForThesis
                 {
                     MyContext.RunTest(() =>
                     {
-                        return TestIdealRectification(new ImageRectification(rectComp), RectificationTestUtils.PrepareCalibrationData_CloseToBeRectified());
+                        return TestIdealRectification(new RectificationAlgorithm(rectComp), RectificationTestUtils.PrepareCalibrationData_CloseToBeRectified());
                     }, info);
                 }
                 else if(caseType == CaseType.NoisedSyntetic)
@@ -186,13 +166,21 @@ namespace CamUnitTest.TestsForThesis
                     MyContext.RunTest(() =>
                     {
                         MyContext.Output.AppendLine("Noise: " + noiseVariance.ToString("F3"));
-                        TestNoisedRectification(new ImageRectification(rectComp), cameras, noiseSeed, noiseVariance);
+                        TestNoisedRectification(new RectificationAlgorithm(rectComp), cameras, noiseSeed, noiseVariance);
+                        return true;
+                    }, info);
+                }
+                else if(caseType == CaseType.RealImages)
+                {
+                    MyContext.RunTest(() =>
+                    {
+                        TestRealImages();
                         return true;
                     }, info);
                 }
             }
 
-            public static bool TestIdealRectification(ImageRectification rect, CameraPair cameras)
+            public static bool TestIdealRectification(RectificationAlgorithm rect, CameraPair cameras)
             {
                 List<Vector2Pair> matchedPairs = RectificationTestUtils.PrepareMatchedPoints(cameras, pointCount: 100, seed: PointsSeed);
 
@@ -220,7 +208,7 @@ namespace CamUnitTest.TestsForThesis
             }
 
 
-            public static bool TestNoisedRectification(ImageRectification rect, CameraPair cameras, int noiseSeed = 0, double noiseRelative = 0)
+            public static bool TestNoisedRectification(RectificationAlgorithm rect, CameraPair cameras, int noiseSeed = 0, double noiseRelative = 0)
             {
                 List<Vector2Pair> matchedPairs = RectificationTestUtils.PrepareMatchedPoints(cameras, 100, seed: PointsSeed);
                 List<Vector2Pair> noisedPairs = new List<Vector2Pair>();
@@ -266,6 +254,22 @@ namespace CamUnitTest.TestsForThesis
                 //RectificationTestUtils.StoreCamerasInfo(MyContext, cameras, H_l, H_r);
 
                 return true;
+            }
+
+            public static void TestRealImages()
+            {
+                foreach(var rectCase in Enum.GetValues(typeof(RectificationTestUtils.RealRect)).Cast<RectificationTestUtils.RealRect>())
+                {
+                    RectificationAlgorithm rect;
+                    List<Vector2Pair> matched;
+                    RectificationTestUtils.LoadRectification(MyContext, rectCase, out rect, out matched);
+
+                    MyContext.Output.AppendLine("CASE: " + rectCase.ToString());
+                    new NonhorizontalityError(matched, DenseMatrix.CreateIdentity(3), DenseMatrix.CreateIdentity(3)).Store(MyContext, shortVer: true);
+                    new NonhorizontalityError(matched, rect.RectificationLeft, rect.RectificationRight).Store(MyContext, shortVer: true);
+                    new NonperpendicularityError(rect.RectificationLeft, rect.RectificationRight, new Vector2(rect.ImageHeight, rect.ImageWidth)).Store(MyContext, shortVer: true);
+                    new AspectError(rect.RectificationLeft, rect.RectificationRight, new Vector2(rect.ImageHeight, rect.ImageWidth)).Store(MyContext, shortVer: true);
+                }
             }
         }
     }

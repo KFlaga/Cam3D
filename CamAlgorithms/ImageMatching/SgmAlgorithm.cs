@@ -5,24 +5,13 @@ using CamAlgorithms.Calibration;
 
 namespace CamAlgorithms.ImageMatching
 {
-    public class GenericImageMatchingAlgorithm : ImageMatchingAlgorithm
+    public class SgmAlgorithm : DenseMatchingAlgorithm
     {
         public CostAggregator Aggregator { get; set; }
         
         public override void MatchImages()
         {
             ConvertImagesToGray();
-
-            if(Rectified)
-            {
-                Aggregator.Fundamental = new DenseMatrix(3, 3);
-                Aggregator.Fundamental[1, 2] = -1;
-                Aggregator.Fundamental[2, 1] = 1;
-            }
-            else
-            {
-                Aggregator.Fundamental = CameraPair.Data.Fundamental;
-            }
             
             MapLeft = MatchImages(true);
             MapRight = MatchImages(false);
@@ -36,14 +25,7 @@ namespace CamAlgorithms.ImageMatching
             Aggregator.IsLeftImageBase = isLeftBase;
 
             Aggregator.Init();
-            if(Rectified)
-            {
-                Aggregator.ComputeMatchingCosts_Rectified();
-            }
-            else
-            {
-                Aggregator.ComputeMatchingCosts();
-            }
+            Aggregator.ComputeMatchingCosts();
             return Aggregator.DisparityMap;
         }
 
@@ -59,43 +41,29 @@ namespace CamAlgorithms.ImageMatching
 
         }
 
-        public override string Name { get { return "Image Matching Algorithm"; } }
+        public override string Name { get { return "Semi-Global Matching Algorithm"; } }
         
         public override void InitParameters()
         {
             base.InitParameters();
 
             ParametrizedObjectParameter aggregatorParam = new ParametrizedObjectParameter(
-                "Cost Aggregator", "COST_AGGREGATOR");
+                "Cost Aggregator", "Aggregator");
 
             aggregatorParam.Parameterizables = new List<IParameterizable>();
-            var epi = new EpilineScanAggregator();
-            epi.InitParameters();
-            aggregatorParam.Parameterizables.Add(epi);
-
-            var img = new WholeImageScan();
-            img.InitParameters();
-            aggregatorParam.Parameterizables.Add(img);
-
-            var sgm = new SGMAggregator();
+            var sgm = new SgmAggregator();
             sgm.InitParameters();
             aggregatorParam.Parameterizables.Add(sgm);
-
+            
             Parameters.Add(aggregatorParam);
-        
-            BooleanParameter rectParam = new BooleanParameter(
-                "Images Rectified", "IS_RECTIFIED", true);
-            Parameters.Add(rectParam);
         }
 
         public override void UpdateParameters()
         {
             base.UpdateParameters();
 
-            Aggregator = IAlgorithmParameter.FindValue<CostAggregator>("COST_AGGREGATOR", Parameters);
+            Aggregator = IAlgorithmParameter.FindValue<CostAggregator>("Aggregator", Parameters);
             Aggregator.UpdateParameters();
-
-            Rectified = IAlgorithmParameter.FindValue<bool>("IS_RECTIFIED", Parameters);
         }
     }
 }

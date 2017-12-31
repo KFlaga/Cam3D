@@ -107,7 +107,7 @@
     <Compile Include="Calibration\RealGridData.cs" />
     <Compile Include="Calibration\Taylor4Model.cs" />
     <Compile Include="ImageProcessing\AnisotropicDiffusionFilter.cs" />
-    <Compile Include="ImageMatching\CppSgmMatchingAlgorithm.cs" />
+    <Compile Include="ImageMatching\CppSgmAlgorithm.cs" />
     <Compile Include="Features\AreaBasedCorrelationImageMatcher.cs" />
     <Compile Include="ImageProcessing\BinarizeFilter.cs" />
     <Compile Include="Features\CalibratedAreaBasedCorrelationImageMatcher.cs" />
@@ -125,8 +125,8 @@
     <Compile Include="DisparityRefinement\CrossCheckRefiner.cs" />
     <Compile Include="DisparityRefinement\DisparityComputer.cs" />
     <Compile Include="DisparityRefinement\DisparityRefinement.cs" />
-    <Compile Include="ImageMatching\ImageMatchingAlgorithm.cs" />
-    <Compile Include="ImageMatching\GenericImageMatchingAlgorithm.cs" />
+    <Compile Include="ImageMatching\DenseMatchingAlgorithm.cs" />
+    <Compile Include="ImageMatching\SgmAlgorithm.cs" />
     <Compile Include="ImageMatching\InterpolationDisparityComputer.cs" />
     <Compile Include="DisparityRefinement\InvalidateLowConfidenceRefiner.cs" />
     <Compile Include="DisparityRefinement\LimitRangeRefiner.cs" />
@@ -134,11 +134,9 @@
     <Compile Include="DisparityRefinement\MedianFilterRefiner.cs" />
     <Compile Include="ImageMatching\Path.cs" />
     <Compile Include="DisparityRefinement\PeakRemovalRefiner.cs" />
-    <Compile Include="ImageMatching\SGMDisparityComputer.cs" />
+    <Compile Include="ImageMatching\SgmDisparityComputer.cs" />
     <Compile Include="DisparityRefinement\SmoothDisparityMapRefiner.cs" />
     <Compile Include="DisparityRefinement\SmoothSegmentsRefiner.cs" />
-    <Compile Include="ImageMatching\WholeImageScan.cs" />
-    <Compile Include="ImageMatching\WTADisparityComputer.cs" />
     <Compile Include="ImageProcessing\ImageTransformation.cs" />
     <Compile Include="ImageProcessing\ImageTransformer.cs" />
     <Compile Include="Math\GaussSolver.cs" />
@@ -159,16 +157,15 @@
     <Compile Include="PointsExtraction\CalibrationShapeGridFinder.cs" />
     <Compile Include="PointsExtraction\CalibrationShapesExtractor.cs" />
     <Compile Include="PointsExtraction\ReferenceShapeChecker.cs" />
-    <Compile Include="PointsExtraction\ShapesGridCPFinder.cs" />
-    <Compile Include="Rectification\ImageRectification.cs" />
+    <Compile Include="PointsExtraction\ShapesGridCalibrationPointsFinder.cs" />
+    <Compile Include="Rectification\RectificationAlgorithm.cs" />
     <Compile Include="Rectification\Rectification_FusielloTruccoVerri.cs" />
     <Compile Include="Rectification\Rectification_FussieloIrsara.cs" />
     <Compile Include="ImageProcessing\ImageFilter.cs" />
-    <Compile Include="ImageMatching\SGMAggregator.cs" />
+    <Compile Include="ImageMatching\SgmAggregator.cs" />
     <Compile Include="ImageMatching\CensusCostComputer.cs" />
     <Compile Include="ImageMatching\BitWord.cs" />
     <Compile Include="ImageMatching\CostAggregator.cs" />
-    <Compile Include="ImageMatching\EpilineScanAggregator.cs" />
     <Compile Include="ImageMatching\RankCostComputer.cs" />
     <Compile Include="ImageProcessing\Convolution.cs" />
     <Compile Include="Rectification\Rectification_ZhangLoop.cs" />
@@ -196,9 +193,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Reports\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

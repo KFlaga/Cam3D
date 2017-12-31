@@ -220,5 +220,17 @@ namespace CamAlgorithms.Calibration
             if(RectificationRight != null) { RectificationRightInverse = RectificationRight.Inverse(); }
             if(AreCalibrated) { Update(); }
         }
+
+        public CameraPair Clone()
+        {
+            CameraPair cloned = new CameraPair();
+            cloned.Left = Left.Clone();
+            cloned.Right = Right.Clone();
+            cloned.RectificationLeft = RectificationLeft?.Clone();
+            cloned.RectificationRight = RectificationRight?.Clone();
+            cloned.RectificationLeftInverse = RectificationLeftInverse?.Clone();
+            cloned.RectificationRightInverse = RectificationRightInverse?.Clone();
+            return cloned;
+        }
     }
 }

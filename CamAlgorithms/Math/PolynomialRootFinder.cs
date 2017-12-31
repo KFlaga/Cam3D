@@ -118,6 +118,7 @@ namespace CamAlgorithms
 
         public void Iterate()
         {
+            Vector<Complex> newRoots = new TComplex.DenseVector(Poly.Rank);
             // dzi = P(zi) / (P(zi)sum{k!=i}[1/(zi-zk)] - P'(zi))
             for(int i = 0; i < Roots.Count; ++i)
             {
@@ -135,8 +136,9 @@ namespace CamAlgorithms
                 }
 
                 Complex dz = p_zi / (p_zi * sum1z - dp_zi);
-                Roots.At(i, Roots.At(i) + dz);
+                newRoots.At(i, Roots.At(i) + dz);
             }
+			newRoots.CopyTo(Roots);
         }
 
         public float Find_r0()

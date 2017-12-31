@@ -44,6 +44,7 @@ namespace TriangulationModule
             if(res != null && res == true)
             {
                 _triangulatedPointsInput = pointsManager.Points;
+                UseTriangulatedInput = true;
             }
         }
 
@@ -79,8 +80,8 @@ namespace TriangulationModule
                 {
                     PointsOutput.Add(new TriangulatedPoint()
                     {
-                        ImageLeft = _matchedPointsInput[i].V1,
-                        ImageRight = _matchedPointsInput[i].V2,
+                        ImageLeft = new Vector2(_matchedPointsInput[i].V1),
+                        ImageRight = new Vector2(_matchedPointsInput[i].V2),
                         Real = new Vector3()
                     });
                 }
@@ -91,8 +92,8 @@ namespace TriangulationModule
                 {
                     PointsOutput.Add(new TriangulatedPoint()
                     {
-                        ImageLeft = _triangulatedPointsInput[i].ImageLeft,
-                        ImageRight = _triangulatedPointsInput[i].ImageRight,
+                        ImageLeft = new Vector2(_triangulatedPointsInput[i].ImageLeft),
+                        ImageRight = new Vector2(_triangulatedPointsInput[i].ImageRight),
                         Real = new Vector3()
                     });
                 }
@@ -106,7 +107,6 @@ namespace TriangulationModule
 
             Algorithm.Cameras = CameraPair.Data;
             Algorithm.Points = PointsOutput;
-            Algorithm.Recitifed = false;
             Algorithm.StatusChanged += Algorithm_StatusChanged;
             AlgorithmWindow window = new AlgorithmWindow(Algorithm);
             window.Show();
@@ -118,6 +118,8 @@ namespace TriangulationModule
             {
                 Dispatcher.Invoke(() =>
                 {
+                    PointsOutput = Algorithm.Points;
+
                     StringBuilder leftText = new StringBuilder();
                     StringBuilder rightText = new StringBuilder();
                     StringBuilder realText = new StringBuilder();

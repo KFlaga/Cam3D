@@ -5,7 +5,7 @@ using System.Diagnostics;
 
 namespace CamAlgorithms.ImageMatching
 {
-    public class SGMAggregator : CostAggregator
+    public class SgmAggregator : CostAggregator
     {
         [DebuggerDisplay("d = {Disparity}, c = {Cost}")]
         public struct DisparityCost
@@ -20,10 +20,8 @@ namespace CamAlgorithms.ImageMatching
         }
 
         public double LowPenaltyCoeff { get; set; } = 0.02; // P1 = coeff * MaxCost
-        public double HighPenaltyCoeff { get; set; } = 0.04; // P2 = coeff * MaxCost * (1 - grad * |Ib - Im|)
-        public double GradientCoeff { get; set; } = 0.5;
-        public int MaxDisparity { get; set; }
-        public int MinDisparity { get; set; }
+        public double HighPenaltyCoeff { get; set; } = 0.04; // P2 = coeff * MaxCost / 2 * coeff * MaxCost
+        public double IntensityThreshold { get; set; } = 0.1;
         double _penaltyLow;
         double _penaltyHigh;
 
@@ -82,12 +80,7 @@ namespace CamAlgorithms.ImageMatching
             (int)PathDirection.PosX_NegY2,
             (int)PathDirection.NegX_NegY2,
         };
-
-        public SGMAggregator()
-        {
-            DispComp = new SGMDisparityComputer();
-        }
-
+        
         void CreateBorderPaths()
         {
             _paths = new Path[ImageBase.RowCount, ImageBase.ColumnCount][];
@@ -214,70 +207,44 @@ namespace CamAlgorithms.ImageMatching
             _borderPixelGetters[(int)PathDirection.PosX_NegY2] = Path_Diag2_XPosY2Neg.GetBorderPixel;
             _borderPixelGetters[(int)PathDirection.NegX_NegY2] = Path_Diag2_XNegY2Neg.GetBorderPixel;
         }
-
-        public override void ComputeMatchingCosts()
+        
+        private double GetCloseDisparityCost(Path path, int d, int dmax)
         {
+            if(d == 0) { return path.LastStepCosts[d + 1]; }
+            else if(d > dmax - 2) { return path.LastStepCosts[d - 1]; }
+            return Math.Min(path.LastStepCosts[d + 1], path.LastStepCosts[d - 1]);
         }
 
-        private void FindCost(Path path, int d)
+        private double GetFarDisparityCost(Path path, int d, int dmax, DisparityCost bestPrev)
         {
-
+            if(bestPrev.Disparity < d - 1 || bestPrev.Disparity > d + 1)
+            {
+                return bestPrev.Cost;
+            }
+            double pen2 = 1e12;
+            for(int dk = 0; dk < d - 1; ++dk)
+            {
+                pen2 = Math.Min(path.LastStepCosts[dk], pen2);
+            }
+            for(int dk = d + 2; dk < dmax - 1; ++dk)
+            {
+                pen2 = Math.Min(path.LastStepCosts[dk], pen2);
+            }
+            return pen2;
         }
 
-        private double FindCost_Rect(IntVector2 basePixel, Path path, int d, int bestPrevDisp, double bestPrevCost, int dmax, double prevCost)
+        private double FindCost(IntVector2 basePixel, Path path, int d, DisparityCost bestPrev, int dmax)
         {
-            double pen0, pen1, pen2;
-
-            pen0 = path.LastStepCosts[d];
-            if(d == 0)
-                pen1 = path.LastStepCosts[d + 1];
-            else if(d > _dispRange - 2)
-                pen1 = prevCost; // path.LastStepCosts[d - 1];
-            else
-                pen1 = Math.Min(path.LastStepCosts[d + 1], prevCost);//  path.LastStepCosts[d - 1]);
-
-            pen2 = double.MaxValue;
-            if(bestPrevDisp < d - 1 || bestPrevDisp > d + 1)
-            {
-                pen2 = bestPrevCost;
-            }
-            else
-            {
-                for(int dk = 0; dk < d - 1; ++dk)
-                {
-                    pen2 = Math.Min(path.LastStepCosts[dk], pen2);
-                }
-
-                for(int dk = d + 2; dk < dmax - 1; ++dk)
-                {
-                    pen2 = Math.Min(path.LastStepCosts[dk], pen2);
-                }
-            }
-
-            if(basePixel.X >= ImageBase.ColumnCount || _matched.X >= ImageBase.ColumnCount ||
-                basePixel.X < 0 || _matched.X < 0)
-            {
-
-            }
-
-            if(Math.Min(pen0, Math.Min(pen1 + _penaltyLow, pen2 + _penaltyHigh * (1.0 - GradientCoeff *
-                Math.Abs(ImageBase[basePixel.Y, basePixel.X] - ImageMatched[_matched.Y, _matched.X])))) !=
-                Math.Min(
-                pen0, Math.Min(pen1 + _penaltyLow, bestPrevCost + _penaltyHigh * (1.0 - GradientCoeff *
-                Math.Abs(ImageBase[basePixel.Y, basePixel.X] - ImageMatched[_matched.Y, _matched.X])))))
-            {
-
-            }
-
-            //return CostComp.GetCost_Border(basePixel, _matched) + Math.Min(
-            //    pen0, Math.Min(pen1 + _penaltyLow, pen2 + _penaltyHigh * (1.0 - GradientCoeff *
-            //    Math.Abs(ImageBase[basePixel.Y, basePixel.X] - ImageMatched[_matched.Y, _matched.X]))));
-
-
+            double pen0 = path.LastStepCosts[d];
+            double pen1 = GetCloseDisparityCost(path, d, dmax);
+            double pen2 = GetFarDisparityCost(path, d, dmax, bestPrev);
+            
             double c = CostComp.GetCost_Border(basePixel, _matched);
+            double imgDiff = Math.Abs(ImageBase[basePixel.Y, basePixel.X] - ImageMatched[_matched.Y, _matched.X]);
             return c + Math.Min(
-                pen0, Math.Min(pen1 + _penaltyLow, bestPrevCost + _penaltyHigh * (1.0 - GradientCoeff *
-                Math.Abs(ImageBase[basePixel.Y, basePixel.X] - ImageMatched[_matched.Y, _matched.X]))));
+                pen0, 
+                Math.Min(pen1 + _penaltyLow, 
+                pen2 + _penaltyHigh * (imgDiff > IntensityThreshold ? 1.0 : 2.0) ));
         }
 
         public double GetCost(IntVector2 pixel, Disparity disp)
@@ -293,7 +260,7 @@ namespace CamAlgorithms.ImageMatching
             return CostComp.GetCost_Border(basePixel, matchedPixel);
         }
 
-        public override void ComputeMatchingCosts_Rectified()
+        public override void ComputeMatchingCosts()
         {
             Vector2 pb_d = new Vector2();
             _bestPathCosts = new DisparityCost[ImageBase.RowCount, ImageBase.ColumnCount, 16];
@@ -399,15 +366,14 @@ namespace CamAlgorithms.ImageMatching
             int bestDisp = 0;
             double bestCost = double.MaxValue;
             DisparityCost bestPrev = _bestPathCosts[path.PreviousPixel.Y, path.PreviousPixel.X, pathIdx];
-            double prevCost = double.MaxValue;
 
+            double[] currentStepCosts = new double[path.LastStepCosts.Length];
             for(int d = 0; d < maxDisp; ++d)
             {
                 _matched.X = IsLeftImageBase ? path.CurrentPixel.X - d : path.CurrentPixel.X + d;
 
-                double cost = FindCost_Rect(path.CurrentPixel, path, d, bestPrev.Disparity, bestPrev.Cost, maxDisp, prevCost);
-                prevCost = path.LastStepCosts[d];
-                path.LastStepCosts[d] = cost;
+                double cost = FindCost(path.CurrentPixel, path, d, bestPrev, maxDisp);
+                currentStepCosts[d] = cost;
 
                 // Save best disparity at current path index
                 if(bestCost > cost)
@@ -417,6 +383,7 @@ namespace CamAlgorithms.ImageMatching
                 }
             }
             _bestPathCosts[path.CurrentPixel.Y, path.CurrentPixel.X, pathIdx] = new DisparityCost(bestDisp, bestCost);
+            currentStepCosts.CopyTo(path.LastStepCosts, 0);
 
             if(startedOnZeroRange && maxDisp > 0)
             {
@@ -435,36 +402,23 @@ namespace CamAlgorithms.ImageMatching
         {
             base.InitParameters();
 
-            //  IntParameter pathLenParam =
-            //      new IntParameter("Paths Max Length", "PATH", 10, 1, 10000);
-            //  Parameters.Add(pathLenParam);
-
             DoubleParameter lowPenParam =
-                new DoubleParameter("Low Disparity Penalty Coeff", "P1", 0.02, 0.0, 1.0);
+                new DoubleParameter("Low Disparity Penalty Coeff", "LowPenaltyCoeff", 0.02, 0.0, 1.0);
             Parameters.Add(lowPenParam);
 
             DoubleParameter highPenParam =
-                new DoubleParameter("High Disparity Penalty Coeff", "P2", 0.04, 0.0, 1.0);
+                new DoubleParameter("High Disparity Penalty Coeff", "HighPenaltyCoeff", 0.04, 0.0, 1.0);
             Parameters.Add(highPenParam);
 
             DoubleParameter gradientCoeff =
-                new DoubleParameter("High Disparity Gradient Coeff", "GRAD", 0.75, 0.0, 2.0);
+                new DoubleParameter("High Disparity Intensity Threshold", "InstenistyThreshold", 0.1, 0.0, 1.0);
             Parameters.Add(gradientCoeff);
-
-            IntParameter maxDispParam = new IntParameter(
-                "Maximum Disparity", "MAXD", 100, -10000, 10000);
-            Parameters.Add(maxDispParam);
-
-            IntParameter minDispParam = new IntParameter(
-                "Minimum Disparity (Negative)", "MIND", 10, -10000, 10000);
-            Parameters.Add(minDispParam);
-
-
+            
             ParametrizedObjectParameter disparityParam = new ParametrizedObjectParameter(
-                "Disparity Computer", "DISP_COMP");
+                "Disparity Computer", "DispComp");
 
             disparityParam.Parameterizables = new List<IParameterizable>();
-            var dcSGM = new SGMDisparityComputer();
+            var dcSGM = new SgmDisparityComputer();
             dcSGM.InitParameters();
             disparityParam.Parameterizables.Add(dcSGM);
 
@@ -474,14 +428,11 @@ namespace CamAlgorithms.ImageMatching
         public override void UpdateParameters()
         {
             base.UpdateParameters();
-            // PathsLength = AlgorithmParameter.FindValue<int>("PATH", Parameters);
-            LowPenaltyCoeff = IAlgorithmParameter.FindValue<double>("P1", Parameters);
-            HighPenaltyCoeff = IAlgorithmParameter.FindValue<double>("P2", Parameters);
-            GradientCoeff = IAlgorithmParameter.FindValue<double>("GRAD", Parameters);
-            MaxDisparity = IAlgorithmParameter.FindValue<int>("MAXD", Parameters);
-            MinDisparity = IAlgorithmParameter.FindValue<int>("MIND", Parameters);
+            LowPenaltyCoeff = IAlgorithmParameter.FindValue<double>("LowPenaltyCoeff", Parameters);
+            HighPenaltyCoeff = IAlgorithmParameter.FindValue<double>("HighPenaltyCoeff", Parameters);
+            IntensityThreshold = IAlgorithmParameter.FindValue<double>("InstenistyThreshold", Parameters);
 
-            DispComp = IAlgorithmParameter.FindValue<DisparityComputer>("DISP_COMP", Parameters);
+            DispComp = IAlgorithmParameter.FindValue<DisparityComputer>("DispComp", Parameters);
             DispComp.UpdateParameters();
         }
 

@@ -20,7 +20,7 @@ namespace RectificationModule
             }
         }
 
-        public ImageRectification Algorithm { get; private set; } = new ImageRectification();
+        public RectificationAlgorithm Algorithm { get; private set; } = new RectificationAlgorithm();
         
         public bool IsTerminable { get; } = false;
         public bool IsParametrizable { get; } = true;

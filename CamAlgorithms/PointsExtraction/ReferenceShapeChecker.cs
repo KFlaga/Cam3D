@@ -110,7 +110,7 @@ namespace CamAlgorithms.PointsExtraction
             Parameters.Add(new IntParameter("Check Neighbourhood Radius", "NeighbourhoodRadius", 3, 1, 99));
             Parameters.Add(new DoubleParameter("Brightness Threshold", "BrightnessThreshold", 0.5, 0.0, 1.0));
             Parameters.Add(new DoubleParameter("Brightness Threshold", "ColorValueThreshold", 0.1, 0.0, 10.0));
-            Parameters.Add(new DoubleParameter("Brightness Threshold", "ColorRatioThreshold", 0.2, 0.0, 10.0));
+            Parameters.Add(new DoubleParameter("Brightness Threshold", "ColorRatioThreshold", 0.5, 0.0, 10.0));
         }
 
         public override void UpdateParameters()

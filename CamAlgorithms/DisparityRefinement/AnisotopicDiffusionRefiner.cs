@@ -34,17 +34,19 @@ namespace CamAlgorithms.ImageMatching
             }
         }
 
-        public int MaxIterations { get; set; } = 10;
+        public int Iterations { get; set; } = 10;
         public double KernelCoeff { get; set; }
         public double StepCoeff { get; set; } // Actual coeff used is StepCoeff * (1/_dirs)
                                               // public bool UseExtendedMethod { get; set; }
         public bool UseEightDirections { get; set; }
-        public bool UseConfidenceWeights { get; set; }
 
-        public bool SmoothDisparityMap { get; set; } // When set instead of interpolating bad disparities
-                                                     // from more confident one within color-coherent areas
-                                                     // smooth disparities in disparity-coherent areas
+        public bool SmoothDisparityMap { get; set; } // When set smooths disparities in disparity-coherent areas
+        public bool InterpolateDisparityMap { get; set; } // When set interpolates bad disparities
+                                                          // from more confident one within color-coherent areas
 
+        double[,] visitCounter; // Counter to find if field could be marked valid ->
+                                // invlid field becomes valid if it was visited from valid field
+                                // at least 4 / step_coeff times
 
         IntVector2[] _dirs4 = new IntVector2[4]
         {
@@ -78,6 +80,7 @@ namespace CamAlgorithms.ImageMatching
 
         private DisparityMap _next;
         private DisparityMap _last;
+        private DisparityMap _initial;
         private IntVector2[] _dirs;
         private double[] _dinv;
         private double _r;
@@ -96,11 +99,12 @@ namespace CamAlgorithms.ImageMatching
 
             _next = (DisparityMap)map.Clone();
             _last = (DisparityMap)map.Clone();
+            _initial = (DisparityMap)map.Clone();
             _dirs = UseEightDirections ? _dirs8 : _dirs4;
             _dinv = UseEightDirections ? _dinv8 : _dinv4;
-            _r = UseEightDirections ? StepCoeff * 0.125 : StepCoeff * 0.25;
 
-            for(int t = 0; t < MaxIterations; ++t)
+            visitCounter = new double[map.RowCount, map.ColumnCount];
+            for(int t = 0; t < Iterations; ++t)
             {
                 Iterate(map, img);
 
@@ -108,13 +112,19 @@ namespace CamAlgorithms.ImageMatching
                 var temp = _last;
                 _last = _next;
                 _next = temp;
-            }
 
-            for(int x = 1; x < map.ColumnCount - 1; ++x)
-            {
-                for(int y = 1; y < map.RowCount - 1; ++y)
+                if(SmoothDisparityMap == false)
                 {
-                    _last[y, x].Flags = (int)DisparityFlags.Valid;
+                    for(int x = 1; x < map.ColumnCount - 1; ++x)
+                    {
+                        for(int y = 1; y < map.RowCount - 1; ++y)
+                        {
+                            if(_last[y, x].IsInvalid() && visitCounter[y, x] > (4 + Iterations * 0.3) / StepCoeff)
+                            {
+                                _last[y, x].Flags = (int)DisparityFlags.Valid;
+                            }
+                        }
+                    }
                 }
             }
             return _last;
@@ -130,59 +140,53 @@ namespace CamAlgorithms.ImageMatching
 
                     //double cxsum = 0, cysum = 0;
 
+                    double weight = 0;
                     // Add c_dir*∇_dir I(t, x, y) to val
                     for(int i = 0; i < _dirs.Length; ++i)
                     {
-                        dispX += GetDirectionalCoeff(img, x, y, i);
+                        double w;
+                        dispX += GetDirectionalCoeff(img, x, y, i, out w);
+                        weight += w;
                     }
 
-                    //if(SmoothDisparityMap)
-                    //{
-                    //    dispX = Math.Abs(cxsum) < 1e-6 ? _last[y, x].SubDX : dispX / cxsum;
-                    //    dispY = Math.Abs(cysum) < 1e-6 ? _last[y, x].SubDY : dispY / cysum;
-                    //}
-                    //else
-                    //{
-                    dispX *= _r; // get _r( sum{dir}(c_dir*∇_dir I(t, x, y))
+                    if(weight > 0)
+                    {
+                        dispX *= StepCoeff / weight; // get _r( sum{dir}(c_dir*∇_dir I(t, x, y))
+                        visitCounter[y, x] += weight;
+                    }
                     dispX += _last[y, x].SubDX; // get I(t, x, y) + _r( sum{dir}(c_dir*∇_dir I(t, x, y)))
-                    //}
-
-
-                    UpdateDisparity(x, y, dispX);
+                    UpdateDisparity(x, y, dispX, weight);
                 }
             }
         }
 
-        private double GetDirectionalCoeff(IImage img, int x, int y, int i)
+        private double GetDirectionalCoeff(IImage img, int x, int y, int i, out double weight)
         {
             double gradDispX = _last[y + _dirs[i].Y, x + _dirs[i].X].SubDX - _last[y, x].SubDX;
             double gradImg = img[y + _dirs[i].Y, x + _dirs[i].X] - img[y, x];
+            double cx;
 
-            //if(SmoothDisparityMap)
-            //{
-            //    GetCxCyForSmoothing2(_last, _dirs[i], x, y, gradDispX, gradDispY, out cx, out cy);
-
-            //    cxsum += cx;
-            //    cysum += cy;
-
-            //    dispX += _last[y + _dirs[i].Y, x + _dirs[i].X].SubDX * cx * _dinv[i];
-            //    dispY += _last[y + _dirs[i].Y, x + _dirs[i].X].SubDY * cy * _dinv[i];
-            //}
             if(SmoothDisparityMap)
             {
-                double cx = GetCxForSmoothing(_dirs[i], x, y, gradDispX);
-                return gradDispX * cx * _dinv[i];
+                cx = _coeff(gradDispX);
+                weight = GetWeightForSmoothing(_dirs[i], x, y);
+            }
+            else if(InterpolateDisparityMap)
+            {
+                cx = _coeff(gradImg);
+                weight = GetWeightForInterpolation(_dirs[i], x, y);
             }
             else
             {
-                double cx = GetCxForDiffusion(_dirs[i], x, y, gradImg);
-                return gradDispX * cx * _dinv[i];
+                cx = _coeff(gradImg);
+                weight = GetWeightForDiffusion(_dirs[i], x, y);
             }
+            return gradDispX * cx * weight * _dinv[i];
         }
 
-        private void UpdateDisparity(int x, int y, double dispX)
+        private void UpdateDisparity(int x, int y, double dispX, double weight)
         {
-            if(dispX > 1000)
+            if(Math.Abs(dispX) > 1000)
             {
                 // Detect invalid disparitiess
                 _next[y, x].SubDX = 0;
@@ -196,67 +200,35 @@ namespace CamAlgorithms.ImageMatching
             }
         }
 
-        private double GetCxForDiffusion(IntVector2 dir, int x, int y, double gradImg)
+        private double GetWeightForDiffusion(IntVector2 dir, int x, int y)
         {
-            if(_last[y + dir.Y, x + dir.X].IsValid() && _last[y, x].IsValid())
+            if(_initial[y + dir.Y, x + dir.X].IsValid()) { return 1.0; }
+            else if(_last[y + dir.Y, x + dir.X].IsValid()) { return 0.5; }
+            else if(_last[y, x].IsInvalid() && _last[y + dir.Y, x + dir.X].IsInvalid()) { return 0.25; }
+            return 0.0;
+        }
+
+        private double GetWeightForInterpolation(IntVector2 dir, int x, int y)
+        {
+            if(_initial[y, x].IsInvalid() && _last[y + dir.Y, x + dir.X].IsValid())
             {
-                return 0.5 * _coeff(gradImg);
-            }
-            else if(_last[y + dir.Y, x + dir.X].IsValid())
-            {
-                return _coeff(gradImg);
-            }
-            else if(_last[y, x].IsValid())
-            {
-                return 0.0;
+                return 1.0;
             }
             else
             {
-                return 0.5 * _coeff(gradImg);
+                return 0.0;
             }
         }
 
-        private double GetCxForSmoothing(IntVector2 dir, int x, int y, double gradDispX)
+        private double GetWeightForSmoothing(IntVector2 dir, int x, int y)
         {
             if(_last[y + dir.Y, x + dir.X].IsValid() && _last[y, x].IsValid())
             {
-                return 0.5 * _coeff(gradDispX);
+                return 1.0;
             }
             else
             {
                 return 0.0;
-            }
-            //else if(_last[y + dir.Y, x + dir.X].IsValid())
-            //{
-            //    return _coeff(gradDispX);
-            //}
-            //else if(_last[y, x].IsValid())
-            //{
-            //    return 0.0;
-            //}
-            //else
-            //{
-            //    return 0.5 * _coeff(gradDispX);
-            //}
-        }
-
-        private double GetCxForSmoothing2(IntVector2 dir, int x, int y, double gradDispX)
-        {
-            if(_last[y + dir.Y, x + dir.X].IsValid() && _last[y, x].IsValid())
-            {
-                return 0.5 * _coeff(gradDispX);
-            }
-            else if(_last[y + dir.Y, x + dir.X].IsValid())
-            {
-                return _coeff(gradDispX);
-            }
-            else if(_last[y, x].IsValid())
-            {
-                return 0.0;
-            }
-            else
-            {
-                return 0.5 * _coeff(gradDispX);
             }
         }
 
@@ -299,11 +271,13 @@ namespace CamAlgorithms.ImageMatching
         public override void InitParameters()
         {
             base.InitParameters();
-            
+
             Parameters.Add(new IntParameter(
-                "Max Interations", "MaxIterations", 10, 1, 1000));
+                "Interations Count", "Iterations", 10, 1, 1000));
             Parameters.Add(new BooleanParameter(
                 "Smooth Disparity Map", "SmoothDisparityMap", false));
+            Parameters.Add(new BooleanParameter(
+                "Interpolate Disparity Map", "InterpolateDisparityMap", false));
             Parameters.Add(new DoubleParameter(
                 "Kernel Coeff", "KernelCoeff", 0.5, 0.001, 100.0));
             Parameters.Add(new DoubleParameter(
@@ -324,8 +298,9 @@ namespace CamAlgorithms.ImageMatching
         public override void UpdateParameters()
         {
             base.UpdateParameters();
-            MaxIterations = IAlgorithmParameter.FindValue<int>("MaxIterations", Parameters);
+            Iterations = IAlgorithmParameter.FindValue<int>("Iterations", Parameters);
             SmoothDisparityMap = IAlgorithmParameter.FindValue<bool>("SmoothDisparityMap", Parameters);
+            InterpolateDisparityMap = IAlgorithmParameter.FindValue<bool>("InterpolateDisparityMap", Parameters);
             KernelCoeff = IAlgorithmParameter.FindValue<double>("KernelCoeff", Parameters);
             StepCoeff = IAlgorithmParameter.FindValue<double>("StepCoeff", Parameters);
             KernelType = IAlgorithmParameter.FindValue<CoeffKernelType>("KernelType", Parameters);

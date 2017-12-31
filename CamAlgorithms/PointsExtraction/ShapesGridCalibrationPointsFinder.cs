@@ -1,6 +1,7 @@
 ﻿using CamCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using CamAlgorithms.Calibration;
 
 namespace CamAlgorithms.PointsExtraction
@@ -24,9 +25,9 @@ namespace CamAlgorithms.PointsExtraction
         {
             return new List<ReferncePoint>()
             {
-                new ReferncePoint(new IntVector2(x: 4, y: 3), new ColorShapeChecker(new Vector3(0.3, 0.0, 0))),
-                new ReferncePoint(new IntVector2(x: 5, y: 3), new ColorShapeChecker(new Vector3(0, 0, 0.3))),
-                new ReferncePoint(new IntVector2(x: 4, y: 4), new ColorShapeChecker(new Vector3(0, 0.3, 0.0)))
+                new ReferncePoint(new IntVector2(x: 3, y: 4), new ColorShapeChecker(new Vector3(0.0, 0.1, 0))),
+                new ReferncePoint(new IntVector2(x: 2, y: 4), new ColorShapeChecker(new Vector3(0.15, 0, 0.0))),
+                new ReferncePoint(new IntVector2(x: 3, y: 5), new ColorShapeChecker(new Vector3(0, 0.0, 0.1)))
             };
         }
     }
@@ -106,7 +107,7 @@ namespace CamAlgorithms.PointsExtraction
 
         void ValidateReferncePoints()
         {
-            if(ReferncePoints.Count != 3)
+            if(ReferncePoints.Count((p) => { return p.Shape != null; }) != 3)
             {
                 throw new Exception("Need 3 refernce points which define local axes");
             }
@@ -194,9 +195,9 @@ namespace CamAlgorithms.PointsExtraction
             base.InitParameters();
             
             Parameters.Add(new DoubleParameter(
-                "Size Elimination Threshold Low", "PointSizeTresholdLow", 0.1, 0.0001, 1.0));
+                "Size Elimination Threshold Low", "PointSizeTresholdLow", 0.25, 0.0001, 1.0));
             Parameters.Add(new DoubleParameter(
-               "Size Elimination Threshold High", "PointSizeTresholdHigh", 10.0, 1.0, 1000.0));
+               "Size Elimination Threshold High", "PointSizeTresholdHigh", 2.0, 1.0, 1000.0));
             Parameters.Add(new DoubleParameter(
                "Brightness Threshold For White/Dark Backgorund", "BrightnessThreshold", 0.5, 0.0, 1.0));
             Parameters.Add(new IntParameter(
@@ -204,22 +205,22 @@ namespace CamAlgorithms.PointsExtraction
 
             Parameters.Add(new Vector3Parameter(
                 "Main Reference Point Color", "RefColor0", 
-                new Vector3(0.3, 0.0, 0.0), new Vector3(0.0, 0.0, 0.0), new Vector3(1.0, 1.0, 1.0)));
+                new Vector3(0.0, 0.1, 0.0), new Vector3(0.0, 0.0, 0.0), new Vector3(1.0, 1.0, 1.0)));
             Parameters.Add(new Vector2Parameter(
                 "Main Reference Point Position", "RefPos0",
-                new Vector2(4, 3), new Vector2(-1000, -1000), new Vector2(1000, 1000)));
+                new Vector2(3, 4), new Vector2(-1000, -1000), new Vector2(1000, 1000)));
             Parameters.Add(new Vector3Parameter(
                 "X Reference Point Color", "RefColorX",
-                new Vector3(0.0, 0.0, 0.3), new Vector3(0.0, 0.0, 0.0), new Vector3(1.0, 1.0, 1.0)));
+                new Vector3(0.15, 0.0, 0.0), new Vector3(0.0, 0.0, 0.0), new Vector3(1.0, 1.0, 1.0)));
             Parameters.Add(new Vector2Parameter(
                 "X Reference Point Position", "RefPosX",
-                new Vector2(5, 3), new Vector2(-1000, -1000), new Vector2(1000, 1000)));
+                new Vector2(2, 4), new Vector2(-1000, -1000), new Vector2(1000, 1000)));
             Parameters.Add(new Vector3Parameter(
                 "Y Reference Point Color", "RefColorY",
-                new Vector3(0.0, 0.3, 0.0), new Vector3(0.0, 0.0, 0.0), new Vector3(1.0, 1.0, 1.0)));
+                new Vector3(0.0, 0.0, 0.1), new Vector3(0.0, 0.0, 0.0), new Vector3(1.0, 1.0, 1.0)));
             Parameters.Add(new Vector2Parameter(
                 "Y Reference Point Position", "RefPosY",
-                new Vector2(4, 4), new Vector2(-1000, -1000), new Vector2(1000, 1000)));
+                new Vector2(3, 5), new Vector2(-1000, -1000), new Vector2(1000, 1000)));
         }
 
         public override void UpdateParameters()

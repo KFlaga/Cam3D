@@ -3,16 +3,14 @@ using CamCore;
 
 namespace CamAlgorithms.ImageMatching
 {
-    public abstract class ImageMatchingAlgorithm : IParameterizable
+    public abstract class DenseMatchingAlgorithm : IParameterizable
     {
         public DisparityMap MapLeft { get; set; }
         public DisparityMap MapRight { get; set; }
 
         public IImage ImageLeft { get; set; }
         public IImage ImageRight { get; set; }
-
-        public bool Rectified { get; set; } = true;
-
+        
         List<IAlgorithmParameter> _params = new List<IAlgorithmParameter>();
         public List<IAlgorithmParameter> Parameters
         {

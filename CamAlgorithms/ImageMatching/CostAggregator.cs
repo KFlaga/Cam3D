@@ -10,7 +10,6 @@ namespace CamAlgorithms.ImageMatching
         public IImage ImageBase { get; set; }
         public IImage ImageMatched { get; set; }
         public DisparityMap DisparityMap { get; set; } // For each pixel p in base image stores corresponding pixels
-        public Matrix<double> Fundamental { get; set; }
 
         public MatchingCostComputer CostComp { get; set; }
         public DisparityComputer DispComp { get; set; }
@@ -23,28 +22,25 @@ namespace CamAlgorithms.ImageMatching
             CostComp.ImageMatched = ImageMatched;         
             CostComp.Init();
 
-                DispComp.CostComp = CostComp;
-                DispComp.ImageBase = ImageBase;
-                DispComp.ImageMatched = ImageMatched;
-                DispComp.IsLeftImageBase = IsLeftImageBase;
-                DispComp.DisparityMap = DisparityMap;
-                DispComp.Init();
+            DispComp.CostComp = CostComp;
+            DispComp.ImageBase = ImageBase;
+            DispComp.ImageMatched = ImageMatched;
+            DispComp.IsLeftImageBase = IsLeftImageBase;
+            DispComp.DisparityMap = DisparityMap;
+            DispComp.Init();
         }
 
         public abstract void ComputeMatchingCosts();
-        public abstract void ComputeMatchingCosts_Rectified();
         
-        List<IAlgorithmParameter> _params = new List<IAlgorithmParameter>();
-        public List<IAlgorithmParameter> Parameters
-        {
-            get { return _params; }
-        }
+        public List<IAlgorithmParameter> Parameters { get; protected set; }
         
         public virtual void InitParameters()
         {
+            Parameters = new List<IAlgorithmParameter>();
+
             // Add all available cost computers
             ParametrizedObjectParameter costParam =
-                new ParametrizedObjectParameter("Matching Cost Computer", "COST");
+                new ParametrizedObjectParameter("Matching Cost Computer", "CostComp");
 
             costParam.Parameterizables = new List<IParameterizable>();
             var cens = new CensusCostComputer();
@@ -56,12 +52,12 @@ namespace CamAlgorithms.ImageMatching
 
             costParam.DefaultValue = cens;
 
-            _params.Add(costParam);
+            Parameters.Add(costParam);
         }
 
         public virtual void UpdateParameters()
         {
-            CostComp = IAlgorithmParameter.FindValue<MatchingCostComputer>("COST", _params);
+            CostComp = IAlgorithmParameter.FindValue<MatchingCostComputer>("CostComp", Parameters);
             CostComp.UpdateParameters();
         }
 

@@ -1,4 +1,5 @@
-﻿using CamAlgorithms.Calibration;
+﻿using CamAlgorithms;
+using CamAlgorithms.Calibration;
 using CamCore;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
@@ -7,6 +8,28 @@ using System.Collections.Generic;
 
 namespace CamUnitTest.TestsForThesis
 {
+    public class Range3d
+    {
+        public double MaxX { get; set; } = 300;
+        public double MinX { get; set; } = -150;
+        public double MaxY { get; set; } = 250;
+        public double MinY { get; set; } = -100;
+        public double MaxZ { get; set; } = 800;
+        public double MinZ { get; set; } = 500;
+    }
+    
+    public struct MatrixInfo
+    {
+        public string Name { get; set; }
+        public Matrix<double> Matrix { get; set; }
+
+        public MatrixInfo(string n, Matrix<double> m)
+        {
+            Name = n;
+            Matrix = m;
+        }
+    }
+
     public class RectificationTestUtils
     {
         public class CameraParams
@@ -112,20 +135,10 @@ namespace CamUnitTest.TestsForThesis
 
             return TestUtils.CreateTestCamerasFromMatrices(K_L, K_R, R_L, R_R, C_L, C_R);
         }
-
-        public class Range
+        
+        public static List<Vector2Pair> PrepareMatchedPoints(CameraPair cameras, int pointCount = 100, Range3d range = null, int seed = 0)
         {
-            public double MaxX { get; set; } = 300;
-            public double MinX { get; set; } = -150;
-            public double MaxY { get; set; } = 250;
-            public double MinY { get; set; } = -100;
-            public double MaxZ { get; set; } = 800;
-            public double MinZ { get; set; } = 500;
-        }
-
-        public static List<Vector2Pair> PrepareMatchedPoints(CameraPair cameras, int pointCount = 100, Range range = null, int seed = 0)
-        {
-            range = range == null ? new Range() : range;
+            range = range == null ? new Range3d() : range;
             Random rand = seed == 0 ? new Random() : new Random(seed);
 
             var matchedPairs = new List<Vector2Pair>();         
@@ -149,18 +162,6 @@ namespace CamUnitTest.TestsForThesis
             return matchedPairs;
         }
         
-        public struct MatrixInfo
-        {
-            public string Name { get; set; }
-            public Matrix<double> Matrix { get; set; }
-
-            public MatrixInfo(string n, Matrix<double> m)
-            {
-                Name = n;
-                Matrix = m;
-            }
-        }
-
         public static void StoreMatrices(Context context, List<MatrixInfo> matrices)
         {
             foreach(var m in matrices)
@@ -215,6 +216,74 @@ namespace CamUnitTest.TestsForThesis
                 new MatrixInfo( "Right Camera Center", cameras.Right.Center.ToRowMatrix()),
                 new MatrixInfo( "Fundamental", cameras.Fundamental)
             });
+        }
+
+        public enum RealRect
+        {
+            FullCalib_ZhangLoop,
+            FullCalib_FussielloTruccoVerri,
+            FullCalib_FussielloIrsara,
+            NoDistortionCalib_ZhangLoop,
+            NoDistortionCalib_FussielloTruccoVerri,
+            NoDistortionCalib_FussielloIrsara,
+            Only600Calib_ZhangLoop,
+            Only600Calib_FussielloTruccoVerri,
+            Only600Calib_FussielloIrsara,
+        }
+
+        public static void LoadRectification(Context context, RealRect rectCase, out RectificationAlgorithm rect, out List<Vector2Pair> matched)
+        {
+            string directory = context.ResultDirectory + "\\real_rectification\\";
+            string rect_name;
+            string matched_name;
+            switch(rectCase)
+            {
+                case RealRect.FullCalib_FussielloIrsara:
+                    rect_name = "rect_fi_full.xml";
+                    matched_name = "matched_full.xml";
+                    break;
+                case RealRect.FullCalib_FussielloTruccoVerri:
+                    rect_name = "rect_ftv_full.xml";
+                    matched_name = "matched_full.xml";
+                    break;
+                case RealRect.FullCalib_ZhangLoop:
+                    rect_name = "rect_zl_full.xml";
+                    matched_name = "matched_full.xml";
+                    break;
+                case RealRect.NoDistortionCalib_FussielloIrsara:
+                    rect_name = "rect_fi_noud.xml";
+                    matched_name = "matched_noud.xml";
+                    break;
+                case RealRect.NoDistortionCalib_FussielloTruccoVerri:
+                    rect_name = "rect_ftv_noud.xml";
+                    matched_name = "matched_noud.xml";
+                    break;
+                case RealRect.NoDistortionCalib_ZhangLoop:
+                    rect_name = "rect_zl_noud.xml";
+                    matched_name = "matched_noud.xml";
+                    break;
+                case RealRect.Only600Calib_FussielloIrsara:
+                    rect_name = "rect_fi_600.xml";
+                    matched_name = "matched_600.xml";
+                    break;
+                case RealRect.Only600Calib_FussielloTruccoVerri:
+                    rect_name = "rect_ftv_600.xml";
+                    matched_name = "matched_600.xml";
+                    break;
+                case RealRect.Only600Calib_ZhangLoop:
+                    rect_name = "rect_zl_600.xml";
+                    matched_name = "matched_600.xml";
+                    break;
+                default:
+                    throw new Exception();
+            }
+            LoadRectification(directory + rect_name, directory + matched_name, out rect, out matched);
+        }
+
+        public static void LoadRectification(string pathRect, string pathMatched, out RectificationAlgorithm rect, out List<Vector2Pair> matched)
+        {
+            rect = XmlSerialisation.CreateFromFile<RectificationAlgorithm>(pathRect);
+            matched = XmlSerialisation.CreateFromFile<List<Vector2Pair>>(pathMatched);
         }
     }
 }

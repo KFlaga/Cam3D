@@ -14,8 +14,7 @@ namespace TriangulationModule
 
         public List<TriangulatedPoint> Points { get { return Algorithm.Points; } set { Algorithm.Points = value; } }
         public CameraPair Cameras { get { return Algorithm.Cameras; } set { Algorithm.Cameras = value; } }
-        public bool Recitifed { get { return Algorithm.Recitifed; } set { Algorithm.Recitifed = value; } }
-
+        
         public string Name { get { return Algorithm.Name; } }
         
         public bool IsTerminable { get; } = true;

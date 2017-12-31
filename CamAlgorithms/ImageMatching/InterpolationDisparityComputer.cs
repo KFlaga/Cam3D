@@ -7,9 +7,10 @@ namespace CamAlgorithms.ImageMatching
 {
     public class InterpolationDisparityComputer : DisparityComputer
     {
-      //  public bool InterpolateFinal { get; set; } = true;
-      //  public bool InterpolatePixelWise { get; set; } = false;
+        //  public bool InterpolateFinal { get; set; } = true;
+        //  public bool InterpolatePixelWise { get; set; } = false;
 
+        MatchConfidenceComputer ConfidenceComp;
         List<Disparity> _dispForPixel;
         int _minIdx;
         int _min2Idx;

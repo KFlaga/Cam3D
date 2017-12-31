@@ -68,7 +68,8 @@ namespace CamAlgorithms.Calibration
         {
             SymmertricK1,
             HighK1,
-            Generic
+            Experimental,
+            Zero
         }
 
         InitialMethods _findInitial = InitialMethods.SymmertricK1;
@@ -85,9 +86,13 @@ namespace CamAlgorithms.Calibration
                 _findInitial = value;
                 switch(value)
                 {
-                    case InitialMethods.Generic:
+                    case InitialMethods.Experimental:
                         _findK1 = FindK1_GenericModel;
                         _setInitialParams = SetInitialParams_GenericModel;
+                        break;
+                    case InitialMethods.Zero:
+                        _findK1 = FindK1_Zero;
+                        _setInitialParams = SetInitialParams_Zero;
                         break;
                     case InitialMethods.HighK1:
                         _findK1 = FindK1_HighK1Model;
@@ -465,13 +470,18 @@ namespace CamAlgorithms.Calibration
             return rd / ru - 1;
         }
 
+        static double FindK1_Zero(double ru, double rd)
+        {
+            return 0;
+        }
+
         static void SetInitialParams_SymmetricModel(Rational3RDModel model, double k1)
         {
             if(k1 > 0)
             {
                 model.Coeffs[model._k1Idx] = 4.0 * k1;
                 model.Coeffs[model._k2Idx] = 4.0 * -k1;
-                model.Coeffs[model._k3Idx] = 0.0;
+                model.Coeffs[model._k3Idx] = 0.4 * k1;
             }
             else
             {
@@ -504,6 +514,13 @@ namespace CamAlgorithms.Calibration
             }
         }
 
+        static void SetInitialParams_Zero(Rational3RDModel model, double k1)
+        {
+            model.Coeffs[model._k1Idx] = 0;
+            model.Coeffs[model._k2Idx] = 0;
+            model.Coeffs[model._k3Idx] = 0;
+        }
+
         public override void InitParameters()
         {
             Parameters = new List<IAlgorithmParameter>();
@@ -512,19 +529,14 @@ namespace CamAlgorithms.Calibration
                 "Inital Cx", "CX", 320.0, 0.0, 99999.0));
             Parameters.Add(new DoubleParameter(
                 "Inital Cy", "CY", 240.0, 0.0, 99999.0));
-            Parameters.Add(new DoubleParameter(
-                "Inital K1", "K1", 0.0, -100.0, 100.0));
-            Parameters.Add(new DoubleParameter(
-                "Inital K2", "K2", 0.0, -100.0, 100.0));
-            Parameters.Add(new DoubleParameter(
-                "Inital K3", "K3", 0.0, -100.0, 100.0));
 
             var initialParam = new DictionaryParameter("Initial parameters method", "InitialMethod");
             initialParam.ValuesMap = new Dictionary< string, object> ()
             {
                 { "k2 = -k1; k3 = 0.1k1", InitialMethods.SymmertricK1 },
                 { "k1 = 2.0k1; k2 = 1.6k1; k3 = 0.4k1", InitialMethods.HighK1 },
-                { "Experimental", InitialMethods.Generic }
+                { "k1 = k2 = k3 = 0", InitialMethods.Zero },
+                { "Experimental", InitialMethods.Experimental }
             };
 
             Parameters.Add(initialParam);
@@ -537,10 +549,6 @@ namespace CamAlgorithms.Calibration
             InitialCenterEstimation.Y = IAlgorithmParameter.FindValue<double>("CY", Parameters);
 
             InitCoeffs();
-
-            Coeffs[_k1Idx] = IAlgorithmParameter.FindValue<double>("K1", Parameters);
-            Coeffs[_k2Idx] = IAlgorithmParameter.FindValue<double>("K2", Parameters);
-            Coeffs[_k3Idx] = IAlgorithmParameter.FindValue<double>("K3", Parameters);
 
             InitialMethod = IAlgorithmParameter.FindValue<InitialMethods>("InitialMethod", Parameters);
         }

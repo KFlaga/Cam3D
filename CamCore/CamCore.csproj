@@ -78,6 +78,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Images\DisparityImage.cs" />
     <Compile Include="ModuleInterfaces\IAlgorithmUi.cs" />
     <Compile Include="Data\Point2.cs" />
     <Compile Include="Data\TriangulatedPoint.cs" />

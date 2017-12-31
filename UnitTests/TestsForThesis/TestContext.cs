@@ -27,6 +27,8 @@ namespace CamUnitTest.TestsForThesis
 
     public class Context
     {
+        // TODO: Move shortVer parameter here
+
         public string ResultDirectory { get; set; } = "d:\\Cam3DTests";
 
         public string TestSuiteName { get; set; }
@@ -144,7 +146,7 @@ namespace CamUnitTest.TestsForThesis
             Output.Clear();
         }
 
-        public void StoreTestResults()
+        public void StoreTestBegin()
         {
             var outFile = new FileStream(ResultPath, FileMode.Append);
             using(TextWriter writer = new StreamWriter(outFile))
@@ -152,8 +154,20 @@ namespace CamUnitTest.TestsForThesis
                 writer.WriteLine("===========================================================================");
                 writer.WriteLine("Test Name: " + TestName);
                 writer.WriteLine("Test Time: " + StartTime.ToString());
-                writer.WriteLine(results.ToString());
                 writer.WriteLine("===========================================================================");
+            }
+            outFile.Close();
+        }
+
+        public void StoreTestOutput()
+        {
+            string text = results.ToString();
+            results.Clear();
+
+            var outFile = new FileStream(ResultPath, FileMode.Append);
+            using(TextWriter writer = new StreamWriter(outFile))
+            {
+                writer.WriteLine(text);
             }
             outFile.Close();
         }

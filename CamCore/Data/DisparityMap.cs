@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Xml;
+using System.Xml.Schema;
+using System.Xml.Serialization;
 
 namespace CamCore
 {
-    public class DisparityMap : ICloneable
+    public class DisparityMap : ICloneable, IXmlSerializable
     {
         public Disparity[,] Disparities;
         public int RowCount { get; private set; }
@@ -105,6 +107,21 @@ namespace CamCore
             }
 
             return map;
+        }
+
+        public XmlSchema GetSchema()
+        {
+            return null;
+        }
+
+        public void ReadXml(XmlReader reader)
+        {
+            throw new NotImplementedException(); // TODO
+        }
+
+        public void WriteXml(XmlWriter writer)
+        {
+            throw new NotImplementedException(); // TODO
         }
     }
 }

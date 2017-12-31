@@ -6,7 +6,7 @@ using System.Collections;
 namespace CamAlgorithms.ImageMatching
 {
     // Just set disparity with lowest cost
-    public class SGMDisparityComputer : DisparityComputer
+    public class SgmDisparityComputer : DisparityComputer
     {
         Disparity[] _dispForPixel;
         int _idx;
@@ -15,7 +15,6 @@ namespace CamAlgorithms.ImageMatching
         public enum MeanMethods
         {
             SimpleAverage,
-            WeightedAverage,
             WeightedAverageWithPathLength,
         }
 
@@ -25,8 +24,7 @@ namespace CamAlgorithms.ImageMatching
         public enum CostMethods
         {
             DistanceToMean,
-            DistanceSquredToMean,
-            DistanceSquredToMeanRoot,
+            DistanceSquredToMean
         }
 
         delegate double CostComputer(double mean, int start, int count);
@@ -43,9 +41,6 @@ namespace CamAlgorithms.ImageMatching
                 {
                     case MeanMethods.WeightedAverageWithPathLength:
                         _meanComputer = FindMean_WeightedPath;
-                        break;
-                    case MeanMethods.WeightedAverage:
-                        _meanComputer = FindMean_Weighted;
                         break;
                     case MeanMethods.SimpleAverage:
                     default:
@@ -74,8 +69,9 @@ namespace CamAlgorithms.ImageMatching
                 }
             }
         }
+        public double CostMethodPower { get; set; } = 2.0;
 
-        public SGMDisparityComputer()
+        public SgmDisparityComputer()
         {
             MeanMethod = MeanMethods.SimpleAverage;
             CostMethod = CostMethods.DistanceToMean;
@@ -233,7 +229,7 @@ namespace CamAlgorithms.ImageMatching
             {
                 cost += Math.Abs(mean - (double)_dispForPixel[start + i].DX);
             }
-            cost /= (count * count);
+            cost /= Math.Pow(count, CostMethodPower * 0.5);
             return cost;
         }
 
@@ -248,21 +244,8 @@ namespace CamAlgorithms.ImageMatching
                 d = mean - (double)_dispForPixel[start + i].DX;
                 cost += d * d;
             }
-            cost /= (count * count * count * count);
+            cost /= Math.Pow(count, CostMethodPower);
 
-            return cost;
-        }
-
-        double FindCost_Root(double mean, int start, int count)
-        {
-            double cost = 0.0;
-
-            // 1) C = sum(||m - d||) / n*sqrt(n) 
-            for(int i = 0; i < count; ++i)
-            {
-                cost += Math.Abs(mean - (double)_dispForPixel[start + i].DX);
-            }
-            cost /= (count * Math.Sqrt(count));
             return cost;
         }
 
@@ -274,36 +257,39 @@ namespace CamAlgorithms.ImageMatching
 
         public override void InitParameters()
         {
-            _params = new List<IAlgorithmParameter>();
+            base.InitParameters();
 
             DictionaryParameter meanParam =
-                new DictionaryParameter("Mean Computing Method", "MEAN");
+                new DictionaryParameter("Mean Computing Method", "MeanMethod");
 
             meanParam.ValuesMap = new Dictionary<string, object>()
             {
                 { "Simple Average", MeanMethods.SimpleAverage },
-                { "Weighted Average", MeanMethods.WeightedAverage }
+                { "Weighted Average", MeanMethods.WeightedAverageWithPathLength }
             };
 
-            _params.Add(meanParam);
+            Parameters.Add(meanParam);
 
             DictionaryParameter costParam =
-                new DictionaryParameter("Cost Computing Method", "COST");
+                new DictionaryParameter("Cost Computing Method", "CostMethod");
 
             costParam.ValuesMap = new Dictionary<string, object>()
             {
-                { "E(||d - m||) / n^2", CostMethods.DistanceToMean },
-                { "E(||d - m||^2) / n^4", CostMethods.DistanceSquredToMean },
-                { "E(||d - m||) / n*sqrt(n)", CostMethods.DistanceSquredToMeanRoot }
+                { "E(||d - m||) / n^(0.5P)", CostMethods.DistanceToMean },
+                { "E(||d - m||^2) / n^P", CostMethods.DistanceSquredToMean }
             };
 
-            _params.Add(costParam);
+            Parameters.Add(costParam);
+
+            Parameters.Add(new DoubleParameter(
+                "Cost Method Coefficient", "CostMethodPower", 2.0, 0.1, 10.0));
         }
 
         public override void UpdateParameters()
         {
-            MeanMethod = IAlgorithmParameter.FindValue<MeanMethods>("MEAN", Parameters);
-            CostMethod = IAlgorithmParameter.FindValue<CostMethods>("COST", Parameters);
+            MeanMethod = IAlgorithmParameter.FindValue<MeanMethods>("MeanMethod", Parameters);
+            CostMethod = IAlgorithmParameter.FindValue<CostMethods>("CostMethod", Parameters);
+            CostMethodPower = IAlgorithmParameter.FindValue<double>("CostMethodPower", Parameters);
         }
 
 

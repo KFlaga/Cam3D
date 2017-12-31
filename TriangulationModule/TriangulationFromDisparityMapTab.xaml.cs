@@ -68,7 +68,6 @@ namespace TriangulationModule
 
             Algorithm.Cameras = CameraPair.Data;
             Algorithm.Points = Points;
-            Algorithm.Recitifed = false;
             Algorithm.StatusChanged += Algorithm_StatusChanged;
             AlgorithmWindow window = new AlgorithmWindow(Algorithm);
             window.Show();

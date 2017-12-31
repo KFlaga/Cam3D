@@ -10,46 +10,29 @@ namespace CamAlgorithms.ImageMatching
         public IImage ImageBase { get; set; }
         public IImage ImageMatched { get; set; }
         public DisparityMap DisparityMap { get; set; }
-
-        public MatchConfidenceComputer ConfidenceComp { get; } = new MatchConfidenceComputer();
+        
         public MatchingCostComputer CostComp { get; set; }
         
         public virtual void Init()
         {
-            ConfidenceComp.CostComp = CostComp;
+
         }
 
         public abstract void StoreDisparity(IntVector2 pixelBase, IntVector2 pixelMatched, double cost);
         public abstract void StoreDisparity(Disparity disp);
         public abstract void FinalizeForPixel(IntVector2 pixelBase);
         public abstract void FinalizeMap();
-
-        protected List<IAlgorithmParameter> _params;
-        public List<IAlgorithmParameter> Parameters
-        {
-            get { return _params; }
-        }
+        
+        public List<IAlgorithmParameter> Parameters { get; protected set; }
 
         public virtual void InitParameters()
         {
-            _params = new List<IAlgorithmParameter>();
-            // Add all available confidence computing methods
-            DictionaryParameter confParam =
-                new DictionaryParameter("Confidence Computing Method", "CONF");
-
-            confParam.ValuesMap = new Dictionary<string, object>()
-            {
-                { "Two Against Two", ConfidenceMethod.TwoAgainstTwo },
-                { "Two Against Max", ConfidenceMethod.TwoAgainstMax },
-                { "Two Against Average", ConfidenceMethod.TwoAgainstAverage }
-            };
-
-            _params.Add(confParam);
+            Parameters = new List<IAlgorithmParameter>();
         }
 
         public virtual void UpdateParameters()
         {
-            ConfidenceComp.UsedConfidenceMethod = IAlgorithmParameter.FindValue<ConfidenceMethod>("CONF", _params);
+
         }
 
         public abstract string Name { get; }

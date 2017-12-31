@@ -22,9 +22,10 @@ namespace CamAlgorithms.PointsExtraction
 
         private void FindLocalAxes()
         {
-            // Local axes should be determined by 3 reference shapes : axis X = r2 - r1, axis Y = r3 - r1
-            AxisX = ReferncePoints[1].Shape.Center - ReferncePoints[0].Shape.Center;
-            AxisY = ReferncePoints[2].Shape.Center - ReferncePoints[0].Shape.Center;
+            ReferncePoint rx = ReferncePoints[0].RealGridPos.X == ReferncePoints[1].RealGridPos.X ? ReferncePoints[2] : ReferncePoints[1];
+            ReferncePoint ry = ReferncePoints[0].RealGridPos.Y == ReferncePoints[1].RealGridPos.Y ? ReferncePoints[2] : ReferncePoints[1];
+            AxisX = (rx.Shape.Center - ReferncePoints[0].Shape.Center) / (rx.RealGridPos.X - ReferncePoints[0].RealGridPos.X);
+            AxisY = (ry.Shape.Center - ReferncePoints[0].Shape.Center) / (ry.RealGridPos.Y - ReferncePoints[0].RealGridPos.Y);
         }
 
         private void InitCalibrationGrid()

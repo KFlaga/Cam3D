@@ -26,8 +26,8 @@ namespace CamAlgorithms
         public abstract void ComputeRectificationMatrices();
     }
 
-    [XmlRoot("Rectification")] // TODO: change name to RectificationAlgorithm
-    public class ImageRectification : IXmlSerializable, IParameterizable
+    [XmlRoot("Rectification")]
+    public class RectificationAlgorithm : IXmlSerializable, IParameterizable
     {
         private class RectifiedImageCorners
         {
@@ -65,8 +65,8 @@ namespace CamAlgorithms
         [XmlIgnore]
         public List<Vector2Pair> MatchedPairs { get; set; }
         
-        public ImageRectification() { }
-        public ImageRectification(IRectificationAlgorithm rectComp)
+        public RectificationAlgorithm() { }
+        public RectificationAlgorithm(IRectificationAlgorithm rectComp)
         {
             RectificationComputer = rectComp;
         }

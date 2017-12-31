@@ -16,6 +16,7 @@ namespace CamUnitTest.TestsForThesis
         public double mean { get; set; }
         public double max { get; set; }
         public double most { get; set; }
+        public double half { get; set; }
         public int pointCount { get; set; }
         public string name { get; set; }
 
@@ -41,6 +42,7 @@ namespace CamUnitTest.TestsForThesis
             variations.Sort((a, b) => { return -a.CompareTo(b); });
             max = Math.Sqrt(variations[0]);
             most = Math.Sqrt(variations[(int)(pointCount * 0.05) + 1]);
+            half = Math.Sqrt(variations[(int)(pointCount * 0.95) + 1]);
         }
 
         public void Store(Context context, string info = "", bool shortVer = false)
@@ -48,6 +50,7 @@ namespace CamUnitTest.TestsForThesis
             if(shortVer)
             {
                 context.Output.AppendLine(mean.ToString("E3"));
+                context.Output.AppendLine(half.ToString("E3"));
                 context.Output.AppendLine(most.ToString("E3"));
                 context.Output.AppendLine(max.ToString("E3"));
             }
@@ -58,6 +61,7 @@ namespace CamUnitTest.TestsForThesis
                     context.Output.AppendLine("Case: " + info);
                 }
                 context.Output.AppendLine(name + " Mean: " + mean.ToString("E3"));
+                context.Output.AppendLine(name + " 50 %: " + half.ToString("E3"));
                 context.Output.AppendLine(name + " 95 %: " + most.ToString("E3"));
                 context.Output.AppendLine(name + " Max: " + max.ToString("E3"));
             }
@@ -66,9 +70,9 @@ namespace CamUnitTest.TestsForThesis
     }
 
     // d(x, PX)
-    public class ReprojectionError : Deviation
+    public class ReprojectionErrorForOneCamera : Deviation
     {
-        public ReprojectionError(Matrix<double> P, List<Vector3> realPoints, List<Vector2> imagePoints) :
+        public ReprojectionErrorForOneCamera(Matrix<double> P, List<Vector3> realPoints, List<Vector2> imagePoints) :
             base(() =>
             {
                 List<double> errors = new List<double>();
@@ -78,13 +82,13 @@ namespace CamUnitTest.TestsForThesis
                     Vector<double> ip = imagePoints[i].ToMathNetVector3();
                     Vector<double> eip = P * rp;
                     eip.MultiplyThis(1 / eip[2]);
-                    errors.Add((eip - ip).L2Norm());
+                    errors.Add((eip - ip).L2Norm() * (eip - ip).L2Norm());
                 }
                 return errors;
             }, "Reprojection Error")
         { }
 
-        public ReprojectionError(Matrix<double> P, List<CalibrationPoint> cpoints) :
+        public ReprojectionErrorForOneCamera(Matrix<double> P, List<CalibrationPoint> cpoints) :
             base(() =>
             {
                 List<double> errors = new List<double>();
@@ -94,13 +98,13 @@ namespace CamUnitTest.TestsForThesis
                     Vector<double> ip = cpoints[i].Img.ToMathNetVector3();
                     Vector<double> eip = P * rp;
                     eip.MultiplyThis(1 / eip[2]);
-                    errors.Add((eip - ip).L2Norm());
+                    errors.Add((eip - ip).L2Norm() * (eip - ip).L2Norm());
                 }
                 return errors;
             }, "Reprojection Error")
         { }
 
-        public ReprojectionError(Matrix<double> P, List<Vector<double>> realPoints, List<Vector<double>> imagePoints) :
+        public ReprojectionErrorForOneCamera(Matrix<double> P, List<Vector<double>> realPoints, List<Vector<double>> imagePoints) :
              base(() =>
              {
                  List<double> errors = new List<double>();
@@ -108,7 +112,7 @@ namespace CamUnitTest.TestsForThesis
                  {
                      Vector<double> eip = P * realPoints[i];
                      eip.MultiplyThis(1 / eip[2]);
-                     errors.Add((eip - imagePoints[i]).L2Norm());
+                     errors.Add((eip - imagePoints[i]).L2Norm() * (eip - imagePoints[i]).L2Norm());
                  }
                  return errors;
              }, "Reprojection Error")
@@ -322,5 +326,138 @@ namespace CamUnitTest.TestsForThesis
             context.Output.AppendLine();
         }
     }
-}
+    
+    public class ReprojectionErrorForCameraPair : Deviation
+    {
+        public ReprojectionErrorForCameraPair(Matrix<double> Pl, Matrix<double> Pr, List<TriangulatedPoint> points) :
+            base(() =>
+            {
+                List<double> errors = new List<double>();
+                for(int i = 0; i < points.Count; ++i)
+                {
+                    Vector<double> rp = points[i].Real.ToMathNetVector4();
+                    Vector<double> ipl = points[i].ImageLeft.ToMathNetVector3();
+                    Vector<double> ipr = points[i].ImageRight.ToMathNetVector3();
+                    Vector<double> eipl = Pl * rp;
+                    Vector<double> eipr = Pr * rp;
+                    eipl.MultiplyThis(1 / eipl[2]);
+                    eipr.MultiplyThis(1 / eipr[2]);
+                    double el = (eipl - ipl).L2Norm();
+                    double er = (eipr - ipr).L2Norm();
+                    if(!double.IsNaN(el + er) && !double.IsInfinity(el + er))
+                    {
+                        errors.Add(el * el + er * er);
+                    }
+                }
+                return errors;
+            }, "Reprojection Error")
+        { }
+    }
 
+    public class ReconstructionError : Deviation
+    {
+        public ReconstructionError(List<TriangulatedPoint> idealPoints, List<TriangulatedPoint> estimatedPoints) :
+            base(() =>
+            {
+                List<double> errors = new List<double>();
+                for(int i = 0; i < idealPoints.Count; ++i)
+                {
+                    Vector<double> p1 = idealPoints[i].Real.ToMathNetVector4();
+                    Vector<double> p2 = estimatedPoints[i].Real.ToMathNetVector4();
+                    double e = (p1 - p2).L2Norm();
+                    if(!double.IsNaN(e) && !double.IsInfinity(e))
+                    {
+                        errors.Add(e * e);
+                    }
+                }
+                return errors;
+            }, "Reconstruction Error")
+        { }
+    }
+	
+	public class DisparityMatches
+	{
+        public int AllMatches { get { return CorrectMatches + IncorrectMatches; } }
+		public int CorrectMatches { get { return TruePositives + TrueNegatives; } }
+        public int IncorrectMatches { get { return FarMacthes + FalsePositives + FalseNegatives; } }
+        public int TruePositives { get; set; } = 0; // Correct match is flagged valid and is close
+        public int TrueNegatives { get; set; } = 0; // Incorrect match is flagged invalid
+        public int FarMacthes { get; set; } = 0; // Correct match is flagged valid but is too far
+        public int FalsePositives { get; set; } = 0; // Incorrect match is flagged valid
+        public int FalseNegatives { get; set; } = 0; // Correct match is flagged invalid
+
+        public DisparityMatches(DisparityMap resultMap, DisparityMap groundTruth) :
+            this(resultMap, groundTruth, new IntVector2(0,0), new IntVector2(resultMap.ColumnCount, resultMap.RowCount))
+		{ }
+		
+		public DisparityMatches(DisparityMap resultMap, DisparityMap groundTruth, IntVector2 topLeft, IntVector2 size)
+		{
+            IntVector2 botRight = topLeft + size;
+			for(int r = topLeft.Y; r < botRight.Y; ++r)
+            {
+                for(int c = topLeft.X; c < botRight.X; ++c)
+                {
+                    Disparity d_res = resultMap[r, c];
+                    Disparity d_exp = groundTruth[r, c];
+                    
+                    if(d_exp.IsValid())
+                    {
+                        if(d_res.IsValid())
+                        {
+                            if(Math.Abs(Math.Abs(d_res.SubDX) - Math.Abs(d_exp.SubDX)) < 1.01)
+                            {
+                                ++TruePositives;
+                            }
+                            else
+                            {
+                                ++FarMacthes;
+                            }
+                        }
+                        else
+                        {
+                            ++FalseNegatives;
+                        }
+                    }
+                    else
+                    {
+                        if(d_res.IsInvalid())
+                        {
+                            ++TrueNegatives;
+                        }
+                        else
+                        {
+                            ++FalsePositives;
+                        }
+                    }
+                }
+            }
+		}
+
+        public void Store(Context context, bool shortVer = false)
+        {
+            if(shortVer)
+            {
+                context.Output.AppendLine(AllMatches.ToString());
+                context.Output.AppendLine(CorrectMatches.ToString());
+                context.Output.AppendLine(IncorrectMatches.ToString());
+                context.Output.AppendLine(TruePositives.ToString());
+                context.Output.AppendLine(TrueNegatives.ToString());
+                context.Output.AppendLine(FarMacthes.ToString());
+                context.Output.AppendLine(FalsePositives.ToString());
+                context.Output.AppendLine(FalseNegatives.ToString());
+            }
+            else
+            {
+                context.Output.AppendLine("AllMatches: " + AllMatches.ToString());
+                context.Output.AppendLine("CorrectMatches: " + CorrectMatches.ToString());
+                context.Output.AppendLine("IncorrectMatches: " + IncorrectMatches.ToString());
+                context.Output.AppendLine("TruePositives: " + TruePositives.ToString());
+                context.Output.AppendLine("TrueNegatives: " + TrueNegatives.ToString());
+                context.Output.AppendLine("FarMacthes: " + FarMacthes.ToString());
+                context.Output.AppendLine("FalsePositives: " + FalsePositives.ToString());
+                context.Output.AppendLine("FalseNegatives: " + FalseNegatives.ToString());
+            }
+            context.Output.AppendLine();
+        }
+    }
+}

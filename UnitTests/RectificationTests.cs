@@ -43,7 +43,7 @@ namespace CamUnitTest
             _cameras = TestUtils.CreateTestCamerasFromMatrices(K_L, K_R, R_L, R_R, C_L, C_R);
         }
 
-        void TestRectification(ImageRectification rect)
+        void TestRectification(RectificationAlgorithm rect)
         {
             PrepareCalibrationData();
             PrepareMatchedPoints();
@@ -67,14 +67,14 @@ namespace CamUnitTest
         [TestMethod]
         public void Verify_ZhangLoop()
         {
-            ImageRectification rect = new ImageRectification(new Rectification_ZhangLoop());
+            RectificationAlgorithm rect = new RectificationAlgorithm(new Rectification_ZhangLoop());
             TestRectification(rect);
         }
 
         [TestMethod]
         public void Verify__FussieloUncalibrated()
         {
-            ImageRectification rect = new ImageRectification(new Rectification_FussieloIrsara()
+            RectificationAlgorithm rect = new RectificationAlgorithm(new Rectification_FussieloIrsara()
             {
                 UseInitialCalibration = false
             });
@@ -85,7 +85,7 @@ namespace CamUnitTest
         [TestMethod]
         public void Verify_FussieloUncalibrated_WithInitial()
         {
-            ImageRectification rect = new ImageRectification(new Rectification_FussieloIrsara()
+            RectificationAlgorithm rect = new RectificationAlgorithm(new Rectification_FussieloIrsara()
             {
                 UseInitialCalibration = true
             });
@@ -95,7 +95,7 @@ namespace CamUnitTest
         [TestMethod]
         public void Verify_FussieloCalibrated()
         {
-            ImageRectification rect = new ImageRectification(new Rectification_FusielloTruccoVerri());
+            RectificationAlgorithm rect = new RectificationAlgorithm(new Rectification_FusielloTruccoVerri());
             TestRectification(rect);
         }
 

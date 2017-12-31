@@ -70,13 +70,27 @@ namespace Visualisation3dModule
             segmentation.MaxDiffSquared = 10;
             segmentation.SegmentDisparity(DispMap);
 
-            var segments = segmentation.Segments;
-            var segmentAssignments = segmentation.SegmentAssignments;
+            List<ImageSegmentation.Segment> segments = segmentation.Segments;
+            int[,] segmentAssignments = segmentation.SegmentAssignments;
+            
+            var assignmentsMap = new int[segments.Count];
+            var segmentsReduced = new List<ImageSegmentation.Segment>();
+            for(int s = 0; s < segments.Count; ++s)
+            {
+                if(segments[s].Pixels.Count > 6)
+                {
+                    assignmentsMap[segments[s].SegmentIndex] = segmentsReduced.Count;
+                    segmentsReduced.Add(segments[s]);
+                }
+                else
+                {
+                    assignmentsMap[segments[s].SegmentIndex] = -1;
+                }
+            }
+            segments = segmentsReduced;
+
             IntPoint2[] segmentMin = new IntPoint2[segments.Count];
             IntPoint2[] segmentMax = new IntPoint2[segments.Count];
-            var segSort = new List<ImageSegmentation.Segment>(segments);
-            segSort.Sort((s1, s2) => { return s2.Pixels.Count.CompareTo(s1.Pixels.Count); });
-
             for(int i = 0; i < segments.Count; ++i)
             {
                 segmentMin[i] = new IntPoint2(DispMap.ColumnCount + 1, DispMap.RowCount + 1);
@@ -88,8 +102,9 @@ namespace Visualisation3dModule
             {
                 IntPoint2 imgPoint = new IntPoint2(y: (int)point3d.ImageLeft.Y, x: (int)point3d.ImageLeft.X);
                 int idx = segmentAssignments[imgPoint.Y, imgPoint.X];
-                if(idx >= 0)
+                if(idx >= 0 && assignmentsMap[idx] >= 0)
                 {
+                    idx = assignmentsMap[idx];
                     segmentMin[idx] = new IntPoint2(y: Math.Min(segmentMin[idx].Y, imgPoint.Y),
                         x: Math.Min(segmentMin[idx].X, imgPoint.X));
                     segmentMax[idx] = new IntPoint2(y: Math.Max(segmentMax[idx].Y, imgPoint.Y),
@@ -109,13 +124,16 @@ namespace Visualisation3dModule
             }
 
             // 3) For each point add it to surface
+            double maxZ = -1e12;
+            double minZ = 1e12;
             for(int i = 0; i < Points3D.Count; ++i)
             {
                 IntPoint2 imgPoint = new IntPoint2(
                     y: (int)Points3D[i].ImageLeft.Y, x: (int)Points3D[i].ImageLeft.X);
                 int idx = segmentAssignments[imgPoint.Y, imgPoint.X];
-                if(idx >= 0 && surfaces[idx] != null)
+                if(idx >= 0 && assignmentsMap[idx] >= 0 && surfaces[assignmentsMap[idx]] != null)
                 {
+                    idx = assignmentsMap[idx];
                     SharpDX.Vector3 pos = new SharpDX.Vector3(
                         (float)Points3D[i].Real.X, (float)Points3D[i].Real.Y, (float)Points3D[i].Real.Z);
                     SharpDX.Vector2 texCoords = new SharpDX.Vector2(
@@ -126,7 +144,13 @@ namespace Visualisation3dModule
                         (float)image[imgPoint.Y, imgPoint.X, RGBChannel.Green], 
                         (float)image[imgPoint.Y, imgPoint.X, RGBChannel.Blue], 1.0f);
 
-                    surfaces[idx].AddVertex(imgPoint.Y - segmentMin[idx].Y, imgPoint.X - segmentMin[idx].X, pos, texCoords, color);
+                    surfaces[idx].AddVertex(
+                        imgPoint.Y - segmentMin[idx].Y, 
+                        imgPoint.X - segmentMin[idx].X, 
+                        pos, texCoords, color);
+
+                    maxZ = Math.Max(maxZ, Points3D[i].Real.Z);
+                    minZ = Math.Min(minZ, Points3D[i].Real.Z);
                 }
             }
 
@@ -147,6 +171,16 @@ namespace Visualisation3dModule
                     }
                 }
             }
+
+            // 8) set camera
+            bool reversed = maxZ < 0.0;
+            float zscale = (float)(maxZ - minZ);
+            _3dwindow.Camera.FarBound = 4.0f * zscale;
+            _3dwindow.Camera.NearBound = 1.0f;
+            _3dwindow.Camera.Position = new SharpDX.Vector3(
+                0.0f, 0.0f, reversed ? (float)maxZ + zscale : (float)minZ - zscale
+            );
+            _3dwindow.Camera.LookAt = new SharpDX.Vector3(0.0f, 0.0f, reversed ? -1.0f : 1.0f);
         }
     }
 }

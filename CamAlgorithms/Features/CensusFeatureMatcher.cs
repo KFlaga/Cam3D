@@ -11,8 +11,8 @@ namespace CamAlgorithms
         public override void Match()
         {
             int r21 = 2 * WindowRadius + 1;
-            _census.MaskHeight = WindowRadius;
-            _census.MaskWidth = WindowRadius;
+            _census.HeightRadius = WindowRadius;
+            _census.WidthRadius = WindowRadius;
 
             _census.ImageBase = LeftImage;
             _census.ImageMatched = RightImage;

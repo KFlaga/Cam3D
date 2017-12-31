@@ -29,7 +29,7 @@ namespace CamUnitTest.TestsForThesis
         [TestCleanup()]
         public void MyTestCleanup()
         {
-            MyContext.StoreTestResults();
+            MyContext.StoreTestOutput();
         }
 
         private RadialDistortionModel model;

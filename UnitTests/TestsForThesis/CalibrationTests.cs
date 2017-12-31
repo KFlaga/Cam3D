@@ -6,7 +6,6 @@ using CamCore;
 using CamAlgorithms;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
-using MatrixInfo = CamUnitTest.TestsForThesis.RectificationTestUtils.MatrixInfo;
 using System.Linq;
 
 namespace CamUnitTest.TestsForThesis
@@ -33,36 +32,26 @@ namespace CamUnitTest.TestsForThesis
         [TestCleanup()]
         public void MyTestCleanup()
         {
-            MyContext.StoreTestResults();
+            MyContext.StoreTestOutput();
         }
         
         [TestMethod]
-        public void ImageErrorOnly()
+        public void CalibStandardTestFar()
         {
             double[] deviations = new double[] { 0, 0.001, 0.002, 0.005, 0.01, 0.02, 0.05, 0.1 };
             foreach(double d in  deviations)
             {
-                TestCase.AddTestCase(CaseType.NoiseImageOnly, "Image Only Error", noiseDeviation: d);
+                TestCase.AddTestCase(CaseType.CalibStandardTestFar, "CalibStandardTestFar", noiseDeviation: d);
             }
         }
-
+        
         [TestMethod]
-        public void RealErrorOnly()
+        public void PointsStandard()
         {
             double[] deviations = new double[] { 0, 0.001, 0.002, 0.005, 0.01, 0.02, 0.05, 0.1 };
             foreach(double d in deviations)
             {
-                TestCase.AddTestCase(CaseType.NoiseRealOnly, "Real Error", noiseDeviation: d);
-            }
-        }
-
-        [TestMethod]
-        public void FullError()
-        {
-            double[] deviations = new double[] { 0, 0.001, 0.002, 0.005, 0.01, 0.02, 0.05, 0.1 };
-            foreach(double d in deviations)
-            {
-                TestCase.AddTestCase(CaseType.NoiseBoth, "Full Error", noiseDeviation: d);
+                TestCase.AddTestCase(CaseType.PointsStandard, "PointsStandard", noiseDeviation: d);
             }
         }
 
@@ -72,7 +61,7 @@ namespace CamUnitTest.TestsForThesis
             double[] deviations = new double[] { 0, 0.001, 0.002, 0.005, 0.01, 0.02, 0.05, 0.1 };
             foreach(double d in deviations)
             {
-                TestCase.AddTestCase(CaseType.PointsOnSide, "Check for points outside calibration area", noiseDeviation: d);
+                TestCase.AddTestCase(CaseType.PointsOnSide, "PointsOnSide", noiseDeviation: d);
             }
         }
 
@@ -82,35 +71,33 @@ namespace CamUnitTest.TestsForThesis
             double[] deviations = new double[] { 0, 0.001, 0.002, 0.005, 0.01, 0.02, 0.05, 0.1 };
             foreach(double d in deviations)
             {
-                TestCase.AddTestCase(CaseType.PointsFar, "Check for points far away from camera", noiseDeviation: d);
+                TestCase.AddTestCase(CaseType.PointsFar, "PointsFar", noiseDeviation: d);
             }
         }
 
         [TestMethod]
-        public void ErrorOnRealIndepenent()
+        public void CalibStandardTestSide()
         {
             double[] deviations = new double[] { 0, 0.001, 0.002, 0.005, 0.01, 0.02, 0.05, 0.1 };
             foreach(double d in deviations)
             {
-                TestCase.AddTestCase(CaseType.NoiseRealIndependent, "Error on reals indepentet", noiseDeviation: d);
+                TestCase.AddTestCase(CaseType.CalibStandardTestSide, "CalibStandardTestSide", noiseDeviation: d);
             }
         }
 
         public enum CaseType
         {
             CompareAlgorithms,
-            NoiseImageOnly,
-            NoiseRealOnly,
-            PointsExact,
+            PointsStandard,
             PointsOnSide,
             PointsFar,
-            NoiseRealIndependent,
-            NoiseBoth
+            CalibStandardTestFar,
+            CalibStandardTestSide,
         }
 
         class TestCase
         {
-            static int _noiseSeed = 1111;
+            static int _noiseSeed = 5433;
             static int NoiseSeed
             {
                 get
@@ -125,7 +112,7 @@ namespace CamUnitTest.TestsForThesis
             
             public static void AddTestCase(CaseType caseType, string info, double noiseDeviation = 0.0)
             {
-                if(caseType == CaseType.NoiseBoth)
+                if(caseType == CaseType.PointsStandard)
                 {
                     MyContext.RunTest(() =>
                     {
@@ -136,37 +123,26 @@ namespace CamUnitTest.TestsForThesis
                             imgDeviation: noiseDeviation, realDeviation: noiseDeviation, noiseSeed: NoiseSeed);
                     }, info);
                 }
-                if(caseType == CaseType.NoiseRealIndependent)
+                if(caseType == CaseType.CalibStandardTestFar)
                 {
                     MyContext.RunTest(() =>
                     {
                         return PerformTestForGivenData(new CalibrationWithGrids(),
                             CalibrationTestUtils.PrepareCamera(),
                             CalibrationTestUtils.PrepareCalibrationGrids(10, 10, CalibrationTestUtils.GridRange.Standard),
-                            CalibrationTestUtils.PrepareCalibrationGrids(10, 10, CalibrationTestUtils.GridRange.Standard),
-                            imgDeviation: noiseDeviation, realDeviation: noiseDeviation, noiseSeed: NoiseSeed, noiseGrids: false);
+                            CalibrationTestUtils.PrepareCalibrationGrids(10, 10, CalibrationTestUtils.GridRange.Far),
+                            imgDeviation: noiseDeviation, realDeviation: noiseDeviation, noiseSeed: NoiseSeed);
                     }, info);
                 }
-                if(caseType == CaseType.NoiseImageOnly)
+                if(caseType == CaseType.CalibStandardTestSide)
                 {
                     MyContext.RunTest(() =>
                     {
-                        return PerformTestForGivenData(new CalibrationWithGrids(), 
-                            CalibrationTestUtils.PrepareCamera(), 
+                        return PerformTestForGivenData(new CalibrationWithGrids(),
+                            CalibrationTestUtils.PrepareCamera(),
                             CalibrationTestUtils.PrepareCalibrationGrids(10, 10, CalibrationTestUtils.GridRange.Standard),
-                            CalibrationTestUtils.PrepareCalibrationGrids(10, 10, CalibrationTestUtils.GridRange.Standard),
-                            imgDeviation: noiseDeviation, realDeviation: 0.0, noiseSeed: NoiseSeed);
-                    }, info);
-                }
-                if(caseType == CaseType.NoiseRealOnly)
-                {
-                    MyContext.RunTest(() =>
-                    {
-                        return PerformTestForGivenData(new CalibrationWithGrids(), 
-                            CalibrationTestUtils.PrepareCamera(), 
-                            CalibrationTestUtils.PrepareCalibrationGrids(10, 10, CalibrationTestUtils.GridRange.Standard),
-                            CalibrationTestUtils.PrepareCalibrationGrids(10, 10, CalibrationTestUtils.GridRange.Standard),
-                            imgDeviation: 0.0, realDeviation: noiseDeviation, noiseSeed: NoiseSeed);
+                            CalibrationTestUtils.PrepareCalibrationGrids(10, 10, CalibrationTestUtils.GridRange.Side),
+                            imgDeviation: noiseDeviation, realDeviation: noiseDeviation, noiseSeed: NoiseSeed);
                     }, info);
                 }
                 if(caseType == CaseType.PointsOnSide)
@@ -175,8 +151,8 @@ namespace CamUnitTest.TestsForThesis
                     {
                         return PerformTestForGivenData(new CalibrationWithGrids(),
                             CalibrationTestUtils.PrepareCamera(),
-                            CalibrationTestUtils.PrepareCalibrationGrids(10, 10, CalibrationTestUtils.GridRange.LeftSide),
-                            CalibrationTestUtils.PrepareCalibrationGrids(10, 10, CalibrationTestUtils.GridRange.LeftSide),
+                            CalibrationTestUtils.PrepareCalibrationGrids(10, 10, CalibrationTestUtils.GridRange.Side),
+                            CalibrationTestUtils.PrepareCalibrationGrids(10, 10, CalibrationTestUtils.GridRange.Side),
                             imgDeviation: noiseDeviation, realDeviation: noiseDeviation, noiseSeed: NoiseSeed);
                     }, info);
                 }
@@ -202,10 +178,10 @@ namespace CamUnitTest.TestsForThesis
                 List<CalibrationPoint> noisedPoints;
                 List<RealGridData> noisedGrids;
 
-                double imageVaraition = imgDeviation * imgDeviation * 200 * 200;
-                double realVaraition = realDeviation * realDeviation * 100 * 100;
+                double imageVaraition = imgDeviation * imgDeviation * 100 * 100;
+                double realVaraition = realDeviation * realDeviation * 200 * 200;
 
-                calib.UseCovarianceMatrix = false;
+                calib.UseCovarianceMatrix = true;
                 SetVariances(calib, imageVaraition, realVaraition);
 
                 if(noiseGrids)
@@ -228,26 +204,27 @@ namespace CamUnitTest.TestsForThesis
                 calib.Grids = noisedGrids;
                 calib.Points = noisedPoints;
 
-                calib.EliminateOuliers = false;
+                calib.EliminateOuliers = true;
+                calib.OutliersCoeff = 2;
                 calib.NormalizeLinear = true;
                 calib.NormalizeIterative = true;
-                calib.LinearOnly = true;
+                calib.LinearOnly = false;
                 calib.MaxIterations = 200;
                 calib.MinimalizeSkew = true;
 
                 if(calib as CalibrationWithGrids != null)
                 {
-                    ((CalibrationWithGrids)calib).UseExplicitParametrization = true;
+                    ((CalibrationWithGrids)calib).UseExplicitParametrization = false;
                 }
 
                 calib.Calibrate();
 
                 MyContext.Output.AppendLine("Noise Image: " + imgDeviation.ToString("F3") + " = " + (200 * imgDeviation).ToString("F3"));
                 //MyContext.Output.AppendLine("Noise Real: " + realDeviation.ToString("F3") + " = " + (100 * realDeviation).ToString("F3"));
-                new ReprojectionError(calib.LinearEstimation.Matrix, testPoints).Store(MyContext, "Linear", shortVer: true);
-                new ReprojectionError(estimated.Matrix, testPoints).Store(MyContext, "Final", shortVer: true);
-                CalibrationTestUtils.StoreCameraInfo(MyContext, idealCamera, estimated, shortVer: true);
-                CalibrationTestUtils.StoreMinimalizationInfo(MyContext, calib, shortVer: true);
+                new ReprojectionErrorForOneCamera(calib.LinearEstimation.Matrix, testPoints).Store(MyContext, "Linear", shortVer: true);
+                new ReprojectionErrorForOneCamera(estimated.Matrix, testPoints).Store(MyContext, "Final", shortVer: true);
+                //CalibrationTestUtils.StoreCameraInfo(MyContext, idealCamera, estimated, shortVer: true);
+                //CalibrationTestUtils.StoreMinimalizationInfo(MyContext, calib, shortVer: true);
 
                 return true;
             }

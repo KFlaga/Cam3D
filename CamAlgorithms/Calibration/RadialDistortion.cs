@@ -185,7 +185,11 @@ namespace CamAlgorithms.Calibration
             if(name == null)
             {
                 Model = null;
-                reader.ReadEndElement();
+                reader.Read();
+                if(reader.NodeType == XmlNodeType.EndElement)
+                {
+                    reader.ReadEndElement();
+                }
                 return;
             }
 

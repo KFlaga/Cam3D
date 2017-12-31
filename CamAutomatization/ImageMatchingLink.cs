@@ -51,7 +51,7 @@ namespace CamAutomatization
         private MatchedImagesLinkData _matchedImages;
         private ImageMatchingLinkData _linkData;
 
-        GenericImageMatchingAlgorithm _matcher;
+        SgmAlgorithm _matcher;
 
         public ImageMatchingLink(GlobalData gData)
         {
@@ -94,7 +94,7 @@ namespace CamAutomatization
 
         void LoadMatcherParameters()
         {
-            _matcher = new GenericImageMatchingAlgorithm();
+            _matcher = new SgmAlgorithm();
 
             XmlNode sgmMatcherNode = _config.RootNode.FirstChildWithName("ImageMatcher");
             if(sgmMatcherNode != null)
@@ -116,7 +116,7 @@ namespace CamAutomatization
             //             <Parameters>
             //              ...
 
-            SGMAggregator sgmAgg = new SGMAggregator();
+            SgmAggregator sgmAgg = new SgmAggregator();
             sgmAgg.InitParameters();
 
             XmlNode sgmParamsNode = sgmMatcherNode.FirstChildWithName("Parameters");
@@ -129,9 +129,9 @@ namespace CamAutomatization
 
         void SetDefaultMatcherParameters()
         {
-            _matcher = new GenericImageMatchingAlgorithm();
+            _matcher = new SgmAlgorithm();
 
-            SGMAggregator sgmAgg = new SGMAggregator();
+            SgmAggregator sgmAgg = new SgmAggregator();
             sgmAgg.InitParameters();
             sgmAgg.UpdateParameters();
 
@@ -147,7 +147,6 @@ namespace CamAutomatization
                 ImagesPair imgPar = entry.Value;
                 _matcher.ImageLeft = imgPar.Left;
                 _matcher.ImageRight = imgPar.Right;
-                _matcher.Rectified = true;
                 _matcher.MatchImages();
 
                 _linkData.MapsLeft.Add(entry.Key, _matcher.MapLeft);

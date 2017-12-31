@@ -57,8 +57,10 @@
     <Reference Include="MathNet.Numerics">
       <HintPath>..\CalibrationModule\bin\Debug\MathNet.Numerics.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
     <Reference Include="WriteableBitmapEx.Wpf">
       <HintPath>..\CalibrationModule\bin\Debug\WriteableBitmapEx.Wpf.dll</HintPath>
     </Reference>
@@ -92,9 +94,14 @@
     <Compile Include="TestsForThesis\CalibrationTests.cs" />
     <Compile Include="TestsForThesis\CalibrationTestUtils.cs" />
     <Compile Include="TestsForThesis\Errors.cs" />
+    <Compile Include="TestsForThesis\PrepareVisualisationData.cs" />
     <Compile Include="TestsForThesis\RadialDistortionTestUtils.cs" />
     <Compile Include="TestsForThesis\RectificationTests.cs" />
     <Compile Include="TestsForThesis\RectificationTestUtils.cs" />
+    <Compile Include="TestsForThesis\RefinementTests.cs" />
+    <Compile Include="TestsForThesis\RefinementTestUtils.cs" />
+    <Compile Include="TestsForThesis\SgmTests.cs" />
+    <Compile Include="TestsForThesis\SgmTestUtils.cs" />
     <Compile Include="TestsForThesis\TestContext.cs" />
     <Compile Include="TestsForThesis\RadialDistortionTests.cs" />
     <Compile Include="TestsForThesis\TriangulationTests.cs" />

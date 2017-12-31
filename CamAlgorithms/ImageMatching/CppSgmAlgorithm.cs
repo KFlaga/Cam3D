@@ -5,7 +5,7 @@ using CamCore;
 
 namespace CamAlgorithms.ImageMatching
 {
-    public class CppSgmMatchingAlgorithm : ImageMatchingAlgorithm
+    public class CppSgmAlgorithm : DenseMatchingAlgorithm
     {
         public int CensusMaskRadius { get; set; }
         public double LowPenaltyCoeff { get; set; }
@@ -15,19 +15,14 @@ namespace CamAlgorithms.ImageMatching
         public DisparityMeanMethod MeanMethod { get; set; }
         public double DiparityPathLengthThreshold { get; set; }
 
-        private SgmMatchingAlgorithm _cppSgm = null;
+        private Cam3dWrapper.SgmMatchingAlgorithm _cppSgm = null;
 
         public override void MatchImages()
         {
-            if(!Rectified)
-            {
-                throw new Exception("Images for CppSgm must be rectified");
-            }
-
             ConvertImagesToGray();
             SgmParameters p = CreateSgmParameters();
 
-            _cppSgm = new SgmMatchingAlgorithm();
+            _cppSgm = new Cam3dWrapper.SgmMatchingAlgorithm();
             _cppSgm.Process(p);
 
             MapLeft = CreateMapFromWrapper(_cppSgm.GetMapLeft());

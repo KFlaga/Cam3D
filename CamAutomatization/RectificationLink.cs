@@ -7,7 +7,7 @@ namespace CamAutomatization
 {
     public class RectificationLinkData
     {
-        public ImageRectification Rectification { get; set; }
+        public RectificationAlgorithm Rectification { get; set; }
     }
 
     public class RectificationLink : ILink
@@ -100,12 +100,12 @@ namespace CamAutomatization
 
         private void FindRectification()
         {
-            ImageRectification zhangLoop = FindRectification(new ImageRectification(new Rectification_ZhangLoop()));
-            ImageRectification fussUncalib = FindRectification(new ImageRectification(new Rectification_FussieloIrsara()
+            RectificationAlgorithm zhangLoop = FindRectification(new RectificationAlgorithm(new Rectification_ZhangLoop()));
+            RectificationAlgorithm fussUncalib = FindRectification(new RectificationAlgorithm(new Rectification_FussieloIrsara()
             {
                 UseInitialCalibration = false
             }));
-            ImageRectification fussUncalibWithInitial = FindRectification(new ImageRectification(new Rectification_FussieloIrsara()
+            RectificationAlgorithm fussUncalibWithInitial = FindRectification(new RectificationAlgorithm(new Rectification_FussieloIrsara()
             {
                 UseInitialCalibration = true
             }));
@@ -128,7 +128,7 @@ namespace CamAutomatization
             //}
         }
 
-        private ImageRectification FindRectification(ImageRectification rectAlg)
+        private RectificationAlgorithm FindRectification(RectificationAlgorithm rectAlg)
         {
             rectAlg.ImageHeight = _imgSize.ImageHeight;
             rectAlg.ImageWidth = _imgSize.ImageWidth;
@@ -168,7 +168,7 @@ namespace CamAutomatization
             XmlNode calibDataNode = _config.RootNode.FirstChildWithName("Rectification");
             string filePath = _config.WorkingDirectory + calibDataNode.Attributes["path"].Value;
             
-            _linkData.Rectification = CamCore.XmlSerialisation.CreateFromFile<ImageRectification>(filePath);
+            _linkData.Rectification = CamCore.XmlSerialisation.CreateFromFile<RectificationAlgorithm>(filePath);
         }
     }
 }

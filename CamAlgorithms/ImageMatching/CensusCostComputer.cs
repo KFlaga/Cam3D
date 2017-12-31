@@ -8,8 +8,8 @@ namespace CamAlgorithms.ImageMatching
         public IBitWord[,] CensusBase { get; set; } // [y,x]
         public IBitWord[,] CensusMatched { get; set; } // [y,x]
 
-        public int MaskWidth { get; set; } // Actual width is equal to MaskWidth*2 + 1
-        public int MaskHeight { get; set; } // Actual height is equal to MaskWidth*2 + 1
+        public int WidthRadius { get; set; } // Actual width is equal to MaskWidth*2 + 1
+        public int HeightRadius { get; set; } // Actual height is equal to MaskWidth*2 + 1
         public int WordLength { get; set; }
 
         public override double GetCost(IntVector2 pixelBase, IntVector2 pixelMatched)
@@ -32,25 +32,25 @@ namespace CamAlgorithms.ImageMatching
             CensusBase = new IBitWord[ImageBase.RowCount, ImageBase.ColumnCount];
             CensusMatched = new IBitWord[ImageBase.RowCount, ImageBase.ColumnCount];
 
-            WordLength = (2 * MaskHeight + 1) * (2 * MaskWidth + 1);
+            WordLength = (2 * HeightRadius + 1) * (2 * WidthRadius + 1);
             BitWord.BitWordLength = WordLength;
             uint[] maskWordBase = new uint[BitWord.Byte4Length];
             uint[] maskWordMatched = new uint[BitWord.Byte4Length];
 
-            BorderHeight = MaskHeight;
-            BorderWidth = MaskWidth;
+            BorderHeight = HeightRadius;
+            BorderWidth = WidthRadius;
 
             // Compute max cost of census :
             // - max cost if all bits in mask differs (except center pixel itself), so its equal to WordLength - 1
             MaxCost = WordLength - 1;
 
             // Compute census transfor for each pixel for which mask is within bounds
-            int maxY = ImageBase.RowCount - MaskHeight, maxX = ImageBase.ColumnCount - MaskWidth;
+            int maxY = ImageBase.RowCount - HeightRadius, maxX = ImageBase.ColumnCount - WidthRadius;
 
             BorderFunction<CensusCostComputer>.DoBorderFunction(this,
                 (thisObj, y, x) => { CensusTransform(y, x, maskWordBase, maskWordMatched); },
                 (thisObj, y, x) => { CensusTransform_Border(y, x, maskWordBase, maskWordMatched); },
-                MaskWidth, MaskHeight, ImageBase.RowCount, ImageBase.ColumnCount); 
+                WidthRadius, HeightRadius, ImageBase.RowCount, ImageBase.ColumnCount); 
         }
 
         public void CensusTransform(int y, int x, uint[] maskBase, uint[] maskMatch)
@@ -58,9 +58,9 @@ namespace CamAlgorithms.ImageMatching
             Array.Clear(maskBase, 0, BitWord.Byte4Length);
             Array.Clear(maskMatch, 0, BitWord.Byte4Length);
             int maskPos = 0, dx, dy;
-            for(dx = -MaskWidth; dx <= MaskWidth; ++dx)
+            for(dx = -WidthRadius; dx <= WidthRadius; ++dx)
             {
-                for(dy = -MaskHeight; dy <= MaskHeight; ++dy)
+                for(dy = -HeightRadius; dy <= HeightRadius; ++dy)
                 {
                     if(ImageBase[y + dy, x + dx] < ImageBase[y, x])
                         maskBase[maskPos / 32] |= (1u << (maskPos % 32));
@@ -79,9 +79,9 @@ namespace CamAlgorithms.ImageMatching
             Array.Clear(maskBase, 0, BitWord.Byte4Length);
             Array.Clear(maskMatch, 0, BitWord.Byte4Length);
             int maskPos = 0, dx, dy, px, py;
-            for(dx = -MaskWidth; dx <= MaskWidth; ++dx)
+            for(dx = -WidthRadius; dx <= WidthRadius; ++dx)
             {
-                for(dy = -MaskHeight; dy <= MaskHeight; ++dy)
+                for(dy = -HeightRadius; dy <= HeightRadius; ++dy)
                 {
                     px = x + dx;
                     px = px > ImageBase.ColumnCount - 1 ? 2 * ImageBase.ColumnCount - px - 2 : px;
@@ -112,19 +112,19 @@ namespace CamAlgorithms.ImageMatching
         {
             base.InitParameters();
             IAlgorithmParameter maskW = new IntParameter(
-                "Mask Width Radius", "MWR", 6, 1, 7);
+                "Mask Width Radius", "WidthRadius", 6, 1, 7);
             _parameters.Add(maskW);
 
             IAlgorithmParameter maskH = new IntParameter(
-                "Mask Height Radius", "MHR", 6, 1, 7);
+                "Mask Height Radius", "HeightRadius", 6, 1, 7);
             _parameters.Add(maskH);
         }
 
         public override void UpdateParameters()
         {
             base.UpdateParameters();
-            MaskWidth = IAlgorithmParameter.FindValue<int>("MWR", Parameters);
-            MaskHeight = IAlgorithmParameter.FindValue<int>("MHR", Parameters);
+            WidthRadius = IAlgorithmParameter.FindValue<int>("WidthRadius", Parameters);
+            HeightRadius = IAlgorithmParameter.FindValue<int>("HeightRadius", Parameters);
         }
 
         public override string Name

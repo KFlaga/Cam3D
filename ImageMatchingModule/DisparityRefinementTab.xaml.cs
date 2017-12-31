@@ -274,8 +274,8 @@ namespace ImageMatchingModule
 
         private void RestoreMap(object sender, RoutedEventArgs e)
         {
-            MapLeftCurrent = MapLeftCurrent != null ? (DisparityMap)_storedLeft.Clone() : null;
-            MapRightCurrent = MapRightCurrent != null ? (DisparityMap)_storedRight.Clone() : null;
+            MapLeftCurrent = _storedLeft != null ? (DisparityMap)_storedLeft.Clone() : null;
+            MapRightCurrent = _storedRight != null ? (DisparityMap)_storedRight.Clone() : null;
         }
     }
 

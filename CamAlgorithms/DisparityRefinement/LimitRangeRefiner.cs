@@ -1,35 +1,34 @@
 ﻿using CamCore;
+using System;
 
 namespace CamAlgorithms.ImageMatching
 {
     public class LimitRangeRefiner : DisparityRefinement
     {
-        public int MaxLeftDisparity { get; set; }
-        public int MinLeftDisparity { get; set; }
-        public int MaxRightDisparity { get; set; }
-        public int MinRightDisparity { get; set; }
+        public int MaxDisparity { get; set; }
+        public int MinDisparity { get; set; }
         
         public override void RefineMaps()
         {
             if(MapLeft != null)
             {
-                LimitMap(MapLeft, MinLeftDisparity, MaxLeftDisparity);
+                LimitMap(MapLeft);
             }
 
             if(MapRight != null)
             {
-                LimitMap(MapRight, MinRightDisparity, MaxRightDisparity);
+                LimitMap(MapRight);
             }
         }
 
-        private void LimitMap(DisparityMap map, int dmin, int dmax)
+        private void LimitMap(DisparityMap map)
         {
             for(int r = 0; r < map.RowCount; ++r)
             {
                 for(int c = 0; c < map.ColumnCount; ++c)
                 {
                     Disparity d = map[r, c];
-                    if(d.DX > dmax || d.DX < dmin)
+                    if(Math.Abs(d.DX) > MaxDisparity || Math.Abs(d.DX) < MinDisparity)
                     {
                         map[r, c].Flags = (int)DisparityFlags.Invalid;
                     }
@@ -42,23 +41,17 @@ namespace CamAlgorithms.ImageMatching
             base.InitParameters();
             
             Parameters.Add(new IntParameter(
-                "Left Max Disparity X", "MaxLeftDisparity", 0, -10000, 10000));
+                "Max Disparity X", "MaxDisparity", 100, 0, 100000));
             Parameters.Add(new IntParameter(
-                "Left Min Disparity X", "MinLeftDisparity", -100, -10000, 10000));
-            Parameters.Add(new IntParameter(
-                "Right Max Disparity X", "MaxRightDisparity", 100, -10000, 10000));
-            Parameters.Add(new IntParameter(
-                "Right Min Disparity X", "MinRightDisparity", 0, -10000, 10000));
+                "Min Disparity X", "MinDisparity", 1, 0, 100000));
         }
 
         public override void UpdateParameters()
         {
             base.UpdateParameters();
 
-            MaxLeftDisparity = IAlgorithmParameter.FindValue<int>("MaxLeftDisparity", Parameters);
-            MinLeftDisparity = IAlgorithmParameter.FindValue<int>("MinLeftDisparity", Parameters);
-            MaxRightDisparity = IAlgorithmParameter.FindValue<int>("MaxRightDisparity", Parameters);
-            MinRightDisparity = IAlgorithmParameter.FindValue<int>("MinRightDisparity", Parameters);
+            MaxDisparity = IAlgorithmParameter.FindValue<int>("MaxDisparity", Parameters);
+            MinDisparity = IAlgorithmParameter.FindValue<int>("MinDisparity", Parameters);
         }
 
         public override string Name

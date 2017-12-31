@@ -3,6 +3,7 @@ using MathNet.Numerics.LinearAlgebra.Double;
 using System;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Xml;
 using System.Xml.Schema;
@@ -91,7 +92,7 @@ namespace CamCore
                 string nodeName = reader.Name;
 
                 var propertyInfo = obj.GetType().GetProperty(nodeName);
-                if(propertyInfo != null)
+                if(propertyInfo != null && IsIgnored(propertyInfo) == false)
                 {
                     if(propertyInfo.PropertyType.Is<Matrix<double>>())
                     {
@@ -154,22 +155,24 @@ namespace CamCore
             }
         }
 
+        static bool IsIgnored(PropertyInfo prop)
+        {
+            foreach(var att in prop.GetCustomAttributesData())
+            {
+                if(att.AttributeType == typeof(XmlIgnoreAttribute))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         // Writes all properties (including Matrix/Vector) not marked as XmlIgnore
         public static void WriteXmlNonIgnoredProperties(XmlWriter writer, object obj)
         {
             foreach(var prop in obj.GetType().GetProperties())
             {
-                bool isIgnored = false;
-                foreach(var att in prop.GetCustomAttributesData())
-                {
-                    if(att.AttributeType == typeof(XmlIgnoreAttribute))
-                    {
-                        isIgnored = true;
-                        break;
-                    }
-                }
-                if(isIgnored) { continue; }
-
+                if(IsIgnored(prop)) { continue; }
                 WriteXmlProperty(writer, obj, prop);
             }
         }

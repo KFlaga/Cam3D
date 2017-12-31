@@ -89,6 +89,11 @@ namespace CalibrationModule
             CamCore.FileOperations.SaveToFile(SaveCalibMatched, "Xml File|*.xml");
         }
 
+        private void SaveCalibTriangulated(object sender, RoutedEventArgs e)
+        {
+            CamCore.FileOperations.SaveToFile(SaveCalibTriangulated, "Xml File|*.xml");
+        }
+
         private void Calibrate(object sender, RoutedEventArgs e)
         {
             if(CameraPair.Data.AreCalibrated)
@@ -150,6 +155,31 @@ namespace CalibrationModule
 
             XmlSerialisation.SaveToFile(CalibrationPointsMatched, file);
         }
+        
+        public void SaveCalibTriangulated(Stream file, string path)
+        {
+            var triangulated = new List<TriangulatedPoint>();
+            for(int i = 0; i < CalibrationPointsLeft.Count; ++i)
+            {
+                var cleft = CalibrationPointsLeft[i];
+                var cright = CalibrationPointsRight.Find((cp) =>
+                {
+                    return cp.GridNum == cleft.GridNum &&
+                        cp.RealCol == cleft.RealCol &&
+                        cp.RealRow == cleft.RealRow;
+                });
+                if(cright != null)
+                {
+                    triangulated.Add(new TriangulatedPoint()
+                    {
+                        ImageLeft = cleft.Img,
+                        ImageRight = cright.Img,
+                        Real = Grids[cleft.GridNum].GetRealFromCell(cleft.RealGridPos)
+                    });
+                }
+            }
 
+            XmlSerialisation.SaveToFile(triangulated, file);
+        }
     }
 }

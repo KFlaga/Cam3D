@@ -8,7 +8,7 @@ namespace ImageMatchingModule
 {
     public class ImageMatchingAlgorithmUi : IControllableAlgorithm
     {
-        public ImageMatchingAlgorithm Algorithm { get; set; }
+        public DenseMatchingAlgorithm Algorithm { get; set; }
 
         public IImage ImageLeft { get; set; }
         public IImage ImageRight { get; set; }
@@ -64,11 +64,11 @@ namespace ImageMatchingModule
         {
             var window = new ParametrizableSelectionWindow();
             //window.AddParametrizable(new CppSgmMatchingAlgorithm());
-            window.AddParametrizable(new GenericImageMatchingAlgorithm());
+            window.AddParametrizable(new SgmAlgorithm());
             window.ShowDialog();
             if(window.Accepted)
             {
-                Algorithm = (ImageMatchingAlgorithm)window.Selected;
+                Algorithm = (DenseMatchingAlgorithm)window.Selected;
                 ParamtersAccepted?.Invoke(this, new EventArgs());
             }
         }

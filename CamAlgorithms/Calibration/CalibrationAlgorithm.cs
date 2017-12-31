@@ -56,16 +56,17 @@ namespace CamAlgorithms.Calibration
             if(IsPointsNormalized) { LinearEstimation.Denormalize(NormImage, NormReal); }
             IsLinearEstimationDone = true;
             
-            if(LinearOnly == false)
-            {
-                FindNormalizedVariances();
-                PerformNonlinearMinimalization();
-            }
             if(EliminateOuliers)
             {
                 EliminateOuliers = false;
                 PerformOutliersElimination();
                 Calibrate();
+				return;
+            }
+            if(LinearOnly == false)
+            {
+                FindNormalizedVariances();
+                PerformNonlinearMinimalization();
             }
             if(IsPointsNormalized)
             {

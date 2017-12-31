@@ -17,14 +17,19 @@ namespace CamAlgorithms.ImageMatching
                         Disparity dispLeft = MapLeft[r, c];
                         if(dispLeft.IsValid())
                         {
-                            CrossCheckPixel(r, c, dispLeft);
+                            CrossCheckLeftPixel(r, c, dispLeft);
+                        }
+                        Disparity dispRight = MapRight[r, c];
+                        if(dispRight.IsValid())
+                        {
+                            CrossCheckRightPixel(r, c, dispRight);
                         }
                     }
                 }
             }
         }
 
-        private void CrossCheckPixel(int r, int c, Disparity dispLeft)
+        private void CrossCheckLeftPixel(int r, int c, Disparity dispLeft)
         {
             IntVector2 rightPixel = dispLeft.GetMatchedPixel(new IntVector2(c, r));
             Disparity dispRight = MapRight[rightPixel.Y, rightPixel.X];
@@ -38,22 +43,49 @@ namespace CamAlgorithms.ImageMatching
                 }
                 else
                 {
-                    SetAverageDisparityForBothMaps(r, c, rightPixel);
+                    SetAverageDisparityForBothMaps(new IntVector2(c, r), rightPixel);
                 }
             }
-            //else
-            //{
-            //    MapLeft[r, c].Flags = (int)DisparityFlags.Invalid;
-            //}
+            else
+            {
+                MapRight[rightPixel.Y, rightPixel.X].Flags = (int)DisparityFlags.Valid;
+                MapRight[rightPixel.Y, rightPixel.X].DX = -dispLeft.DX;
+                MapRight[rightPixel.Y, rightPixel.X].SubDX = -dispLeft.SubDX;
+            }
         }
 
-        private void SetAverageDisparityForBothMaps(int r, int c, IntVector2 rightPixel)
+        private void CrossCheckRightPixel(int r, int c, Disparity dispRight)
         {
-            double subDx = (MapLeft[r, c].SubDX - MapRight[rightPixel.Y, rightPixel.X].SubDX) * 0.5;
-            MapLeft[r, c].SubDX = subDx;
+            IntVector2 leftPixel = dispRight.GetMatchedPixel(new IntVector2(c, r));
+            Disparity dispLeft = MapLeft[leftPixel.Y, leftPixel.X];
+
+            if(dispLeft.IsValid())
+            {
+                if(CheckDisparitiesAreFar(dispLeft, dispRight))
+                {
+                    MapLeft[r, c].Flags = (int)DisparityFlags.Invalid;
+                    MapRight[leftPixel.Y, leftPixel.X].Flags = (int)DisparityFlags.Invalid;
+                }
+                else
+                {
+                    SetAverageDisparityForBothMaps(leftPixel, new IntVector2(c, r));
+                }
+            }
+            else
+            {
+                MapLeft[leftPixel.Y, leftPixel.X].Flags = (int)DisparityFlags.Valid;
+                MapLeft[leftPixel.Y, leftPixel.X].DX = -dispRight.DX;
+                MapLeft[leftPixel.Y, leftPixel.X].SubDX = -dispRight.SubDX;
+            }
+        }
+
+        private void SetAverageDisparityForBothMaps(IntVector2 leftPixel, IntVector2 rightPixel)
+        {
+            double subDx = (MapLeft[leftPixel.Y, leftPixel.X].SubDX - MapRight[rightPixel.Y, rightPixel.X].SubDX) * 0.5;
+            MapLeft[leftPixel.Y, leftPixel.X].SubDX = subDx;
             MapRight[rightPixel.Y, rightPixel.X].SubDX = -subDx;
-            MapLeft[r, c].DX = subDx.Round();
-            MapRight[rightPixel.Y, rightPixel.X].DX = -MapLeft[r, c].DX;
+            MapLeft[leftPixel.Y, leftPixel.X].DX = subDx.Round();
+            MapRight[rightPixel.Y, rightPixel.X].DX = -MapLeft[leftPixel.Y, leftPixel.X].DX;
         }
 
         private bool CheckDisparitiesAreFar(Disparity dispLeft, Disparity dispRight)
@@ -66,7 +98,7 @@ namespace CamAlgorithms.ImageMatching
         public override void InitParameters()
         {
             base.InitParameters();
-            
+
             Parameters.Add(new DoubleParameter(
                 "Max Disparity Difference", "MaxDisparityDiff", 1.5, 0.0, 10000.0));
         }

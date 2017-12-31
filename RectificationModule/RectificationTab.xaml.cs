@@ -152,7 +152,7 @@ namespace RectificationModule
         {
             FileOperations.LoadFromFile((f, p) => 
             {
-                ImageRectification rectification = XmlSerialisation.CreateFromFile<ImageRectification>(f);
+                RectificationAlgorithm rectification = XmlSerialisation.CreateFromFile<RectificationAlgorithm>(f);
                 Cameras.RectificationLeft = rectification.RectificationLeft;
                 Cameras.RectificationRight = rectification.RectificationRight;
                 Cameras.RectificationLeftInverse = rectification.RectificationLeftInverse;
@@ -170,7 +170,7 @@ namespace RectificationModule
 
             FileOperations.SaveToFile((f, p) =>
             {
-                ImageRectification rectification = new ImageRectification();
+                RectificationAlgorithm rectification = new RectificationAlgorithm();
                 rectification.RectificationLeft = Cameras.RectificationLeft;
                 rectification.RectificationRight = Cameras.RectificationRight;
                 rectification.RectificationLeftInverse = Cameras.RectificationLeftInverse;
