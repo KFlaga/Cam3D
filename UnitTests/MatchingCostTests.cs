@@ -18,10 +18,7 @@ namespace CamUnitTest
     {
         private Matrix<double> _imageLeft;
         private Matrix<double> _imageRight;
-
-        private Matrix<double> _expectedCosts;
-        private Matrix<double> _computedCosts;
-
+        
 
         public MatchingCostTests()
         {

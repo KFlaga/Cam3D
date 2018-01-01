@@ -19,8 +19,8 @@
         <CamControls:DisparityImage x:Name="_dispImage"  Grid.Column="2" Grid.Row="0"/>
         <Border Grid.Row="1" Grid.ColumnSpan="3" BorderBrush="Black" BorderThickness="1">
             <StackPanel Orientation="Horizontal">
-                <Button Content="Load 3D Points" Click="ManagePoints" Margin="5,3,5,3"/>
-                <Button Content="Build 3D Image" Click="Build3DImage" Margin="5,3,5,3"/>
+                <Button Content="Wczytaj punkty 3d" Click="ManagePoints" Margin="5,3,5,3"/>
+                <Button Content="Stwórz scenę 3d" Click="Build3DImage" Margin="5,3,5,3"/>
             </StackPanel>
         </Border>
     </Grid>

@@ -1,51 +1,36 @@
 ﻿<Window
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:local="clr-namespace:CamMain" x:Class="CamMain.MainWindow"
-        Title="MainWindow" Height="800" Width="1024" ResizeMode="CanResize"
-        WindowStartupLocation="CenterScreen" x:Name="_this" MinHeight="400" MinWidth="800"
+        xmlns:local="clr-namespace:CamMain" xmlns:CalibrationModule="clr-namespace:CalibrationModule;assembly=CalibrationModule" xmlns:RectificationModule="clr-namespace:RectificationModule;assembly=RectificationModule" xmlns:ImageMatchingModule="clr-namespace:ImageMatchingModule;assembly=ImageMatchingModule" xmlns:TriangulationModule="clr-namespace:TriangulationModule;assembly=TriangulationModule" xmlns:Visualisation3dModule="clr-namespace:Visualisation3dModule;assembly=Visualisation3dModule" xmlns:CaptureModule="clr-namespace:CaptureModule;assembly=CamCapture" x:Class="CamMain.MainWindow"
+        Title="Cam3d" 
+        Height="800" Width="1024" ResizeMode="CanResize"
+        WindowStartupLocation="CenterScreen" x:Name="_this" 
+        MinHeight="400" MinWidth="800"
         Background="#fddd">
     <DockPanel>
-        <Menu x:Name="_mainMenu" IsMainMenu="True" DockPanel.Dock="Top" VerticalAlignment="Top" BorderBrush="Black" BorderThickness="1">
-            <MenuItem x:Name="_menuFile" Header="_File">
-                <Separator/> -->
-                <MenuItem x:Name="_submenuProcessChain" Header="Chain-Process" IsEnabled="True" Click="StartChainProcess"/>
-                <MenuItem x:Name="_submenuExit" Header="Exit" IsEnabled="True" Click="Exit"/>
-            </MenuItem>
-            <MenuItem x:Name="_menuModules" Header="_Modules">
-                <MenuItem x:Name="_headerCalibration" Header="Calibration Module" Click="OpenModule"/>
-                <MenuItem x:Name="_headerRectification" Header="Rectification Module" Click="OpenModule"/>
-                <MenuItem x:Name="_headerMatching" Header="Image Matching Module" Click="OpenModule"/>
-                <MenuItem x:Name="_headerTriangulation" Header="Triangulation Module" Click="OpenModule"/>
-                <MenuItem x:Name="_headerImage3D" Header="Image3D Module" Click="OpenModule"/>
-                <MenuItem x:Name="_headerCapture" Header="Camera Capture Module" Click="OpenModule"/>
-                <MenuItem x:Name="_headerOperations" Header="Image Operations Module" Click="OpenModule"/>
-
-            </MenuItem>
-            <MenuItem x:Name="_menuCalib" Header="_Calibration">
-                <MenuItem Header="Load Calibration Data" IsEnabled="True" Click="LoadCalibrationData"/>
-                <MenuItem Header="Save Calibration Data" IsEnabled="True" Click="SaveCalibrationData"/>
-                <MenuItem x:Name="_menuShowCalib" Header="Show Calibration Results" IsEnabled="True" Click="ShowCalibrationData"/>
-            </MenuItem>
-        </Menu>
-        <StatusBar x:Name="_statusBar" DockPanel.Dock="Bottom" Height="30" BorderBrush="Black" BorderThickness="1"/>
-        <Canvas x:Name="_mainCanvas" DockPanel.Dock="Top" SnapsToDevicePixels="True" ClipToBounds="True">
-            <DockPanel x:Name="_mainPanel" Height="{Binding ActualHeight, ElementName=_mainCanvas}" 
-                       Width="{Binding ActualWidth, ElementName=_mainCanvas}"/>
-            <local:CalibrationResults x:Name="_calibResults" Height="290" Canvas.Top="-290" Canvas.Left="108"/>
-        </Canvas>
+        <TabControl x:Name="tabControl" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+            <TabItem Header="Moduł kalibracji">
+                <CalibrationModule:CalibrationModeTabs/>
+            </TabItem>
+            <TabItem Header="Dane kalibracji">
+                <local:CalibrationResults />
+            </TabItem>
+            <TabItem Header="Moduł rektyfikacji">
+                <RectificationModule:RectificationTab/>
+            </TabItem>
+            <TabItem Header="Moduł mapy dysparycji">
+                <ImageMatchingModule:ImageMatchingModeTabs/>
+            </TabItem>
+            <TabItem Header="Maduł triangulacji">
+                <TriangulationModule:TraingulationModeTabs/>
+            </TabItem>
+            <TabItem Header="Moduł wizualizacji">
+                <Visualisation3dModule:Image3DTabs/>
+            </TabItem>
+            <TabItem Header="Moduł akwizycji">
+                <CaptureModule:CameraCaptureTabs/>
+            </TabItem>
+        </TabControl>
     </DockPanel>
 
-    <Window.Resources>
-        <Storyboard x:Key="calibResultShowAnimation">
-            <DoubleAnimation Storyboard.TargetProperty="(Canvas.Top)"
-                             From="{Binding ElementName=_calibResults, Path=(Canvas.Top)}" To="0" 
-        		              Duration="0:0:1" BeginTime="0:0:0"/>
-        </Storyboard>
-        <Storyboard x:Key="calibResultHideAnimation">
-            <DoubleAnimation Storyboard.TargetProperty="(Canvas.Top)" 
-                             From="{Binding ElementName=_calibResults, Path=(Canvas.Top)}" To="-290" 
-        		             Duration="0:0:1" BeginTime="0:0:0"/>
-        </Storyboard>
-    </Window.Resources>
 </Window>

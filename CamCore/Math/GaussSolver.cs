@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
 
-namespace CamAlgorithms
+namespace CamCore
 {
     // Basic Gauss method solver with choosing of primary element
     // Assumes Equations matrix is square and of same size as left size vector

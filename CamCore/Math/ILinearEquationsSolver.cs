@@ -1,6 +1,6 @@
 ﻿using MathNet.Numerics.LinearAlgebra;
 
-namespace CamAlgorithms
+namespace CamCore
 {
     // Linear equation solver interface for equations : Ax = b 
     public interface ILinearEquationsSolver

@@ -2,7 +2,7 @@
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Single;
 
-namespace CamAlgorithms
+namespace CamCore
 {
     public class Polynomial
     {

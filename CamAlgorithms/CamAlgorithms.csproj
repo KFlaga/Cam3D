@@ -80,17 +80,15 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Algs\BasicFloodAlgorithm.cs" />
-    <Compile Include="Algs\IFloodAlgorithm.cs" />
-    <Compile Include="Algs\IterativeBasicFloodAlgorithm.cs" />
-    <Compile Include="Algs\ScanLineFloodAlgorithm.cs" />
+    <Compile Include="Flood\BasicFloodAlgorithm.cs" />
+    <Compile Include="Flood\IFloodAlgorithm.cs" />
+    <Compile Include="Flood\IterativeBasicFloodAlgorithm.cs" />
+    <Compile Include="Flood\ScanLineFloodAlgorithm.cs" />
     <Compile Include="Calibration\CalibrationHartleyZisserman.cs" />
     <Compile Include="Calibration\CalibrationWithGrids.cs" />
     <Compile Include="Calibration\CameraMatrixGridSimpleMinimalisation.cs" />
-    <Compile Include="Calibration\CameraPair.cs" />
     <Compile Include="Calibration\CalibrationPoint.cs" />
     <Compile Include="Calibration\CalibrationAlgorithm.cs" />
-    <Compile Include="Calibration\Camera.cs" />
     <Compile Include="Calibration\CrossCalibrationRefiner.cs" />
     <Compile Include="Calibration\EpiLine.cs" />
     <Compile Include="Calibration\CameraMatrixGridExplicitMinimalisation.cs" />
@@ -100,12 +98,8 @@
     <Compile Include="Calibration\LMCameraMatrixZeroSkewMini.cs" />
     <Compile Include="Calibration\RadialDistortionQuadricFitMinimalisation.cs" />
     <Compile Include="Calibration\RadialDistortionLineFitMinimalisation.cs" />
-    <Compile Include="Calibration\RadialDistortion.cs" />
-    <Compile Include="Calibration\RadialDistortionModel.cs" />
     <Compile Include="Calibration\RadialDistrotionCorrectionAlgorithm.cs" />
-    <Compile Include="Calibration\Rational3RDModel.cs" />
     <Compile Include="Calibration\RealGridData.cs" />
-    <Compile Include="Calibration\Taylor4Model.cs" />
     <Compile Include="ImageProcessing\AnisotropicDiffusionFilter.cs" />
     <Compile Include="ImageMatching\CppSgmAlgorithm.cs" />
     <Compile Include="Features\AreaBasedCorrelationImageMatcher.cs" />
@@ -139,17 +133,6 @@
     <Compile Include="DisparityRefinement\SmoothSegmentsRefiner.cs" />
     <Compile Include="ImageProcessing\ImageTransformation.cs" />
     <Compile Include="ImageProcessing\ImageTransformer.cs" />
-    <Compile Include="Math\GaussSolver.cs" />
-    <Compile Include="Math\ILinearEquationsSolver.cs" />
-    <Compile Include="Math\LevenbergMarquardtBasicAlgorithm.cs" />
-    <Compile Include="Math\Line.cs" />
-    <Compile Include="Math\MinimalisationAlgorithm.cs" />
-    <Compile Include="Math\MultivariateFunctionMinimalisation.cs" />
-    <Compile Include="Math\OneVariableMinimisation.cs" />
-    <Compile Include="Math\Polynomial.cs" />
-    <Compile Include="Math\PolynomialRootFinder.cs" />
-    <Compile Include="Math\Quadric.cs" />
-    <Compile Include="Math\SvdSolver.cs" />
     <Compile Include="PointsExtraction\CalibrationGrid.cs" />
     <Compile Include="PointsExtraction\CalibrationLinesExtractor.cs" />
     <Compile Include="PointsExtraction\CalibrationPointsFinder.cs" />

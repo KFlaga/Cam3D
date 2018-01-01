@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace CamAlgorithms
+namespace CamCore
 {
     [DebuggerDisplay("{DebuggerDisplay, nq}")]
     public class Line2D

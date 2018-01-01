@@ -19,9 +19,7 @@
         <CamControls:PointImage x:Name="_camImageSec" Grid.Column="2" Grid.Row="0"/>
         <Border Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="3" BorderBrush="Black" BorderThickness="1">
             <DockPanel DockPanel.Dock="Bottom" Height="35" Background="LightGray">
-                <Button x:Name="_butMatchImages" DockPanel.Dock="Left" Margin="3,4,4,3"  Width="100" IsEnabled="True" Click="MatchImages">Match Images</Button>
-                <Button x:Name="_butRectify" DockPanel.Dock="Left" Margin="3,4,4,3"  Width="100" IsEnabled="True" Click="RectifyImages">Rectify Images</Button>
-
+                <Button x:Name="_butMatchImages" DockPanel.Dock="Left" Margin="3,4,4,3"  Width="120" IsEnabled="True" Click="MatchImages">Dopasuj punkty</Button>
                 <Label></Label>
             </DockPanel>
         </Border>

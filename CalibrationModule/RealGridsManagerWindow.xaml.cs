@@ -226,16 +226,16 @@ namespace CalibrationModule
             CamCore.XmlSerialisation.SaveToFile(_savedList, file);
         }
 
-        private void UpdateFromP1P4(object sender, RoutedEventArgs e)
-        {
-            RealGridData grid = (RealGridData)_gridListView.SelectedItem;
+        //private void UpdateFromP1P4(object sender, RoutedEventArgs e)
+        //{
+        //    RealGridData grid = (RealGridData)_gridListView.SelectedItem;
 
-            Vector3 p1 = new Vector3(_tbP1X.CurrentValue, _tbP1Y.CurrentValue, _tbP1Z.CurrentValue);
-            Vector3 p4 = new Vector3(_tbP4X.CurrentValue, _tbP4Y.CurrentValue, _tbP4Z.CurrentValue);
-            Vector3 p1p = new Vector3(_tbP1pX.CurrentValue, _tbP1pY.CurrentValue, _tbP1pZ.CurrentValue);
-            Vector3 p4p = new Vector3(_tbP4pX.CurrentValue, _tbP4pY.CurrentValue, _tbP4pZ.CurrentValue);
+        //    Vector3 p1 = new Vector3(_tbP1X.CurrentValue, _tbP1Y.CurrentValue, _tbP1Z.CurrentValue);
+        //    Vector3 p4 = new Vector3(_tbP4X.CurrentValue, _tbP4Y.CurrentValue, _tbP4Z.CurrentValue);
+        //    Vector3 p1p = new Vector3(_tbP1pX.CurrentValue, _tbP1pY.CurrentValue, _tbP1pZ.CurrentValue);
+        //    Vector3 p4p = new Vector3(_tbP4pX.CurrentValue, _tbP4pY.CurrentValue, _tbP4pZ.CurrentValue);
 
-            grid.FillFromP1P4(p1, p4, p1p, p4p);
-        }
+        //    grid.FillFromP1P4(p1, p4, p1p, p4p);
+        //}
     }
 }

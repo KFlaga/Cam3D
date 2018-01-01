@@ -4,7 +4,7 @@ using MathNet.Numerics.LinearAlgebra.Double;
 using System.Collections.Generic;
 using CamCore;
 
-namespace CamAlgorithms.Calibration
+namespace CamCore
 {
     // Rational model of distortion function :
     //                        1 + k1*ru

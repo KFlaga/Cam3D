@@ -2,7 +2,7 @@
 using MathNet.Numerics.LinearAlgebra.Double;
 using System;
 
-namespace CamAlgorithms
+namespace CamCore
 {
     // Works like one variable but function takes argument vector X and returns single value
     public class MultivariateFunctionMinimalisation

@@ -2,7 +2,7 @@
 using MathNet.Numerics.LinearAlgebra;
 using System.Collections.Generic;
 
-namespace CamAlgorithms.Calibration
+namespace CamCore
 {
     // General base for distrotion ( and undistortion ) models
     // It exposes to public only functions to compute R(r), R^-1(r), D(r), U(r) for given p, r and P

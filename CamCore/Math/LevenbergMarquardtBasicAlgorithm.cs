@@ -4,7 +4,7 @@ using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
 using CamCore;
 
-namespace CamAlgorithms
+namespace CamCore
 {
     // Base LM algorithm -> jacobian / mapping function must still be supplied
     public abstract class LevenbergMarquardtBaseAlgorithm : MinimalisationAlgorithm

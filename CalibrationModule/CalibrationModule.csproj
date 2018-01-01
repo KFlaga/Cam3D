@@ -90,22 +90,12 @@
       <SubType>Code</SubType>
       <DependentUpon>CalibrationModeTabs.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Module.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="CalibrationLinesManagerWindow.xaml.cs">
       <DependentUpon>CalibrationLinesManagerWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="CalibrationPointsManagerWindow.xaml.cs">
       <SubType>Code</SubType>
       <DependentUpon>CalibrationPointsManagerWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="ChooseRealGridPointDialog.xaml.cs">
-      <SubType>Code</SubType>
-      <DependentUpon>ChooseRealGridPointDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="CalibrationTestTab.xaml.cs">
-      <DependentUpon>CalibrationTestTab.xaml</DependentUpon>
     </Compile>
     <Compile Include="PointsExtractionAlgorithmUi.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -152,14 +142,6 @@
     <Page Include="CalibrationPointsManagerWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="ChooseRealGridPointDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="CalibrationTestTab.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
     <Page Include="RealGridsManagerWindow.xaml">
       <SubType>Designer</SubType>

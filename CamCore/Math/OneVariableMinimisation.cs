@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CamAlgorithms
+namespace CamCore
 {
     // Class that minimises function f(x) over one parameter x
     // Base class uses basic Newton 2nd derivative algorithm

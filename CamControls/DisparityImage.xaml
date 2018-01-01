@@ -19,8 +19,8 @@
 
         <Border Grid.Row="2" Grid.ColumnSpan="2" BorderBrush="Black" BorderThickness="1">
             <StackPanel Orientation="Horizontal" Height="35">
-                <Button x:Name="_butSave" Margin="10,4,3,4" Click="SaveMap">Save Map</Button>
-                <Button x:Name="_butLoad" Margin="3,4,3,4" Click="LoadMap">Load Map</Button>
+                <Button x:Name="_butSave" Margin="10,4,3,4" Click="SaveMap">Zapisz mapę</Button>
+                <Button x:Name="_butLoad" Margin="3,4,3,4" Click="LoadMap">Wczytaj mapę</Button>
                 <Label/>
             </StackPanel>
         </Border>
@@ -29,8 +29,8 @@
         <Image x:Name="_imageControl" Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" />
         <Canvas x:Name="_dispBoxCanvas" Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" />
 
-        <Button Grid.Column="0" Grid.Row="1" Margin="0,-15,0,0" Height="25" Click="SelectRange">Range</Button>
-        <CheckBox Grid.Column="0" Grid.Row="1" Margin="0,30,0,0" Height="15" Checked="FreezeRange" Unchecked="UnfreezeRange">FRZ</CheckBox>
+        <Button Grid.Column="0" Grid.Row="1" Margin="0,-15,0,0" Height="25" Click="SelectRange">Zakres</Button>
+        <CheckBox Grid.Column="0" Grid.Row="1" Margin="0,30,0,0" Height="15" Checked="FreezeRange" Unchecked="UnfreezeRange" FontSize="9">Stały</CheckBox>
     </Grid>
 
 </UserControl>

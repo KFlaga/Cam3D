@@ -77,7 +77,6 @@
     <Compile Include="TriangulationFromPointsTab.xaml.cs">
       <DependentUpon>TriangulationFromPointsTab.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TriangulationFromDisparityMapTab.xaml.cs">
       <DependentUpon>TriangulationFromDisparityMapTab.xaml</DependentUpon>

@@ -78,7 +78,24 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\Camera.cs" />
+    <Compile Include="Data\CameraPair.cs" />
+    <Compile Include="Data\RadialDistortion.cs" />
+    <Compile Include="Data\RadialDistortionModel.cs" />
+    <Compile Include="Data\Rational3RDModel.cs" />
+    <Compile Include="Data\Taylor4Model.cs" />
     <Compile Include="Images\DisparityImage.cs" />
+    <Compile Include="Math\GaussSolver.cs" />
+    <Compile Include="Math\ILinearEquationsSolver.cs" />
+    <Compile Include="Math\LevenbergMarquardtBasicAlgorithm.cs" />
+    <Compile Include="Math\Line.cs" />
+    <Compile Include="Math\MinimalisationAlgorithm.cs" />
+    <Compile Include="Math\MultivariateFunctionMinimalisation.cs" />
+    <Compile Include="Math\OneVariableMinimisation.cs" />
+    <Compile Include="Math\Polynomial.cs" />
+    <Compile Include="Math\PolynomialRootFinder.cs" />
+    <Compile Include="Math\Quadric.cs" />
+    <Compile Include="Math\SvdSolver.cs" />
     <Compile Include="ModuleInterfaces\IAlgorithmUi.cs" />
     <Compile Include="Data\Point2.cs" />
     <Compile Include="Data\TriangulatedPoint.cs" />
@@ -106,7 +123,6 @@
     <Compile Include="Converters\IntToStringConverter.cs" />
     <Compile Include="InterModularConnection.cs" />
     <Compile Include="Misc\MatrixExtensions.cs" />
-    <Compile Include="ModuleInterfaces\GuiModule.cs" />
     <Compile Include="Misc\NoiseGenerators.cs" />
     <Compile Include="Data\Vector2.cs" />
     <Compile Include="ModuleInterfaces\AlgorithmParameter.cs" />

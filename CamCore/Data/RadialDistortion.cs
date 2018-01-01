@@ -7,7 +7,7 @@ using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 
-namespace CamAlgorithms.Calibration
+namespace CamCore
 {
     public enum DistortionDirection : int
     {

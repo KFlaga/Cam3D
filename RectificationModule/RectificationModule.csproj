@@ -82,14 +82,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Module.cs" />
     <Compile Include="RectificationTab.xaml.cs">
       <DependentUpon>RectificationTab.xaml</DependentUpon>
     </Compile>
     <Compile Include="RectificationAlgorithmUi.cs" />
-    <Compile Include="RectificationModeTabs.xaml.cs">
-      <DependentUpon>RectificationModeTabs.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -108,10 +104,6 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="RectificationTab.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="RectificationModeTabs.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

@@ -88,7 +88,6 @@
     <Compile Include="CameraChooseControl.xaml.cs">
       <DependentUpon>CameraChooseControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Module.cs" />
     <Compile Include="CaptureSettingsControl.xaml.cs" />
     <Compile Include="FreeCameraCollection.cs" />
     <Compile Include="CameraConfig.cs" />

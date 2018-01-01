@@ -2,7 +2,7 @@
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
 
-namespace CamAlgorithms
+namespace CamCore
 {
     // Uses SVD decomposition to find least-squares solution of problem Ax = b 
     // Equation may have exact or either over- or under-determined solution

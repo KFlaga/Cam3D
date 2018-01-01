@@ -8,7 +8,8 @@
              d:DesignHeight="140" d:DesignWidth="250"
         xmlns:CamControls="clr-namespace:CamControls;assembly=CamControls"
         SizeToContent="WidthAndHeight"
-        Title="SetImageSizeDialog" ResizeMode="NoResize">
+        Title="SetImageSizeDialog" ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner">
     <DockPanel>
         <Label DockPanel.Dock="Top" HorizontalAlignment="Center">Wprowadź rozdzielczość zdjęć z kamery</Label>
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
@@ -18,8 +19,8 @@
             <CamControls:IntegerTextBox x:Name="_tbY" HorizontalAlignment="Stretch" Width="40" Margin="3"/>
         </StackPanel>
         <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" FlowDirection="RightToLeft" VerticalAlignment="Bottom">
-            <Button Width="60" Margin="3" Click="Accept">OK</Button>
-            <Button Width="60" Margin="3" Click="Cancel">Cancel</Button>
+            <Button Width="60" Margin="3" Click="Accept">Akceptuj</Button>
+            <Button Width="60" Margin="3" Click="Cancel">Anuluj</Button>
         </StackPanel>
     </DockPanel>
 </Window>

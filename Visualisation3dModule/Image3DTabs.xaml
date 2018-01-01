@@ -7,10 +7,10 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <TabControl>
-        <TabItem Header="Cube Points">
+        <TabItem Header="Chumra punktów 3d">
             <local:Image3DFromPointsTab x:Name="_tabFromPoints"/>
         </TabItem>
-        <TabItem Header="Disparity Segmented">
+        <TabItem Header="Model z mapy dysparycji">
             <local:Image3DWithDisparityTab x:Name="_tabWithDisparity"/>
         </TabItem>
     </TabControl>

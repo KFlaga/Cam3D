@@ -18,7 +18,7 @@
             <ColumnDefinition Width="10*"/>
             <ColumnDefinition Width="200"/>
         </Grid.ColumnDefinitions>
-        <Label Grid.ColumnSpan="2" HorizontalAlignment="Center">Choose Disparity Refinement Type</Label>
+        <Label Grid.ColumnSpan="2" HorizontalAlignment="Center">Wybierz metodę poprawiania mapy</Label>
         <ComboBox x:Name="_refinersCombo" Grid.ColumnSpan="2" Grid.Row="1" Margin="2" 
                   SelectionChanged="_refinersCombo_SelectionChanged"/>
         <ScrollViewer  Grid.ColumnSpan="2" Grid.Row="2" >
@@ -26,9 +26,9 @@
         </ScrollViewer>
 
         <StackPanel Grid.Column="1" Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button x:Name="_butRemove" Margin="3" Click="_butRemove_Click">Remove Step</Button>
-            <Button x:Name="_butCancel" Margin="3" Click="_butCancel_Click">Cancel</Button>
-            <Button x:Name="_butAccept" Margin="3,3,5,3" Click="_butAccept_Click">Accept</Button>
+            <Button x:Name="_butRemove" Margin="3" Click="_butRemove_Click">Usuń krok</Button>
+            <Button x:Name="_butCancel" Margin="3" Click="_butCancel_Click">Anuluj</Button>
+            <Button x:Name="_butAccept" Margin="3,3,5,3" Click="_butAccept_Click">Akceptuj</Button>
         </StackPanel>
     </Grid>
 </Window>

@@ -10,17 +10,17 @@
         <Border BorderBrush="Black" BorderThickness="1" DockPanel.Dock="Bottom">
             <StackPanel Orientation="Vertical">
                 <DockPanel Height="35">
-                    <Button x:Name="_butStart" DockPanel.Dock="Left" Margin="5" Width="85" Click="_butStart_Click">Start Capture</Button>
-                    <Button x:Name="_butPause" DockPanel.Dock="Left" Margin="5" Width="85" Click="_butPause_Click">Pause Capture</Button>
-                    <Button x:Name="_butStop" DockPanel.Dock="Left" Margin="5" Width="85" Click="_butStop_Click">Stop Capture</Button>
+                    <Button x:Name="_butStart" DockPanel.Dock="Left" Margin="5" Width="85" Click="_butStart_Click">Start</Button>
+                    <Button x:Name="_butPause" DockPanel.Dock="Left" Margin="5" Width="85" Click="_butPause_Click">Pauza</Button>
+                    <Button x:Name="_butStop" DockPanel.Dock="Left" Margin="5" Width="85" Click="_butStop_Click">Stop</Button>
 
                     <Label DockPanel.Dock="Left"/>
                 </DockPanel>
                 <DockPanel Height="35">
-                    <Label DockPanel.Dock="Left" VerticalAlignment="Center">Toggle SingleShot</Label>
+                    <Label DockPanel.Dock="Left" VerticalAlignment="Center">Pojedyńcza klatka</Label>
                     <CheckBox x:Name="_cbSingleShot" DockPanel.Dock="Left" Checked="_cbSingleShot_Checked" Unchecked="_cbSingleShot_Unchecked"
                               VerticalAlignment="Center" IsChecked="False"/>
-                    <Button x:Name="_butSnapShot" DockPanel.Dock="Left" Margin="10,5,5,5" Click="_butSnapShot_Click" >Next Frame</Button>
+                    <Button x:Name="_butSnapShot" DockPanel.Dock="Left" Margin="10,5,5,5" Click="_butSnapShot_Click" >Pobierz klatkę</Button>
                     <Label DockPanel.Dock="Left"/>
                 </DockPanel>
             </StackPanel>

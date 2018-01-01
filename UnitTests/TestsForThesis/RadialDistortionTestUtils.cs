@@ -207,7 +207,6 @@ namespace CamUnitTest.TestsForThesis
         {
             int linesCount = 12;
             int pointsInLine = 10;
-            int _pointsCount = 120;
             Random rand = new Random();
             List<List<Vector2>> realLines = new List<List<Vector2>>();
             // Predefined starts/ends of lines

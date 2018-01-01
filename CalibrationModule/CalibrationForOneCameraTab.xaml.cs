@@ -59,15 +59,6 @@ namespace CalibrationModule
         public CalibrationForOneCameraTab()
         {
             InitializeComponent();
-
-            _imageControl.TemporaryPoint.IsNullChanged += (s, e) =>
-            {
-                _butAcceptPoint.IsEnabled = !e.IsNewPointNull;
-            };
-            _imageControl.SelectedPointChanged += (s, e) =>
-            {
-                _butEditPoint.IsEnabled = e.IsNewPointSelected;
-            };
             
             _imageControl.ImageSourceChanged += (s, e) =>
             {
@@ -94,28 +85,7 @@ namespace CalibrationModule
                 CameraPair.Data.GetCamera(CameraIndex).ImageWidth = Camera.ImageWidth;
             }
         }
-
-        private void AcceptImagePoint(object sender, RoutedEventArgs e)
-        {
-            // Open real point dialog
-            ChooseRealGridPointDialog realPointDialog = new ChooseRealGridPointDialog();
-            bool? res = realPointDialog.ShowDialog();
-            if(res != null && res == true)
-            {
-                CalibrationPoint cp = new CalibrationPoint()
-                {
-                    ImgX = (double)_curPoint.X,
-                    ImgY = (double)_curPoint.Y,
-                    GridNum = realPointDialog.GridNum,
-                    RealCol = realPointDialog.X,
-                    RealRow = realPointDialog.Y
-                };
-                _currentImagePoints.Add(cp);
-                _imageControl.AcceptTempPoint(cp);
-                _butAcceptGrid.IsEnabled = true;
-            }
-        }
-
+        
         private void RefreshCalibrationPoints()
         {
             _imageControl.ResetPoints();
@@ -136,24 +106,7 @@ namespace CalibrationModule
                 _imageControl.ImageSource = _cameraCaptureImage;
             }
         }
-
-        private void _butEditPoint_Click(object sender, RoutedEventArgs e)
-        {
-            var cpoint = (CalibrationPoint)_imageControl.SelectedPoint.Value;
-
-            ChooseRealGridPointDialog realPointDialog = new ChooseRealGridPointDialog();
-            realPointDialog.X = cpoint.RealCol;
-            realPointDialog.Y = cpoint.RealRow;
-            realPointDialog.GridNum = cpoint.GridNum;
-            bool? res = realPointDialog.ShowDialog();
-            if(res != null && res == true)
-            {
-                cpoint.GridNum = realPointDialog.GridNum;
-                cpoint.RealCol = realPointDialog.X;
-                cpoint.RealRow = realPointDialog.Y;
-            }
-        }
-
+        
         private void _butAcceptGrid_Click(object sender, RoutedEventArgs e)
         {
             int gridnum = (int)_textGridNum.GetNumber();
@@ -177,8 +130,7 @@ namespace CalibrationModule
             if(_imageControl.ImageSource != null)
                 _imageControl.ResetPoints();
         }
-
-
+        
         private void ManageGrids(object sender, RoutedEventArgs e)
         {
             RealGridsManagerWindow gridsManager = new RealGridsManagerWindow();

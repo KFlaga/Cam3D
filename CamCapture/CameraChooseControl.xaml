@@ -14,9 +14,9 @@
                 <RowDefinition Height="25"/>
                 <RowDefinition Height="35"/>
             </Grid.RowDefinitions>
-            <Label Grid.Row="0" HorizontalAlignment="Center" >Choose device</Label>
+            <Label Grid.Row="0" HorizontalAlignment="Center" >Wybierz urządzenie</Label>
             <ComboBox x:Name="_cbCameras" Grid.Row="1" SelectionChanged="_cbCameras_SelectionChanged" Height="25" Margin="5"/>
-            <Label Grid.Row="2" HorizontalAlignment="Center" >Supported configurations:</Label>
+            <Label Grid.Row="2" HorizontalAlignment="Center" >Wybierz konfigurację</Label>
             <ComboBox x:Name="_cbConfigs" Grid.Row="3" SelectionChanged="_cbConfigs_SelectionChanged" Height="25" Margin="5"/>
         </Grid>
     </Border>

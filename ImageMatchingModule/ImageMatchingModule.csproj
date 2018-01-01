@@ -74,7 +74,6 @@
     <Compile Include="DisparityRefinementTab.xaml.cs">
       <DependentUpon>DisparityRefinementTab.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Module.cs" />
     <Compile Include="ImageMatchingModeTabs.xaml.cs">
       <DependentUpon>ImageMatchingModeTabs.xaml</DependentUpon>
     </Compile>

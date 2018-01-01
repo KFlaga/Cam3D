@@ -16,8 +16,8 @@
         <CamControls:PointImage x:Name="_imageControl" Grid.Column="0" Grid.Row="0"/>
         <Border Grid.Column="1" BorderBrush="Black" BorderThickness="1">
             <StackPanel>
-                <Button Content="Load 3D Points" Click="ManagePoints" Margin="5,3,5,3"/>
-                <Button Content="Build 3D Image" Click="Build3DImage" Margin="5,3,5,3"/>
+                <Button Content="Wczytaj punkty 3d" Click="ManagePoints" Margin="5,3,5,3"/>
+                <Button Content="Stwórz scenę 3d" Click="Build3DImage" Margin="5,3,5,3"/>
             </StackPanel>
        </Border>
     </Grid>

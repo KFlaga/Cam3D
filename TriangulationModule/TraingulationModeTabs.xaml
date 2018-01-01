@@ -8,10 +8,10 @@
              d:DesignHeight="300" d:DesignWidth="600"
              >
     <TabControl>
-       <TabItem Header="From Points">
+       <TabItem Header="Z par punktów">
             <local:TriangulationFromPointsTab x:Name="_tabFromPoints"/>
         </TabItem>
-        <TabItem Header="From Disparity Map">
+        <TabItem Header="Z mapy dysparycji">
             <local:TriangulationFromDisparityMapTab x:Name="_tabFromDisparity"/>
         </TabItem>
 

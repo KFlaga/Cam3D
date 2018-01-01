@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using Complex = MathNet.Numerics.Complex32;
 using TComplex = MathNet.Numerics.LinearAlgebra.Complex32;
 
-namespace CamAlgorithms
+namespace CamCore
 {
     // Uses Aberth methid to find all root of polynomial with real coefficients and rank > 2
     public class PolynomialRootFinder

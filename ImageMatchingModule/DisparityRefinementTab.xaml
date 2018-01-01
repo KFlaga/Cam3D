@@ -18,7 +18,7 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
-        <Label Grid.Column="1" HorizontalContentAlignment="Center">Final disparity map (for left image)</Label>
+        <Label Grid.Column="1" HorizontalContentAlignment="Center">Wynikowa mapa (dla lewego obrazu)</Label>
         
         <Border Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" BorderBrush="Black" BorderThickness="1">
             <ScrollViewer>
@@ -33,12 +33,9 @@
 
         <Border Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="3" BorderBrush="Black" BorderThickness="1">
             <DockPanel DockPanel.Dock="Bottom" Height="35" Background="LightGray">
-                <Button Margin="10,4,3,4" Click="UpdateMaps">Update Maps</Button>
-                <Button Margin="10,4,3,4" Click="UpdateImages">Update Images</Button>
-                <Button Margin="10,4,3,4" Click="ResetMaps">Reset Maps</Button>
-
-                <Button Margin="10,4,3,4" Click="RestoreMap" DockPanel.Dock="Right">Restore Map</Button>
-                <Button Margin="10,4,3,4" Click="StoreMap" DockPanel.Dock="Right">Store Map</Button>
+                <Button Margin="10,4,3,4" Click="UpdateMaps">Odśwież mapy</Button>
+                <Button Margin="10,4,3,4" Click="UpdateImages">Odśwież obrazy</Button>
+                <Button Margin="10,4,3,4" Click="ResetMaps">Zresetuj mapy</Button>
                 <Label></Label>
             </DockPanel>
         </Border>

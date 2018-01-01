@@ -9,7 +9,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="305" d:DesignWidth="500">
     <TabControl>
-        <TabItem Header="Capture">
+        <TabItem Header="Kamery">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="50*"/>
@@ -28,24 +28,20 @@
                 <Border Grid.Column="0"  Grid.Row="1" BorderBrush="Black" BorderThickness="1">
                     <DockPanel>
                         <Button x:Name="_butSaveShotLeft" Click="_butSaveShotLeft_Click" DockPanel.Dock="Left" 
-                                Width="100">Save To Disc</Button>
-                        <Button x:Name="_butSaveShotLeftMemory" Click="_butSaveShotLeftMemory_Click" DockPanel.Dock="Left" 
-                                Width="100">Save To Memory</Button>
+                                Width="100">Zapisz na dysk</Button>
                         <Label/>
                     </DockPanel>
                 </Border>
                 <Border Grid.Column="1"  Grid.Row="1" BorderBrush="Black" BorderThickness="1">
                     <DockPanel>
                         <Button x:Name="_butSaveShotRight" Click="_butSaveShotRight_Click"  DockPanel.Dock="Left" 
-                                Width="100" >Save To Disc</Button>
-                        <Button x:Name="_butSaveShotRightMemory" Click="_butSaveShotRightMemory_Click" DockPanel.Dock="Left" 
-                                Width="100" >Save To Memory</Button>
+                                Width="100" >Zapisz na dysk</Button>
                         <Label/>
                     </DockPanel>
                 </Border>
             </Grid>
         </TabItem>
-        <TabItem Header="Options">
+        <TabItem Header="Ustawienia">
             <local:CaptureSettingsControl x:Name="_settingsTab"/>
         </TabItem>
     </TabControl>

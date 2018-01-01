@@ -45,17 +45,17 @@
         <!-- Manual RGB control -->
         <Border Grid.Column="2" Grid.Row="1" Grid.RowSpan="2" BorderBrush="Black" BorderThickness="1" Margin="5">
             <StackPanel>
-                <Label Margin="0,3,0,3" HorizontalContentAlignment="Center" Height="15" Padding="0">RED</Label>
+                <Label Margin="0,3,0,3" HorizontalContentAlignment="Center" Height="15" Padding="0">R</Label>
                 <local:UnsignedIntegerTextBox x:Name="_tbRed" Style="{DynamicResource colorTextBoxStyle}" TextChanged="_tbRed_TextChanged"/>
-                <Label Margin="0,3,0,3" HorizontalContentAlignment="Center">GREEN</Label>
+                <Label Margin="0,3,0,3" HorizontalContentAlignment="Center">G</Label>
                 <local:UnsignedIntegerTextBox x:Name="_tbGreen" Style="{DynamicResource colorTextBoxStyle}" TextChanged="_tbGreen_TextChanged"/>
-                <Label Margin="0,3,0,3" HorizontalContentAlignment="Center">BLUE</Label>
+                <Label Margin="0,3,0,3" HorizontalContentAlignment="Center">B</Label>
                 <local:UnsignedIntegerTextBox x:Name="_tbBlue" Style="{DynamicResource colorTextBoxStyle}" TextChanged="_tbBlue_TextChanged"/>
             </StackPanel>
         </Border>
         <StackPanel Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="5" Orientation="Horizontal">
-            <Button Width="50" Margin="2" Click="Cancel">Cancel</Button>
-            <Button Width="50" Margin="2" Click="Accept">OK</Button>
+            <Button Width="50" Margin="2" Click="Cancel">Anuluj</Button>
+            <Button Width="50" Margin="2" Click="Accept">Ok</Button>
         </StackPanel>
     </Grid>
 

@@ -11,16 +11,16 @@ namespace CamControls
     public partial class MatrixControl : UserControl, INotifyPropertyChanged
     {
         public static readonly DependencyProperty MatrixSourceProperty =
-            DependencyProperty.Register("MatrixSource", typeof(Matrix<float>), typeof(MatrixControl), new PropertyMetadata()
+            DependencyProperty.Register("MatrixSource", typeof(Matrix<double>), typeof(MatrixControl), new PropertyMetadata()
             {
                 DefaultValue = null,
                 PropertyChangedCallback = OnMatrixSourceChanged
             });
-        public Matrix<float> MatrixSource
+        public Matrix<double> MatrixSource
         {
             get
             {
-                return this.GetValue(MatrixSourceProperty) as Matrix<float>;
+                return this.GetValue(MatrixSourceProperty) as Matrix<double>;
             }
             set
             {
@@ -102,9 +102,9 @@ namespace CamControls
             for (int r = 0; r < MatrixSource.RowCount; r++)
                 for (int c = 0; c < MatrixSource.ColumnCount; c++)
                 {
-                    SingleTextBox cell = new SingleTextBox();
+                    DoubleTextBox cell = new DoubleTextBox();
                     cell.LimitValue = false;
-                    cell.SetNumber(MatrixSource[r, c]);
+                    cell.SetNumber(double.Parse(MatrixSource[r, c].ToString("F4")));
                     Grid.SetColumn(cell, c);
                     Grid.SetRow(cell, r);
                     cell.VerticalContentAlignment = VerticalAlignment.Center;
@@ -114,7 +114,7 @@ namespace CamControls
                     cell.IsReadOnly = IsReadOnly; 
                     cell.TextChanged += (s, e) =>
                     {
-                        MatrixSource[Grid.GetRow(cell), Grid.GetColumn(cell)] = (float)cell.CurrentValue;
+                        MatrixSource[Grid.GetRow(cell), Grid.GetColumn(cell)] = (double)cell.CurrentValue;
                     };
                 }
         }

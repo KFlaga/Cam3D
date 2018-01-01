@@ -28,11 +28,11 @@
                     <RowDefinition Height="20*"/>
                     <RowDefinition Height="40"/>
                 </Grid.RowDefinitions>
-                <Label Grid.ColumnSpan="2" Grid.Row="0" HorizontalAlignment="Center" FontWeight="Bold" FontSize="14" Content="Cameras Settings"/>
+                <Label Grid.ColumnSpan="2" Grid.Row="0" HorizontalAlignment="Center" FontWeight="Bold" FontSize="14" Content="Ustawienia kamer"/>
 
-                <Label Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center" FontWeight="Bold" Content="LEFT CAMERA"/>
+                <Label Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center" FontWeight="Bold" Content="Lewa kamera"/>
                 <CamCapture:CameraChooseControl x:Name="_camChooseLeft" Grid.Column="0" Grid.Row="2" HorizontalAlignment="Stretch"/>
-                <Label Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" FontWeight="Bold" Content="RIGHT CAMERA"/>
+                <Label Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" FontWeight="Bold" Content="Prawa kamera"/>
                 <CamCapture:CameraChooseControl x:Name="_camChooseRight" Grid.Column="1" Grid.Row="2" HorizontalAlignment="Stretch"/>
                 
                 <DockPanel Grid.Column="1" Grid.Row="7">

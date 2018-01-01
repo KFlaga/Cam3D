@@ -96,7 +96,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DXSurface.cs" />
-    <Compile Include="Module.cs" />
     <Compile Include="Image3DWithDisparityTab.xaml.cs">
       <DependentUpon>Image3DWithDisparityTab.xaml</DependentUpon>
     </Compile>

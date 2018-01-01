@@ -1,7 +1,7 @@
 ﻿using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
 
-namespace CamAlgorithms
+namespace CamCore
 {
     // Base for algorithms that minimise problem : find P so that ||f(P)-X||^2 is minimal,
     // where P is parameter vector, X is measurement vector and f(P) is arbitrary mapping function

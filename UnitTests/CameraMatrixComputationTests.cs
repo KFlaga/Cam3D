@@ -416,12 +416,7 @@ namespace CamUnitTest
         double _rangeReal_MaxY = 100.0;
         double _rangeReal_MinZ = 50.0;
         double _rangeReal_MaxZ = 100.0;
-
-        double _rangeImage_MinY = -5.0;
-        double _rangeImage_MaxY = 5.0;
-        double _rangeImage_MinX = -5.0;
-        double _rangeImage_MaxX = 5.0;
-
+        
         double _varianceReal = 1;
         double _varianceImage = 0.01;
 

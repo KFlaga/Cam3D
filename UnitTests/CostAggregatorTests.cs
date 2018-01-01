@@ -20,7 +20,6 @@ namespace CamUnitTest
         private Matrix<double> _imageRight;
 
         private int[,] _expectedDisparity;
-        private int[,] _computedDisparity;
 
         private Matrix<double> _F;
 

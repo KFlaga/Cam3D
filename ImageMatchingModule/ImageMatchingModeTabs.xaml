@@ -9,13 +9,13 @@
              >
     <TabControl>
         <TabControl.Items>
-            <TabItem Header="Image Matching">
+            <TabItem Header="Dopasowanie punktów">
                 <local:MatchedImagesTab x:Name="_tabMatching"/>
             </TabItem>
-            <TabItem Header="Disparity Map">
+            <TabItem Header="Mapa dysparycji">
                 <local:DisparityMapTab x:Name="_tabDisparity"/>
             </TabItem>
-            <TabItem Header="Disparity Refinement">
+            <TabItem Header="Poprawianie mapy">
                 <local:DisparityRefinementTab x:Name="_tabRefinement"/>
             </TabItem>
         </TabControl.Items>

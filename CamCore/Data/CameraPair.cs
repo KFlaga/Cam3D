@@ -7,7 +7,7 @@ using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 
-namespace CamAlgorithms.Calibration
+namespace CamCore
 {
     [DebuggerDisplay("L = {Left.Matrix}, R = {Right.Matrix}")]
     public class CameraPair : IXmlSerializable

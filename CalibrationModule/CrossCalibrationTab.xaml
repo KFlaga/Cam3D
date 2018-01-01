@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="CalibrationModule.CrossCalibrationTab"
+﻿<UserControl x:Class="CalibrationModule.MatchCalibrationPointsTab"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -8,13 +8,13 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="650">
     <DockPanel>
-        <Border Width="200" BorderBrush="Black" BorderThickness="1" DockPanel.Dock="Left">
+        <Border Width="250" BorderBrush="Black" BorderThickness="1" DockPanel.Dock="Left">
             <StackPanel>
-                <Button Content="Manage Left Calib Points" Click="ManagePointsLeft" Margin="5,3,5,3"/>
-                <Button Content="Manage Right Calib Points" Click="ManagePointsRight" Margin="5,3,5,3"/>
-                <Button Content="Manage Calib Grids" Click="ManageGridsLeft" Margin="5,3,5,3"/>
-                <Button Content="Save Matched Calib Points" Click="SaveCalibMatched" Margin="5,3,5,3"/>
-                <Button Content="Save Triangulated Calib Points" Click="SaveCalibTriangulated" Margin="5,3,5,3"/>
+                <Button Content="Lewa: Punkty kalibracyjne" Click="ManagePointsLeft" Margin="5,3,5,3"/>
+                <Button Content="Prawa: Punkty kalibracyjne" Click="ManagePointsRight" Margin="5,3,5,3"/>
+                <Button Content="Siatki kalibracyjne" Click="ManageGridsLeft" Margin="5,3,5,3"/>
+                <Button Content="Zapisz punkty na obrazie jako pary" Click="SaveCalibMatched" Margin="5,3,5,3"/>
+                <Button Content="Zapisz punkty jako TriangulatedPoint" Click="SaveCalibTriangulated" Margin="5,3,5,3"/>
                 <Rectangle Fill="Black" Height="2"/>
 
             </StackPanel>

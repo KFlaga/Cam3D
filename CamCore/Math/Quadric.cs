@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace CamAlgorithms
+namespace CamCore
 {
     /// <summary>
     /// Quadric desribed by equation : Ax^2 + Bx + Cxy + Dy + Ey^2 + F = 0

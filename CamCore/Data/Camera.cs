@@ -8,7 +8,7 @@ using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 
-namespace CamAlgorithms.Calibration
+namespace CamCore
 {
     // Camera matrix M = 
     //  M = KE (E = R[I|-T])
