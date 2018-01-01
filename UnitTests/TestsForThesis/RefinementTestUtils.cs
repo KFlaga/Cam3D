@@ -19,18 +19,18 @@ namespace CamUnitTest.TestsForThesis
             {
                 // Resample images: resample by skipping pixels 2 times (so final image is about 180x120)
                 // In comparsion of final disparity map divide each disparity by 4
-                left = LoadImage_PipesLeft();
-                right = LoadImage_PipesRight();
-                disp = LoadImage_PipesDisparity();
+                left = ResampleImage(LoadImage_PipesLeft());
+                right = ResampleImage(LoadImage_PipesRight());
+                disp = ResampleDisparityImage(LoadImage_PipesDisparity());
             }
             else //if(caseType == SteroImage.MotorResampled)
             {
-                left = LoadImage_MotorLeft();
-                right = LoadImage_MotorRight();
-                disp = LoadImage_MotorDisparity();
+                left = ResampleImage(LoadImage_MotorLeft());
+                right = ResampleImage(LoadImage_MotorRight());
+                disp = ResampleDisparityImage(LoadImage_MotorDisparity());
             }
         }
-
+        
         public static void LoadSgmResultMap(Context context, SteroImage caseType, out DisparityMap leftMap, out DisparityMap rightMap)
         {
             string pathLeft = context.ResultDirectory;

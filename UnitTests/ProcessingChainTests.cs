@@ -7,7 +7,7 @@ using System.IO;
 
 namespace CamUnitTest
 {
-    [TestClass]
+   // [TestClass]
     public class ProcessingChainTests
     {
         string _inputPath = @"../../resources/calib_input_test.xml";

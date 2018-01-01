@@ -8,6 +8,9 @@ using System.Linq;
 
 namespace CamUnitTest.TestsForThesis
 {
+    // For this tests to work, disprity maps needs to be generated first by using SgmTests with
+    // same resample level set in SgmTestUtils and RefinementTestUtils. 
+    // Then maps needs to copied and renamed as required by RefinementTestUtils
     [TestClass]
     public class RefinementsTests
     {
@@ -182,14 +185,15 @@ namespace CamUnitTest.TestsForThesis
 
                     DisparityMap map2 = (DisparityMap)mapLeft.Clone();
                     DisparityMap map2R = (DisparityMap)mapRight.Clone();
+                    double dispMult = SgmTestUtils.resampleLevel == ResampleLevel.None ? 1.0 : SgmTestUtils.resampleLevel == ResampleLevel.x2 ? 2.0 : 4.0;
                     for(int r = 0; r < mapLeft.RowCount; ++r)
                     {
                         for(int c = 0; c < mapLeft.ColumnCount; ++c)
                         {
-                            map2[r, c].DX = mapLeft[r, c].DX;
-                            map2[r, c].SubDX = mapLeft[r, c].SubDX;
-                            map2R[r, c].DX = mapRight[r, c].DX;
-                            map2R[r, c].SubDX = mapRight[r, c].SubDX;
+                            map2[r, c].DX = (int)(mapLeft[r, c].DX * dispMult);
+                            map2[r, c].SubDX = mapLeft[r, c].SubDX * dispMult;
+                            map2R[r, c].DX = (int)(mapRight[r, c].DX * dispMult);
+                            map2R[r, c].SubDX = mapRight[r, c].SubDX * dispMult;
                         }
                     }
                     

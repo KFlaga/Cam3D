@@ -416,57 +416,7 @@ namespace CamUnitTest
             Assert.IsTrue(error - distanceToABC <= 2e-4,
                 "Noised lines coefficients approximation failed");
         }
-
-        [TestMethod]
-        public void Test_ComputeJacobian_Ver3()
-        {
-            _model = new Rational3RDModel();
-            _model.InitialCenterEstimation = new Vector2(0.25, 0.5);
-            _model.InitCoeffs();
-
-            _model.Coeffs[0] = 1e-1; // k1
-            _model.Coeffs[1] = -2e-2; // k2
-            _model.Coeffs[2] = 5e-3; // k3
-
-            _distLines = DistortLines(_model, GenerateTestLines());
-
-            // Change parameters a little
-            _model.Coeffs[0] = 2e-1; // k1
-            _model.Coeffs[1] = -1e-3; // k2
-            _model.Coeffs[2] = 1e-3; // k3
-            _model.Coeffs[3] = 0.25; // cx
-            _model.Coeffs[4] = 0.5; // cy
-           // _model.Parameters[5] = 1.0; // sx
-
-            _miniAlg = new RadialDistortionQuadricFitMinimalisation();
-
-            _miniAlg.DistortionModel = _model;
-            _miniAlg.LinePoints = _distLines;
-            _miniAlg.ParametersVector = _model.Coeffs;
-
-            _miniAlg.Init();
-            _miniAlg.UpdateAfterParametersChanged();
-
-            int size = 10 * _model.ParametersCount;
-            _miniAlg.DoComputeJacobianNumerically = false;
-            Matrix<double> testedJacobian = new DenseMatrix(_pointsCount, _model.ParametersCount);
-            _miniAlg.ComputeJacobian(testedJacobian);
-
-            _miniAlg.NumericalDerivativeStep = 1e-6;
-            _miniAlg.DoComputeJacobianNumerically = true;
-            Matrix<double> numericJacobian = new DenseMatrix(_pointsCount, _model.ParametersCount);
-            _miniAlg.ComputeJacobian(numericJacobian);
-            
-            var line2NJ = numericJacobian.SubMatrix(10, 10, 0, _model.ParametersCount);
-            var line2TJ = testedJacobian.SubMatrix(10, 10, 0, _model.ParametersCount);
-
-            var jacobian_diff = line2NJ.PointwiseDivide_NoNaN(line2TJ);
-            double err = jacobian_diff.FrobeniusNorm();
-            Assert.IsTrue(Math.Abs(err - Math.Sqrt(size)) < Math.Sqrt(size) / 100.0 || // 1% diffrence max
-                (line2NJ - line2TJ).FrobeniusNorm() < line2NJ.FrobeniusNorm() / 100.0,
-                "Analitical and numeric jacobians differ");
-        }
-
+        
         RadialDistortionModel _realModel;
 
         public void PrepareMinimalizationAlgorithm_MinimalisationTests_Ver3()

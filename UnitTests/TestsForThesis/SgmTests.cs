@@ -261,16 +261,17 @@ namespace CamUnitTest.TestsForThesis
 
                     DisparityMap map2 = (DisparityMap)mapLeft.Clone();
                     DisparityMap map2R = (DisparityMap)mapRight.Clone();
-                    //for(int r = 0; r < mapLeft.RowCount; ++r)
-                    //{
-                    //    for(int c = 0; c < mapLeft.ColumnCount; ++c)
-                    //    {
-                    //        map2[r, c].DX = mapLeft[r, c].DX * 2;
-                    //        map2[r, c].SubDX = mapLeft[r, c].SubDX * 2;
-                    //        map2R[r, c].DX = mapRight[r, c].DX * 2;
-                    //        map2R[r, c].SubDX = mapRight[r, c].SubDX * 2;
-                    //    }
-                    //}
+                    double dispMult = SgmTestUtils.resampleLevel == ResampleLevel.None ? 1.0 : SgmTestUtils.resampleLevel == ResampleLevel.x2 ? 2.0 : 4.0;
+                    for(int r = 0; r < mapLeft.RowCount; ++r)
+                    {
+                        for(int c = 0; c < mapLeft.ColumnCount; ++c)
+                        {
+                            map2[r, c].DX = (int)(mapLeft[r, c].DX * dispMult);
+                            map2[r, c].SubDX = mapLeft[r, c].SubDX * dispMult;
+                            map2R[r, c].DX = (int)(mapRight[r, c].DX * dispMult);
+                            map2R[r, c].SubDX = mapRight[r, c].SubDX * dispMult;
+                        }
+                    }
 
                     SgmTestUtils.StoreDisparityMapAsImage(MyContext, map2, "_left_" + timestamp, sgm.MapLeft.ColumnCount / 2);
                     SgmTestUtils.StoreDisparityMapAsImage(MyContext, map2R, "_right_" + timestamp, sgm.MapRight.ColumnCount / 2);
@@ -297,7 +298,7 @@ namespace CamUnitTest.TestsForThesis
                 {
                     MapLeft = sgm.MapLeft,
                     MapRight = sgm.MapRight,
-                    MaxDisparity = 150,
+                    MaxDisparity = sgm.MapLeft.ColumnCount / 4,
                     MinDisparity = 3
                 };
                 limitRange.RefineMaps();

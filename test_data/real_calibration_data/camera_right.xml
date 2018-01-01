@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Camera>
+  <Matrix rows="3" columns="4">
+    <Row>955.26376|28.58624|203.00966|-15279.29263</Row>
+    <Row>-181.16656|-739.21692|397.53188|97018.60809</Row>
+    <Row>-0.50570|0.20807|0.83724|12.90147</Row>
+  </Matrix>
+  <InternalMatrix rows="3" columns="3">
+    <Row>926.72859|-37.26024|-307.15590</Row>
+    <Row>0.00000|814.89319|270.63569</Row>
+    <Row>0.00000|0.00000|1.00000</Row>
+  </InternalMatrix>
+  <RotationMatrix rows="3" columns="3">
+    <Row>0.86100|0.06056|0.50499</Row>
+    <Row>-0.05437|-0.97624|0.20977</Row>
+    <Row>-0.50570|0.20807|0.83724</Row>
+  </RotationMatrix>
+  <Center size="3">
+    <Value>19.30534|109.82038|-31.04165</Value>
+  </Center>
+  <Distortion />
+  <ImageWidth>640</ImageWidth>
+  <ImageHeight>480</ImageHeight>
+</Camera>

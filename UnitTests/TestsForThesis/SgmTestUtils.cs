@@ -4,17 +4,23 @@ using MathNet.Numerics.LinearAlgebra.Double;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using System.Xml;
 
 namespace CamUnitTest.TestsForThesis
 {
+    public enum ResampleLevel
+    {
+        x4,
+        x2,
+        None
+    }
+
     public class SgmTestUtils
     {
-        public static string imagesDirectory = "d:\\robokam\\matching_images\\";
+        public static ResampleLevel resampleLevel = ResampleLevel.x4;
+
+        public static string imagesDirectory { get; set; } = @"..\..\..\test_data\matching_images\";
 
         public static ImageType LoadImage<ImageType>(string path) where ImageType: IImage, new()
         {
@@ -90,31 +96,26 @@ namespace CamUnitTest.TestsForThesis
 
             return cropped;
         }
-
-        public static ImageType ResampleImage4x<ImageType>(ImageType image) where ImageType : IImage, new()
+        
+        public static ImageType ResampleImage<ImageType>(ImageType image) where ImageType : IImage, new()
         {
-            ImageType resampled = new ImageType();
-
-            ImageResampler resampler = new ImageResampler();
-            for(int ch = 0; ch < image.ChannelsCount; ++ch)
+            if(resampleLevel == ResampleLevel.None)
             {
-                Matrix<double> matrix = resampler.Downsample_Skippixel(
-                    resampler.Downsample_Skippixel(image.GetMatrix(ch)));
-                resampled.SetMatrix(matrix, ch);
-
+                return image;
             }
 
-            return resampled;
-        }
-
-        public static ImageType ResampleImage2x<ImageType>(ImageType image) where ImageType : IImage, new()
-        {
             ImageType resampled = new ImageType();
 
             ImageResampler resampler = new ImageResampler();
             for(int ch = 0; ch < image.ChannelsCount; ++ch)
             {
                 Matrix<double> matrix = resampler.Downsample_Skippixel(image.GetMatrix(ch));
+
+                if(resampleLevel == ResampleLevel.x4)
+                {
+                    matrix = resampler.Downsample_Skippixel(matrix);
+                }
+
                 resampled.SetMatrix(matrix, ch);
 
             }
@@ -122,8 +123,13 @@ namespace CamUnitTest.TestsForThesis
             return resampled;
         }
 
-        public static DisparityImage ResampleDisparityImage2x(DisparityImage image)
+        public static DisparityImage ResampleDisparityImage(DisparityImage image)
         {
+            if(resampleLevel == ResampleLevel.None)
+            {
+                return image;
+            }
+
             DisparityImage resampled = new DisparityImage();
             resampled.ImageMatrix = image.ImageMatrix.Clone();
             
@@ -141,37 +147,16 @@ namespace CamUnitTest.TestsForThesis
             ImageResampler resampler = new ImageResampler();
             Matrix<double> matrix = resampler.Downsample_Skippixel(resampled.ImageMatrix);
 
-            resampled.SetMatrix(matrix, 0);
-
-            return resampled;
-        }
-
-
-        public static DisparityImage ResampleDisparityImage4x(DisparityImage image)
-        {
-            DisparityImage resampled = new DisparityImage();
-            resampled.ImageMatrix = image.ImageMatrix.Clone();
-
-            for(int c = 0; c < image.ColumnCount; ++c)
+            if(resampleLevel == ResampleLevel.x4)
             {
-                for(int r = 0; r < image.RowCount; ++r)
-                {
-                    if(resampled.ImageMatrix[r, c] < resampled.InvalidDisparity)
-                    {
-                        resampled.ImageMatrix[r, c] = resampled.ImageMatrix[r, c] * 0.25;
-                    }
-                }
+                matrix = resampler.Downsample_Skippixel(matrix);
             }
 
-            ImageResampler resampler = new ImageResampler();
-            Matrix<double> matrix = resampler.Downsample_Skippixel(
-                resampler.Downsample_Skippixel(resampled.ImageMatrix));
-
             resampled.SetMatrix(matrix, 0);
 
             return resampled;
         }
-
+        
         public enum SteroImage
         {
             PipesResampled,
@@ -182,15 +167,15 @@ namespace CamUnitTest.TestsForThesis
         {
             if(caseType == SteroImage.PipesResampled)
             {
-                left = LoadImage_PipesLeft();
-                right = LoadImage_PipesRight();
-                disp = LoadImage_PipesDisparity();
+                left = ResampleImage(LoadImage_PipesLeft());
+                right = ResampleImage(LoadImage_PipesRight());
+                disp = ResampleDisparityImage(LoadImage_PipesDisparity());
             }
             else //if(caseType == SteroImage.MotorResampled)
             {
-                left = LoadImage_MotorLeft();
-                right = LoadImage_MotorRight();
-                disp = LoadImage_MotorDisparity();
+                left = ResampleImage(LoadImage_MotorLeft());
+                right = ResampleImage(LoadImage_MotorRight());
+                disp = ResampleDisparityImage(LoadImage_MotorDisparity());
             }
         }
 

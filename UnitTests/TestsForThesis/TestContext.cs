@@ -28,8 +28,8 @@ namespace CamUnitTest.TestsForThesis
     public class Context
     {
         // TODO: Move shortVer parameter here
-
-        public string ResultDirectory { get; set; } = "d:\\Cam3DTests";
+        
+        public string ResultDirectory { get; set; } = @"..\..\..\test_data";
 
         public string TestSuiteName { get; set; }
         public string TestName { get; set; }

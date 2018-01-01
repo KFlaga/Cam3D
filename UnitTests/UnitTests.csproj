@@ -80,17 +80,11 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="CalibrationPointsExtractorTests.cs" />
-    <Compile Include="CostAggregatorTests.cs" />
-    <Compile Include="ImageSegmentationTests.cs" />
     <Compile Include="MatchingCostTests.cs" />
     <Compile Include="MathsTests.cs" />
-    <Compile Include="Rational3ModelTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RaidalCorrectionMinimalisationTests.cs" />
-    <Compile Include="MinimalisationTests.cs" />
     <Compile Include="CameraMatrixComputationTests.cs" />
-    <Compile Include="RectificationTests.cs" />
     <Compile Include="TestsForThesis\CalibrationTests.cs" />
     <Compile Include="TestsForThesis\CalibrationTestUtils.cs" />
     <Compile Include="TestsForThesis\Errors.cs" />
@@ -107,7 +101,6 @@
     <Compile Include="TestsForThesis\TriangulationTests.cs" />
     <Compile Include="TestsForThesis\TriangulationTestUtils.cs" />
     <Compile Include="TestUtils.cs" />
-    <Compile Include="TriangulationTests.cs" />
     <Compile Include="ProcessingChainTests.cs" />
     <Compile Include="ImageTransformationTests.cs" />
   </ItemGroup>
@@ -136,22 +129,6 @@
       <Project>{252716e3-a96e-4552-8750-4456f828f335}</Project>
       <Name>CamMain</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="resources\CalibPic_Left_1_Post.png" />
-    <Content Include="resources\CalibPic_Left_2_Post.png" />
-    <Content Include="resources\CalibPic_Left_3_Post.png" />
-    <Content Include="resources\CalibPic_Left_4_Post.png" />
-    <Content Include="resources\CalibPic_Left_5_Post.png" />
-    <Content Include="resources\CalibPic_Left_6_Post.png" />
-    <Content Include="resources\CalibPic_Right_1_Post.png" />
-    <Content Include="resources\CalibPic_Right_2_Post.png" />
-    <Content Include="resources\CalibPic_Right_3_Post.png" />
-    <Content Include="resources\CalibPic_Right_4_Post.png" />
-    <Content Include="resources\CalibPic_Right_5_Post.png" />
-    <Content Include="resources\CalibPic_Right_6_Post.png" />
-    <Content Include="resources\calib_input_test.xml" />
-    <Content Include="resources\Grids6.xml" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RadialDistortion name="Rational3">
+  <Parameters>
+    <Parameter>-0.00592379392932893</Parameter>
+    <Parameter>-0.0126771141771409</Parameter>
+    <Parameter>0.00124185984782307</Parameter>
+    <Parameter>1.11568152347458</Parameter>
+    <Parameter>1.52061396912681</Parameter>
+  </Parameters>
+  <ImageScale>0.005</ImageScale>
+</RadialDistortion>

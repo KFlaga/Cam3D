@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace CamUnitTest.TestsForThesis
 {
-    [TestClass]
+    //[TestClass] -> needs generation of maps and triangulated points first
     public class PrepareVisualisationData
     {
         public TestContext TestContext { get; set; }

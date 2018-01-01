@@ -105,14 +105,9 @@ namespace CamCore
             Left.Decompose();
             Right.Decompose();
 
-            if(AreCalibrated == false)
+            if(!(Left.IsCalibrated && Right.IsCalibrated))
             {
                 return;
-            }
-
-            if(Left.ImageHeight != Right.ImageHeight || Left.ImageWidth != Right.ImageWidth)
-            {
-                throw new Exception("Image sizes for both cameras must match");
             }
             
             // Find e_R = P_R*C_L, e_L = P_L*C_R
