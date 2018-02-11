@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Rectification>
+  <ImageWidth>0</ImageWidth>
+  <ImageHeight>0</ImageHeight>
+  <RectificationLeft rows="3" columns="3">
+    <Row>0.94253|-0.07635|36.55344</Row>
+    <Row>0.06591|0.86753|6.09107</Row>
+    <Row>-0.00004|0.00000|1.01820</Row>
+  </RectificationLeft>
+  <RectificationRight rows="3" columns="3">
+    <Row>-0.89024|0.17981|-90.03900</Row>
+    <Row>-0.10569|-0.91042|0.00000</Row>
+    <Row>-0.00004|-0.00021|-0.92173</Row>
+  </RectificationRight>
+  <RectificationLeftInverse rows="3" columns="3">
+    <Row>1.05268|0.09280|-38.34645</Row>
+    <Row>-0.08030|1.14565|-3.97081</Row>
+    <Row>0.00005|0.00000|0.98047</Row>
+  </RectificationLeftInverse>
+  <RectificationRightInverse rows="3" columns="3">
+    <Row>-1.09941|-0.24218|107.39527</Row>
+    <Row>0.12763|-1.07027|-12.46778</Row>
+    <Row>0.00002|0.00026|-1.08675</Row>
+  </RectificationRightInverse>
+</Rectification>

@@ -1,0 +1,24 @@
+﻿<UserControl x:Class="CalibrationModule.MatchCalibrationPointsTab"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:CalibrationModule"
+             xmlns:CamControls="clr-namespace:CamControls;assembly=CamControls"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="650">
+    <DockPanel>
+        <Border Width="250" BorderBrush="Black" BorderThickness="1" DockPanel.Dock="Left">
+            <StackPanel>
+                <Button Content="Lewa: Punkty kalibracyjne" Click="ManagePointsLeft" Margin="5,3,5,3"/>
+                <Button Content="Prawa: Punkty kalibracyjne" Click="ManagePointsRight" Margin="5,3,5,3"/>
+                <Button Content="Siatki kalibracyjne" Click="ManageGridsLeft" Margin="5,3,5,3"/>
+                <Button Content="Zapisz punkty na obrazie jako pary" Click="SaveCalibMatched" Margin="5,3,5,3"/>
+                <Button Content="Zapisz punkty jako TriangulatedPoint" Click="SaveCalibTriangulated" Margin="5,3,5,3"/>
+                <Rectangle Fill="Black" Height="2"/>
+
+            </StackPanel>
+        </Border>
+        <Label/>
+    </DockPanel>
+</UserControl>

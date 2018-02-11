@@ -1,0 +1,48 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Cam3dCppClrWrapper", "Cam3dCppClrWrapper\Cam3dCppClrWrapper.vcxproj", "{CC42F9B9-3519-4FA7-AAFD-FDFA5A3252E0}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CamCommon", "CamCommon\CamCommon.vcxproj", "{6DC6E7A7-7B51-4760-8EFE-23284E1EF932}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CamImageMatching", "CamImageMatching\CamImageMatching.vcxproj", "{9FFAF3CA-F57C-4991-9AAC-B7FAA6DCB886}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CC42F9B9-3519-4FA7-AAFD-FDFA5A3252E0}.Debug|x64.ActiveCfg = Debug|x64
+		{CC42F9B9-3519-4FA7-AAFD-FDFA5A3252E0}.Debug|x64.Build.0 = Debug|x64
+		{CC42F9B9-3519-4FA7-AAFD-FDFA5A3252E0}.Debug|x86.ActiveCfg = Debug|Win32
+		{CC42F9B9-3519-4FA7-AAFD-FDFA5A3252E0}.Debug|x86.Build.0 = Debug|Win32
+		{CC42F9B9-3519-4FA7-AAFD-FDFA5A3252E0}.Release|x64.ActiveCfg = Release|x64
+		{CC42F9B9-3519-4FA7-AAFD-FDFA5A3252E0}.Release|x64.Build.0 = Release|x64
+		{CC42F9B9-3519-4FA7-AAFD-FDFA5A3252E0}.Release|x86.ActiveCfg = Release|Win32
+		{CC42F9B9-3519-4FA7-AAFD-FDFA5A3252E0}.Release|x86.Build.0 = Release|Win32
+		{6DC6E7A7-7B51-4760-8EFE-23284E1EF932}.Debug|x64.ActiveCfg = Debug|x64
+		{6DC6E7A7-7B51-4760-8EFE-23284E1EF932}.Debug|x64.Build.0 = Debug|x64
+		{6DC6E7A7-7B51-4760-8EFE-23284E1EF932}.Debug|x86.ActiveCfg = Debug|Win32
+		{6DC6E7A7-7B51-4760-8EFE-23284E1EF932}.Debug|x86.Build.0 = Debug|Win32
+		{6DC6E7A7-7B51-4760-8EFE-23284E1EF932}.Release|x64.ActiveCfg = Release|x64
+		{6DC6E7A7-7B51-4760-8EFE-23284E1EF932}.Release|x64.Build.0 = Release|x64
+		{6DC6E7A7-7B51-4760-8EFE-23284E1EF932}.Release|x86.ActiveCfg = Release|Win32
+		{6DC6E7A7-7B51-4760-8EFE-23284E1EF932}.Release|x86.Build.0 = Release|Win32
+		{9FFAF3CA-F57C-4991-9AAC-B7FAA6DCB886}.Debug|x64.ActiveCfg = Debug|x64
+		{9FFAF3CA-F57C-4991-9AAC-B7FAA6DCB886}.Debug|x64.Build.0 = Debug|x64
+		{9FFAF3CA-F57C-4991-9AAC-B7FAA6DCB886}.Debug|x86.ActiveCfg = Debug|Win32
+		{9FFAF3CA-F57C-4991-9AAC-B7FAA6DCB886}.Debug|x86.Build.0 = Debug|Win32
+		{9FFAF3CA-F57C-4991-9AAC-B7FAA6DCB886}.Release|x64.ActiveCfg = Release|x64
+		{9FFAF3CA-F57C-4991-9AAC-B7FAA6DCB886}.Release|x64.Build.0 = Release|x64
+		{9FFAF3CA-F57C-4991-9AAC-B7FAA6DCB886}.Release|x86.ActiveCfg = Release|Win32
+		{9FFAF3CA-F57C-4991-9AAC-B7FAA6DCB886}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,2278 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfTriangulatedPoint xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <TriangulatedPoint>
+    <ImageLeft X="361.71246365814164" Y="123.58328130478164" />
+    <ImageRight X="146.68630506622688" Y="127.22926416017883" />
+    <Real X="-48.333333333333343" Y="343" Z="596" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="401.32591445254116" Y="123.53681774787006" />
+    <ImageRight X="185.76317022114719" Y="125.90449117245584" />
+    <Real X="-20.666666666666675" Y="343.00000000000006" Z="596" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="440.69287260526" Y="123.74457515263364" />
+    <ImageRight X="225.04747939979407" Y="124.34374595115214" />
+    <Real X="7" Y="343" Z="596" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="479.79552547629322" Y="123.29082302317502" />
+    <ImageRight X="264.39763052736862" Y="122.28984360980526" />
+    <Real X="34.666666666666657" Y="343" Z="596" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="518.50699235800494" Y="123.14743044381275" />
+    <ImageRight X="302.816472586206" Y="120.75578750510343" />
+    <Real X="62.333333333333343" Y="343" Z="596" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="557.29526506782929" Y="122.06611645299994" />
+    <ImageRight X="341.36833730444704" Y="119.14422510970665" />
+    <Real X="90" Y="343" Z="596" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="362.9354008725204" Y="162.69469905254988" />
+    <ImageRight X="147.22341182311726" Y="164.43289014540062" />
+    <Real X="-48.333333333333336" Y="315.33333333333331" Z="597" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="402.524322739474" Y="162.79581412294877" />
+    <ImageRight X="186.83579479474767" Y="162.49518292299774" />
+    <Real X="-20.666666666666675" Y="315.33333333333331" Z="597" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="441.8517655760686" Y="162.79363948601713" />
+    <ImageRight X="226.01237755367717" Y="160.8273249215753" />
+    <Real X="7" Y="315.33333333333331" Z="597" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="480.79403336517987" Y="162.18743017940184" />
+    <ImageRight X="266.105783641229" Y="158.85560816843673" />
+    <Real X="34.666666666666657" Y="315.33333333333331" Z="597" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="519.63453171966285" Y="161.67337063832972" />
+    <ImageRight X="304.97542568625579" Y="157.20904381807142" />
+    <Real X="62.333333333333336" Y="315.33333333333326" Z="597" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="363.70354068506606" Y="201.98555183221183" />
+    <ImageRight X="147.87386925163415" Y="201.79061643659057" />
+    <Real X="-48.333333333333343" Y="287.66666666666669" Z="598" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="403.75345615665293" Y="201.40772618400902" />
+    <ImageRight X="187.54561080739359" Y="200.01585270647237" />
+    <Real X="-20.666666666666679" Y="287.66666666666669" Z="598.00000000000011" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="442.92535459207267" Y="201.26901275248778" />
+    <ImageRight X="227.17233607707328" Y="198.14496745268704" />
+    <Real X="6.9999999999999991" Y="287.66666666666663" Z="598" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="481.89935634796103" Y="200.67502699564469" />
+    <ImageRight X="266.87176818162214" Y="196.19132026954969" />
+    <Real X="34.666666666666657" Y="287.66666666666669" Z="598" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="520.68812399226056" Y="200.47609949841981" />
+    <ImageRight X="306.64309855994082" Y="194.27682485894454" />
+    <Real X="62.333333333333343" Y="287.66666666666663" Z="598" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="559.32195311151258" Y="199.77869986047261" />
+    <ImageRight X="346.09931198613759" Y="192.46334972436856" />
+    <Real X="90" Y="287.66666666666663" Z="598" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="323.8680982963395" Y="241.5030143214241" />
+    <ImageRight X="107.62794227500282" Y="242.02052641536804" />
+    <Real X="-76" Y="260" Z="599" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="364.501049025349" Y="240.95740518610759" />
+    <ImageRight X="148.19420130812958" Y="240.09142654658859" />
+    <Real X="-48.333333333333336" Y="260" Z="599" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="404.57205659210462" Y="240.01924103267425" />
+    <ImageRight X="188.38318429939628" Y="238.14580876746354" />
+    <Real X="-20.666666666666679" Y="260" Z="599" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="444.09918114094245" Y="239.80017836089579" />
+    <ImageRight X="228.17490465303652" Y="235.8114400599483" />
+    <Real X="7" Y="260" Z="599" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="483.03462032040869" Y="239.05009294096735" />
+    <ImageRight X="268.32821989900776" Y="234.34287545653297" />
+    <Real X="34.666666666666657" Y="260" Z="599" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="521.67351844046357" Y="238.78069641890448" />
+    <ImageRight X="308.42529678004576" Y="232.32487679385682" />
+    <Real X="62.33333333333335" Y="260" Z="599" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="560.35779393186317" Y="237.93727020771092" />
+    <ImageRight X="348.60331347214384" Y="230.32794333630022" />
+    <Real X="90" Y="260" Z="599" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="324.59000438362852" Y="280.91521370213718" />
+    <ImageRight X="108.06236965855933" Y="280.83258100408818" />
+    <Real X="-76" Y="232.33333333333334" Z="600" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="364.96972759093069" Y="280.11490917658443" />
+    <ImageRight X="148.86641259024717" Y="278.70348287138228" />
+    <Real X="-48.333333333333336" Y="232.33333333333331" Z="600" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="405.36354795043655" Y="279.052307249427" />
+    <ImageRight X="189.28882497155669" Y="276.65273952809241" />
+    <Real X="-20.666666666666679" Y="232.33333333333334" Z="600" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="445.11402066359597" Y="278.32188072689212" />
+    <ImageRight X="229.56466682541182" Y="274.91806303096553" />
+    <Real X="7" Y="232.33333333333334" Z="600" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="484.11947452879082" Y="278.03122189639942" />
+    <ImageRight X="269.88960897849717" Y="272.9301033974005" />
+    <Real X="34.666666666666657" Y="232.33333333333334" Z="600" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="522.82969355981322" Y="277.0334077819582" />
+    <ImageRight X="310.26467691949193" Y="270.98798918223116" />
+    <Real X="62.333333333333343" Y="232.33333333333334" Z="600" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="561.516498817228" Y="276.74182196220778" />
+    <ImageRight X="350.87769402049321" Y="269.13917078030005" />
+    <Real X="90" Y="232.33333333333334" Z="600" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="324.81826510778012" Y="320.08556027617647" />
+    <ImageRight X="107.88129556530363" Y="320.72293378900906" />
+    <Real X="-76" Y="204.66666666666666" Z="601" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="365.70673493860426" Y="319.33317705664439" />
+    <ImageRight X="149.3317393721816" Y="318.43307621052691" />
+    <Real X="-48.333333333333336" Y="204.66666666666663" Z="601" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="405.9728608591347" Y="318.31605734131153" />
+    <ImageRight X="190.03596154197527" Y="316.31132840913938" />
+    <Real X="-20.666666666666679" Y="204.66666666666666" Z="601" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="445.99831905200574" Y="317.59570558986985" />
+    <ImageRight X="230.79827784489368" Y="314.40687121385253" />
+    <Real X="7" Y="204.66666666666666" Z="601" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="485.15483246396496" Y="316.79042323528716" />
+    <ImageRight X="271.42283905841271" Y="312.56943670027607" />
+    <Real X="34.666666666666657" Y="204.66666666666669" Z="601" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="524.20404187162239" Y="315.8992417269763" />
+    <ImageRight X="312.47723154779129" Y="310.64613852402505" />
+    <Real X="62.333333333333343" Y="204.66666666666666" Z="601" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="562.662536327259" Y="315.07184895752584" />
+    <ImageRight X="353.27504073702465" Y="308.47027313087779" />
+    <Real X="90" Y="204.66666666666666" Z="601" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="325.61670989914694" Y="359.34773253057227" />
+    <ImageRight X="107.6064038922722" Y="361.2623902407758" />
+    <Real X="-76" Y="177" Z="602" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="366.27434681352014" Y="359.09565132222554" />
+    <ImageRight X="149.66844959355197" Y="359.13397633384773" />
+    <Real X="-48.333333333333336" Y="177" Z="602" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="406.688908114321" Y="357.67044036819175" />
+    <ImageRight X="191.14685936077936" Y="356.76391549902451" />
+    <Real X="-20.666666666666679" Y="177" Z="602" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="446.63393474979927" Y="356.74740749396773" />
+    <ImageRight X="232.33277146536969" Y="354.63318407527191" />
+    <Real X="7" Y="177" Z="602" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="486.035796736026" Y="355.86976588737355" />
+    <ImageRight X="273.27390737590679" Y="352.80960329635593" />
+    <Real X="34.666666666666657" Y="177" Z="602" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="525.12678826641536" Y="354.65748457687204" />
+    <ImageRight X="314.51150417523928" Y="350.61322781607635" />
+    <Real X="62.333333333333343" Y="177" Z="602" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="563.89329808900936" Y="353.80119704579062" />
+    <ImageRight X="355.75278699425695" Y="348.6242410188438" />
+    <Real X="90" Y="177" Z="602" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="326.05169518844576" Y="399.33917327961257" />
+    <ImageRight X="107.66894441954737" Y="403.49307965515317" />
+    <Real X="-76" Y="149.33333333333334" Z="603" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="366.75605677309943" Y="398.08826548311714" />
+    <ImageRight X="149.92589748682673" Y="400.63277118324658" />
+    <Real X="-48.333333333333336" Y="149.33333333333331" Z="603" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="407.34888830115148" Y="397.3248139006231" />
+    <ImageRight X="191.85339068231451" Y="398.15749564405081" />
+    <Real X="-20.666666666666682" Y="149.33333333333334" Z="603" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="447.33109113873076" Y="396.06758414507129" />
+    <ImageRight X="233.48722342058261" Y="395.93662824869079" />
+    <Real X="6.9999999999999991" Y="149.33333333333331" Z="603" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="486.77075821560123" Y="394.89579617074429" />
+    <ImageRight X="275.14143227288088" Y="393.95633821099761" />
+    <Real X="34.666666666666657" Y="149.33333333333331" Z="603" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="526.1576034981083" Y="393.5779641664177" />
+    <ImageRight X="316.71508758377007" Y="391.81529566770939" />
+    <Real X="62.333333333333343" Y="149.33333333333331" Z="603" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="565.14117368012114" Y="392.58130006507974" />
+    <ImageRight X="358.250048127148" Y="389.37165559970907" />
+    <Real X="90" Y="149.33333333333329" Z="603" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="367.63738359622" Y="437.77182992662091" />
+    <ImageRight X="150.03408621515806" Y="443.65550607518742" />
+    <Real X="-48.333333333333343" Y="121.66666666666669" Z="604" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="408.0486418113116" Y="436.64780260146682" />
+    <ImageRight X="192.92192368594348" Y="440.57273124833597" />
+    <Real X="-20.666666666666679" Y="121.66666666666669" Z="604" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="448.00662501112845" Y="435.65617022638259" />
+    <ImageRight X="235.02673934349812" Y="438.15933473334115" />
+    <Real X="7" Y="121.66666666666669" Z="604" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="487.73843021594558" Y="434.30375859163473" />
+    <ImageRight X="276.97780524400304" Y="435.76169784882939" />
+    <Real X="34.666666666666657" Y="121.66666666666669" Z="604" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="527.23025706155852" Y="433.09389725918271" />
+    <ImageRight X="319.1699689421871" Y="433.56875053068887" />
+    <Real X="62.333333333333343" Y="121.6666666666667" Z="604" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="566.46150651955031" Y="431.48732055201435" />
+    <ImageRight X="361.06188786982972" Y="431.56840381888094" />
+    <Real X="90" Y="121.66666666666669" Z="604" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="360.97909289080718" Y="146.67653022029441" />
+    <ImageRight X="150.4293122861672" Y="148.64409305399209" />
+    <Real X="-47.034722222222229" Y="343" Z="612.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="397.51714986609443" Y="141.71965220002471" />
+    <ImageRight X="184.28766566070891" Y="142.59933949258522" />
+    <Real X="-21.055555555555557" Y="343.00000000000006" Z="603" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="434.75092733855723" Y="136.55194806652511" />
+    <ImageRight X="219.46132933085943" Y="136.38002219721489" />
+    <Real X="4.9375" Y="343" Z="593.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="472.90414466455235" Y="131.11023925096851" />
+    <ImageRight X="256.11400204941623" Y="129.80272538871765" />
+    <Real X="30.944444444444443" Y="343" Z="584" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="512.49134540087346" Y="125.24647543538238" />
+    <ImageRight X="293.47061116352177" Y="123.0187415272601" />
+    <Real X="56.965277777777771" Y="343" Z="574.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="553.05827652959567" Y="118.85435948770066" />
+    <ImageRight X="331.32091870126311" Y="116.18520678547779" />
+    <Real X="83" Y="343" Z="565" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="362.4187904271152" Y="183.83435676586569" />
+    <ImageRight X="151.0018034584528" Y="184.18203060537289" />
+    <Real X="-46.716820987654323" Y="315.33333333333331" Z="613.50000000000011" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="398.98923874913709" Y="179.66205087100687" />
+    <ImageRight X="185.59349095644643" Y="178.68068993122904" />
+    <Real X="-20.7283950617284" Y="315.33333333333331" Z="604" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="436.26371161369065" Y="174.9526330680815" />
+    <ImageRight X="220.80251262664" Y="172.85603835583331" />
+    <Real X="5.2739197530864192" Y="315.33333333333331" Z="594.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="474.40846100637185" Y="170.00811617798667" />
+    <ImageRight X="257.46904982512319" Y="166.53911274278488" />
+    <Real X="31.29012345679012" Y="315.33333333333331" Z="585" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="513.98129419635075" Y="164.92002096255382" />
+    <ImageRight X="295.67429110823218" Y="160.34381968868223" />
+    <Real X="57.320216049382708" Y="315.33333333333326" Z="575.49999999999989" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="554.58661548178634" Y="159.28136416418593" />
+    <ImageRight X="334.29620836253093" Y="153.93769459641112" />
+    <Real X="83.364197530864189" Y="315.33333333333331" Z="566" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="327.35110822016264" Y="225.66600462015481" />
+    <ImageRight X="117.45618650498905" Y="225.44858646542122" />
+    <Real X="-72.37654320987653" Y="287.66666666666663" Z="624" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="363.35611072979651" Y="221.46997988396245" />
+    <ImageRight X="151.88426500716292" Y="220.24185365849505" />
+    <Real X="-46.392746913580254" Y="287.66666666666669" Z="614.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="400.28889113409684" Y="217.25263271460321" />
+    <ImageRight X="186.33134407298755" Y="215.37702348317458" />
+    <Real X="-20.395061728395067" Y="287.66666666666669" Z="605.00000000000011" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="437.80381990420921" Y="213.04634083049038" />
+    <ImageRight X="222.43610747728269" Y="209.81990463455514" />
+    <Real X="5.6165123456790127" Y="287.66666666666663" Z="595.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="475.92561009572927" Y="208.89706123163703" />
+    <ImageRight X="258.92860545766956" Y="204.22489511793626" />
+    <Real X="31.641975308641975" Y="287.66666666666669" Z="586" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="515.40642398593332" Y="204.34957249245764" />
+    <ImageRight X="297.46372081116414" Y="198.61446573896237" />
+    <Real X="57.681327160493829" Y="287.66666666666663" Z="576.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="556.36215325275737" Y="199.53236517216149" />
+    <ImageRight X="337.20827257489066" Y="192.69555215493256" />
+    <Real X="83.73456790123457" Y="287.66666666666663" Z="567" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="364.22252978818057" Y="259.04239139078334" />
+    <ImageRight X="152.5545350810109" Y="257.33683385245371" />
+    <Real X="-46.062500000000007" Y="260" Z="615.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="401.34416839597293" Y="255.10176603644868" />
+    <ImageRight X="187.4620692511613" Y="252.51204890504636" />
+    <Real X="-20.055555555555561" Y="260" Z="606" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="438.98862023149724" Y="251.45560849571731" />
+    <ImageRight X="223.47656396647642" Y="247.7560011077851" />
+    <Real X="5.9652777777777768" Y="260" Z="596.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="477.67601195817525" Y="247.80241148171987" />
+    <ImageRight X="260.98474485455233" Y="242.82869506158482" />
+    <Real X="32" Y="260" Z="587" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="517.1445658191783" Y="243.91328438082115" />
+    <ImageRight X="299.5378023073294" Y="237.53806874347316" />
+    <Real X="58.048611111111114" Y="260" Z="577.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="558.00417652889053" Y="239.67695267999338" />
+    <ImageRight X="339.99037527060148" Y="232.2084707690239" />
+    <Real X="84.111111111111114" Y="260" Z="568" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="402.73671385001563" Y="293.30694107782767" />
+    <ImageRight X="188.43587514156695" Y="290.99289974138276" />
+    <Real X="-19.70987654320988" Y="232.33333333333334" Z="607" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="440.6292786583461" Y="290.28987973086487" />
+    <ImageRight X="225.28381412984317" Y="286.48563419132819" />
+    <Real X="6.320216049382716" Y="232.33333333333334" Z="597.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="479.33223486437782" Y="286.8350074212027" />
+    <ImageRight X="263.36178644370426" Y="282.28700404859774" />
+    <Real X="32.364197530864196" Y="232.33333333333334" Z="588" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="519.00795137415787" Y="283.47033736882526" />
+    <ImageRight X="302.24987556545358" Y="277.65993087762507" />
+    <Real X="58.42206790123457" Y="232.33333333333334" Z="578.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="559.67449253804807" Y="279.97208253266172" />
+    <ImageRight X="342.80350807560473" Y="272.93994896563089" />
+    <Real X="84.493827160493822" Y="232.33333333333334" Z="569" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="366.23502402388823" Y="335.08043332096832" />
+    <ImageRight X="153.91696805259886" Y="333.58340089357142" />
+    <Real X="-45.383487654320994" Y="204.66666666666663" Z="617.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="403.55449071777247" Y="331.812792605923" />
+    <ImageRight X="190.02226209791331" Y="329.72965885567572" />
+    <Real X="-19.358024691358029" Y="204.66666666666666" Z="608" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="441.89814491786075" Y="328.89551007981669" />
+    <ImageRight X="226.86039352585877" Y="326.12995897995791" />
+    <Real X="6.6813271604938276" Y="204.66666666666666" Z="598.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="480.719591182069" Y="326.25458012093048" />
+    <ImageRight X="265.30419415653637" Y="322.24446287969647" />
+    <Real X="32.734567901234563" Y="204.66666666666669" Z="589" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="520.64590565926881" Y="323.20317337986143" />
+    <ImageRight X="304.70288443415438" Y="318.46982637182236" />
+    <Real X="58.801697530864196" Y="204.66666666666666" Z="579.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="561.497755144467" Y="320.3030735519244" />
+    <ImageRight X="345.62621461406781" Y="314.29487470394315" />
+    <Real X="84.882716049382708" Y="204.66666666666666" Z="570" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="367.338692330893" Y="372.81931506609993" />
+    <ImageRight X="154.55622568224868" Y="373.21535451280442" />
+    <Real X="-45.034722222222229" Y="177" Z="618.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="404.64221857813419" Y="370.59955447989836" />
+    <ImageRight X="190.83494758878013" Y="369.82104207877882" />
+    <Real X="-19.000000000000007" Y="177" Z="609" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="442.94007445016553" Y="368.33930115749331" />
+    <ImageRight X="228.37214895063912" Y="366.75187832138306" />
+    <Real X="7.0486111111111107" Y="177" Z="599.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="481.90986670175181" Y="365.88385746737339" />
+    <ImageRight X="267.27500147543327" Y="363.46640371720224" />
+    <Real X="33.111111111111107" Y="177" Z="590" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="522.207624161633" Y="363.54842029935139" />
+    <ImageRight X="307.19466468527895" Y="360.14136529880204" />
+    <Real X="59.187500000000007" Y="177" Z="580.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="563.31186409867178" Y="361.04482053317633" />
+    <ImageRight X="348.46128680360653" Y="356.32494310281305" />
+    <Real X="85.277777777777771" Y="177" Z="571" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="444.00666351323537" Y="407.44556536976671" />
+    <ImageRight X="229.96721013911125" Y="408.18146852361917" />
+    <Real X="7.4220679012345681" Y="149.33333333333331" Z="600.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="483.24965560573628" Y="405.86943292962479" />
+    <ImageRight X="269.09524438062545" Y="405.54784483886914" />
+    <Real X="33.493827160493822" Y="149.33333333333331" Z="591" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="523.52738879495212" Y="403.95733653661148" />
+    <ImageRight X="309.63192926855947" Y="402.78536216132954" />
+    <Real X="59.579475308641982" Y="149.33333333333331" Z="581.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="565.39705289113533" Y="402.09810136052022" />
+    <ImageRight X="351.58268980744862" Y="399.91668448949878" />
+    <Real X="85.679012345679013" Y="149.33333333333329" Z="572" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="484.45762175269351" Y="445.656714758314" />
+    <ImageRight X="271.26045290065497" Y="449.06613300351268" />
+    <Real X="33.882716049382715" Y="121.66666666666669" Z="592" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="525.30348872448053" Y="444.612201600914" />
+    <ImageRight X="312.30216643605223" Y="446.60897439378306" />
+    <Real X="59.977623456790134" Y="121.6666666666667" Z="582.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="374.85995708113524" Y="136.57595774497543" />
+    <ImageRight X="156.96319497633488" Y="138.30921356961997" />
+    <Real X="-43.88194444444445" Y="343" Z="587.50000000000011" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="412.76385547305222" Y="142.1711339799657" />
+    <ImageRight X="195.93542012681536" Y="141.89424123932307" />
+    <Real X="-17.777777777777782" Y="343.00000000000006" Z="597" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="448.4822882613459" Y="147.17100490046434" />
+    <ImageRight X="233.45975347526542" Y="145.079320642871" />
+    <Real X="8.3125" Y="343" Z="606.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="483.06581878926005" Y="151.97495122612853" />
+    <ImageRight X="270.6525338827127" Y="147.57535411286017" />
+    <Real X="34.388888888888886" Y="343" Z="616" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="516.19573649382244" Y="156.42259613358269" />
+    <ImageRight X="306.20780509511724" Y="150.5385790870177" />
+    <Real X="60.4513888888889" Y="343" Z="625.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="548.39495826705354" Y="160.40115292606529" />
+    <ImageRight X="340.29368722703811" Y="153.53778215681948" />
+    <Real X="86.5" Y="343" Z="635" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="375.58475719583276" Y="176.32049883831428" />
+    <ImageRight X="156.9631898873198" Y="176.11908238733111" />
+    <Real X="-44.199845679012356" Y="315.33333333333331" Z="586.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="413.11538816907643" Y="181.00750061298388" />
+    <ImageRight X="196.4758849578503" Y="178.65418064225568" />
+    <Real X="-18.104938271604944" Y="315.33333333333331" Z="596" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="448.90095878668996" Y="185.36610790332881" />
+    <ImageRight X="234.18796145518627" Y="181.517114442889" />
+    <Real X="7.9760802469135808" Y="315.33333333333331" Z="605.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="483.65608801793519" Y="189.46727999393426" />
+    <ImageRight X="271.12528913652272" Y="183.72164296648964" />
+    <Real X="34.0432098765432" Y="315.33333333333331" Z="615" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="516.94827407551054" Y="193.23090284399555" />
+    <ImageRight X="307.3704734988109" Y="186.14507766209258" />
+    <Real X="60.096450617283956" Y="315.33333333333326" Z="624.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="548.92905408109391" Y="196.70910912960156" />
+    <ImageRight X="342.04945547838844" Y="188.25497315714549" />
+    <Real X="86.135802469135811" Y="315.33333333333331" Z="634" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="336.40726979064266" Y="211.9771612322138" />
+    <ImageRight X="115.50312313616166" Y="212.3357476042452" />
+    <Real X="-70.623456790123456" Y="287.66666666666663" Z="576" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="376.00920157501565" Y="215.93021015529303" />
+    <ImageRight X="156.79668370191408" Y="214.57879503626867" />
+    <Real X="-44.523919753086417" Y="287.66666666666669" Z="585.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="413.8800694896014" Y="219.6701785802841" />
+    <ImageRight X="196.58307388919053" Y="216.65476496176513" />
+    <Real X="-18.438271604938279" Y="287.66666666666669" Z="595" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="449.80424394946255" Y="223.18422201623642" />
+    <ImageRight X="235.25350555918737" Y="218.49665509692855" />
+    <Real X="7.6334876543209873" Y="287.66666666666663" Z="604.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="484.39226737905443" Y="226.47814332665561" />
+    <ImageRight X="272.10345598531882" Y="220.42026826085717" />
+    <Real X="33.691358024691354" Y="287.66666666666669" Z="614" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="517.75310777193829" Y="229.7029600506998" />
+    <ImageRight X="308.8240030434763" Y="222.01202402742473" />
+    <Real X="59.735339506172849" Y="287.66666666666663" Z="623.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="549.71288958891148" Y="232.7697305301092" />
+    <ImageRight X="344.05253679068556" Y="224.095178280233" />
+    <Real X="85.765432098765444" Y="287.66666666666663" Z="633" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="336.45754319573808" Y="252.80917766082828" />
+    <ImageRight X="114.72364459219051" Y="252.15850929996478" />
+    <Real X="-70.944444444444457" Y="260" Z="575" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="376.54326202570525" Y="255.79716577235226" />
+    <ImageRight X="156.80042281989111" Y="253.73038374099582" />
+    <Real X="-44.854166666666664" Y="260" Z="584.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="414.43567747657079" Y="258.45767618653542" />
+    <ImageRight X="197.17574427092421" Y="255.06475502162869" />
+    <Real X="-18.777777777777786" Y="260" Z="594" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="450.63615605812225" Y="261.10424729787673" />
+    <ImageRight X="236.0007797623627" Y="256.55157293333855" />
+    <Real X="7.2847222222222223" Y="260" Z="603.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="485.03682502345782" Y="263.82754542914483" />
+    <ImageRight X="273.3555337724307" Y="257.7522734924695" />
+    <Real X="33.333333333333329" Y="260" Z="613" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="518.32146800675378" Y="266.62666993066392" />
+    <ImageRight X="309.944506674945" Y="258.91614681958578" />
+    <Real X="59.368055555555571" Y="260" Z="622.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="550.40725435348054" Y="268.89619337920544" />
+    <ImageRight X="345.74401955392665" Y="260.466321487994" />
+    <Real X="85.388888888888886" Y="260" Z="632" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="336.3227632853766" Y="293.77860030234649" />
+    <ImageRight X="114.18694180627522" Y="293.07304622814" />
+    <Real X="-71.271604938271608" Y="232.33333333333334" Z="574" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="376.38480278375181" Y="295.85051698276669" />
+    <ImageRight X="156.44642281265581" Y="293.88687937934748" />
+    <Real X="-45.190586419753089" Y="232.33333333333331" Z="583.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="414.41551256723938" Y="297.80418893467174" />
+    <ImageRight X="197.29558439779027" Y="294.38571371912815" />
+    <Real X="-19.123456790123463" Y="232.33333333333334" Z="593" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="450.62952774230547" Y="299.76004452991424" />
+    <ImageRight X="236.5315363768662" Y="295.25560833906138" />
+    <Real X="6.929783950617284" Y="232.33333333333334" Z="602.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="485.63038424427077" Y="301.57232545800446" />
+    <ImageRight X="274.37786925188487" Y="296.15112190345616" />
+    <Real X="32.969135802469125" Y="232.33333333333334" Z="612" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="518.96445415385165" Y="303.55508015051464" />
+    <ImageRight X="311.37866860619056" Y="296.60288927967343" />
+    <Real X="58.9945987654321" Y="232.33333333333334" Z="621.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="551.05047070942226" Y="305.14909424491606" />
+    <ImageRight X="347.38167098182095" Y="297.54021370387835" />
+    <Real X="85.006172839506178" Y="232.33333333333334" Z="631" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="336.3174503357489" Y="335.07578305181397" />
+    <ImageRight X="113.62220410171884" Y="334.72290710697359" />
+    <Real X="-71.604938271604937" Y="204.66666666666666" Z="573" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="376.27403604264816" Y="336.11044026167457" />
+    <ImageRight X="156.43115345608979" Y="334.67315504655249" />
+    <Real X="-45.533179012345677" Y="204.66666666666663" Z="582.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="414.25719424262934" Y="337.29046372174594" />
+    <ImageRight X="197.53109111831881" Y="334.66902810239583" />
+    <Real X="-19.475308641975317" Y="204.66666666666666" Z="592" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="451.00709448187" Y="338.5313275026819" />
+    <ImageRight X="237.27081464259257" Y="334.73996869546215" />
+    <Real X="6.5686728395061724" Y="204.66666666666666" Z="601.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="485.88838100054375" Y="339.5515276683401" />
+    <ImageRight X="275.642528219354" Y="334.95897311600686" />
+    <Real X="32.598765432098759" Y="204.66666666666669" Z="611" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="519.71453659034057" Y="340.84657303913656" />
+    <ImageRight X="312.84414062083766" Y="334.96384358551512" />
+    <Real X="58.614969135802475" Y="204.66666666666666" Z="620.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="551.90983992661825" Y="341.43927746931416" />
+    <ImageRight X="349.18641636269894" Y="334.9628018202024" />
+    <Real X="84.617283950617278" Y="204.66666666666666" Z="630" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="336.32448065426763" Y="376.45042656017654" />
+    <ImageRight X="112.48719612025009" Y="377.99268563443735" />
+    <Real X="-71.944444444444457" Y="177" Z="572" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="376.36133566644219" Y="376.73168307351443" />
+    <ImageRight X="156.47399287025215" Y="377.02831113724585" />
+    <Real X="-45.881944444444443" Y="177" Z="581.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="414.7331082991837" Y="377.15496532761927" />
+    <ImageRight X="197.96971320608333" Y="375.9120607945132" />
+    <Real X="-19.833333333333343" Y="177" Z="591" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="451.46150624969869" Y="377.59147928281141" />
+    <ImageRight X="238.25233658965715" Y="375.399191165438" />
+    <Real X="6.2013888888888893" Y="177" Z="600.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="486.78260739983409" Y="377.96205644614946" />
+    <ImageRight X="276.94328938454669" Y="374.89798803547183" />
+    <Real X="32.222222222222214" Y="177" Z="610" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="520.29741500854" Y="378.06260111385336" />
+    <ImageRight X="314.53148244913376" Y="373.99443145525549" />
+    <Real X="58.229166666666671" Y="177" Z="619.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="552.70353032394667" Y="378.31014335248409" />
+    <ImageRight X="350.98056123719385" Y="373.60765899375826" />
+    <Real X="84.222222222222229" Y="177" Z="629" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="336.19494399617031" Y="417.80663838206192" />
+    <ImageRight X="111.24712492789715" Y="422.49255681180892" />
+    <Real X="-72.290123456790127" Y="149.33333333333334" Z="571" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="376.2994340241703" Y="417.4643806435455" />
+    <ImageRight X="155.4785359766052" Y="420.41709084744781" />
+    <Real X="-46.236882716049379" Y="149.33333333333331" Z="580.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="414.8778736695341" Y="417.12970455803361" />
+    <ImageRight X="198.04582889337971" Y="418.58932406914391" />
+    <Real X="-20.197530864197539" Y="149.33333333333334" Z="590" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="451.819064568666" Y="416.68208379273534" />
+    <ImageRight X="238.91292935510185" Y="416.91707995535916" />
+    <Real X="5.8279320987654319" Y="149.33333333333331" Z="599.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="486.99044701635131" Y="416.55460051486466" />
+    <ImageRight X="278.06556251156269" Y="415.44215056513673" />
+    <Real X="31.8395061728395" Y="149.33333333333331" Z="609" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="520.82791753933486" Y="415.66419113940168" />
+    <ImageRight X="315.9258359646667" Y="414.14071227131808" />
+    <Real X="57.8371913580247" Y="149.33333333333331" Z="618.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="553.55157536610773" Y="415.5059951916877" />
+    <ImageRight X="353.17986616500946" Y="412.916169235997" />
+    <Real X="83.820987654320973" Y="149.33333333333329" Z="628" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="414.70249777612656" Y="457.26919042767821" />
+    <ImageRight X="198.27074203015766" Y="462.36078316311148" />
+    <Real X="-20.567901234567913" Y="121.66666666666669" Z="589" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="451.593612998107" Y="456.13958787852454" />
+    <ImageRight X="239.3097152714542" Y="459.73405828605331" />
+    <Real X="5.4483024691358031" Y="121.66666666666669" Z="598.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="487.147314374327" Y="454.98589159343049" />
+    <ImageRight X="279.09821025277415" Y="457.37676786444234" />
+    <Real X="31.45061728395061" Y="121.66666666666669" Z="608" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="521.17563093978822" Y="453.95194163282724" />
+    <ImageRight X="317.82402418066226" Y="455.30448170686765" />
+    <Real X="57.439043209876552" Y="121.6666666666667" Z="617.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="554.19581894872476" Y="452.74812251543267" />
+    <ImageRight X="355.21073221318414" Y="453.38497439015055" />
+    <Real X="83.413580246913568" Y="121.66666666666669" Z="627" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="340.38706798364996" Y="244.03918640314853" />
+    <ImageRight X="161.88002344658682" Y="239.52948779311654" />
+    <Real X="76" Y="343" Z="846" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="368.07034046055679" Y="243.86049772425284" />
+    <ImageRight X="189.19257513680159" Y="238.58121194354459" />
+    <Real X="78.333333333333329" Y="343" Z="846.00000000000011" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="395.50885547008022" Y="243.4193037170873" />
+    <ImageRight X="217.49475992006609" Y="237.07746130428387" />
+    <Real X="80.666666666666671" Y="343.00000000000006" Z="846" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="422.76511457013913" Y="242.88276230793699" />
+    <ImageRight X="244.290533803506" Y="235.62362319525531" />
+    <Real X="83" Y="343" Z="846" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="449.42795526941592" Y="242.43831833259142" />
+    <ImageRight X="271.5202319277717" Y="234.41719882902828" />
+    <Real X="85.333333333333343" Y="343" Z="846.00000000000011" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="476.4954893699711" Y="242.35701033749771" />
+    <ImageRight X="298.94474709389135" Y="232.76949899609124" />
+    <Real X="87.666666666666657" Y="343" Z="846" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="503.24991935520524" Y="241.78718173139967" />
+    <ImageRight X="327.09277216507388" Y="231.50181551273903" />
+    <Real X="90" Y="343" Z="846" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="340.3604858608644" Y="270.98315828801259" />
+    <ImageRight X="162.22614617578472" Y="265.99735024529491" />
+    <Real X="76" Y="315.33333333333331" Z="847" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="368.33729488608606" Y="270.71219059261085" />
+    <ImageRight X="189.95207010901984" Y="264.7070939170182" />
+    <Real X="78.333333333333343" Y="315.33333333333331" Z="847.00000000000011" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="396.13212096312537" Y="269.79313048809644" />
+    <ImageRight X="217.63068610959624" Y="263.54695081169274" />
+    <Real X="80.666666666666671" Y="315.33333333333331" Z="847" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="423.29568963838972" Y="269.50021455775914" />
+    <ImageRight X="245.381648016892" Y="262.18133325964487" />
+    <Real X="83" Y="315.33333333333331" Z="847" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="450.36135057702404" Y="268.85638764021814" />
+    <ImageRight X="272.8500122723658" Y="261.18374162737075" />
+    <Real X="85.333333333333329" Y="315.33333333333331" Z="847" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="477.33852886801321" Y="268.51604850545715" />
+    <ImageRight X="300.28844177553736" Y="259.62716840575104" />
+    <Real X="87.666666666666657" Y="315.33333333333326" Z="847" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="504.15599480422236" Y="268.28516924513514" />
+    <ImageRight X="328.74127186504018" Y="257.96756200164674" />
+    <Real X="90" Y="315.33333333333331" Z="847" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="340.97227446569741" Y="298.02427387178051" />
+    <ImageRight X="162.62520056080555" Y="292.91841109452787" />
+    <Real X="76" Y="287.66666666666663" Z="847.99999999999989" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="368.85492820058533" Y="297.45360089532761" />
+    <ImageRight X="190.51145545580184" Y="291.7033556478234" />
+    <Real X="78.333333333333329" Y="287.66666666666669" Z="848" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="396.60001356371606" Y="296.64298736080497" />
+    <ImageRight X="218.4586637282857" Y="290.33772751947993" />
+    <Real X="80.666666666666686" Y="287.66666666666669" Z="848.00000000000011" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="423.78562137153182" Y="296.15073552564974" />
+    <ImageRight X="246.30506422827943" Y="289.23083770075488" />
+    <Real X="83" Y="287.66666666666663" Z="848" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="451.06971984323661" Y="295.45354482934965" />
+    <ImageRight X="273.82461686049862" Y="287.54785971250635" />
+    <Real X="85.333333333333329" Y="287.66666666666669" Z="848" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="478.31513159138" Y="294.911622168452" />
+    <ImageRight X="301.78074706586068" Y="286.46118795032839" />
+    <Real X="87.666666666666671" Y="287.66666666666663" Z="848" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="505.04076440635527" Y="294.71517025896082" />
+    <ImageRight X="330.36497057126485" Y="285.05581365889725" />
+    <Real X="90" Y="287.66666666666663" Z="848" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="341.25383684656367" Y="324.86478181899594" />
+    <ImageRight X="163.0646550969509" Y="320.412317992552" />
+    <Real X="76" Y="260" Z="849" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="368.97787618370722" Y="324.39776315006367" />
+    <ImageRight X="191.094728255516" Y="318.93844751204045" />
+    <Real X="78.333333333333329" Y="260" Z="849" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="397.10021083202463" Y="323.66305855817404" />
+    <ImageRight X="219.16139243285605" Y="317.6662669911068" />
+    <Real X="80.666666666666671" Y="260" Z="849.00000000000011" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="424.53476134569962" Y="323.19979589177308" />
+    <ImageRight X="247.07265146035365" Y="316.3202958213" />
+    <Real X="83" Y="260" Z="849" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="452.15976489734436" Y="322.51092790147572" />
+    <ImageRight X="275.1926975309064" Y="314.89665163759793" />
+    <Real X="85.333333333333329" Y="260" Z="849" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="479.09271904919734" Y="321.82820245897295" />
+    <ImageRight X="303.22059936020872" Y="313.51531781347103" />
+    <Real X="87.666666666666671" Y="260" Z="849" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="506.00771642570811" Y="321.148548800468" />
+    <ImageRight X="331.70294187601536" Y="312.20681648101811" />
+    <Real X="90" Y="260" Z="849" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="341.41617520997386" Y="351.98512539887491" />
+    <ImageRight X="163.25011876317223" Y="348.17161245971425" />
+    <Real X="76" Y="232.33333333333334" Z="850" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="369.57660893416323" Y="351.20000235919531" />
+    <ImageRight X="191.70907528517131" Y="346.68214790160573" />
+    <Real X="78.333333333333329" Y="232.33333333333331" Z="849.99999999999989" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="397.40850729758472" Y="350.77748883864393" />
+    <ImageRight X="219.79459015035914" Y="345.18237367015786" />
+    <Real X="80.666666666666671" Y="232.33333333333334" Z="850" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="425.01417991621435" Y="350.048740716095" />
+    <ImageRight X="248.48006039332842" Y="343.77226575723358" />
+    <Real X="83" Y="232.33333333333334" Z="850" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="452.384720189827" Y="349.270725802538" />
+    <ImageRight X="276.61450455380958" Y="342.60006597562057" />
+    <Real X="85.333333333333329" Y="232.33333333333334" Z="850" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="479.57432420175616" Y="348.51123354143056" />
+    <ImageRight X="304.83112816803163" Y="341.21793014784924" />
+    <Real X="87.666666666666671" Y="232.33333333333334" Z="850" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="506.59723368205175" Y="348.02218729480529" />
+    <ImageRight X="333.3338203667987" Y="339.74047479852311" />
+    <Real X="90" Y="232.33333333333334" Z="850" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="341.65311172196141" Y="379.05215751523264" />
+    <ImageRight X="163.65797155937679" Y="376.55454715382643" />
+    <Real X="76" Y="204.66666666666666" Z="851" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="370.02526988536135" Y="378.65169823770213" />
+    <ImageRight X="192.14811097796937" Y="374.93629077512617" />
+    <Real X="78.333333333333329" Y="204.66666666666663" Z="851" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="397.7789244441924" Y="377.9864376730751" />
+    <ImageRight X="220.94285234054468" Y="373.51835802700208" />
+    <Real X="80.666666666666671" Y="204.66666666666666" Z="851" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="425.59735300389275" Y="376.89383665236244" />
+    <ImageRight X="249.36343831733714" Y="371.80875402067113" />
+    <Real X="83" Y="204.66666666666666" Z="851" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="453.00007515646678" Y="376.32486522056439" />
+    <ImageRight X="277.60890878288831" Y="370.50676882147218" />
+    <Real X="85.333333333333343" Y="204.66666666666669" Z="851" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="480.36837103984823" Y="375.50220308541657" />
+    <ImageRight X="306.25446060547438" Y="369.05897396853845" />
+    <Real X="87.666666666666671" Y="204.66666666666666" Z="851" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="507.4516660336343" Y="374.55086265285337" />
+    <ImageRight X="335.03273230559205" Y="367.608078644411" />
+    <Real X="90" Y="204.66666666666666" Z="851" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="342.43215003590319" Y="406.50095185705123" />
+    <ImageRight X="163.96598275281505" Y="405.06549156732456" />
+    <Real X="76" Y="177" Z="852.00000000000011" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="370.09047644692782" Y="405.84475164308981" />
+    <ImageRight X="192.87672384258113" Y="403.68478336109729" />
+    <Real X="78.333333333333329" Y="177" Z="852" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="398.36397258467247" Y="405.3513027674752" />
+    <ImageRight X="221.55385883083568" Y="402.22398572636251" />
+    <Real X="80.666666666666671" Y="177" Z="852" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="426.22829038107426" Y="404.2899893308072" />
+    <ImageRight X="250.54769501011575" Y="400.34851231017245" />
+    <Real X="83" Y="177" Z="852" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="453.73942191185682" Y="403.45360957217423" />
+    <ImageRight X="279.09913091934726" Y="399.041104271727" />
+    <Real X="85.333333333333329" Y="177" Z="852" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="480.93315008496836" Y="402.64693439921223" />
+    <ImageRight X="307.85907935665256" Y="397.48901627136377" />
+    <Real X="87.666666666666671" Y="177" Z="852" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="508.05931619938684" Y="401.62882086157958" />
+    <ImageRight X="336.74206358361613" Y="395.97532132233812" />
+    <Real X="90" Y="177" Z="851.99999999999989" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="342.645188869106" Y="433.78821676669207" />
+    <ImageRight X="163.765736254851" Y="434.68621592508072" />
+    <Real X="76" Y="149.33333333333334" Z="853" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="370.93584293865348" Y="432.95407369927386" />
+    <ImageRight X="193.21505088742981" Y="432.92202433444584" />
+    <Real X="78.333333333333329" Y="149.33333333333331" Z="853" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="398.79951612076655" Y="432.3747458754475" />
+    <ImageRight X="222.30574496055709" Y="431.183650637294" />
+    <Real X="80.666666666666671" Y="149.33333333333334" Z="853" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="426.50578636671605" Y="431.54014604581778" />
+    <ImageRight X="251.48598312540273" Y="429.61571643884457" />
+    <Real X="83" Y="149.33333333333331" Z="853" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="454.078518098925" Y="430.50529049066643" />
+    <ImageRight X="280.4148059875734" Y="428.02275541943987" />
+    <Real X="85.333333333333329" Y="149.33333333333331" Z="853" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="481.54067503575078" Y="429.76611414168087" />
+    <ImageRight X="309.18367080545227" Y="426.60950006497728" />
+    <Real X="87.666666666666671" Y="149.33333333333331" Z="853" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="508.93239488121861" Y="428.69179802401493" />
+    <ImageRight X="338.55215922811522" Y="424.88525796497584" />
+    <Real X="90" Y="149.33333333333329" Z="853" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="371.32571366667372" Y="460.32275381717261" />
+    <ImageRight X="193.47475080463144" Y="463.11224400647518" />
+    <Real X="78.333333333333329" Y="121.66666666666669" Z="854" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="399.10447329159308" Y="459.5615391536391" />
+    <ImageRight X="223.04870735588605" Y="461.15863067406622" />
+    <Real X="80.666666666666671" Y="121.66666666666669" Z="854" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="426.89931729610265" Y="458.85591880549254" />
+    <ImageRight X="252.2288736399629" Y="459.38407979409595" />
+    <Real X="83" Y="121.66666666666669" Z="854" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="454.86881003157151" Y="457.63474492172128" />
+    <ImageRight X="281.54143767633821" Y="457.88251006688307" />
+    <Real X="85.333333333333314" Y="121.66666666666669" Z="854" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="482.40013940930231" Y="456.77414337981259" />
+    <ImageRight X="310.84250812536811" Y="456.16431384323414" />
+    <Real X="87.666666666666671" Y="121.6666666666667" Z="854" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="509.701211714798" Y="456.10992288291072" />
+    <ImageRight X="340.15405148810157" Y="454.78322287324147" />
+    <Real X="90" Y="121.66666666666669" Z="854" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="342.00132956235547" Y="252.78008105671344" />
+    <ImageRight X="166.6512391222945" Y="247.68581708303489" />
+    <Real X="-73" Y="343" Z="872" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="367.09573717692484" Y="250.02876657307203" />
+    <ImageRight X="190.43519465719936" Y="244.44877157715945" />
+    <Real X="-47.034722222222229" Y="343" Z="862.50000000000011" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="392.49282954172082" Y="247.12901907564717" />
+    <ImageRight X="215.0317394843606" Y="240.75625902511195" />
+    <Real X="-21.055555555555557" Y="343.00000000000006" Z="853" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="418.2068697460636" Y="244.27813425286891" />
+    <ImageRight X="240.06431739581925" Y="236.96053099884321" />
+    <Real X="4.9375" Y="343" Z="843.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="444.51291013439078" Y="241.49654639402533" />
+    <ImageRight X="265.63408773266565" Y="233.22619269745974" />
+    <Real X="30.944444444444443" Y="343" Z="834.00000000000011" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="470.99745319539892" Y="238.55848829368878" />
+    <ImageRight X="291.54603197261537" Y="229.41220681011308" />
+    <Real X="56.965277777777771" Y="343" Z="824.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="498.14344147481631" Y="235.38887451112092" />
+    <ImageRight X="318.99582067192819" Y="225.46745131279556" />
+    <Real X="83" Y="343" Z="815" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="342.39641517710197" Y="278.66116551245648" />
+    <ImageRight X="167.05345833110678" Y="273.50241082016834" />
+    <Real X="-72.691358024691368" Y="315.33333333333331" Z="873" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="367.67643332549238" Y="276.216265548764" />
+    <ImageRight X="191.42846822927098" Y="270.120504768211" />
+    <Real X="-46.716820987654323" Y="315.33333333333331" Z="863.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="393.27284506513172" Y="273.34994528928763" />
+    <ImageRight X="216.26830078040732" Y="266.97979533430447" />
+    <Real X="-20.7283950617284" Y="315.33333333333331" Z="854" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="419.12054619180043" Y="270.82211188918041" />
+    <ImageRight X="241.32414926453038" Y="263.60532471643182" />
+    <Real X="5.2739197530864192" Y="315.33333333333331" Z="844.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="445.46387655237805" Y="268.07391265549222" />
+    <ImageRight X="266.76897095927126" Y="260.02584830179956" />
+    <Real X="31.29012345679012" Y="315.33333333333331" Z="835" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="472.31902969255844" Y="265.40838645691377" />
+    <ImageRight X="293.20221203374143" Y="256.45711222871876" />
+    <Real X="57.320216049382708" Y="315.33333333333326" Z="825.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="499.59491921633071" Y="262.77791797099343" />
+    <ImageRight X="320.83593554570825" Y="252.76221372440472" />
+    <Real X="83.364197530864189" Y="315.33333333333331" Z="816" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="343.243924355927" Y="304.76032927953429" />
+    <ImageRight X="167.692215657162" Y="299.34788344628043" />
+    <Real X="-72.37654320987653" Y="287.66666666666663" Z="873.99999999999989" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="368.59292693314984" Y="302.00020224029674" />
+    <ImageRight X="192.24993547131592" Y="296.61848359735671" />
+    <Real X="-46.392746913580254" Y="287.66666666666669" Z="864.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="394.10925591695371" Y="299.843582731812" />
+    <ImageRight X="216.77418039628114" Y="293.29465459075834" />
+    <Real X="-20.395061728395067" Y="287.66666666666669" Z="855.00000000000011" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="420.25219683448574" Y="297.48804264726374" />
+    <ImageRight X="242.27515922140972" Y="290.2415978545036" />
+    <Real X="5.6165123456790127" Y="287.66666666666663" Z="845.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="446.55767996861078" Y="295.10544122607058" />
+    <ImageRight X="268.19754411060944" Y="287.02284217046025" />
+    <Real X="31.641975308641975" Y="287.66666666666669" Z="836" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="473.5250097154422" Y="292.44148649884568" />
+    <ImageRight X="294.72536922209906" Y="283.763255915594" />
+    <Real X="57.681327160493829" Y="287.66666666666663" Z="826.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="501.00563123238027" Y="289.93286596245491" />
+    <ImageRight X="322.77342685105174" Y="280.51865354436984" />
+    <Real X="83.73456790123457" Y="287.66666666666663" Z="817" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="343.7120815431781" Y="330.74156939220029" />
+    <ImageRight X="168.58906798404095" Y="325.79518503935782" />
+    <Real X="-72.055555555555557" Y="260" Z="875" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="369.05510665179185" Y="328.56089983208238" />
+    <ImageRight X="192.89775077589798" Y="323.09861626773676" />
+    <Real X="-46.062500000000007" Y="260" Z="865.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="395.15383497995725" Y="326.07226973030743" />
+    <ImageRight X="217.98614903399346" Y="320.33851731633371" />
+    <Real X="-20.055555555555561" Y="260" Z="856" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="421.15667551495847" Y="323.98068199347796" />
+    <ImageRight X="243.65948498743467" Y="317.59418010757577" />
+    <Real X="5.9652777777777768" Y="260" Z="846.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="447.500821427385" Y="321.88880286505042" />
+    <ImageRight X="269.64524025204179" Y="314.62526820796739" />
+    <Real X="32" Y="260" Z="837" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="474.51100278614359" Y="319.78347023032291" />
+    <ImageRight X="296.67260679169283" Y="311.5600682752563" />
+    <Real X="58.048611111111114" Y="260" Z="827.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="502.15994757879497" Y="317.40270698207826" />
+    <ImageRight X="324.56406608395071" Y="308.55878125751423" />
+    <Real X="84.111111111111114" Y="260" Z="818" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="344.328972745778" Y="356.87655531985865" />
+    <ImageRight X="168.92378954106113" Y="352.82446717263207" />
+    <Real X="-71.7283950617284" Y="232.33333333333334" Z="876" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="369.32505920090057" Y="354.99437237660516" />
+    <ImageRight X="193.7648540725788" Y="350.26713072089814" />
+    <Real X="-45.726080246913583" Y="232.33333333333331" Z="866.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="395.39802689521997" Y="352.99334180072918" />
+    <ImageRight X="218.93691454670355" Y="347.4811000084959" />
+    <Real X="-19.70987654320988" Y="232.33333333333334" Z="857" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="421.67468761178594" Y="350.93472084640604" />
+    <ImageRight X="244.98316003362302" Y="345.0362746198773" />
+    <Real X="6.320216049382716" Y="232.33333333333334" Z="847.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="448.52273538399129" Y="348.73795561433514" />
+    <ImageRight X="271.40220453182565" Y="342.46100253478244" />
+    <Real X="32.364197530864196" Y="232.33333333333334" Z="838" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="475.69274836536761" Y="347.17655801344176" />
+    <ImageRight X="298.22557009404318" Y="339.63927986780453" />
+    <Real X="58.42206790123457" Y="232.33333333333334" Z="828.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="503.05902625646269" Y="345.2332375478955" />
+    <ImageRight X="326.51947292830874" Y="337.00148676227684" />
+    <Real X="84.493827160493822" Y="232.33333333333334" Z="819" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="344.84566294340686" Y="382.96813814098749" />
+    <ImageRight X="169.40537617445807" Y="380.01467651663108" />
+    <Real X="-71.395061728395063" Y="204.66666666666666" Z="877" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="370.27945973927581" Y="381.56964909868867" />
+    <ImageRight X="194.61202956045293" Y="377.56162503919217" />
+    <Real X="-45.383487654320994" Y="204.66666666666663" Z="867.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="396.42391548025114" Y="379.88036010606618" />
+    <ImageRight X="220.51019927050149" Y="374.84143249700571" />
+    <Real X="-19.358024691358029" Y="204.66666666666666" Z="858" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="422.65774638175816" Y="378.31187741820276" />
+    <ImageRight X="246.32112521454496" Y="372.92412670463119" />
+    <Real X="6.6813271604938276" Y="204.66666666666666" Z="848.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="449.61363818144588" Y="376.46097945060006" />
+    <ImageRight X="272.84340883649014" Y="370.718766641641" />
+    <Real X="32.734567901234563" Y="204.66666666666669" Z="839" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="476.80986716457562" Y="374.70136853100792" />
+    <ImageRight X="300.46618868114825" Y="368.40756657484059" />
+    <Real X="58.801697530864196" Y="204.66666666666666" Z="829.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="504.45524240640862" Y="372.52524503420295" />
+    <ImageRight X="328.65571339118895" Y="365.94651037831" />
+    <Real X="84.882716049382708" Y="204.66666666666666" Z="820" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="345.46201771386154" Y="409.43278283201323" />
+    <ImageRight X="169.95968600879542" Y="407.90222149684882" />
+    <Real X="-71.055555555555557" Y="177" Z="878" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="371.11901658518508" Y="408.2621995533782" />
+    <ImageRight X="195.18353252470902" Y="405.90214705463683" />
+    <Real X="-45.034722222222229" Y="177" Z="868.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="396.85891273397829" Y="407.10320288407632" />
+    <ImageRight X="221.01111667285397" Y="403.71587308846006" />
+    <Real X="-19.000000000000007" Y="177" Z="859" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="423.39671241354409" Y="405.4204233146188" />
+    <ImageRight X="247.68998243073284" Y="401.67343892356246" />
+    <Real X="7.0486111111111107" Y="177" Z="849.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="450.15167247719285" Y="404.02977517996976" />
+    <ImageRight X="274.47326100959594" Y="399.46427898187954" />
+    <Real X="33.111111111111107" Y="177" Z="840" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="477.6397693936201" Y="402.59843301051592" />
+    <ImageRight X="301.95413698326018" Y="397.28663843915081" />
+    <Real X="59.187500000000007" Y="177" Z="830.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="505.37304960942328" Y="401.08736781371812" />
+    <ImageRight X="330.45383812066251" Y="395.23072791282863" />
+    <Real X="85.277777777777771" Y="177" Z="821" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="346.03338250198107" Y="435.86055649897088" />
+    <ImageRight X="170.52316618385791" Y="436.41721749395913" />
+    <Real X="-70.709876543209873" Y="149.33333333333334" Z="879" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="371.702528825431" Y="434.57045917686611" />
+    <ImageRight X="196.31469447648618" Y="434.49763322538189" />
+    <Real X="-44.679783950617292" Y="149.33333333333331" Z="869.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="397.95316122509877" Y="433.92591014751991" />
+    <ImageRight X="222.15562331612551" Y="432.62892408115067" />
+    <Real X="-18.635802469135811" Y="149.33333333333334" Z="860" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="424.22157168841863" Y="432.67205190189429" />
+    <ImageRight X="248.80724330300373" Y="430.93088848997667" />
+    <Real X="7.4220679012345681" Y="149.33333333333331" Z="850.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="451.31400771127028" Y="431.50799986739156" />
+    <ImageRight X="276.10162213911576" Y="428.89229421700605" />
+    <Real X="33.493827160493822" Y="149.33333333333331" Z="841" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="478.67346831350807" Y="430.124765198242" />
+    <ImageRight X="303.88834483673236" Y="427.10396992436068" />
+    <Real X="59.579475308641982" Y="149.33333333333331" Z="831.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="506.38879082294551" Y="428.88489196041718" />
+    <ImageRight X="332.63299836483731" Y="425.1346307334195" />
+    <Real X="85.679012345679013" Y="149.33333333333329" Z="822" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="372.64769209307588" Y="461.58254001324713" />
+    <ImageRight X="196.94950309684913" Y="463.89650062494542" />
+    <Real X="-44.318672839506185" Y="121.66666666666669" Z="870.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="398.72435622856608" Y="460.72316611981648" />
+    <ImageRight X="223.61270400230103" Y="462.28869592712806" />
+    <Real X="-18.265432098765437" Y="121.66666666666669" Z="861" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="425.10499085402085" Y="459.52090957731372" />
+    <ImageRight X="250.28822065267823" Y="460.72666707788272" />
+    <Real X="7.8016975308641969" Y="121.66666666666669" Z="851.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="451.79631551192506" Y="459.07656646426921" />
+    <ImageRight X="277.42582848502366" Y="459.00358448459747" />
+    <Real X="33.882716049382715" Y="121.66666666666669" Z="842" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="479.47954663635863" Y="458.32333919078144" />
+    <ImageRight X="305.71183224031529" Y="457.61424601726242" />
+    <Real X="59.977623456790134" Y="121.6666666666667" Z="832.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="507.693535378501" Y="456.98969437475955" />
+    <ImageRight X="334.73714192421056" Y="456.0198518800276" />
+    <Real X="86.086419753086432" Y="121.66666666666669" Z="823" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="348.50703925763275" Y="238.12327158795753" />
+    <ImageRight X="167.30279999781266" Y="233.662443319993" />
+    <Real X="-70" Y="343" Z="828" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="374.75248127994581" Y="240.65731634863647" />
+    <ImageRight X="194.25421625610642" Y="235.33446365596572" />
+    <Real X="-43.88194444444445" Y="343" Z="837.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="400.73530013828372" Y="242.87269076007556" />
+    <ImageRight X="221.65081602050555" Y="236.52594352166688" />
+    <Real X="-17.777777777777782" Y="343.00000000000006" Z="847" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="425.13354973108585" Y="245.12662457870647" />
+    <ImageRight X="247.81851494181942" Y="237.72115091041036" />
+    <Real X="8.3125" Y="343" Z="856.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="449.22679197686762" Y="247.20830049591825" />
+    <ImageRight X="272.9134291344007" Y="239.05601500435472" />
+    <Real X="34.388888888888886" Y="343" Z="866" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="472.66096467997363" Y="249.47291958694436" />
+    <ImageRight X="297.95104463818274" Y="240.14255283807566" />
+    <Real X="60.4513888888889" Y="343" Z="875.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="495.44490990109881" Y="251.57184615220805" />
+    <ImageRight X="322.77023811927756" Y="241.14324839707075" />
+    <Real X="86.5" Y="343" Z="885" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="348.55438063829524" Y="265.91787941239431" />
+    <ImageRight X="167.53394394700146" Y="260.9582886716932" />
+    <Real X="-70.308641975308646" Y="315.33333333333331" Z="827" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="375.02029156698131" Y="267.69069261522867" />
+    <ImageRight X="194.79777111997476" Y="261.87955823421265" />
+    <Real X="-44.199845679012356" Y="315.33333333333331" Z="836.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="400.84314097090436" Y="269.574687606107" />
+    <ImageRight X="221.71860172066994" Y="263.02701616265688" />
+    <Real X="-18.104938271604944" Y="315.33333333333331" Z="846" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="425.88457460516815" Y="271.53018440617438" />
+    <ImageRight X="248.09410279847467" Y="263.96058097438186" />
+    <Real X="7.9760802469135808" Y="315.33333333333331" Z="855.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="449.98188041440227" Y="273.13107784219659" />
+    <ImageRight X="273.8980733715286" Y="264.88997194362787" />
+    <Real X="34.0432098765432" Y="315.33333333333331" Z="865" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="473.35847230019607" Y="275.12948685846823" />
+    <ImageRight X="298.69988712242616" Y="265.96142963303845" />
+    <Real X="60.096450617283956" Y="315.33333333333326" Z="874.49999999999989" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="495.99558502457108" Y="276.76322302460369" />
+    <ImageRight X="323.90159524866624" Y="266.7674258233983" />
+    <Real X="86.135802469135811" Y="315.33333333333331" Z="884" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="348.57949479127694" Y="293.565495387261" />
+    <ImageRight X="167.569852910033" Y="288.55946641016004" />
+    <Real X="-70.623456790123456" Y="287.66666666666663" Z="826" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="375.24338937722621" Y="295.10723318254321" />
+    <ImageRight X="195.21830411449227" Y="289.21889585371747" />
+    <Real X="-44.523919753086417" Y="287.66666666666669" Z="835.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="401.00570221508207" Y="296.61824850790924" />
+    <ImageRight X="222.63369037516512" Y="289.82661989429721" />
+    <Real X="-18.438271604938279" Y="287.66666666666669" Z="845" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="426.18079277802" Y="297.89305627286359" />
+    <ImageRight X="249.19575172469718" Y="290.57063505282929" />
+    <Real X="7.6334876543209873" Y="287.66666666666663" Z="854.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="450.41479187126646" Y="299.27819908176332" />
+    <ImageRight X="274.69957387359625" Y="291.32833642325062" />
+    <Real X="33.691358024691354" Y="287.66666666666669" Z="864" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="474.130219790293" Y="300.9396252637867" />
+    <ImageRight X="300.35691384302925" Y="291.9999993472822" />
+    <Real X="59.735339506172849" Y="287.66666666666663" Z="873.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="496.73998402124619" Y="302.25844049807114" />
+    <ImageRight X="325.13940201798306" Y="292.64411513897284" />
+    <Real X="85.765432098765444" Y="287.66666666666663" Z="883.00000000000011" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="348.67925536132475" Y="321.51809570407937" />
+    <ImageRight X="167.29180852888982" Y="316.69403158436052" />
+    <Real X="-70.944444444444457" Y="260" Z="825" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="375.38200887339423" Y="322.35070460494109" />
+    <ImageRight X="195.72573410545874" Y="317.11100781989308" />
+    <Real X="-44.854166666666664" Y="260" Z="834.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="401.36116692666235" Y="323.6745463311367" />
+    <ImageRight X="223.12490016876811" Y="317.51751757899143" />
+    <Real X="-18.777777777777786" Y="260" Z="844" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="426.83947195893347" Y="324.61678703971882" />
+    <ImageRight X="250.05108012463361" Y="317.81428429949034" />
+    <Real X="7.2847222222222223" Y="260" Z="853.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="451.18041239737607" Y="325.70106668532151" />
+    <ImageRight X="275.94128176812853" Y="318.04952795845037" />
+    <Real X="33.333333333333329" Y="260" Z="863" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="474.355080996613" Y="326.71576545702328" />
+    <ImageRight X="301.36082479730027" Y="318.3538183292896" />
+    <Real X="59.368055555555571" Y="260" Z="872.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="497.43111503187583" Y="327.90408740997952" />
+    <ImageRight X="326.38173593684394" Y="318.82715272678456" />
+    <Real X="85.388888888888886" Y="260" Z="882" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="348.52639865320248" Y="349.59143326872947" />
+    <ImageRight X="167.77098403367916" Y="345.17661956380016" />
+    <Real X="-71.271604938271608" Y="232.33333333333334" Z="824" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="375.15402988571213" Y="349.98017153626449" />
+    <ImageRight X="195.74795994696515" Y="345.15076841267484" />
+    <Real X="-45.190586419753089" Y="232.33333333333331" Z="833.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="401.53141777511274" Y="350.34006542144886" />
+    <ImageRight X="223.48183923046923" Y="345.14819133761466" />
+    <Real X="-19.123456790123463" Y="232.33333333333334" Z="843" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="426.90203002849751" Y="351.081128801977" />
+    <ImageRight X="250.65699714859483" Y="345.20710706736384" />
+    <Real X="6.929783950617284" Y="232.33333333333334" Z="852.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="451.25875216401221" Y="352.18448474982932" />
+    <ImageRight X="276.63983330006494" Y="345.40055797767127" />
+    <Real X="32.969135802469125" Y="232.33333333333334" Z="862" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="474.79907470613136" Y="352.93375402125679" />
+    <ImageRight X="302.13290969470563" Y="345.20199319433306" />
+    <Real X="58.9945987654321" Y="232.33333333333334" Z="871.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="497.81631346322445" Y="353.45297687113492" />
+    <ImageRight X="327.62418133833171" Y="345.1323070804068" />
+    <Real X="85.006172839506178" Y="232.33333333333334" Z="881" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="348.83033938861468" Y="377.71954941195236" />
+    <ImageRight X="167.66111432161137" Y="374.45151499271071" />
+    <Real X="-71.604938271604937" Y="204.66666666666666" Z="823" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="375.92942832758808" Y="378.13500484220987" />
+    <ImageRight X="196.27029469388944" Y="374.105791618586" />
+    <Real X="-45.533179012345677" Y="204.66666666666663" Z="832.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="402.01027438751174" Y="378.36224624914792" />
+    <ImageRight X="224.0269288311942" Y="373.49119702083033" />
+    <Real X="-19.475308641975317" Y="204.66666666666666" Z="842" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="426.99900366332116" Y="378.45181097391344" />
+    <ImageRight X="251.17893961138242" Y="373.30491315938781" />
+    <Real X="6.5686728395061724" Y="204.66666666666666" Z="851.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="451.38520927059068" Y="378.87710157203816" />
+    <ImageRight X="277.67247558861089" Y="372.62813025478187" />
+    <Real X="32.598765432098759" Y="204.66666666666669" Z="861" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="475.51016614083375" Y="378.74943478433255" />
+    <ImageRight X="303.58444049733271" Y="372.56512349636762" />
+    <Real X="58.614969135802475" Y="204.66666666666666" Z="870.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="498.32960109579784" Y="378.78253344504975" />
+    <ImageRight X="328.803791157552" Y="372.10067099557864" />
+    <Real X="84.617283950617278" Y="204.66666666666666" Z="880" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="348.87447461834176" Y="405.88374748941254" />
+    <ImageRight X="167.59444811503934" Y="404.1931574687805" />
+    <Real X="-71.944444444444457" Y="177" Z="822.00000000000011" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="375.9902371887805" Y="405.88328932544295" />
+    <ImageRight X="196.70747856135623" Y="403.21596641269451" />
+    <Real X="-45.881944444444443" Y="177" Z="831.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="402.18248609576756" Y="405.89293139793165" />
+    <ImageRight X="225.00265417791275" Y="402.69655496013172" />
+    <Real X="-19.833333333333343" Y="177" Z="841" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="427.42479904367349" Y="405.43101380367409" />
+    <ImageRight X="252.18174851036309" Y="401.70743281500108" />
+    <Real X="6.2013888888888893" Y="177" Z="850.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="451.881963088618" Y="405.38776506128738" />
+    <ImageRight X="278.53878553625145" Y="400.89932983588318" />
+    <Real X="32.222222222222214" Y="177" Z="860" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="475.60924982241613" Y="405.24008531071638" />
+    <ImageRight X="304.72496687944022" Y="400.40672911819684" />
+    <Real X="58.229166666666671" Y="177" Z="869.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="498.81255555423962" Y="405.0524531410577" />
+    <ImageRight X="330.16958793963443" Y="399.35043600815766" />
+    <Real X="84.222222222222229" Y="177" Z="878.99999999999989" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="349.05518504006636" Y="433.96658540245363" />
+    <ImageRight X="167.56754410611575" Y="435.14464144857737" />
+    <Real X="-72.290123456790127" Y="149.33333333333334" Z="821" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="375.8318486047462" Y="433.60165178738742" />
+    <ImageRight X="196.67745704063682" Y="433.30650580912061" />
+    <Real X="-46.236882716049379" Y="149.33333333333331" Z="830.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="402.23202570617093" Y="433.16375220601662" />
+    <ImageRight X="225.19261968103538" Y="431.8569887451809" />
+    <Real X="-20.197530864197539" Y="149.33333333333334" Z="840" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="427.44952882355312" Y="432.85270988210624" />
+    <ImageRight X="252.72884932745313" Y="430.76171329733529" />
+    <Real X="5.8279320987654319" Y="149.33333333333331" Z="849.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="452.41959526499221" Y="432.17758355622004" />
+    <ImageRight X="279.50746307459536" Y="429.71761821556748" />
+    <Real X="31.8395061728395" Y="149.33333333333331" Z="859" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="476.18672971782405" Y="431.65390570795097" />
+    <ImageRight X="305.86716418127622" Y="428.43907161190555" />
+    <Real X="57.8371913580247" Y="149.33333333333331" Z="868.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="499.41635254190754" Y="431.22382113450789" />
+    <ImageRight X="331.95918625116417" Y="427.18765632150621" />
+    <Real X="83.820987654320973" Y="149.33333333333329" Z="878" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="349.08040870641992" Y="462.41080440663939" />
+    <ImageRight X="167.11407455085717" Y="466.39508815986426" />
+    <Real X="-72.641975308641975" Y="121.66666666666669" Z="820" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="376.10326718026562" Y="461.57402463292703" />
+    <ImageRight X="196.71695188866406" Y="464.36618820488309" />
+    <Real X="-46.597993827160494" Y="121.66666666666669" Z="829.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="402.127789635727" Y="460.79020380501629" />
+    <ImageRight X="225.59161890617432" Y="462.21103449544978" />
+    <Real X="-20.567901234567913" Y="121.66666666666669" Z="839" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="427.64160550848055" Y="459.98505359282848" />
+    <ImageRight X="253.29862514215188" Y="460.57032589053523" />
+    <Real X="5.4483024691358031" Y="121.66666666666669" Z="848.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="452.33048469957" Y="459.02823638422393" />
+    <ImageRight X="280.54126360852774" Y="458.93259295126808" />
+    <Real X="31.45061728395061" Y="121.66666666666669" Z="858" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="476.63638442303045" Y="458.12151589000149" />
+    <ImageRight X="307.1150331778054" Y="457.10462120021162" />
+    <Real X="57.439043209876552" Y="121.6666666666667" Z="867.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="500.01050555791903" Y="457.06335746024928" />
+    <ImageRight X="333.41726528539169" Y="455.69310247602283" />
+    <Real X="83.413580246913568" Y="121.66666666666669" Z="877" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="359.81334735708646" Y="42.506236540549011" />
+    <ImageRight X="81.089021855926674" Y="54.463127052048279" />
+    <Real X="78.333333333333343" Y="315.33333333333331" Z="397.00000000000006" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="421.32807602945837" Y="43.023923643193406" />
+    <ImageRight X="141.54755963286749" Y="52.702130965859205" />
+    <Real X="80.666666666666671" Y="315.33333333333331" Z="397" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="481.84580989885865" Y="43.11274617731047" />
+    <ImageRight X="201.35306221060716" Y="50.850167064739836" />
+    <Real X="83" Y="315.33333333333331" Z="397" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="542.30230733619192" Y="42.388764933336255" />
+    <ImageRight X="260.7900008955811" Y="48.713269558644967" />
+    <Real X="85.333333333333329" Y="315.33333333333331" Z="397" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="602.63755974669334" Y="42.052339338259294" />
+    <ImageRight X="319.42350347745844" Y="46.731597108392009" />
+    <Real X="87.666666666666657" Y="315.33333333333326" Z="397" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="361.02951713741606" Y="102.28884570933766" />
+    <ImageRight X="79.94304017020886" Y="110.38443945796423" />
+    <Real X="78.333333333333329" Y="287.66666666666669" Z="398" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="423.06685047355415" Y="102.41693033117302" />
+    <ImageRight X="142.25097300440066" Y="107.69116793169413" />
+    <Real X="80.666666666666686" Y="287.66666666666669" Z="398" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="483.82109168418327" Y="102.08064276569509" />
+    <ImageRight X="202.4037955350899" Y="105.52715986589813" />
+    <Real X="83" Y="287.66666666666663" Z="398" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="544.25244569290658" Y="101.59407917749603" />
+    <ImageRight X="262.94239737305043" Y="102.9129225499326" />
+    <Real X="85.333333333333329" Y="287.66666666666669" Z="398" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="604.82429791828667" Y="100.97720850995897" />
+    <ImageRight X="322.60571211284218" Y="100.62489873722899" />
+    <Real X="87.666666666666671" Y="287.66666666666663" Z="398" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="362.84815025311025" Y="162.49924951869929" />
+    <ImageRight X="79.854592626255851" Y="166.99431561681988" />
+    <Real X="78.333333333333329" Y="260" Z="399" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="424.7900859045144" Y="162.32756033232752" />
+    <ImageRight X="142.15120859797116" Y="164.13570495871866" />
+    <Real X="80.666666666666671" Y="260" Z="399.00000000000006" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="485.57598407237526" Y="161.99741486574411" />
+    <ImageRight X="203.66592449387272" Y="161.47121931167746" />
+    <Real X="83" Y="260" Z="399" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="545.97517550059035" Y="161.37120190613632" />
+    <ImageRight X="264.87474526026989" Y="158.88169759569567" />
+    <Real X="85.333333333333329" Y="260" Z="399" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="606.67593834059653" Y="160.30029277827288" />
+    <ImageRight X="325.98121744027924" Y="156.32933152123937" />
+    <Real X="87.666666666666671" Y="260" Z="399" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="364.10067979551496" Y="222.70793676189052" />
+    <ImageRight X="79.123917343818334" Y="225.21567700999157" />
+    <Real X="78.333333333333329" Y="232.33333333333331" Z="400" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="426.343459594641" Y="222.18784121245804" />
+    <ImageRight X="142.73929850066435" Y="222.67056974402041" />
+    <Real X="80.666666666666671" Y="232.33333333333334" Z="400" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="487.14327023813792" Y="221.64775659544293" />
+    <ImageRight X="205.05570512522678" Y="219.74433829453835" />
+    <Real X="83" Y="232.33333333333334" Z="400" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="547.39801681802885" Y="220.98388462472823" />
+    <ImageRight X="266.80530812073249" Y="216.82756252333286" />
+    <Real X="85.333333333333329" Y="232.33333333333334" Z="400" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="608.30077957909043" Y="220.05293528167363" />
+    <ImageRight X="329.39394278941126" Y="214.16999272389123" />
+    <Real X="87.666666666666671" Y="232.33333333333334" Z="400" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="364.83710772310428" Y="283.31787399286014" />
+    <ImageRight X="78.727076381434941" Y="285.97597249536841" />
+    <Real X="78.333333333333329" Y="204.66666666666663" Z="400.99999999999994" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="427.53275816190063" Y="282.352758510054" />
+    <ImageRight X="143.04175965185166" Y="282.64738922092505" />
+    <Real X="80.666666666666671" Y="204.66666666666666" Z="401" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="489.00932068180151" Y="281.51116027936058" />
+    <ImageRight X="206.15460400463323" Y="279.87741141940029" />
+    <Real X="83" Y="204.66666666666666" Z="401" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="549.3120416873993" Y="280.82801834475248" />
+    <ImageRight X="269.08826733963946" Y="276.98286286741148" />
+    <Real X="85.333333333333343" Y="204.66666666666669" Z="401" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="365.46044087285156" Y="344.8656034858372" />
+    <ImageRight X="77.144645290683741" Y="349.14965033192857" />
+    <Real X="78.333333333333329" Y="177" Z="402" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="428.62083838833183" Y="343.62749290059048" />
+    <ImageRight X="143.18967521787289" Y="345.37364963333965" />
+    <Real X="80.666666666666671" Y="177" Z="402" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="490.69490451516185" Y="342.256580475543" />
+    <ImageRight X="207.55612786148402" Y="342.14950902488152" />
+    <Real X="83" Y="177" Z="402" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="551.56582880659585" Y="341.19560323138023" />
+    <ImageRight X="271.73560106492795" Y="339.15958582253836" />
+    <Real X="85.333333333333329" Y="177" Z="402" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="429.62263430198726" Y="405.1689856980243" />
+    <ImageRight X="142.86029183890315" Y="410.35216234190148" />
+    <Real X="80.666666666666671" Y="149.33333333333334" Z="403" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="492.00574583033659" Y="403.6546093868335" />
+    <ImageRight X="208.87538849320788" Y="406.81906945192577" />
+    <Real X="83" Y="149.33333333333331" Z="403" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="553.49541148931371" Y="401.91468754533594" />
+    <ImageRight X="274.42949161880091" Y="403.47827988993276" />
+    <Real X="85.333333333333329" Y="149.33333333333331" Z="403" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="430.37611999896956" Y="36.9792990019296" />
+    <ImageRight X="147.41008197242442" Y="46.988137250768737" />
+    <Real X="-20.7283950617284" Y="315.33333333333331" Z="404" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="484.86539543918565" Y="48.214332202066721" />
+    <ImageRight X="206.51799714469146" Y="55.504520434382783" />
+    <Real X="5.2739197530864192" Y="315.33333333333331" Z="394.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="536.48900514906722" Y="58.164822903662291" />
+    <ImageRight X="262.1686441824487" Y="62.87439488047535" />
+    <Real X="31.29012345679012" Y="315.33333333333331" Z="385" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="585.51736524435057" Y="67.964200681173551" />
+    <ImageRight X="314.50457690011808" Y="70.2944498353668" />
+    <Real X="57.320216049382708" Y="315.33333333333326" Z="375.49999999999994" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="372.7433852947446" Y="87.079228633919328" />
+    <ImageRight X="83.495008667081279" Y="95.824997303659472" />
+    <Real X="-46.392746913580254" Y="287.66666666666669" Z="414.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="431.70163774136654" Y="97.58225378302609" />
+    <ImageRight X="147.83903293412794" Y="102.96366411533455" />
+    <Real X="-20.395061728395067" Y="287.66666666666669" Z="405.00000000000006" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="486.91766002380984" Y="106.80276036147555" />
+    <ImageRight X="207.61961907196795" Y="109.59311679319575" />
+    <Real X="5.6165123456790127" Y="287.66666666666663" Z="395.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="538.54889181690135" Y="115.44627521607775" />
+    <ImageRight X="263.8967865299316" Y="115.47767082455786" />
+    <Real X="31.641975308641975" Y="287.66666666666669" Z="386" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="587.19858238990992" Y="123.2531027155151" />
+    <ImageRight X="317.17117823446222" Y="121.24667967797609" />
+    <Real X="57.681327160493829" Y="287.66666666666663" Z="376.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="374.25966660777812" Y="149.99202402036735" />
+    <ImageRight X="82.640665060363" Y="155.18610978709404" />
+    <Real X="-46.062500000000007" Y="260" Z="415.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="433.35469466132082" Y="158.414863935558" />
+    <ImageRight X="147.87457502529259" Y="160.20195913497835" />
+    <Real X="-20.055555555555561" Y="260" Z="406" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="488.38164992648592" Y="166.10617237581721" />
+    <ImageRight X="208.17068768819027" Y="165.14841005106658" />
+    <Real X="5.9652777777777768" Y="260" Z="396.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="540.02070888717731" Y="172.86429655355886" />
+    <ImageRight X="265.45455536993063" Y="169.67885304036278" />
+    <Real X="32" Y="260" Z="387" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="588.45787854088212" Y="179.39198675443387" />
+    <ImageRight X="319.79211620748282" Y="174.10165275529056" />
+    <Real X="58.048611111111114" Y="260" Z="377.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="375.1250961656466" Y="213.11911627035394" />
+    <ImageRight X="81.1799384401748" Y="216.14268117105689" />
+    <Real X="-45.726080246913583" Y="232.33333333333331" Z="416.49999999999994" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="434.41882925834886" Y="219.472092283997" />
+    <ImageRight X="147.70560465699512" Y="219.95485391817854" />
+    <Real X="-19.70987654320988" Y="232.33333333333334" Z="407" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="489.23949353142484" Y="225.30371131187462" />
+    <ImageRight X="208.88279472056695" Y="222.9700237983871" />
+    <Real X="6.320216049382716" Y="232.33333333333334" Z="397.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="540.5040398937798" Y="230.37109611412294" />
+    <ImageRight X="266.43247254322324" Y="226.06706358438728" />
+    <Real X="32.364197530864196" Y="232.33333333333334" Z="388" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="589.61329469341365" Y="235.16515186384362" />
+    <ImageRight X="322.237320123634" Y="229.13558020641176" />
+    <Real X="58.42206790123457" Y="232.33333333333334" Z="378.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="375.99209803517186" Y="276.69243457352371" />
+    <ImageRight X="80.929691689926429" Y="279.71416613436287" />
+    <Real X="-45.383487654320994" Y="204.66666666666663" Z="417.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="435.43375570618622" Y="280.65224350093888" />
+    <ImageRight X="147.37297173982998" Y="280.91290545085383" />
+    <Real X="-19.358024691358029" Y="204.66666666666666" Z="408" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="490.41794246431289" Y="284.59512191413756" />
+    <ImageRight X="209.43466941212665" Y="282.716162871978" />
+    <Real X="6.6813271604938276" Y="204.66666666666666" Z="398.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="541.957835359004" Y="288.05758187654078" />
+    <ImageRight X="268.37951692953459" Y="284.42746404455096" />
+    <Real X="32.734567901234563" Y="204.66666666666669" Z="389" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="591.13034977483085" Y="291.29865638909524" />
+    <ImageRight X="324.64687993302738" Y="285.97006917332067" />
+    <Real X="58.801697530864196" Y="204.66666666666666" Z="379.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="376.38163784293488" Y="341.21377637891595" />
+    <ImageRight X="78.86840588950173" Y="345.5902476429207" />
+    <Real X="-45.034722222222229" Y="177" Z="418.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="436.42800453311122" Y="343.17598137392463" />
+    <ImageRight X="147.21095692275097" Y="344.81122326993875" />
+    <Real X="-19.000000000000007" Y="177" Z="409" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="491.97973310278741" Y="344.73708734396672" />
+    <ImageRight X="210.78687993598678" Y="344.36541679619569" />
+    <Real X="7.0486111111111107" Y="177" Z="399.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="543.70094454781986" Y="346.43512733694297" />
+    <ImageRight X="270.40930102900819" Y="344.62532115656677" />
+    <Real X="33.111111111111107" Y="177" Z="390" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="592.98676941462713" Y="348.01606185424811" />
+    <ImageRight X="327.57827232659821" Y="344.67446604734522" />
+    <Real X="59.187500000000007" Y="177" Z="380.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="436.61808812241514" Y="406.02752799219985" />
+    <ImageRight X="146.47391263920127" Y="411.25104178392547" />
+    <Real X="-18.635802469135811" Y="149.33333333333334" Z="410" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="492.92040907428071" Y="405.59185486706735" />
+    <ImageRight X="211.369116985168" Y="408.68949304656121" />
+    <Real X="7.4220679012345681" Y="149.33333333333331" Z="400.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="545.13101487896074" Y="405.37002271521931" />
+    <ImageRight X="272.71780223029117" Y="406.73517580112303" />
+    <Real X="33.493827160493822" Y="149.33333333333331" Z="391" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="595.07481315787629" Y="405.457560120212" />
+    <ImageRight X="330.57033900152965" Y="404.99037745124082" />
+    <Real X="59.579475308641982" Y="149.33333333333331" Z="381.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="300.82686867539604" Y="78.175191494047084" />
+    <ImageRight X="300.87531060939449" Y="78.815260244768" />
+    <Real X="-70.308641975308646" Y="315.33333333333331" Z="377" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="354.33171280792749" Y="68.359665318449984" />
+    <ImageRight X="354.66569643897458" Y="68.873499348978925" />
+    <Real X="-44.199845679012356" Y="315.33333333333331" Z="386.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="408.987409813456" Y="57.932566046233156" />
+    <ImageRight X="409.77960628124828" Y="58.189577433219242" />
+    <Real X="-18.104938271604944" Y="315.33333333333331" Z="396" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="465.83676330041328" Y="46.621581738018982" />
+    <ImageRight X="467.34878687708613" Y="46.552216248841518" />
+    <Real X="7.9760802469135808" Y="315.33333333333331" Z="405.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="525.74122941498888" Y="34.257645820514895" />
+    <ImageRight X="528.23156040217452" Y="33.854903687379469" />
+    <Real X="34.0432098765432" Y="315.33333333333331" Z="415" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="303.22617381805043" Y="133.00272534663179" />
+    <ImageRight X="303.31331447056124" Y="133.95443340868346" />
+    <Real X="-70.623456790123456" Y="287.66666666666663" Z="376" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="356.32054999891955" Y="124.25394716886233" />
+    <ImageRight X="356.53770341074232" Y="125.12305233212241" />
+    <Real X="-44.523919753086417" Y="287.66666666666669" Z="385.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="411.29471976423929" Y="115.26629403156284" />
+    <ImageRight X="411.89374443136745" Y="115.92223194716596" />
+    <Real X="-18.438271604938279" Y="287.66666666666669" Z="395.00000000000006" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="468.52757460945884" Y="104.8895456221323" />
+    <ImageRight X="469.8588990850763" Y="105.28354867805429" />
+    <Real X="7.6334876543209873" Y="287.66666666666663" Z="404.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="528.53883914031815" Y="93.910526387356157" />
+    <ImageRight X="530.90981672016369" Y="94.051692515193423" />
+    <Real X="33.691358024691354" Y="287.66666666666669" Z="414" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="592.51484530979394" Y="82.5016061519239" />
+    <ImageRight X="596.15180919451859" Y="82.436636649816379" />
+    <Real X="59.735339506172849" Y="287.66666666666663" Z="423.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="304.61872654636517" Y="188.25672498998691" />
+    <ImageRight X="304.73718346005484" Y="189.1921195608283" />
+    <Real X="-70.944444444444457" Y="260" Z="375" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="358.20269293048318" Y="180.63896597449377" />
+    <ImageRight X="358.2888243181572" Y="181.5421173413738" />
+    <Real X="-44.854166666666664" Y="260" Z="384.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="413.50915410994355" Y="172.50845546838383" />
+    <ImageRight X="413.95700258050664" Y="173.30087765906927" />
+    <Real X="-18.777777777777786" Y="260" Z="394" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="471.01225241177468" Y="163.88205684488293" />
+    <ImageRight X="472.24056297013863" Y="164.57080284153088" />
+    <Real X="7.2847222222222223" Y="260" Z="403.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="531.375175532599" Y="154.72445647254685" />
+    <ImageRight X="533.71611406419117" Y="155.32728894485297" />
+    <Real X="33.333333333333329" Y="260" Z="413" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="595.28319998975473" Y="144.4093268509977" />
+    <ImageRight X="598.96839933206263" Y="144.94609142232963" />
+    <Real X="59.368055555555571" Y="260" Z="422.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="306.15329289507469" Y="244.12156792282556" />
+    <ImageRight X="306.24882166931292" Y="244.686253942724" />
+    <Real X="-71.271604938271608" Y="232.33333333333334" Z="374" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="360.00081826798" Y="237.20180105581721" />
+    <ImageRight X="360.05135230107425" Y="237.82848856368508" />
+    <Real X="-45.190586419753089" Y="232.33333333333331" Z="383.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="415.93562423445735" Y="230.18626081389439" />
+    <ImageRight X="416.41853505985972" Y="230.95688953274802" />
+    <Real X="-19.123456790123463" Y="232.33333333333334" Z="393" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="473.98319818446072" Y="222.94582217355705" />
+    <ImageRight X="475.31282838818424" Y="223.86642435515415" />
+    <Real X="6.929783950617284" Y="232.33333333333334" Z="402.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="534.41627576191786" Y="215.3626049099897" />
+    <ImageRight X="536.90513970657173" Y="216.42141086979115" />
+    <Real X="32.969135802469125" Y="232.33333333333334" Z="412" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="598.55644850485282" Y="206.75487778798166" />
+    <ImageRight X="602.43361616120342" Y="207.933775331986" />
+    <Real X="58.9945987654321" Y="232.33333333333334" Z="421.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="307.00391396651912" Y="300.20552175046282" />
+    <ImageRight X="306.96760093894329" Y="300.91176736181484" />
+    <Real X="-71.604938271604937" Y="204.66666666666666" Z="373" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="361.44319428039421" Y="294.33413488887459" />
+    <ImageRight X="361.7077146212722" Y="295.05469598620232" />
+    <Real X="-45.533179012345677" Y="204.66666666666663" Z="382.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="418.03825804384928" Y="288.41712175867713" />
+    <ImageRight X="418.84057979812752" Y="289.42864596198723" />
+    <Real X="-19.475308641975317" Y="204.66666666666666" Z="392" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="476.69844250039057" Y="282.31139657281977" />
+    <ImageRight X="478.37451570818121" Y="283.66919504755106" />
+    <Real X="6.5686728395061724" Y="204.66666666666666" Z="401.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="537.28545280357594" Y="276.30237749841643" />
+    <ImageRight X="540.12061858035383" Y="277.98437320577739" />
+    <Real X="32.598765432098759" Y="204.66666666666669" Z="411" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="601.76634268167322" Y="269.44600252536111" />
+    <ImageRight X="605.985288330997" Y="271.41001911918693" />
+    <Real X="58.614969135802475" Y="204.66666666666666" Z="420.49999999999994" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="307.57694226179723" Y="356.01721509757033" />
+    <ImageRight X="307.43506077490923" Y="357.69830279171561" />
+    <Real X="-71.944444444444457" Y="177" Z="372" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="362.69291951211505" Y="352.28104501317705" />
+    <ImageRight X="363.22783180431929" Y="353.94751827234938" />
+    <Real X="-45.881944444444443" Y="177" Z="381.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="419.68358371773934" Y="347.65145130549422" />
+    <ImageRight X="420.9364989688944" Y="349.54126189776741" />
+    <Real X="-19.833333333333343" Y="177" Z="391" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="478.8988026279423" Y="342.72544788523669" />
+    <ImageRight X="481.06835555932656" Y="344.96946424738059" />
+    <Real X="6.2013888888888893" Y="177" Z="400.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="540.30377665915739" Y="337.91686607214871" />
+    <ImageRight X="543.62782808089469" Y="340.54721491352137" />
+    <Real X="32.222222222222214" Y="177" Z="410" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="605.33146502680688" Y="332.48839141617549" />
+    <ImageRight X="610.00627750458693" Y="335.47491455746183" />
+    <Real X="58.229166666666671" Y="177" Z="419.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="364.27674925242985" Y="410.5562506533937" />
+    <ImageRight X="365.00405541368883" Y="413.75195368325183" />
+    <Real X="-46.236882716049379" Y="149.33333333333331" Z="380.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="421.39284557287266" Y="407.27463454155736" />
+    <ImageRight X="423.03072876953564" Y="410.59468276904113" />
+    <Real X="-20.197530864197539" Y="149.33333333333334" Z="390" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="481.22886312591061" Y="403.96586136172976" />
+    <ImageRight X="483.88912495989871" Y="407.560311321013" />
+    <Real X="5.8279320987654319" Y="149.33333333333331" Z="399.5" />
+  </TriangulatedPoint>
+  <TriangulatedPoint>
+    <ImageLeft X="543.19315072113011" Y="400.37795508671451" />
+    <ImageRight X="547.0268675493719" Y="404.31248332866738" />
+    <Real X="31.8395061728395" Y="149.33333333333331" Z="409" />
+  </TriangulatedPoint>
+</ArrayOfTriangulatedPoint>

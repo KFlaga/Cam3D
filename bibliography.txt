@@ -1,9 +1,0 @@
-[1]     R. Hartley, A. Zisserman, Multiple View Geometry in Computer Vision 2nd ed, Cambridge,  2003
-[2]	M. Nixon, A. Aguado, Feature Extraction and Image Processing 2nd ed, Academic Press, 2008 
-[3]	Y. Chen, K. L. Moore, L. Ma, Rational Radial Distortion Models with Analytical Undistortion Formulae, International Journal of Information Acquisition,2004. 
-[4]	H. Hirschmuller, Stereo processing by semi-global matching and mutual information. IEEE Transactions on Pattern Analysis and Machine Intelligence 30, 2008
-[5]	H. Hirschmuller, M. Buder, I. Ernst, Memory Efficient Semi-Global Matching, ISPRS Annals of the Photogrammetry, Remote Sensing and Spatial Information Sciences, 2012 
-[6]	C. Loop, Z. Zhang, Computing Rectifying Homographies for Stereo Vision, Proceedings of IEEE Conference on Computer Vision and Pattern Recognition, 1999 
-[7]	A. Fusiello, L. Irsara, Quasi-Euclidean epipolar rectification of uncalibrated images, Machine Vision and Applications, 2011 
-[8]	R. Zabih, J. Woodfill, Non-parametric local transforms for computing visual correspondence, Computer Vision — ECCV '94, 1994 
-[9]	A. Banno, K. Ikeuchi - Disparity map refinement and 3d surface smoothing via directed anisotropic diffusion, Computer Vision and Image Understanding vol.115, issue 5, 2011 

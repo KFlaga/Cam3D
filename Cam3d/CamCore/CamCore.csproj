@@ -1,0 +1,169 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{30AB90ED-775C-49E5-96A8-B419D08D2204}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CamCore</RootNamespace>
+    <AssemblyName>CamCore</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="MathNet.Numerics, Version=3.20.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MathNet.Numerics.3.20.0\lib\net40\MathNet.Numerics.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="WriteableBitmapEx.Wpf">
+      <HintPath>..\CamMain\bin\Debug\WriteableBitmapEx.Wpf.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Data\Camera.cs" />
+    <Compile Include="Data\CameraPair.cs" />
+    <Compile Include="Data\RadialDistortion.cs" />
+    <Compile Include="Data\RadialDistortionModel.cs" />
+    <Compile Include="Data\Rational3RDModel.cs" />
+    <Compile Include="Data\Taylor4Model.cs" />
+    <Compile Include="Images\DisparityImage.cs" />
+    <Compile Include="Math\GaussSolver.cs" />
+    <Compile Include="Math\ILinearEquationsSolver.cs" />
+    <Compile Include="Math\LevenbergMarquardtBasicAlgorithm.cs" />
+    <Compile Include="Math\Line.cs" />
+    <Compile Include="Math\MinimalisationAlgorithm.cs" />
+    <Compile Include="Math\MultivariateFunctionMinimalisation.cs" />
+    <Compile Include="Math\OneVariableMinimisation.cs" />
+    <Compile Include="Math\Polynomial.cs" />
+    <Compile Include="Math\PolynomialRootFinder.cs" />
+    <Compile Include="Math\Quadric.cs" />
+    <Compile Include="Math\SvdSolver.cs" />
+    <Compile Include="ModuleInterfaces\IAlgorithmUi.cs" />
+    <Compile Include="Data\Point2.cs" />
+    <Compile Include="Data\TriangulatedPoint.cs" />
+    <Compile Include="Images\BorderFunction.cs" />
+    <Compile Include="Images\ColorImage.cs" />
+    <Compile Include="Images\GrayScaleImage.cs" />
+    <Compile Include="Images\HSIImage.cs" />
+    <Compile Include="Images\IImage.cs" />
+    <Compile Include="Images\ImageResampler.cs" />
+    <Compile Include="Images\MaskedImage.cs" />
+    <Compile Include="Misc\ListExtensions.cs" />
+    <Compile Include="Misc\DictionaryExtensions.cs" />
+    <Compile Include="Data\Disparity.cs" />
+    <Compile Include="Data\DisparityMap.cs" />
+    <Compile Include="Misc\FloatExtensions.cs" />
+    <Compile Include="Misc\Math.cs" />
+    <Compile Include="Misc\RotationConverter.cs" />
+    <Compile Include="Data\Vector2Pair.cs" />
+    <Compile Include="Data\Vector3.cs" />
+    <Compile Include="Misc\SideIndex.cs" />
+    <Compile Include="Misc\VectorExtensions.cs" />
+    <Compile Include="Misc\PointNormalization.cs" />
+    <Compile Include="Converters\DoubleToStringConverter.cs" />
+    <Compile Include="Misc\FileOperations.cs" />
+    <Compile Include="Converters\IntToStringConverter.cs" />
+    <Compile Include="InterModularConnection.cs" />
+    <Compile Include="Misc\MatrixExtensions.cs" />
+    <Compile Include="Misc\NoiseGenerators.cs" />
+    <Compile Include="Data\Vector2.cs" />
+    <Compile Include="ModuleInterfaces\AlgorithmParameter.cs" />
+    <Compile Include="ModuleInterfaces\FinalParameters.cs" />
+    <Compile Include="ModuleInterfaces\INamed.cs" />
+    <Compile Include="ModuleInterfaces\IParametrizable.cs" />
+    <Compile Include="ModuleInterfaces\ParamterInput.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="Converters\StringToDoubleConverter.cs" />
+    <Compile Include="Converters\StringToIntConverter.cs" />
+    <Compile Include="Misc\XmlSerialisation.cs" />
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,57 @@
+﻿<Window x:Class="CamControls.AlgorithmWindow"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CamControls"
+             mc:Ignorable="d" Width="600" Height="440" ResizeMode="CanResize">
+    <DockPanel>
+        <Border BorderThickness="1" BorderBrush="Black" DockPanel.Dock="Top">
+            <StackPanel Orientation="Horizontal">
+                <Label>Algorytm:</Label>
+                <Label x:Name="_labelAlgorithmName">ALGORITHM NAME</Label>
+            </StackPanel>
+        </Border>
+        <Border BorderThickness="1" BorderBrush="Black" DockPanel.Dock="Top">
+            <StackPanel Orientation="Horizontal">
+                <Label>Status:</Label>
+                <Label x:Name="_labelAlgorithmStatus">NOT SUPPORTED</Label>
+                <Rectangle Width="1" Fill="Black"/>
+                <Label>Czas:</Label>
+                <Label x:Name="_labelAlgorithmTime">TIME</Label>
+            </StackPanel>
+        </Border>
+        <Border BorderThickness="1" BorderBrush="Black" DockPanel.Dock="Top">
+            <StackPanel Orientation="Horizontal">
+                <Label>Postęp:</Label>
+                <Label x:Name="_labelAlgorithmProgress">NOT SUPPORTED</Label>
+            </StackPanel>
+        </Border>
+        <Border BorderThickness="1" BorderBrush="Black" DockPanel.Dock="Right">
+            <StackPanel Orientation="Vertical" Width="100">
+                <Button x:Name="_buttonRun" IsEnabled="False" Click="_buttonRun_Click" >Uruchom</Button>
+                <Button x:Name="_buttonAbort" IsEnabled="False" Click="_buttonAbort_Click" >Zaniechaj</Button>
+                <Button x:Name="_buttonRefresh" IsEnabled="False" Height="44" Click="_buttonRefresh_Click">
+                    <TextBlock TextAlignment="Center">Odśwież<LineBreak/>wyniki</TextBlock>
+                </Button>
+                <Button x:Name="_buttonParams" IsEnabled="False" Height="44" Click="_buttonParams_Click">
+                    <TextBlock TextAlignment="Center">Ustaw<LineBreak/>parametry</TextBlock>
+                </Button>
+                <!--<Button x:Name="_buttonAcceptResults" IsEnabled="True" Height="44" Click="_buttonAcceptResults_Click">
+                    <TextBlock TextAlignment="Center">ACCEPT<LineBreak/>RESULTS</TextBlock>
+                </Button>-->
+                <Button x:Name="_buttonExit" Click="_buttonExit_Click">Wyjdź</Button>
+                <Button x:Name="_buttonSave" Click="_buttonSave_Click">Zapisz wyniki</Button>
+            </StackPanel>
+        </Border>
+        <Border BorderThickness="1" BorderBrush="Black" DockPanel.Dock="Left">
+            <StackPanel Orientation="Vertical">
+                <Label HorizontalContentAlignment="Center">Wyniki:</Label>
+                <ScrollViewer Margin="5" Height="280" ScrollViewer.PanningMode="Both" ScrollViewer.HorizontalScrollBarVisibility="Visible" ScrollViewer.VerticalScrollBarVisibility="Visible">
+                    <TextBox x:Name="_textResults" IsReadOnly="True" 
+                             Background="AntiqueWhite" MinLines="15"/>
+                </ScrollViewer>
+            </StackPanel>
+        </Border>
+    </DockPanel>
+</Window>

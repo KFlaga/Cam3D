@@ -1,0 +1,73 @@
+﻿<UserControl
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CamMain"
+             xmlns:CamControls="clr-namespace:CamControls;assembly=CamControls" x:Class="CamMain.CalibrationResults"
+             mc:Ignorable="d" 
+             d:DesignHeight="400" d:DesignWidth="600">
+    <DockPanel>
+        <Border Width="200" BorderBrush="Black" BorderThickness="1" DockPanel.Dock="Left">
+            <StackPanel>
+                <Button Content="Wczytaj dane kalibracji" Click="LoadCalibration" Margin="5,3,5,3"/>
+                <Button Content="Zapisz dane kalibracji" Click="SaveCalibration" Margin="5,3,5,3"/>
+                <Rectangle Fill="Black" Height="2"/>
+                <Button Content="Odśwież" Click="Update" Margin="5,3,5,3"/>
+
+            </StackPanel>
+        </Border>
+        <ScrollViewer DockPanel.Dock="Right" ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.HorizontalScrollBarVisibility="Visible" ScrollViewer.CanContentScroll="True">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="250"/>
+                    <ColumnDefinition Width="250"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="150"/>
+                    <RowDefinition Height="150"/>
+                    <RowDefinition Height="60"/>
+                    <RowDefinition Height="60"/>
+                </Grid.RowDefinitions>
+
+                <Border BorderBrush="Black" BorderThickness="1" Grid.Column="0" Grid.RowSpan="5"/>
+                <Border BorderBrush="Black" BorderThickness="1" Grid.Column="1" Grid.RowSpan="5"/>
+                <StackPanel Orientation="Vertical" Grid.Column="0" Grid.Row="0">
+                    <Label HorizontalContentAlignment="Center" Height="25">Lewa: Macierz kamery</Label>
+                    <CamControls:MatrixControl x:Name="_matrixLeftCamera" Padding="5,0,5,0"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" Grid.Column="0" Grid.Row="1">
+                    <Label HorizontalContentAlignment="Center" Height="25">Lewa: Macierz p. wewnętrznych</Label>
+                    <CamControls:MatrixControl x:Name="_matrixLeftInternal" Padding="5,0,5,0"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" Grid.Column="0" Grid.Row="2">
+                    <Label HorizontalContentAlignment="Center" Height="25">Lewa: Orientacja - kąty eulera XYZ</Label>
+                    <CamControls:MatrixControl x:Name="_matrixLeftRotation" Padding="5,0,5,0"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" Grid.Column="0" Grid.Row="3">
+                    <Label HorizontalContentAlignment="Center" Height="25">Lewa: Środek kamery</Label>
+                    <CamControls:MatrixControl x:Name="_matrixLeftCenter" Padding="5,0,5,0"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" Grid.Column="1" Grid.Row="0">
+                    <Label HorizontalContentAlignment="Center" Height="25">Prawa: Macierz kamery</Label>
+                    <CamControls:MatrixControl x:Name="_matrixRightCamera" Padding="5,0,5,0"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" Grid.Column="1" Grid.Row="1">
+                    <Label HorizontalContentAlignment="Center" Height="25">Prawa: Macierz p. wewnętrznych</Label>
+                    <CamControls:MatrixControl x:Name="_matrixRightInternal" Padding="5,0,5,0"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" Grid.Column="1" Grid.Row="2">
+                    <Label HorizontalContentAlignment="Center" Height="25">Prawa: Orientacja - kąty eulera XYZ</Label>
+                    <CamControls:MatrixControl x:Name="_matrixRightRotation" Padding="5,0,5,0"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" Grid.Column="1" Grid.Row="3">
+                    <Label HorizontalContentAlignment="Center" Height="25">Prawa: Środek kamery</Label>
+                    <CamControls:MatrixControl x:Name="_matrixRightCenter" Padding="5,0,5,0"/>
+                </StackPanel>
+
+
+
+            </Grid>
+        </ScrollViewer>
+    </DockPanel>
+</UserControl>

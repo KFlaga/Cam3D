@@ -1,0 +1,29 @@
+<Shader name="ColorShader_NoLight">
+	<Passes>
+		<Pass>
+			<VertexShaderIndex value="0"/>
+            <PixelShaderIndex value="0"/>
+            <InputLayoutIndex value="0"/>
+            <!-- Options/Flags/Etc. -->
+		</Pass>
+	</Passes>
+	<VertexShaders>
+		<VertexShader>
+			<File>"ColorShader.vs</File>
+			<Entry>"Main"</Entry>
+		</VertexShader>
+	</VertexShaders>
+	<PixelShaders>
+		<PixelShader>
+			<File>"ColorShader.ps</File>
+			<Entry>"Main"</Entry>
+		</PixelShader>
+	</PixelShaders>
+	<InputLayouts>
+		<InputLayout>
+			<ElementType type="Position4" slot="0"/>
+			<ElementType type="Color4" slot="0"/>
+		</InputLayout>
+	</InputLayouts>
+</Shader>
+
